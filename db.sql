@@ -46,6 +46,7 @@ CREATE TABLE recipes (
     water_weight float,
     water_type varchar(60),
     water_temp float,
+    yield_weight float,
     brew_time interval,
     tds float,
     palate_rates jsonb,
