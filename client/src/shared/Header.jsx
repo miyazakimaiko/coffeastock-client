@@ -4,8 +4,8 @@ import React from 'react'
 const Header = () => {
     return (
         <div
-        className="
-            h-20 w-full
+          className="
+            h-20 w-full mb-4 px-3 
             flex items-center justify-between
             border-b border-black border-opacity-20"
         >

@@ -18,7 +18,7 @@ const App = () => {
         <Router>
             <div className="flex w-full">
                 <Nav/>
-                <div className="w-full px-4 text-sm text-burnt-sienna">
+                <div className="w-full px-3 text-sm text-burnt-sienna">
                 <Routes>
                     <Route exact path='/' element={<Dashboard />} />
                     <Route exact path="/recipes" element={<ViewAllRecipes />} />
