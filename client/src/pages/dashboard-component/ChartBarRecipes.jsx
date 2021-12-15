@@ -31,8 +31,37 @@ export const options = {
   plugins: {
     legend: {
       position: 'top',
+      labels: {
+        font: {
+          family: "Nunito" // Add your font here to change the font of your legend label
+        }
+      }
     },
+    tooltip: {
+      bodyFont: {
+        family: "Nunito" // Add your font here to change the font of your tooltip body
+      },
+      titleFont: {
+        family: "Nunito" // Add your font here to change the font of your tooltip title
+      }
+    }
   },
+  scales: {
+    yAxes: {
+      ticks: {
+        font: {
+          family: "Nunito" // Add your font here to change the font of your legend label
+        }
+      }
+    },
+    xAxes: {
+      ticks: {
+        font: {
+          family: "Nunito" // Add your font here to change the font of your legend label
+        }
+      }
+    }
+  }
 };
 
 const labels = ['Waltz Blend', 'Tropical Blend', 'Su Nolag', 'April', 'Ethopian heirloom', 'June', 'July'];

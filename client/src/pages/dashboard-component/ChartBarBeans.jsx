@@ -31,8 +31,37 @@ export const options = {
   plugins: {
     legend: {
       position: 'top',
+      labels: {
+        font: {
+          family: "Nunito" // Add your font here to change the font of your legend label
+        }
+      }
     },
+    tooltip: {
+      bodyFont: {
+        family: "Nunito" // Add your font here to change the font of your tooltip body
+      },
+      titleFont: {
+        family: "Nunito" // Add your font here to change the font of your tooltip title
+      }
+    }
   },
+  scales: {
+    yAxes: {
+      ticks: {
+        font: {
+          family: "Nunito" // Add your font here to change the font of your legend label
+        }
+      }
+    },
+    xAxes: {
+      ticks: {
+        font: {
+          family: "Nunito" // Add your font here to change the font of your legend label
+        }
+      }
+    }
+  }
 };
 
 const labels = ['Waltz Blend', 'Tropical Blend', 'Su Nolag', 'April', 'Ethopian heirloom', 'June', 'July'];
@@ -41,7 +70,7 @@ export const data = {
   labels,
   datasets: [
     {
-      label: 'Dataset 1',
+      label: 'Coffee Beans (kg)',
       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
       borderColor: 'rgb(243,187,69)',
       backgroundColor: 'rgba(243,187,69, 0.5)',
@@ -60,7 +89,7 @@ const ChartBarBeans = () => {
         <h3 className="font-medium text-lg text-center pb-2">
           <strong>Beans</strong> Overall Rate TOP 10
         </h3>
-        <Bar options={options} data={data} />
+        <Bar options={options} data={data} className="font-sans" />
       </div>
     </div>
   )
