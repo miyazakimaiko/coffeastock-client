@@ -20,9 +20,6 @@ const Dashboard = () => {
         <ChartBarBeans />
         <ChartBarRecipes />
       </div>
-      <div>
-        <ChartWorldMap />
-      </div>
     </>
   )
 }
