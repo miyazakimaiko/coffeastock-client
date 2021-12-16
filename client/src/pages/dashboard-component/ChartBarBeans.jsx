@@ -72,7 +72,7 @@ export const data = {
     {
       label: 'Coffee Beans (kg)',
       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      borderColor: 'rgb(243,187,69)',
+      borderColor: 'rgba(243,187,69, 0.5)',
       backgroundColor: 'rgba(243,187,69, 0.5)',
     }
   ],
