@@ -6,8 +6,8 @@ import EditCoffeeBean from './pages/EditCoffeeBean';
 import EditRecipe from './pages/EditRecipe';
 import SettingsCoffeeBean from './pages/SettingsCoffeeBean';
 import SettingsRecipes from './pages/SettingsRecipes';
-import ViewAllRecipes from './pages/ViewAllRecipes';
-import ViewFilteredRecipes from './pages/ViewFilteredRecipes';
+import ViewRecipes from './pages/ViewRecipes';
+import ViewMyCoffees from './pages/ViewMyCoffees';
 import Nav from './shared/Nav';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
@@ -18,11 +18,11 @@ const App = () => {
         <Router>
             <div className="flex w-full">
                 <Nav/>
-                <div className="w-full px-3 text-sm text-burnt-sienna">
+                <div className="w-full pl-72 text-sm text-burnt-sienna">
                 <Routes>
                     <Route exact path='/' element={<Dashboard />} />
-                    <Route exact path="/recipes" element={<ViewAllRecipes />} />
-                    <Route exact path="/recipes/:attr_name/:cat_id" element={<ViewFilteredRecipes />} />
+                    <Route exact path="/coffees" element={<ViewMyCoffees />} />
+                    <Route exact path="/recipes/:roaster_id/:coffee_id" element={<ViewRecipes />} />
                     <Route exact path="/create/bean" element={<CreateCoffeeBean />} />
                     <Route exact path="/create/recipe" element={<CreateRecipe />} />
                     <Route exact path="/edit/:bean_id" element={<EditCoffeeBean />} />
