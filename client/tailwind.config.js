@@ -8,11 +8,25 @@ module.exports = {
       colors: {
         'burnt-sienna': '#66615B',
         'creme': '#F4F3EE',
+        'green': '#79C29A',
+        'blue': '#68B3C7',
+        'orange': '#FF8F5D',
+        'lime': '#D6E4A3',
+        'yellow': '#F3BB44'
       },
       fontFamily: {
         'capitals': ['Sen', ...defaultTheme.fontFamily.sans],
         'sans': ['Nunito', ...defaultTheme.fontFamily.sans]
       },
+      maxWidth: {
+        '10': '10rem',
+        '60pc': '60%',
+        '350px': '350px'
+      },
+      minWidth: {
+        '21': '21rem',
+        '250px': '250px'
+      }
     },
   },
   variants: {
