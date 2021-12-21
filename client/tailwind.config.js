@@ -21,11 +21,15 @@ module.exports = {
       maxWidth: {
         '10': '10rem',
         '60pc': '60%',
-        '350px': '350px'
+        '350px': '350px',
       },
       minWidth: {
         '21': '21rem',
-        '250px': '250px'
+        '250px': '250px',
+        '150px': '150px'
+      },
+      transitionProperty: {
+        'width': 'width'
       }
     },
   },
