@@ -6,7 +6,7 @@ const port = process.env.PORT || 4001;
 
 app.use(morgan('dev'));
 
-require("./routes/register.js")(app);
+require("./routes/auth.js")(app);
 require("./routes/users.js")(app);
 require("./routes/beans.js")(app);
 require("./routes/recipes.js")(app);
