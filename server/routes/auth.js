@@ -3,7 +3,7 @@ const db = require("../db");
 const express = require("express");
 const morgan = require("morgan");
 const bcrypt = require("bcrypt");
-const utils = require("../utils");
+const jwtGenerator = require("../utils/jwtGenerator");
 
 module.exports = (app) => {
   // primary middleware
@@ -78,7 +78,7 @@ module.exports = (app) => {
         ]
       );
 
-      const token = utils.jwtGenerator(result.rows[0].user_id);
+      const token = jwtGenerator(result.rows[0].user_id);
 
       res.status(200).json({
         status: "success",
@@ -90,4 +90,36 @@ module.exports = (app) => {
       next(error);
     }
   });
+
+  app.post("/api/v1/login", async (req, res, next) => {
+    try {
+      const existingUser = await db.query(`SELECT * FROM USERS WHERE email = $1`, [req.body.email])
+
+      if (existingUser.rows.length === 0) {
+        return res.status(401).json({
+          message: "Email or Password is incorrect"
+        })
+      }
+
+      const validPassword = await bcrypt.compare(req.body.password, existingUser.rows[0].password);
+
+      if (!validPassword) {
+        return res.status(401).json({
+          message: "Email or Password is incorrect"
+        })
+      }
+
+      const token = jwtGenerator(existingUser.rows[0].user_id);
+
+      res.status(200).json({
+        status: "success",
+        results: existingUser.rows.length,
+        data: existingUser.rows,
+        token: token
+      });
+
+    } catch (error) {
+      next(error);
+    }
+  })
 }
