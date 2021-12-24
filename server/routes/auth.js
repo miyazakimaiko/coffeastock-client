@@ -1,4 +1,4 @@
-// node-postgres.com
+require("dotenv").config();
 const db = require("../db");
 const express = require("express");
 const morgan = require("morgan");
@@ -6,11 +6,12 @@ const bcrypt = require("bcrypt");
 const jwtGenerator = require("../utils/jwtGenerator");
 
 module.exports = (app) => {
+  const endpoint = process.env.API_ENDPOINT;
   // primary middleware
   app.use(morgan('dev'));
   app.use(express.json());
 
-  app.post("/api/v1/register", async (req, res, next) => {
+  app.post(endpoint + "/register", async (req, res, next) => {
     try {
       const existingUser = await db.query(`SELECT * FROM USERS WHERE email = $1`, [req.body.email])
 
@@ -91,7 +92,7 @@ module.exports = (app) => {
     }
   });
 
-  app.post("/api/v1/login", async (req, res, next) => {
+  app.post(endpoint + "/login", async (req, res, next) => {
     try {
       const existingUser = await db.query(`SELECT * FROM USERS WHERE email = $1`, [req.body.email])
 
