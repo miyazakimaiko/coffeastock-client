@@ -1,7 +1,7 @@
 import { SearchIcon } from '@heroicons/react/outline'
 import React from 'react'
 
-const Header = () => {
+const Header = ({title}) => {
     return (
         <div
           className="
@@ -9,7 +9,7 @@ const Header = () => {
             flex items-center justify-between
             border-b border-black border-opacity-20"
         >
-            <h2 className="font-bold text-xl">Header</h2>
+            <h2 className="text-2xl">{title}</h2>
             <form 
               action=""
               className="

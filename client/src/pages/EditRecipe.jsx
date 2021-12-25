@@ -2,9 +2,10 @@ import React from 'react'
 import Header from '../shared/Header'
 
 const EditRecipe = () => {
-    return (
-      <>
-        <Header />
+  const title = "Edit Recipe";
+  return (
+    <>
+      <Header title={title} />
         Edit Recipe Page
       </>
     )

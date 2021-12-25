@@ -2,9 +2,10 @@ import React from 'react'
 import Header from '../shared/Header'
 
 const EditCoffeeBean = () => {
-    return (
-      <>
-        <Header />
+  const title = "Edit Coffee Bean";
+  return (
+    <>
+      <Header title={title} />
         Edit Coffee Bean Page
       </>
     )
