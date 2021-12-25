@@ -9,12 +9,7 @@
 
 .coffee-details-table tr:not(:last-child) {
   border-bottom: solid 1px #CCC5B9;
-
 }
-
-/* .coffee-details-table tbody > tr:nth-of-type(2n+1) {
-    background-color: #F3F2EE;
-} */
 
 .coffee-details-table th {
   padding: 1rem 1rem 1rem 2rem;
@@ -22,4 +17,42 @@
 
 .coffee-details-table td {
   padding: 1rem 2rem 1rem 1rem;
+}
+
+.orange-outline-transition {
+  outline: transparent solid 1px;
+  transition: outline 0.2s ease;
+}
+
+.orange-outline-transition:focus-visible {
+  outline: solid 1px #FF8F5D;
+}
+
+.blue-outline-transition {
+  outline: transparent solid 1px;
+  transition: outline 0.2s ease;
+}
+
+.blue-outline-transition:focus-visible {
+  outline: solid 1px #68B3C7;
+}
+
+.button-transition {
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.button-transition:hover {
+  opacity: 1;
+}
+
+.sinenna-button-transition {
+  border: 2px solid #66615B;
+  background-color: transparent;
+  transition: all 0.2s ease;
+}
+
+.sinenna-button-transition:hover {
+  color: white;
+  background-color: #66615B;
 }
