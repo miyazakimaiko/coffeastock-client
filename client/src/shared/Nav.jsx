@@ -11,7 +11,7 @@ function Nav() {
   return (
   <nav 
   className="
-      w-72 fixed top-0 bottom-0 overflow-auto
+      w-64 fixed top-0 bottom-0 overflow-auto
       bg-burnt-sienna 
       border-r
       text-white"
