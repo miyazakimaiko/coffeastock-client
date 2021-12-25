@@ -1,7 +1,7 @@
 import React from 'react'
-import Header from '../shared/Header'
-import CoffeeBag from '../svgs/CoffeeBag';
-import RecipeSection from './view-recipes-component/RecipeSection';
+import Header from '../../shared/Header'
+import CoffeeBag from '../../svgs/CoffeeBag';
+import RecipeSection from './RecipeSection';
 
 const ViewRecipes = () => {
   const title = "Recipes";
