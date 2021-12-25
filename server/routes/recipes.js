@@ -2,6 +2,7 @@ require("dotenv").config();
 const db = require("../db");
 const express = require("express");
 const morgan = require("morgan");
+const authorize = require("../middlewares/authorize");
 
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
@@ -10,7 +11,7 @@ module.exports = (app) => {
   app.use(express.json());
 
   // Get all recipes of a bean
-  app.get(endpoint + "/bean/:productid/recipes", async (req, res, next) => {
+  app.get(endpoint + "/bean/:productid/recipes", authorize, async (req, res, next) => {
     try {
       const results = await db.query(`
       SELECT * FROM recipes WHERE product_id = $1`, 
@@ -27,7 +28,7 @@ module.exports = (app) => {
   });
 
   // Create a recipe of beans
-  app.post("/api/v1/bean/:productid/recipe", async (req, res, next) => {
+  app.post(endpoint + "/bean/:productid/recipe", authorize, async (req, res, next) => {
     try {
       const results = await db.query(`
       INSERT INTO recipes (
@@ -76,7 +77,7 @@ module.exports = (app) => {
   }); 
   
   // update a recipe of beans
-  app.post(endpoint + "/bean/:productid/recipe/:recipeid", async (req, res, next) => {
+  app.post(endpoint + "/bean/:productid/recipe/:recipeid", authorize, async (req, res, next) => {
     try {
       const results = await db.query(`
       UPDATE recipes 
@@ -125,7 +126,7 @@ module.exports = (app) => {
   });
 
   // delete a recipe
-  app.delete(endpoint + "/bean/:productid/recipe/:recipeid", async (req, res, next) => {
+  app.delete(endpoint + "/bean/:productid/recipe/:recipeid", authorize, async (req, res, next) => {
     try {
       const results = await db.query(`
       DELETE FROM recipes WHERE product_id = $1 AND recipe_id = $2`,

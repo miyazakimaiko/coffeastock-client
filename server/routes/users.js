@@ -2,6 +2,7 @@ require("dotenv").config();
 const db = require("../db");
 const express = require("express");
 const morgan = require("morgan");
+const authorize = require("../middlewares/authorize");
 
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
@@ -10,7 +11,7 @@ module.exports = (app) => {
   app.use(express.json());
 
   // Get all users
-  app.get(endpoint + "/users", async (req, res, next) => {
+  app.get(endpoint + "/users", authorize, async (req, res, next) => {
     try {
       const results = await db.query(`SELECT * FROM users`);
       
@@ -25,7 +26,7 @@ module.exports = (app) => {
   });
 
   // Get a user
-  app.get(endpoint + "/user/:userid", async (req, res, next) => {
+  app.get(endpoint + "/user/:userid", authorize, async (req, res, next) => {
     try {
       const results = await db.query(`
       SELECT * FROM users WHERE user_id = $1`, 
@@ -40,57 +41,9 @@ module.exports = (app) => {
       next(error);
     }
 });
-
-  // create a user
-  app.post(endpoint + "/user", async (req, res, next) => {
-    try {
-      const results = await db.query(`
-        INSERT INTO 
-        USERS (
-          username, 
-          email, 
-          password, 
-          origin_range, 
-          variety_range, 
-          process_range, 
-          roaster_range, 
-          method_range, 
-          water_range, 
-          grinder_range,
-          palates,
-          aroma
-        )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-        RETURNING *`,
-        [
-          req.body.username,
-          req.body.email,
-          req.body.password,
-          req.body.origin_range,
-          req.body.variety_range,
-          req.body.process_range,
-          req.body.roaster_range,
-          req.body.method_range,
-          req.body.water_range,
-          req.body.grinder_range,
-          req.body.palates,
-          req.body.aroma
-        ]
-      );
-
-      res.status(200).json({
-        status: "success",
-        results: results.rows.length,
-        data: results.rows,
-      });
-
-    } catch (error) {
-      next(error);
-    }
-  }); 
   
   // update a user
-  app.post(endpoint + "/user/:userid", async (req, res, next) => {
+  app.post(endpoint + "/user/:userid", authorize, async (req, res, next) => {
     try {
       const results = await db.query(`
       UPDATE USERS 
@@ -131,7 +84,7 @@ module.exports = (app) => {
   });
 
   // delete a user
-  app.delete(endpoint + "/user/:userid", async (req, res, next) => {
+  app.delete(endpoint + "/user/:userid", authorize, async (req, res, next) => {
     try {
       const results = await db.query(`
       DELETE FROM USERS WHERE user_id = $1`,

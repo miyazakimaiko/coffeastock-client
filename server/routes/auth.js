@@ -3,6 +3,8 @@ const db = require("../db");
 const express = require("express");
 const morgan = require("morgan");
 const bcrypt = require("bcrypt");
+const validate = require("../middlewares/validate")
+const authorize = require("../middlewares/authorize")
 const jwtGenerator = require("../utils/jwtGenerator");
 
 module.exports = (app) => {
@@ -11,7 +13,7 @@ module.exports = (app) => {
   app.use(morgan('dev'));
   app.use(express.json());
 
-  app.post(endpoint + "/register", async (req, res, next) => {
+  app.post(endpoint + "/registration", validate, async (req, res, next) => {
     try {
       const existingUser = await db.query(`SELECT * FROM USERS WHERE email = $1`, [req.body.email])
 
@@ -92,7 +94,7 @@ module.exports = (app) => {
     }
   });
 
-  app.post(endpoint + "/login", async (req, res, next) => {
+  app.post(endpoint + "/login", validate, async (req, res, next) => {
     try {
       const existingUser = await db.query(`SELECT * FROM USERS WHERE email = $1`, [req.body.email])
 
@@ -122,5 +124,15 @@ module.exports = (app) => {
     } catch (error) {
       next(error);
     }
-  })
+  });
+
+  app.get(endpoint + "/authorized", authorize, async (req, res, next) => {
+    try {
+      res.status(200).json({
+        message: "Success",
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
 }
