@@ -1,10 +1,10 @@
 import React from 'react'
-import Header from '../shared/Header'
-import ChartBarBeans from './dashboard-component/ChartBarBeans'
-import ChartBarRecipes from './dashboard-component/ChartBarRecipes'
-import TotalBeans from './dashboard-component/TotalBeans'
-import TotalBrews from './dashboard-component/TotalBrews'
-import TotalRecipes from './dashboard-component/TotalRecipes'
+import Header from '../../shared/Header'
+import ChartBarBeans from './ChartBarBeans'
+import ChartBarRecipes from './ChartBarRecipes'
+import TotalBeans from './TotalBeans'
+import TotalBrews from './TotalBrews'
+import TotalRecipes from './TotalRecipes'
 
 const Dashboard = () => {
   const title = "Dashboard";
