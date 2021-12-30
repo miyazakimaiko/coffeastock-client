@@ -18,10 +18,7 @@ module.exports = (app) => {
       const existingUser = await db.query(`SELECT * FROM USERS WHERE email = $1`, [req.body.email])
 
       if (existingUser.rows.length !== 0) {
-        return res.status(409).json({
-          status: "Conflict",
-          message: "User already exists"
-        })
+        return res.status(409).json("User already exists.")
       }
 
       const saltRound = 10;
@@ -82,13 +79,8 @@ module.exports = (app) => {
       );
 
       const token = jwtGenerator(result.rows[0].user_id);
+      res.status(200).json({token: token});
 
-      res.status(200).json({
-        status: "success",
-        results: result.rows.length,
-        data: result.rows,
-        token: token
-      });
     } catch (error) {
       next(error);
     }
@@ -99,27 +91,17 @@ module.exports = (app) => {
       const existingUser = await db.query(`SELECT * FROM USERS WHERE email = $1`, [req.body.email])
 
       if (existingUser.rows.length === 0) {
-        return res.status(401).json({
-          message: "Email or Password is incorrect"
-        })
+        return res.status(401).json("Email or Password is incorrect")
       }
 
       const validPassword = await bcrypt.compare(req.body.password, existingUser.rows[0].password);
 
       if (!validPassword) {
-        return res.status(401).json({
-          message: "Email or Password is incorrect"
-        })
+        return res.status(401).json("Email or Password is incorrect")
       }
 
       const token = jwtGenerator(existingUser.rows[0].user_id);
-
-      res.status(200).json({
-        status: "success",
-        results: existingUser.rows.length,
-        data: existingUser.rows,
-        token: token
-      });
+      res.status(200).json({token: token});
 
     } catch (error) {
       next(error);
@@ -128,9 +110,7 @@ module.exports = (app) => {
 
   app.get(endpoint + "/authorized", authorize, async (req, res, next) => {
     try {
-      res.status(200).json({
-        message: "Success",
-      });
+      res.status(200).json(true);
     } catch (error) {
       next(error);
     }

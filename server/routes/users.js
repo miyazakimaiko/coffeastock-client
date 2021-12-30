@@ -26,17 +26,13 @@ module.exports = (app) => {
   });
 
   // Get a user
-  app.get(endpoint + "/user/:userid", authorize, async (req, res, next) => {
+  app.get(endpoint + "/user", authorize, async (req, res, next) => {
     try {
       const results = await db.query(`
       SELECT * FROM users WHERE user_id = $1`, 
-      [req.params.userid]);
+      [req.user.user_id]);
       
-      res.status(200).json({
-        status: "success",
-        results: results.rows.length,
-        data: results.rows,
-      });
+      res.status(200).json(results.rows[0]);
     } catch (error) {
       next(error);
     }

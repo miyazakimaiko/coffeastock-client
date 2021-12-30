@@ -9,17 +9,17 @@ module.exports = (req, res, next) => {
   }
 
   try {
-    if (req.path === endpoint + "/register") {
+    if (req.path === endpoint + "/registration") {
       if (![email, username, password].every(Boolean)) {
-        return res.status(401).json({message: "Missing Credentials"});
+        return res.status(401).json("Please fill all the fields to register.");
       } else if (!validEmail(email)) {
-        return res.status(401).json({message: "Invalid Email"});
+        return res.status(401).json("Invalid Email");
       }
     } else if (req.path === endpoint + "/login") {
       if (![email, password].every(Boolean)) {
-        return res.status(401).json({message: "Missing Credentials"});
+        return res.status(401).json("Missing Credentials");
       } else if (!validEmail(email)) {
-        return res.status(401).json({message: "Invalid Email"});
+        return res.status(401).json("Invalid Email");
       }
     }
   } catch (error) {

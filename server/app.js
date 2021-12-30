@@ -3,7 +3,9 @@ const express = require("express");
 const morgan = require("morgan");
 const app = module.exports = express();
 const port = process.env.PORT || 4001;
+const cors = require("cors");
 
+app.use(cors());
 app.use(morgan('dev'));
 
 require("./routes/auth.js")(app);
