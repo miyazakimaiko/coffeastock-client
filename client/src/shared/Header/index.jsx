@@ -1,13 +1,14 @@
 import { SearchIcon } from '@heroicons/react/outline'
 import React from 'react'
+import './Header.scss'
 
 const Header = ({title}) => {
     return (
         <div
           className="
-            h-20 w-full mb-4 px-3 
+            h-20 w-full mb-4 px-4 
             flex items-center justify-between
-            border-b border-black border-opacity-20"
+            header-border"
         >
             <h2 className="text-2xl">{title}</h2>
             <form 
