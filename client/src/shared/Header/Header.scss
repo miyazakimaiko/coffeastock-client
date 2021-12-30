@@ -1,0 +1,14 @@
+.header-border {
+  position: relative;
+
+  ::after {
+    position: absolute;
+    bottom: 0;
+    content: "";
+    display: block;
+    width: calc(100% - 3rem);
+    height: 1px;
+    background: #66615B;
+    opacity: 0.4;
+  }
+}

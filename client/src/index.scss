@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --toastify-color-info: #68B3C7;
+  --toastify-color-success: #65c48f;
+  --toastify-color-warning: #FF8F5D;
+  --toastify-color-error: #EB5E28;
+  --toastify-font-family: 'Nunito';
+}
+
+::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+
+.active {
+  font-weight: inherit;
+  color: #D57C58;
+}
+
+.orange-outline-transition {
+  outline: transparent solid 1px;
+  transition: outline 0.2s ease;
+
+  &:focus-visible {
+    outline: solid 1px #FF8F5D;
+  }
+}
+
+.blue-outline-transition {
+  outline: transparent solid 1px;
+  transition: outline 0.2s ease;
+
+  &:focus-visible {
+    outline: solid 1px ;
+  }
+}
+
+.button-transition {
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.sinenna-button-transition {
+  border: 2px solid #66615B;
+  background-color: transparent;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: white;
+    background-color: #66615B;
+  }
+}
