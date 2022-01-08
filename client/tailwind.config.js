@@ -12,7 +12,8 @@ module.exports = {
         'blue': '#68B3C7',
         'orange': '#FF8F5D',
         'lime': '#D6E4A3',
-        'yellow': '#F3BB44'
+        'yellow': '#F3BB44',
+        'red': '#EB5E28'
       },
       fontFamily: {
         'capitals': ['Sen', ...defaultTheme.fontFamily.sans],
