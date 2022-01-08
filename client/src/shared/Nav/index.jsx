@@ -4,6 +4,8 @@ import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, CogIcon, FilterIcon, Home
 import { Collapse } from 'react-bootstrap'
 import imgBeans from '../../images/beans.png'
 import { toast } from 'react-toastify'
+import { useContext } from 'react'
+import { AccountContext } from '../../utils/Account'
 
 
 function Nav({setAuth, name}) {
@@ -13,10 +15,10 @@ function Nav({setAuth, name}) {
   const [openSettingCoffeeBeans, setOpenSettingCoffeeBeans] = useState(false);
   const [openSettingRecipes, setOpenSettingRecipes] = useState(false);
 
+  const { signout } = useContext(AccountContext);
 
-  const logout = (e) => {
-    e.preventDefault();
-    localStorage.removeItem("token");
+  const logout = () => {
+    signout();
     setAuth(false);
     toast.success("Logged out successfully.")
   }
@@ -74,7 +76,7 @@ function Nav({setAuth, name}) {
               </NavLink>
             </li>
             <li className="h-10 mx-3 pl-9 flex items-center">
-              <button className="flex items-center tracking-widest transition-opacity duration-300 ease-out opacity-70 hover:opacity-100" type="button" onClick={(e) => logout(e)}>
+              <button className="flex items-center tracking-widest transition-opacity duration-300 ease-out opacity-70 hover:opacity-100" type="button" onClick={logout}>
                 <span className="ml-4">Logout</span>
               </button>
             </li>

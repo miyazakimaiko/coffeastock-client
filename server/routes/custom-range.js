@@ -2,7 +2,6 @@ require("dotenv").config();
 const db = require("../db");
 const express = require("express");
 const morgan = require("morgan");
-const authorize = require("../middlewares/authorize");
 
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
@@ -11,7 +10,7 @@ module.exports = (app) => {
   app.use(express.json());
 
   // Get all custom range of a user
-  app.get(endpoint + "/user/:userid/ranges", authorize, async (req, res, next) => {
+  app.get(endpoint + "/user/:userid/ranges", async (req, res, next) => {
     try {
       const results = await db.query(`
       SELECT
@@ -126,7 +125,7 @@ module.exports = (app) => {
   }); 
   
   // update beans of a user
-  app.post(endpoint + "/user/:userid/bean/:productid", authorize, async (req, res, next) => {
+  app.post(endpoint + "/user/:userid/bean/:productid", async (req, res, next) => {
     try {
       const results = await db.query(`
       UPDATE beans 
@@ -174,7 +173,7 @@ module.exports = (app) => {
   });
 
   // delete beans
-  app.delete(endpoint + "/user/:userid/bean/:productid", authorize, async (req, res, next) => {
+  app.delete(endpoint + "/user/:userid/bean/:productid", async (req, res, next) => {
     try {
       const results = await db.query(`
       DELETE FROM beans WHERE user_id = $1 AND product_id = $2`,

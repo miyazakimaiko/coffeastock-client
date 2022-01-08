@@ -2,7 +2,6 @@ require("dotenv").config();
 const db = require("../db");
 const express = require("express");
 const morgan = require("morgan");
-const authorize = require("../middlewares/authorize");
 
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
@@ -11,7 +10,7 @@ module.exports = (app) => {
   app.use(express.json());
 
   // Get all users
-  app.get(endpoint + "/users", authorize, async (req, res, next) => {
+  app.get(endpoint + "/users", async (req, res, next) => {
     try {
       const results = await db.query(`SELECT * FROM users`);
       
@@ -26,7 +25,7 @@ module.exports = (app) => {
   });
 
   // Get a user
-  app.get(endpoint + "/user", authorize, async (req, res, next) => {
+  app.get(endpoint + "/user", async (req, res, next) => {
     try {
       const results = await db.query(`
       SELECT * FROM users WHERE user_id = $1`, 
@@ -80,7 +79,7 @@ module.exports = (app) => {
   });
 
   // delete a user
-  app.delete(endpoint + "/user/:userid", authorize, async (req, res, next) => {
+  app.delete(endpoint + "/user/:userid", async (req, res, next) => {
     try {
       const results = await db.query(`
       DELETE FROM USERS WHERE user_id = $1`,

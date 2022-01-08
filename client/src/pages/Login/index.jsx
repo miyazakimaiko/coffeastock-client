@@ -1,49 +1,30 @@
 import { LoginIcon } from '@heroicons/react/outline'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify';
+import { AccountContext } from '../../utils/Account';
 
 const Login = ({setAuth}) => {
-  const [inputs, setInputs] = useState({
-    email: "",
-    password: ""
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const {email, password} = inputs;
+  const { authenticate } = useContext(AccountContext);
 
-  const onSetInputs = (e) => {
-    setInputs({...inputs, [e.target.name] : e.target.value})
-  };
+  const onSubmit = (event) => {
+    event.preventDefault();
 
-  const onSubmitForm = async (e) => {
-    e.preventDefault();
-    try {
-      const body = {email, password};
-      const response = await fetch(
-        "http://localhost:4000/api/v1/login",
-        {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify(body)
-        }
-      );
-      const parseRes = await response.json();
-
-      if (parseRes.token) {
-        localStorage.setItem("token", parseRes.token);
+    authenticate(email, password)
+      .then(data => {
+        toast.success("LOGGED IN!")
+        console.log("Logged In: ", data);
         setAuth(true);
-        toast.success("Logged in successfully!")
-      } 
-      else toast.error(parseRes,  {
-        position: toast.POSITION.TOP_CENTER
-      });
-
-    } catch (error) {
-      toast.error(error.message,  {
-        position: toast.POSITION.TOP_CENTER
-      });
-    }
-  }
+      })
+      .catch(err => {
+        toast.error(err.message, {
+          position: toast.POSITION.TOP_CENTER
+        });
+      })
+  };
 
   return (
     <div className="h-full">
@@ -62,7 +43,7 @@ const Login = ({setAuth}) => {
           method="#" 
           action="#"
           className="w-96"
-          onSubmit={onSubmitForm}
+          onSubmit={onSubmit}
         >
           <div className="bg-white p-6 shadow-sm rounded-md">
             <div>
@@ -73,14 +54,14 @@ const Login = ({setAuth}) => {
                 <label className="font-bold">Email address</label>
                 <input type="email" name="email" placeholder="Enter email" className="blue-outline-transition bg-creme block w-full text-base py-2 px-3 rounded-md"
                   value={email}
-                  onChange={e => onSetInputs(e)}
+                  onChange={e => setEmail(e.target.value)}
                 />
               </div>
               <div className="pb-3">
                 <label className="font-bold">Password</label>
                 <input type="password" name="password" placeholder="Password" className="blue-outline-transition bg-creme block w-full text-base py-2 px-3 rounded-md"
                   value={password}
-                  onChange={e => onSetInputs(e)}
+                  onChange={e => setPassword(e.target.value)}
                 />
               </div>
             </div>
