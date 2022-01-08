@@ -11,14 +11,16 @@ const Dashboard = () => {
   return (
     <>
       <Header title={title}/>
-      <div className="flex mb-4">
-        <TotalBrews />
-        <TotalRecipes />
-        <TotalBeans />
-      </div>
-      <div className="flex mb-4">
-        <ChartBarBeans />
-        <ChartBarRecipes />
+      <div className="px-2">
+        <div className="flex mb-4">
+          <TotalBrews />
+          <TotalRecipes />
+          <TotalBeans />
+        </div>
+        <div className="flex mb-4">
+          <ChartBarBeans />
+          <ChartBarRecipes />
+        </div>
       </div>
     </>
   )

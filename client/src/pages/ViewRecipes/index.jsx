@@ -2,6 +2,7 @@ import React from 'react'
 import Header from '../../shared/Header'
 import CoffeeBag from '../../svgs/CoffeeBag';
 import RecipeSection from './RecipeSection';
+import './ViewRecipes.scss'
 
 const ViewRecipes = () => {
   const title = "Recipes";
@@ -10,7 +11,7 @@ const ViewRecipes = () => {
   return (
     <>
       <Header title={title} />
-      <div>
+      <div className="px-2">
         <h2 className="font-bold text-2xl text-center p-4">{coffeeName}</h2>
         <div className="w-full flex flex-wrap-reverse justify-center my-4">
           <div className="flex items-center my-4 mx-10">

@@ -86,7 +86,7 @@ const ChartBarBeans = () => {
           w-full p-4
           bg-white shadow-sm rounded-md"
     >
-        <h3 className="font-medium text-lg text-center pb-2">
+        <h3 className="font-light text-lg text-center pb-2">
           <strong>Beans</strong> Overall Rate TOP 10
         </h3>
         <Bar options={options} data={data} className="font-sans" />

@@ -5,12 +5,12 @@ import { Link } from 'react-router-dom'
 
 const CoffeeSection = ({name}) => {
   return (
-    <div className="relative p-4 w-1/3 max-w-350px min-w-250px">
+    <div className="relative p-3 w-1/3 max-w-350px min-w-250px">
       <Link to="/recipes/1/1">
         <div 
           className="
-            absolute left-6 right-6 top-6 bottom-6 
-            bg-burnt-sienna rounded-md z-50 
+            absolute left-4 right-4 top-4 bottom-4 
+            bg-burnt-sienna rounded-md z-10 
             transition-opacity duration-300 ease-out opacity-0 hover:opacity-80
         ">
           <span  className=" h-full w-full flex justify-center items-center text-white font-bold text-2xl">
