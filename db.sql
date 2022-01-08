@@ -4,14 +4,15 @@ CREATE TABLE USERS (
     email citext UNIQUE NOT NULL,
     password varchar(255) NOT NULL,
     origin_range jsonb,
+    farm_range jsonb,
     variety_range jsonb,
     process_range jsonb,
     roaster_range jsonb,
     method_range jsonb,
     grinder_range jsonb,
     water_range jsonb,
-    palates jsonb,
-    aroma jsonb
+    palate_range jsonb,
+    aroma_range jsonb
 );
 
 INSERT INTO users (
@@ -25,99 +26,168 @@ INSERT INTO users (
   method_range, 
   water_range, 
   grinder_range,
-  palates,
-  aroma
+  palate_range,
+  aroma_range
 )
 VALUES (
   'Maiko.M', 
   'myzkmik19922@gmail.com', 
-  'maiko1992', 
+  'password', 
   '{
-    "1": {
-      "country": "Ethiopia",
-      "region": [
-        "Yirgacheffe", 
-        "Sidamo", 
-        "Kaffa"
+    "1" : {
+      "name": "Yirgacheffe, Ethiopia",
+      "def": "Location details here..."
     },
     "2": {
-      "country": "Kenya",
-      "region": [
-        "Ruiri", 
-        "Thika", 
-        "Kirinyaga"
-      ]
+      "name": "Sidamo, Ethiopia",
+      "def": "Location details here..."
+    },
+    "3": {
+      "name": "Kaffa, Ethiopia",
+      "def": "Location details here..."
+    },
+    "4": {
+      "name": "Ruiri, Kenya",
+      "def": "Location details here..."
+    },
+    "5": {
+      "name": "Thika, Kenya",
+      "def": "Location details here..."
     }
   }',
   '{
-    "1": "Typica",
-    "2": "Caturra",
-    "3": "Burbon"
+    "1" : {
+      "name": "Typica",
+      "def": "Details what typica is..."
+    },
+    "2": {
+      "name": "Caturra",
+      "def": "Details what caturra is..."
+    },
+    "3": {
+      "name": "Burbon",
+      "def": "Details what Burbon is..."
+    } 
   }', 
   '{
-    "1": "Washed",
-    "2": "Semi-Washed",
-    "3": "Natural"
+    "1" : {
+      "name": "Washed",
+      "def": "Details what washed is..."
+    },
+    "2": {
+      "name": "Semi-Washed",
+      "def": "Details what semi-washed is..."
+    },
+    "3": {
+      "name": "Natural",
+      "def": "Details what natural is..."
+    }
   }', 
   '{
-    "1": {
+    "1" : {
       "name": "Coffeeangel",
-      "country": "Ireland"
+      "def": "Definition of Coffeeangel..."
     },
     "2": {
       "name": "Coffee Collective",
-      "country": "Holland"
+      "def": "Coffee Collective definition..."
     },
     "3": {
       "name": "Koppi",
-      "country": "Switzerland"
+      "def": "Koppi details..."
     }
   }',
   '{
-    "1": "French Press",
-    "2": "Espresso",
-    "3": "Mocha Pot"
+    "1" : {
+      "name": "French Press",
+      "def": "details..."
+    },
+    "2": {
+      "name": "Espresso",
+      "def": "details..."
+    },
+    "3": {
+      "name": "Mocha Pot",
+      "def": "details..."
+    }
   }',
   '{
-    "1": {
+    "1" : {
       "name": "Water 1",
-      "loc": "北海道",
-      "ph": 7.0
+      "def": "details..."
     },
     "2": {
       "name": "Water 2",
-      "loc": "Swiss",
-      "ph": 6.5
+      "def": "details..."
     }
   }',
   '{
-    "1": "Hario Mini Handmill",
-    "2": "EKS",
-    "3": "Sage espresso grinder"
+    "1" : {
+      "name": "Hario Mini Handmill",
+      "def": "details..."
+    },
+    "2": {
+      "name": "EKS",
+      "def": "details..."
+    },
+    "3": {
+      "name": "Sage espresso grinder",
+      "def": "details..."
+    }
   }',
   '{
-    "1": "sweet",
-    "2": "acidic",
-    "3": "cherries",
-    "4": "stonefruit",
-    "5": "citrus fruit",
-    "6": "chocolate"
+    "1" : {
+      "name": "sweet",
+      "def": "details..."
+    },
+    "2": {
+      "name": "acidic",
+      "def": "details..."
+    },
+    "3": {
+      "name": "cherries",
+      "def": "details..."
+    },
+    "4" : {
+      "name": "stonefruit",
+      "def": "details..."
+    },
+    "5": {
+      "name": "citrus fruit",
+      "def": "details..."
+    },
+    "6": {
+      "name": "chocolate",
+      "def": "details..."
+    }
   }',
   '{
-    "1": "Walnut",
-    "2": "Peach",
-    "3": "Pineapple",
-    "4": "Green apple"
+    "1" : {
+      "name": "Walnut",
+      "def": "details..."
+    },
+    "2": {
+      "name": "Peach",
+      "def": "details..."
+    },
+    "3": {
+      "name": "Pineapple",
+      "def": "details..."
+    },
+    "4" : {
+      "name": "Green apple",
+      "def": "details..."
+    }
   }'
 );
 
 CREATE TABLE BEANS (
-    product_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    coffee_bean_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id uuid NOT NULL,
-    product_name varchar(60) NOT NULL,
+    coffee_bean_name varchar(60) NOT NULL,
     blend_ratio jsonb,
     origin INT,
-    farm varchar(60),
+    farm INT [],
     varieties INT [],
     processing INT,
     altitude varchar(60),
@@ -133,7 +203,7 @@ CREATE TABLE BEANS (
 
 INSERT INTO BEANS (
   user_id, 
-  product_name,
+  coffee_bean_name,
   origin, 
   farm, 
   varieties, 
@@ -147,10 +217,10 @@ INSERT INTO BEANS (
   aroma
 )
 VALUES (
-  1, 
+  '6021b8e4-8e58-4d81-a00a-81a19ad8df63', 
   'Kieni', 
   1, 
-  'Farm 1', 
+  '{1}', 
   '{1, 2}', 
   2, 
   '1100-1200 MASL',
@@ -165,7 +235,7 @@ VALUES (
 
 CREATE TABLE RECIPES (
     recipe_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    product_id uuid NOT NULL,
+    coffee_bean_id uuid NOT NULL,
     brew_date date,
     method INT,
     grinder INT,
@@ -179,13 +249,13 @@ CREATE TABLE RECIPES (
     tds float,
     palate_rates jsonb,
     comment text,
-    FOREIGN KEY (product_id)
-        REFERENCES BEANS (product_id)
+    FOREIGN KEY (coffee_bean_id)
+        REFERENCES BEANS (coffee_bean_id)
 );
 
 
 INSERT INTO RECIPES (
-  product_id,
+  coffee_bean_id,
   brew_date,
   method,
   grinder,
@@ -201,7 +271,7 @@ INSERT INTO RECIPES (
   comment
 )
 VALUES (
-  1,
+  'da1f2bd8-c7de-4e82-a0c2-a319274025e7',
   '2021-10-22',
   1,
   2,

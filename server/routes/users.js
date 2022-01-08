@@ -39,7 +39,7 @@ module.exports = (app) => {
 });
   
   // update a user
-  app.post(endpoint + "/user/:userid", authorize, async (req, res, next) => {
+  app.post(endpoint + "/user/:userid", async (req, res, next) => {
     try {
       const results = await db.query(`
       UPDATE USERS 
