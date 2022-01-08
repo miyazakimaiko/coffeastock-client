@@ -31,50 +31,33 @@ module.exports = (app) => {
           username, 
           email, 
           password,
-          origin_range, 
+          origin_range,
+          farm_range, 
           variety_range, 
           process_range, 
-          method_range
+          roaster_range, 
+          method_range, 
+          water_range, 
+          grinder_range,
+          palate_range,
+          aroma_range
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
         RETURNING *`,
         [
           req.body.username,
           req.body.email,
           bcryptedPwd,
-          {
-            "1": {
-              "country": "Ethiopia",
-              "region": [
-                "Yirgacheffe", 
-                "Sidamo", 
-                "Kaffa"
-              ]
-            },
-            "2": {
-              "country": "Kenya",
-              "region": [
-                "Ruiri", 
-                "Thika", 
-                "Kirinyaga"
-              ]
-            }
-          },
-          {
-            "1": "Typica",
-            "2": "Caturra",
-            "3": "Burbon"
-          },
-          {
-            "1": "Washed",
-            "2": "Semi-Washed",
-            "3": "Natural"
-          },
-          {
-            "1": "French Press",
-            "2": "Espresso",
-            "3": "Mocha Pot"
-          }
+          JSON.stringify(req.body.origin_range), 
+          JSON.stringify(req.body.farm_range), 
+          JSON.stringify(req.body.variety_range), 
+          JSON.stringify(req.body.process_range), 
+          JSON.stringify(req.body.roaster_range), 
+          JSON.stringify(req.body.method_range), 
+          JSON.stringify(req.body.water_range), 
+          JSON.stringify(req.body.grinder_range),
+          JSON.stringify(req.body.palate_range),
+          JSON.stringify(req.body.aroma_range)
         ]
       );
 
