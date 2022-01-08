@@ -1,39 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, CogIcon, FilterIcon, HomeIcon, PlusCircleIcon } from '@heroicons/react/outline'
+import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, CogIcon, FilterIcon, HomeIcon } from '@heroicons/react/outline'
 import { Collapse } from 'react-bootstrap'
 import imgBeans from '../../images/beans.png'
 import { toast } from 'react-toastify'
 
 
-function Nav({setAuth}) {
+function Nav({setAuth, name}) {
   const [openUserMenu, setOpenUserMenu] = useState(false);
   const [openProcess, setOpenProcess] = useState(false);
   const [openOrigin, setOpenOrigin] = useState(false);
+  const [openSettingCoffeeBeans, setOpenSettingCoffeeBeans] = useState(false);
+  const [openSettingRecipes, setOpenSettingRecipes] = useState(false);
 
-  const [name, setName] = useState('');
-
-  const getName = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:4000/api/v1/user",
-        {
-          method: "GET",
-          headers: {"token": localStorage.token}
-        }
-      );
-      const parseRes = await response.json();
-      console.log(parseRes.username)
-      setName(parseRes.username)
-
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
-
-  useEffect(() => {
-    getName();
-  }, []);
 
   const logout = (e) => {
     e.preventDefault();
@@ -91,15 +70,7 @@ function Nav({setAuth}) {
                 className={({ isActive }) => "flex items-center" 
                 + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
               >
-                <span className="ml-4">My Profile</span>
-              </NavLink>
-            </li>
-            <li className="h-10 mx-3 pl-9 flex items-center justify-between">
-              <NavLink exact="true" to="/my-profile/edit"
-                className={({ isActive }) => "flex items-center" 
-                + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
-              >
-                <span className="ml-4">Edit My Profile</span>
+                <span className="ml-4">My Account</span>
               </NavLink>
             </li>
             <li className="h-10 mx-3 pl-9 flex items-center">
@@ -134,33 +105,6 @@ function Nav({setAuth}) {
           >
             <BookOpenIcon className="h-4 w-4"></BookOpenIcon>
             <span className="ml-4">my coffees</span>
-          </NavLink>
-        </li>
-      </ul>
-    </div>
-
-    <div className="my-8 text-xs tracking-widest font-capitals uppercase">
-      <h3 className="mx-6 my-2 opacity-50">
-        Create New
-      </h3>
-      <ul>
-        <li className="h-10 mx-6 flex items-center justify-between font-bold">
-          <NavLink exact="true" to="create/bean"
-            className={({ isActive }) => "flex items-center" 
-            + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
-          >
-            <PlusCircleIcon className="h-4 w-4"></PlusCircleIcon>
-            <span className="ml-4">Coffee Bean</span>
-          </NavLink>
-        </li>
-
-        <li className="h-10 mx-6 flex items-center justify-between font-bold">
-          <NavLink exact="true" to="create/recipe"
-            className={({ isActive }) => "flex items-center" 
-            + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
-          >
-            <PlusCircleIcon className="h-4 w-4"></PlusCircleIcon>
-            <span className="ml-4">Recipe</span>
           </NavLink>
         </li>
       </ul>
@@ -248,28 +192,147 @@ function Nav({setAuth}) {
 
     <div className="my-8 text-xs tracking-widest font-capitals uppercase">
       <h3 className="mx-6 my-2  opacity-50">
-          Settings
+          Customize
       </h3>
       <ul>
-        <li className="h-10 mx-6 flex items-center justify-between font-bold">
-          <NavLink exact="true" to="settings/bean"             
-            className={({ isActive }) => "flex items-center" 
-            + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+        <li className="ml-6 mr-4">
+          <div className="
+            h-10 flex items-center justify-between font-bold
+            transition-opacity duration-300
+            ease-out opacity-70 hover:opacity-100
+            cursor-pointer"
+            onClick={() => setOpenSettingCoffeeBeans(!openSettingCoffeeBeans)}
+            aria-controls="origin-content"
+            aria-expanded={openSettingCoffeeBeans}
           >
-            <CogIcon className="h-4 w-4"></CogIcon>
-            <span className="ml-4">Coffee Bean</span>
-          </NavLink>
+            <div className="flex items-center">
+              <CogIcon className="h-4 w-4"></CogIcon>
+              <span className="ml-4">Coffee Beans</span>
+            </div>
+
+            { openSettingCoffeeBeans === true ? (
+              <ChevronUpIcon className="h-4 w-4"></ChevronUpIcon>
+            ) :
+              <ChevronDownIcon className="h-4 w-4"></ChevronDownIcon>
+            }
+          </div>
+          <Collapse in={openSettingCoffeeBeans}>
+            <div id="origin-content">
+              <ul>
+                <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <NavLink exact="true" to="settings/origin"
+                    className={({ isActive }) => "flex items-center" 
+                    + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                  >
+                    <span>Origin</span>
+                  </NavLink>
+                </li>
+                <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <NavLink exact="true" to="settings/farm"
+                    className={({ isActive }) => "flex items-center" 
+                    + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                  >
+                    <span>Farm</span>
+                  </NavLink>
+                </li>
+                <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <NavLink exact="true" to="settings/variety"
+                    className={({ isActive }) => "flex items-center" 
+                    + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                  >
+                    <span>Variety</span>
+                  </NavLink>
+                </li>
+                <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <NavLink exact="true" to="settings/process"
+                    className={({ isActive }) => "flex items-center" 
+                    + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                  >
+                    <span>process</span>
+                  </NavLink>
+                </li>
+                <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <NavLink exact="true" to="settings/roaster"
+                    className={({ isActive }) => "flex items-center" 
+                    + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                  >
+                    <span>roaster</span>
+                  </NavLink>
+                </li>
+                <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <NavLink exact="true" to="settings/aroma"
+                    className={({ isActive }) => "flex items-center" 
+                    + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                  >
+                    <span>aroma</span>
+                  </NavLink>
+                </li>
+              </ul>
+            </div>
+          </Collapse>
         </li>
 
-        <li className="h-10 mx-6 flex items-center justify-between font-bold">
-          <NavLink exact="true" to="settings/recipe"
-            className={({ isActive }) => "flex items-center" 
-            + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+        <li className="ml-6 mr-4">
+          <div className="
+            h-10 flex items-center justify-between font-bold
+            transition-opacity duration-300
+            ease-out opacity-70 hover:opacity-100
+            cursor-pointer"
+            onClick={() => setOpenSettingRecipes(!openSettingRecipes)}
+            aria-controls="origin-content"
+            aria-expanded={openSettingRecipes}
           >
-            <CogIcon className="h-4 w-4"></CogIcon>
-            <span className="ml-4">Recipe</span>
-          </NavLink>
+            <div className="flex items-center">
+              <CogIcon className="h-4 w-4"></CogIcon>
+              <span className="ml-4">Recipes</span>
+            </div>
+
+            { openSettingRecipes === true ? (
+              <ChevronUpIcon className="h-4 w-4"></ChevronUpIcon>
+            ) :
+              <ChevronDownIcon className="h-4 w-4"></ChevronDownIcon>
+            }
+          </div>
+          <Collapse in={openSettingRecipes}>
+            <div id="origin-content">
+              <ul>
+                <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <NavLink exact="true" to="settings/grinder"
+                    className={({ isActive }) => "flex items-center" 
+                    + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                  >
+                    <span>grinder</span>
+                  </NavLink>
+                </li>
+                <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <NavLink exact="true" to="settings/method"
+                    className={({ isActive }) => "flex items-center" 
+                    + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                  >
+                    <span>method</span>
+                  </NavLink>
+                </li>
+                <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <NavLink exact="true" to="settings/water"
+                    className={({ isActive }) => "flex items-center" 
+                    + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                  >
+                    <span>water</span>
+                  </NavLink>
+                </li>
+                <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <NavLink exact="true" to="settings/palate"
+                    className={({ isActive }) => "flex items-center" 
+                    + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                  >
+                    <span>palate</span>
+                  </NavLink>
+                </li>
+              </ul>
+            </div>
+          </Collapse>
         </li>
+
       </ul>
     </div>
 

@@ -12,6 +12,7 @@ require("./routes/auth.js")(app);
 require("./routes/users.js")(app);
 require("./routes/beans.js")(app);
 require("./routes/recipes.js")(app);
+require("./routes/custom-range.js")(app);
 
 app.use((req, res, next) => {
   const err = new Error('Not Found');

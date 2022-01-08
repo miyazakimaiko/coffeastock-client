@@ -57,3 +57,32 @@
     background-color: #66615B;
   }
 }
+
+.settings-table {
+  thead {
+    th {
+      padding: 15px 8px;
+    }
+  }
+  tbody {
+    tr {
+      border-top: 1px solid lightgray;
+      &:nth-child(odd) {
+        background-color: #F4F3EE;
+      }
+      td {
+        padding: 15px 8px;
+      }
+      .td-options {
+        display: flex;
+        .option-button {
+          margin: 0 5px;
+          .icon {
+            height: 1.2rem;
+            width: 1.2rem;
+          }
+        }
+      }
+    }
+  }
+}
