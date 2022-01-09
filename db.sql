@@ -1,8 +1,5 @@
 CREATE TABLE USERS (
-    user_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    username varchar(255) UNIQUE NOT NULL,
-    email citext UNIQUE NOT NULL,
-    password varchar(255) NOT NULL,
+    user_id varchar(255) PRIMARY KEY NOT NULL,
     origin_range jsonb,
     farm_range jsonb,
     variety_range jsonb,
@@ -16,9 +13,7 @@ CREATE TABLE USERS (
 );
 
 INSERT INTO users (
-  username, 
-  email, 
-  password, 
+  user_id, 
   origin_range, 
   variety_range, 
   process_range, 
@@ -30,9 +25,7 @@ INSERT INTO users (
   aroma_range
 )
 VALUES (
-  'Maiko.M', 
-  'myzkmik19922@gmail.com', 
-  'password', 
+  '123455', 
   '{
     "1" : {
       "name": "Yirgacheffe, Ethiopia",
