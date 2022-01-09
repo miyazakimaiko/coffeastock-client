@@ -8,7 +8,6 @@ const cors = require("cors");
 app.use(cors());
 app.use(morgan('dev'));
 
-require("./routes/users.js")(app);
 require("./routes/beans.js")(app);
 require("./routes/recipes.js")(app);
 require("./routes/custom-range.js")(app);
