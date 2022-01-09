@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import Account from './utils/Account'
+import Account from './context/Account'
 
 
 ReactDOM.render(

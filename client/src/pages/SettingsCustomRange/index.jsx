@@ -1,20 +1,43 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { PencilAltIcon, PlusSmIcon, XIcon } from '@heroicons/react/outline'
 import Header from '../../shared/Header'
+import { CustomRangeContext } from '../../context/CustomRange';
+import { AccountContext } from '../../context/Account';
 
-const SettingsCustomRange = ({parentCat, cat, customRanges}) => {
+const SettingsCustomRange = ({parentCat, cat}) => {
+  const { userData } = useContext(AccountContext);
+  const { customRange, setCustomRange } = useContext(CustomRangeContext);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/v1/user/${userData.sub}/range/${cat}`,
+          {
+            method: "GET"
+          }
+        );
+        const parseRes = await response.json();
+
+        setCustomRange(parseRes)
+      } catch (error) {}
+    };
+    fetchData();
+  });
+
+
   const [openAddModal, setOpenAddModal] = useState(false)
 
+  
   const title = `Customize ${parentCat} Setting`;
-  const rangeName = `${cat}_range`
   let items = [];
   
-  if (customRanges !== null) {
-    Object.keys(customRanges).forEach((key) => {
+  if (customRange !== null) {
+    Object.keys(customRange).forEach((key) => {
       items.push(
         <tr id={`${cat}-${key}`}>
-          <td>{customRanges[key]['name']}</td>
-          <td>{customRanges[key]['def']}</td>
+          <td>{customRange[key]['name']}</td>
+          <td>{customRange[key]['def']}</td>
           <td className="td-options">
             <button
               className="option-button"
