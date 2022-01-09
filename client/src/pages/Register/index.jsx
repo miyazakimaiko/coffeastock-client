@@ -26,207 +26,200 @@ const Register = () => {
         toast.error(err.message, {
           position: toast.POSITION.TOP_CENTER
         });
+      } else {
+        try {
+          const userId = data.userSub;
+          setDefaultCustomRange(userId);
+          toast.success("Registered successfully!");
+        } catch (error) {
+          toast.error(error.message, {
+            position: toast.POSITION.TOP_CENTER
+          });
+        }
       }
-      toast.success("Registered successfully!")
-      console.log(data);
     });
   };
 
-  // const onSubmitForm = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const response = await fetch(
-  //       "http://localhost:4000/api/v1/registration",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           'Content-Type': "application/json"
-  //         },
-  //         body: JSON.stringify({
-  //           "username": username,
-  //           "email": email,
-  //           "password": password,
-  //           "origin_range": {
-  //             3 : {
-  //               "name": "Yirgacheffe, Ethiopia",
-  //               "def": "Location details here..."
-  //             },
-  //             2: {
-  //               "name": "Sidamo, Ethiopia",
-  //               "def": "Location details here..."
-  //             },
-  //             5: {
-  //               "name": "Kaffa, Ethiopia",
-  //               "def": "Location details here..."
-  //             },
-  //             4: {
-  //               "name": "Ruiri, Kenya",
-  //               "def": "Location details here..."
-  //             },
-  //             1: {
-  //               "name": "Thika, Kenya",
-  //               "def": "Location details here..."
-  //             }
-  //           },
-  //           "farm_range": {
-  //             3 : {
-  //               "name": "Farm 1",
-  //               "def": "details..."
-  //             },
-  //             2: {
-  //               "name": "Farm 2",
-  //               "def": "details..."
-  //             },
-  //             1: {
-  //               "name": "Farm 3",
-  //               "def": "details..."
-  //             } 
-  //           },
-  //           "variety_range": {
-  //             1 : {
-  //               "name": "Typica",
-  //               "def": "Details what typica is..."
-  //             },
-  //             3: {
-  //               "name": "Caturra",
-  //               "def": "Details what caturra is..."
-  //             },
-  //             2: {
-  //               "name": "Burbon",
-  //               "def": "Details what Burbon is..."
-  //             } 
-  //           },
-  //           "process_range": {
-  //             1 : {
-  //               "name": "Washed",
-  //               "def": "Details what washed is..."
-  //             },
-  //             2: {
-  //               "name": "Semi-Washed",
-  //               "def": "Details what semi-washed is..."
-  //             },
-  //             3: {
-  //               "name": "Natural",
-  //               "def": "Details what natural is..."
-  //             }
-  //           },
-  //           "roaster_range": {
-  //             3 : {
-  //               "name": "Coffeeangel",
-  //               "def": "Definition of Coffeeangel..."
-  //             },
-  //             1: {
-  //               "name": "Coffee Collective",
-  //               "def": "Coffee Collective definition..."
-  //             },
-  //             2: {
-  //               "name": "Koppi",
-  //               "def": "Koppi details..."
-  //             }
-  //           },
-  //           "method_range": {
-  //             1 : {
-  //               "name": "French Press",
-  //               "def": "details..."
-  //             },
-  //             3: {
-  //               "name": "Espresso",
-  //               "def": "details..."
-  //             },
-  //             2: {
-  //               "name": "Mocha Pot",
-  //               "def": "details..."
-  //             }
-  //           },
-  //           "water_range": {
-  //             2 : {
-  //               "name": "Water 1",
-  //               "def": "details..."
-  //             },
-  //             1: {
-  //               "name": "Water 2",
-  //               "def": "details..."
-  //             }
-  //           },
-  //           "grinder_range": {
-  //             2 : {
-  //               "name": "Hario Mini Handmill",
-  //               "def": "details..."
-  //             },
-  //             3: {
-  //               "name": "EKS",
-  //               "def": "details..."
-  //             },
-  //             1: {
-  //               "name": "Sage espresso grinder",
-  //               "def": "details..."
-  //             }
-  //           },
-  //           "palate_range": {
-  //             5 : {
-  //               "name": "sweet",
-  //               "def": "details..."
-  //             },
-  //             2: {
-  //               "name": "acidic",
-  //               "def": "details..."
-  //             },
-  //             4: {
-  //               "name": "cherries",
-  //               "def": "details..."
-  //             },
-  //             1 : {
-  //               "name": "stonefruit",
-  //               "def": "details..."
-  //             },
-  //             6: {
-  //               "name": "citrus fruit",
-  //               "def": "details..."
-  //             },
-  //             3: {
-  //               "name": "chocolate",
-  //               "def": "details..."
-  //             }
-  //           },
-  //           "aroma_range": {
-  //             4 : {
-  //               "name": "Walnut",
-  //               "def": "details..."
-  //             },
-  //             2: {
-  //               "name": "Peach",
-  //               "def": "details..."
-  //             },
-  //             1: {
-  //               "name": "Pineapple",
-  //               "def": "details..."
-  //             },
-  //             3 : {
-  //               "name": "Green apple",
-  //               "def": "details..."
-  //             }
-  //           }
-  //         })
-  //       }
-  //     );
-  //     const parseRes = await response.json()
-
-  //     if (parseRes.token) {
-  //       localStorage.setItem("token", parseRes.token);
-  //       setAuth(true);
-  //       toast.success("Registered successfully!")
-  //     }
-  //     else toast.error(parseRes, {
-  //       position: toast.POSITION.TOP_CENTER
-  //     });
-
-  //   } catch (error) {
-  //     toast.error(error.message, {
-  //       position: toast.POSITION.TOP_CENTER
-  //     });
-  //   }
-  // }
+  const setDefaultCustomRange = async (userid) => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/v1/user/${userid}`,
+        {
+          method: "POST",
+          headers: {
+            'Content-Type': "application/json"
+          },
+          body: JSON.stringify({
+            "origin_range": {
+              3 : {
+                "name": "Yirgacheffe, Ethiopia",
+                "def": "Location details here..."
+              },
+              2: {
+                "name": "Sidamo, Ethiopia",
+                "def": "Location details here..."
+              },
+              5: {
+                "name": "Kaffa, Ethiopia",
+                "def": "Location details here..."
+              },
+              4: {
+                "name": "Ruiri, Kenya",
+                "def": "Location details here..."
+              },
+              1: {
+                "name": "Thika, Kenya",
+                "def": "Location details here..."
+              }
+            },
+            "farm_range": {
+              3 : {
+                "name": "Farm 1",
+                "def": "details..."
+              },
+              2: {
+                "name": "Farm 2",
+                "def": "details..."
+              },
+              1: {
+                "name": "Farm 3",
+                "def": "details..."
+              } 
+            },
+            "variety_range": {
+              1 : {
+                "name": "Typica",
+                "def": "Details what typica is..."
+              },
+              3: {
+                "name": "Caturra",
+                "def": "Details what caturra is..."
+              },
+              2: {
+                "name": "Burbon",
+                "def": "Details what Burbon is..."
+              } 
+            },
+            "process_range": {
+              1 : {
+                "name": "Washed",
+                "def": "Details what washed is..."
+              },
+              2: {
+                "name": "Semi-Washed",
+                "def": "Details what semi-washed is..."
+              },
+              3: {
+                "name": "Natural",
+                "def": "Details what natural is..."
+              }
+            },
+            "roaster_range": {
+              3 : {
+                "name": "Coffeeangel",
+                "def": "Definition of Coffeeangel..."
+              },
+              1: {
+                "name": "Coffee Collective",
+                "def": "Coffee Collective definition..."
+              },
+              2: {
+                "name": "Koppi",
+                "def": "Koppi details..."
+              }
+            },
+            "method_range": {
+              1 : {
+                "name": "French Press",
+                "def": "details..."
+              },
+              3: {
+                "name": "Espresso",
+                "def": "details..."
+              },
+              2: {
+                "name": "Mocha Pot",
+                "def": "details..."
+              }
+            },
+            "water_range": {
+              2 : {
+                "name": "Water 1",
+                "def": "details..."
+              },
+              1: {
+                "name": "Water 2",
+                "def": "details..."
+              }
+            },
+            "grinder_range": {
+              2 : {
+                "name": "Hario Mini Handmill",
+                "def": "details..."
+              },
+              3: {
+                "name": "EKS",
+                "def": "details..."
+              },
+              1: {
+                "name": "Sage espresso grinder",
+                "def": "details..."
+              }
+            },
+            "palate_range": {
+              5 : {
+                "name": "sweet",
+                "def": "details..."
+              },
+              2: {
+                "name": "acidic",
+                "def": "details..."
+              },
+              4: {
+                "name": "cherries",
+                "def": "details..."
+              },
+              1 : {
+                "name": "stonefruit",
+                "def": "details..."
+              },
+              6: {
+                "name": "citrus fruit",
+                "def": "details..."
+              },
+              3: {
+                "name": "chocolate",
+                "def": "details..."
+              }
+            },
+            "aroma_range": {
+              4 : {
+                "name": "Walnut",
+                "def": "details..."
+              },
+              2: {
+                "name": "Peach",
+                "def": "details..."
+              },
+              1: {
+                "name": "Pineapple",
+                "def": "details..."
+              },
+              3 : {
+                "name": "Green apple",
+                "def": "details..."
+              }
+            }
+          })
+        }
+      );
+      console.log(response)
+    } catch (error) {
+      toast.error(error.message, {
+        position: toast.POSITION.TOP_CENTER
+      });
+    }
+  }
 
   return (
     <div className="h-full bg-white">
