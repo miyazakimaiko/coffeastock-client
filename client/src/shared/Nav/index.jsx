@@ -1,14 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, CogIcon, FilterIcon, HomeIcon } from '@heroicons/react/outline'
 import { Collapse } from 'react-bootstrap'
 import imgBeans from '../../images/beans.png'
 import { toast } from 'react-toastify'
 import { useContext } from 'react'
-import { AccountContext } from '../../utils/Account'
+import { AccountContext } from '../../context/Account'
 
-
-function Nav({setAuth, name}) {
+function Nav({setAuth, nickname}) {
   const [openUserMenu, setOpenUserMenu] = useState(false);
   const [openProcess, setOpenProcess] = useState(false);
   const [openOrigin, setOpenOrigin] = useState(false);
@@ -23,6 +22,7 @@ function Nav({setAuth, name}) {
     toast.success("Logged out successfully.")
   }
 
+  // console.log(customRanges['origin_range'][1]['name'])
   return (
   <nav 
   className="
@@ -54,7 +54,7 @@ function Nav({setAuth, name}) {
             <img src={imgBeans} className="h-full w-full"/>
           </div>
           <div className="ml-4">
-            <span>{name}</span>
+            <span>{nickname}</span>
           </div>
         </div>
 

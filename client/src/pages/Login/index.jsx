@@ -2,7 +2,8 @@ import { LoginIcon } from '@heroicons/react/outline'
 import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify';
-import { AccountContext } from '../../utils/Account';
+import { AccountContext } from '../../context/Account';
+
 
 const Login = ({setAuth}) => {
   const [email, setEmail] = useState('');
@@ -16,7 +17,6 @@ const Login = ({setAuth}) => {
     authenticate(email, password)
       .then(data => {
         toast.success("LOGGED IN!")
-        console.log("Logged In: ", data);
         setAuth(true);
       })
       .catch(err => {
