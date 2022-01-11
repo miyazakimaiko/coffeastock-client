@@ -34,74 +34,7 @@ const App = () => {
       setAuthenticated(true);
     });
   }, []);
-  // const [authenticated, setAuthenticated] = useState(false)
 
-  // const setAuth = boolean => {
-  //   setAuthenticated(boolean);
-  // }
-
-  // const isAuthenticated = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       "http://localhost:4000/api/v1/authorized",
-  //       {
-  //         method: "GET",
-  //         headers: {
-  //           "token": localStorage.token
-  //         }
-  //       }
-  //     );
-  //     const parseRes = await response.json();
-  //     console.log(parseRes)
-  //     parseRes === true ? setAuthenticated(true) : setAuthenticated(false);
-
-  //   } catch (error) {
-  //     console.log(error.message)
-  //   }
-  // }
-
-  // const [name, setName] = useState('');
-  // const [customOrigins, setCustomOrigins] = useState('')
-  // const [customVarieties, setCustomVarieties] = useState('')
-  // const [customFarms, setCustomFarms] = useState('')
-  // const [customProcesses, setCustomProcesses] = useState('')
-  // const [customRoasters, setCustomRoasters] = useState('')
-  // const [customMethods, setCustomMethods] = useState('')
-  // const [customWaters, setCustomWaters] = useState('')
-  // const [customGrinders, setCustomGrinders] = useState('')
-  // const [customPalates, setCustomPalates] = useState('')
-  // const [customAromas, setCustomAromas] = useState('')
- 
-  //  const getUserDetails = async () => {
-  //    try {
-  //      const response = await fetch(
-  //        "http://localhost:4000/api/v1/user",
-  //        {
-  //          method: "GET",
-  //          headers: {"token": localStorage.token}
-  //        }
-  //      );
-  //      const parseRes = await response.json();
-  //      setName(parseRes.username)
-  //      setCustomOrigins(parseRes.origin_range)
-  //      setCustomFarms(parseRes.farm_range)
-  //      setCustomVarieties(parseRes.variety_range)
-  //      setCustomProcesses(parseRes.process_range)
-  //      setCustomRoasters(parseRes.roaster_range)
-  //      setCustomAromas(parseRes.aroma_range)
-  //      setCustomGrinders(parseRes.grinder_range)
-  //      setCustomMethods(parseRes.method_range)
-  //      setCustomWaters(parseRes.water_range)
-  //      setCustomPalates(parseRes.palate_range)
- 
-  //    } catch (error) {
-  //      console.log(error.message)
-  //    }
-  //  }
-
-  // useEffect(() => {
-  //   isAuthenticated().then(getUserDetails());
-  // }, [])
   return <>
     <CustomRange>
       <div className="relative flex min-h-screen bg-creme font-sans">
