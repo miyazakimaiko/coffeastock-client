@@ -10,7 +10,17 @@ app.use(morgan('dev'));
 
 require("./routes/beans.js")(app);
 require("./routes/recipes.js")(app);
-require("./routes/custom-range.js")(app);
+require("./routes/ranges.js")(app);
+require("./routes/aroma-range.js")(app);
+require("./routes/farm-range.js")(app);
+require("./routes/grinder-range.js")(app);
+require("./routes/method-range.js")(app);
+require("./routes/origin-range.js")(app);
+require("./routes/palate-range.js")(app);
+require("./routes/process-range.js")(app);
+require("./routes/roaster-range.js")(app);
+require("./routes/variety-range.js")(app);
+require("./routes/water-range.js")(app);
 
 app.use((req, res, next) => {
   const err = new Error('Not Found');
