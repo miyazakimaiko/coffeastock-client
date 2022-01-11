@@ -1,12 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react'
+import { toast } from 'react-toastify'
 import { PencilAltIcon, PlusSmIcon, XIcon } from '@heroicons/react/outline'
 import Header from '../../shared/Header'
 import { CustomRangeContext } from '../../context/CustomRange';
 import { AccountContext } from '../../context/Account';
 
 const SettingsCustomRange = ({parentCat, cat}) => {
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [rangeName, setRangeName] = useState('');
+  const [rangeDef, setRangeDef] = useState('')
+
   const { userData } = useContext(AccountContext);
-  const { customRange, setCustomRange } = useContext(CustomRangeContext);
+  const { customRange, addCustomRange } = useContext(CustomRangeContext);
+  let elements = [];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,25 +24,18 @@ const SettingsCustomRange = ({parentCat, cat}) => {
           }
         );
         const parseRes = await response.json();
-
-        setCustomRange(parseRes)
+  
+        addCustomRange(parseRes)
       } catch (error) {}
     };
     fetchData();
-  });
-
-
-  const [openAddModal, setOpenAddModal] = useState(false)
-
-  
-  const title = `Customize ${parentCat} Setting`;
-  let items = [];
-  
+  }, [cat]);
+ 
   if (customRange !== null) {
     Object.keys(customRange).forEach((key) => {
-      items.push(
-        <tr id={`${cat}-${key}`}>
-          <td>{customRange[key]['name']}</td>
+      elements.push(
+        <tr id={`${cat}-${customRange[key]['id']}`}>
+          <td>{key}</td>
           <td>{customRange[key]['def']}</td>
           <td className="td-options">
             <button
@@ -52,10 +51,39 @@ const SettingsCustomRange = ({parentCat, cat}) => {
       )
     })
   }
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    setOpenAddModal(false);
+
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/v1/user/${userData.sub}/range/${cat}`,
+        {
+          method: "POST",
+          headers: {
+            'Content-Type': "application/json"
+          },
+          body: JSON.stringify({
+            "name": rangeName,
+            "def": rangeDef
+          })
+        }
+      );
+      const parseRes = await response.json();
+      addCustomRange(parseRes);
+      setRangeName('');
+      setRangeDef('');
+      
+    } catch (error) {
+      toast.error(error.message, {
+        position: toast.POSITION.TOP_CENTER
+      });
+    }
+  }
 
   return (
     <>
-      <Header title={title}/>
+      <Header title={`Customize ${parentCat} Setting`}/>
       <div className="px-2">
         <div className="flex mb-4 w-full flex-wrap justify-center">
           <div className="px-3 w-full">
@@ -82,7 +110,7 @@ const SettingsCustomRange = ({parentCat, cat}) => {
                   <th>Options</th>
                 </thead>
                 <tbody>
-                  {items}
+                  {elements}
                 </tbody>
               </table>
             </form>
@@ -112,24 +140,45 @@ const SettingsCustomRange = ({parentCat, cat}) => {
               </div>
               {/*body*/}
               <div class="content">
-                content
-              </div>
-              {/*footer*/}
-              <div className="flex items-center justify-end p-4 rounded-b">
-                <button
-                  className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                  type="button"
-                  onClick={() => setOpenAddModal(false)}
+                <form 
+                  id={`${cat}AddForm`}
+                  className="w-96"
+                  onSubmit={onSubmit}
                 >
-                  Cancel
-                </button>
-                <button
-                  className="bg-blue text-white opacity-80 hover:opacity-100 font-bold uppercase text-sm px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
-                  type="button"
-                  onClick={() => setOpenAddModal(false)}
-                >
-                  Save Changes
-                </button>
+                  <div className="bg-white px-6 shadow-sm rounded-md">
+                    <div className="card-content pt-3">
+                      <div className="pb-3">
+                        <label className="font-bold capitalize">{cat} name</label>
+                        <input type="text" name="name" placeholder={`${cat} name`} className="blue-outline-transition bg-creme block w-full text-base py-2 px-3 rounded-md"
+                          value={rangeName}
+                          onChange={e => setRangeName(e.target.value)}
+                        />
+                      </div>
+                      <div className="pb-3">
+                        <label className="font-bold capitalize">{cat} definition</label>
+                        <input type="text" name="definition" placeholder={`${cat} definition`} className="blue-outline-transition bg-creme block w-full text-base py-2 px-3 rounded-md"
+                          value={rangeDef}
+                          onChange={e => setRangeDef(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-end py-4 rounded-b">
+                      <button
+                        className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                        type="button"
+                        onClick={() => setOpenAddModal(false)}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="bg-blue text-white opacity-80 hover:opacity-100 font-bold uppercase text-sm px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
+                        type="submit"
+                      >
+                        Save Changes
+                      </button>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
