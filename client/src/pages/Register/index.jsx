@@ -51,169 +51,199 @@ const Register = () => {
           },
           body: JSON.stringify({
             "origin_range": {
-              3 : {
-                "name": "Yirgacheffe, Ethiopia",
-                "def": "Location details here..."
-              },
-              2: {
-                "name": "Sidamo, Ethiopia",
-                "def": "Location details here..."
-              },
-              5: {
-                "name": "Kaffa, Ethiopia",
-                "def": "Location details here..."
-              },
-              4: {
-                "name": "Ruiri, Kenya",
-                "def": "Location details here..."
-              },
-              1: {
-                "name": "Thika, Kenya",
-                "def": "Location details here..."
+              "next_id": 6,
+              "range": {
+                "Yirgacheffe, Ethiopia" : {
+                  "id": 3,
+                  "def": "Location details here..."
+                },
+                "Sidamo, Ethiopia": {
+                  "id": 2,
+                  "def": "Location details here..."
+                },
+                "Kaffa, Ethiopia": {
+                  "id": 5,
+                  "def": "Location details here..."
+                },
+                "Ruiri, Kenya": {
+                  "id": 4,
+                  "def": "Location details here..."
+                },
+                "Thika, Kenya": {
+                  "id": 1,
+                  "def": "Location details here..."
+                }
               }
             },
             "farm_range": {
-              3 : {
-                "name": "Farm 1",
-                "def": "details..."
-              },
-              2: {
-                "name": "Farm 2",
-                "def": "details..."
-              },
-              1: {
-                "name": "Farm 3",
-                "def": "details..."
-              } 
+              "next_id": 4,
+              "range": {
+                "Farm 1" : {
+                  "id": 3,
+                  "def": "details..."
+                },
+                "Farm 2": {
+                  "id": 2,
+                  "def": "details..."
+                },
+                "Farm 3": {
+                  "id": 1,
+                  "def": "details..."
+                }
+              }
             },
             "variety_range": {
-              1 : {
-                "name": "Typica",
-                "def": "Details what typica is..."
-              },
-              3: {
-                "name": "Caturra",
-                "def": "Details what caturra is..."
-              },
-              2: {
-                "name": "Burbon",
-                "def": "Details what Burbon is..."
-              } 
+              "next_id": 4,
+              "range": {
+                "Typica" : {
+                  "id": 1,
+                  "def": "Details what typica is..."
+                },
+                "Caturra": {
+                  "id": 3,
+                  "def": "Details what caturra is..."
+                },
+                "Burbon": {
+                  "id": 2,
+                  "def": "Details what Burbon is..."
+                }
+              }
             },
             "process_range": {
-              1 : {
-                "name": "Washed",
-                "def": "Details what washed is..."
-              },
-              2: {
-                "name": "Semi-Washed",
-                "def": "Details what semi-washed is..."
-              },
-              3: {
-                "name": "Natural",
-                "def": "Details what natural is..."
+              "next_id": 4,
+              "range": {
+                "Washed" : {
+                  "id": 1,
+                  "def": "Details what washed is..."
+                },
+                "Semi-Washed": {
+                  "id": 2,
+                  "def": "Details what semi-washed is..."
+                },
+                "Natural": {
+                  "id": 3,
+                  "def": "Details what natural is..."
+                }
               }
             },
             "roaster_range": {
-              3 : {
-                "name": "Coffeeangel",
-                "def": "Definition of Coffeeangel..."
-              },
-              1: {
-                "name": "Coffee Collective",
-                "def": "Coffee Collective definition..."
-              },
-              2: {
-                "name": "Koppi",
-                "def": "Koppi details..."
+              "next_id": 4,
+              "range": {
+                "Coffeeangel" : {
+                  "id": 3,
+                  "def": "Definition of Coffeeangel..."
+                },
+                "Coffee Collective": {
+                  "id": 1,
+                  "def": "Coffee Collective definition..."
+                },
+                "Koppi": {
+                  "id": 2,
+                  "def": "Koppi details..."
+                }
               }
             },
             "method_range": {
-              1 : {
-                "name": "French Press",
-                "def": "details..."
-              },
-              3: {
-                "name": "Espresso",
-                "def": "details..."
-              },
-              2: {
-                "name": "Mocha Pot",
-                "def": "details..."
+              "next_id": 4,
+                "range": {
+                "French Press" : {
+                  "id": 1,
+                  "def": "details..."
+                },
+                "Espresso": {
+                  "id": 3,
+                  "def": "details..."
+                },
+                "Mocha Pot": {
+                  "id": 2,
+                  "def": "details..."
+                }
               }
             },
             "water_range": {
-              2 : {
-                "name": "Water 1",
-                "def": "details..."
-              },
-              1: {
-                "name": "Water 2",
-                "def": "details..."
+              "next_id": 3,
+              "range": {
+                "Water 1" : {
+                  "id": 2,
+                  "def": "details..."
+                },
+                "Water 2": {
+                  "id": 1,
+                  "def": "details..."
+                }
               }
             },
             "grinder_range": {
-              2 : {
-                "name": "Hario Mini Handmill",
-                "def": "details..."
-              },
-              3: {
-                "name": "EKS",
-                "def": "details..."
-              },
-              1: {
-                "name": "Sage espresso grinder",
-                "def": "details..."
+              "next_id": 4,
+              "range": {
+                "Hario Mini Handmill" : {
+                  "id": 2,
+                  "def": "details..."
+                },
+                "EKS": {
+                  "id": 3,
+                  "def": "details..."
+                },
+                "Sage espresso grinder": {
+                  "id": 1,
+                  "def": "details..."
+                }
               }
             },
             "palate_range": {
-              5 : {
-                "name": "sweet",
-                "def": "details..."
-              },
-              2: {
-                "name": "acidic",
-                "def": "details..."
-              },
-              4: {
-                "name": "cherries",
-                "def": "details..."
-              },
-              1 : {
-                "name": "stonefruit",
-                "def": "details..."
-              },
-              6: {
-                "name": "citrus fruit",
-                "def": "details..."
-              },
-              3: {
-                "name": "chocolate",
-                "def": "details..."
+              "next_id": 7,
+              "range": {
+                "sweet" : {
+                  "id": 5,
+                  "def": "details..."
+                },
+                "acidic": {
+                  "id": 2,
+                  "def": "details..."
+                },
+                "cherries": {
+                  "id": 4,
+                  "def": "details..."
+                },
+                "stonefruit" : {
+                  "id": 1,
+                  "def": "details..."
+                },
+                "citrus fruit": {
+                  "id": 6,
+                  "def": "details..."
+                },
+                "chocolate": {
+                  "id": 3,
+                  "def": "details..."
+                }
               }
             },
             "aroma_range": {
-              4 : {
-                "name": "Walnut",
-                "def": "details..."
-              },
-              2: {
-                "name": "Peach",
-                "def": "details..."
-              },
-              1: {
-                "name": "Pineapple",
-                "def": "details..."
-              },
-              3 : {
-                "name": "Green apple",
-                "def": "details..."
+              "next_id": 5,
+              "range": {
+                "Walnut" : {
+                  "id": 4,
+                  "def": "details..."
+                },
+                "Peach": {
+                  "id": 2,
+                  "def": "details..."
+                },
+                "Pineapple": {
+                  "id": 1,
+                  "def": "details..."
+                },
+                "Green apple" : {
+                  "id": 3,
+                  "def": "details..."
+                }
               }
             }
           })
         }
       );
-      console.log(response)
+
     } catch (error) {
       toast.error(error.message, {
         position: toast.POSITION.TOP_CENTER
