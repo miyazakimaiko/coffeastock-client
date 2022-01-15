@@ -7,22 +7,21 @@ import { toast } from 'react-toastify'
 import { useContext } from 'react'
 import { AccountContext } from '../../context/Account'
 
-function Nav({setAuth, nickname}) {
+const Nav = () => {
   const [openUserMenu, setOpenUserMenu] = useState(false);
   const [openProcess, setOpenProcess] = useState(false);
   const [openOrigin, setOpenOrigin] = useState(false);
   const [openSettingCoffeeBeans, setOpenSettingCoffeeBeans] = useState(false);
   const [openSettingRecipes, setOpenSettingRecipes] = useState(false);
 
-  const { signout } = useContext(AccountContext);
+  const { userData, setAuthenticated, signout } = useContext(AccountContext);
 
   const logout = () => {
     signout();
-    setAuth(false);
+    setAuthenticated(false);
     toast.success("Logged out successfully.")
   }
 
-  // console.log(customRanges['origin_range'][1]['name'])
   return (
   <nav 
   className="
@@ -54,7 +53,7 @@ function Nav({setAuth, nickname}) {
             <img src={imgBeans} className="h-full w-full"/>
           </div>
           <div className="ml-4">
-            <span>{nickname}</span>
+            <span>{userData.nickname}</span>
           </div>
         </div>
 

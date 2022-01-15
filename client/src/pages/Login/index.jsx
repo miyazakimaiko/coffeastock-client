@@ -5,19 +5,22 @@ import { toast } from 'react-toastify';
 import { AccountContext } from '../../context/Account';
 
 
-const Login = ({setAuth}) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { authenticate } = useContext(AccountContext);
+  const { setUserData, authenticate, getSession, setAuthenticated } = useContext(AccountContext);
 
   const onSubmit = (event) => {
     event.preventDefault();
 
     authenticate(email, password)
       .then(data => {
-        toast.success("LOGGED IN!")
-        setAuth(true);
+        getSession().then((session) => {
+          setUserData(session);
+          setAuthenticated(true);
+          toast.success("LOGGED IN!")
+        });
       })
       .catch(err => {
         toast.error(err.message, {
