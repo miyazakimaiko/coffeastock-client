@@ -110,9 +110,7 @@ const getPostRangeBaseQuery = (rangeName) => {
       baseQuery = `SELECT (palate_range::jsonb->'range') as range FROM users WHERE user_id = $1`;
       break;
     default:
-      res.status(500).json({
-        'status': 'error',
-        'message': 'invalid query'});
+      break;
   }
   return baseQuery;
 }
