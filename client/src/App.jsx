@@ -21,16 +21,12 @@ import { AccountContext } from './context/Account';
 import CustomRange from './context/CustomRange';
 
 const App = () => {
-  const [authenticated, setAuthenticated] = useState(false);
 
-  const setAuth = boolean => {
-    setAuthenticated(boolean);
-  }
-
-  const { getSession, userData } = useContext(AccountContext);
+  const { getSession, setUserData, authenticated, setAuthenticated } = useContext(AccountContext);
 
   useEffect(() => {
     getSession().then((session) => {
+      setUserData(session);
       setAuthenticated(true);
     });
   }, []);
@@ -40,10 +36,10 @@ const App = () => {
       <div className="relative flex min-h-screen bg-creme font-sans">
           <Router>
             <div className="flex w-full">
-              {authenticated ? <Nav setAuth={setAuth} nickname={userData.nickname} />: ""}
+              {authenticated ? <Nav />: ""}
               <div className={"w-full box-border text-sm text-burnt-sienna" + (authenticated ? " pl-64" : "")}>
                 <Routes>
-                <Route exact path='/login' element={authenticated ? <Navigate to="/" /> : <Login setAuth={setAuth} />} />
+                <Route exact path='/login' element={authenticated ? <Navigate to="/" /> : <Login />} />
                 <Route exact path='/register' element={authenticated ? <Navigate to="/" /> : <Register />} />
 
                 <Route exact path='/' element={authenticated ? <Dashboard /> : <Navigate to="/login" />} />
