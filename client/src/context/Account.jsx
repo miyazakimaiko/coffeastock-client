@@ -5,7 +5,17 @@ import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 export const AccountContext = createContext();
 
 const Account = (props) => {
-  const [userData, setUserData] = useState([])
+  const [userData, innerSetUserData] = useState({})
+
+  const setUserData = (data) => {
+    innerSetUserData(data);
+  }
+
+  const [authenticated, innerSetAuthenticated] = useState(false);
+
+  const setAuthenticated = boolean => {
+    innerSetAuthenticated(boolean);
+  }
 
   const getSession = async () => {
     return await new Promise((resolve, reject) => {
@@ -31,11 +41,6 @@ const Account = (props) => {
                 }
               });
             });
-            setUserData({
-              user,
-              ...session,
-              ...attributes
-            })
             resolve({
               user,
               ...session,
@@ -72,11 +77,12 @@ const Account = (props) => {
     const user = Pool.getCurrentUser();
     if (user) {
       user.signOut();
+      innerSetUserData({})
     };
   };
 
   return (
-    <AccountContext.Provider value={{ authenticate, getSession, userData, signout }}>
+    <AccountContext.Provider value={{ authenticate, getSession, userData, setUserData, authenticated, setAuthenticated, signout }}>
       { props.children }
     </AccountContext.Provider>
   )
