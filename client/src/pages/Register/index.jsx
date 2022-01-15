@@ -53,24 +53,24 @@ const Register = () => {
             "origin_range": {
               "next_id": 6,
               "range": {
-                "Yirgacheffe, Ethiopia" : {
-                  "id": 3,
+                "3" : {
+                  "name": "Yirgacheffe, Ethiopia",
                   "def": "Location details here..."
                 },
-                "Sidamo, Ethiopia": {
-                  "id": 2,
+                "2": {
+                  "name": "Sidamo, Ethiopia",
                   "def": "Location details here..."
                 },
-                "Kaffa, Ethiopia": {
-                  "id": 5,
+                "5": {
+                  "name": "Kaffa, Ethiopia",
                   "def": "Location details here..."
                 },
-                "Ruiri, Kenya": {
-                  "id": 4,
+                "4": {
+                  "name": "Ruiri, Kenya",
                   "def": "Location details here..."
                 },
-                "Thika, Kenya": {
-                  "id": 1,
+                "1": {
+                  "name": "Thika, Kenya",
                   "def": "Location details here..."
                 }
               }
@@ -78,16 +78,16 @@ const Register = () => {
             "farm_range": {
               "next_id": 4,
               "range": {
-                "Farm 1" : {
-                  "id": 3,
+                "3" : {
+                  "name": "Farm 1",
                   "def": "details..."
                 },
-                "Farm 2": {
-                  "id": 2,
+                "2": {
+                  "name": "Farm 2",
                   "def": "details..."
                 },
-                "Farm 3": {
-                  "id": 1,
+                "1": {
+                  "name": "Farm 3",
                   "def": "details..."
                 }
               }
@@ -95,16 +95,16 @@ const Register = () => {
             "variety_range": {
               "next_id": 4,
               "range": {
-                "Typica" : {
-                  "id": 1,
+                "1" : {
+                  "name": "Typica",
                   "def": "Details what typica is..."
                 },
-                "Caturra": {
-                  "id": 3,
+                "3": {
+                  "name": "Caturra",
                   "def": "Details what caturra is..."
                 },
-                "Burbon": {
-                  "id": 2,
+                "2": {
+                  "name": "Burbon",
                   "def": "Details what Burbon is..."
                 }
               }
@@ -112,16 +112,16 @@ const Register = () => {
             "process_range": {
               "next_id": 4,
               "range": {
-                "Washed" : {
-                  "id": 1,
+                "1" : {
+                  "name": "Washed",
                   "def": "Details what washed is..."
                 },
-                "Semi-Washed": {
-                  "id": 2,
+                "2": {
+                  "name": "Semi-Washed",
                   "def": "Details what semi-washed is..."
                 },
-                "Natural": {
-                  "id": 3,
+                "3": {
+                  "name": "Natural",
                   "def": "Details what natural is..."
                 }
               }
@@ -129,16 +129,16 @@ const Register = () => {
             "roaster_range": {
               "next_id": 4,
               "range": {
-                "Coffeeangel" : {
-                  "id": 3,
+                "3" : {
+                  "name": "Coffeeangel",
                   "def": "Definition of Coffeeangel..."
                 },
-                "Coffee Collective": {
-                  "id": 1,
+                "1": {
+                  "name": "Coffee Collective",
                   "def": "Coffee Collective definition..."
                 },
-                "Koppi": {
-                  "id": 2,
+                "2": {
+                  "name": "Koppi",
                   "def": "Koppi details..."
                 }
               }
@@ -146,16 +146,16 @@ const Register = () => {
             "method_range": {
               "next_id": 4,
                 "range": {
-                "French Press" : {
-                  "id": 1,
+                "1" : {
+                  "name": "French Press",
                   "def": "details..."
                 },
-                "Espresso": {
-                  "id": 3,
+                "3": {
+                  "name": "Espresso",
                   "def": "details..."
                 },
-                "Mocha Pot": {
-                  "id": 2,
+                "2": {
+                  "name": "Mocha Pot",
                   "def": "details..."
                 }
               }
@@ -163,12 +163,12 @@ const Register = () => {
             "water_range": {
               "next_id": 3,
               "range": {
-                "Water 1" : {
-                  "id": 2,
+                "2" : {
+                  "name": "Water 1",
                   "def": "details..."
                 },
-                "Water 2": {
-                  "id": 1,
+                "1": {
+                  "name": "Water 2",
                   "def": "details..."
                 }
               }
@@ -176,16 +176,16 @@ const Register = () => {
             "grinder_range": {
               "next_id": 4,
               "range": {
-                "Hario Mini Handmill" : {
-                  "id": 2,
+                "2" : {
+                  "name": "Hario Mini Handmill",
                   "def": "details..."
                 },
-                "EKS": {
-                  "id": 3,
+                "3": {
+                  "name": "EKS",
                   "def": "details..."
                 },
-                "Sage espresso grinder": {
-                  "id": 1,
+                "1": {
+                  "name": "Sage espresso grinder",
                   "def": "details..."
                 }
               }
@@ -193,28 +193,28 @@ const Register = () => {
             "palate_range": {
               "next_id": 7,
               "range": {
-                "sweet" : {
-                  "id": 5,
+                "5" : {
+                  "name": "sweet",
                   "def": "details..."
                 },
-                "acidic": {
-                  "id": 2,
+                "2": {
+                  "name": "acnameic",
                   "def": "details..."
                 },
-                "cherries": {
-                  "id": 4,
+                "4": {
+                  "name": "cherries",
                   "def": "details..."
                 },
-                "stonefruit" : {
-                  "id": 1,
+                "1" : {
+                  "name": "stonefruit",
                   "def": "details..."
                 },
-                "citrus fruit": {
-                  "id": 6,
+                "6": {
+                  "name": "citrus fruit",
                   "def": "details..."
                 },
-                "chocolate": {
-                  "id": 3,
+                "3": {
+                  "name": "chocolate",
                   "def": "details..."
                 }
               }
@@ -222,20 +222,20 @@ const Register = () => {
             "aroma_range": {
               "next_id": 5,
               "range": {
-                "Walnut" : {
-                  "id": 4,
+                "4" : {
+                  "name": "Walnut",
                   "def": "details..."
                 },
-                "Peach": {
-                  "id": 2,
+                "2": {
+                  "name": "Peach",
                   "def": "details..."
                 },
-                "Pineapple": {
-                  "id": 1,
+                "1": {
+                  "name": "Pineapple",
                   "def": "details..."
                 },
-                "Green apple" : {
-                  "id": 3,
+                "3" : {
+                  "name": "Green apple",
                   "def": "details..."
                 }
               }

@@ -72,6 +72,9 @@
   thead {
     th {
       padding: 15px 8px;
+      &:last-child {
+        text-align: end;
+      }
     }
   }
   tbody {
@@ -85,6 +88,8 @@
       }
       .td-options {
         display: flex;
+        width: fit-content;
+        margin: 0 0 0 auto;
         .option-button {
           margin: 0 5px;
           .icon {

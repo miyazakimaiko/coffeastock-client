@@ -4,24 +4,34 @@ import { createContext } from 'react'
 export const CustomRangeContext = createContext();
 
 const CustomRange = (props) => {
-  const [customRange, setCustomRange] = useState({})
+  const [customRange, innerSetCustomRange] = useState({})
 
-  const addCustomRange = (newRange) => {
-    const orderedRange = Object.keys(newRange).sort().reduce(
-      (obj, key) => { 
-        obj[key] = newRange[key]; 
+  const setCustomRange = (newRange) => {
+    const orderedRange = Object.entries(newRange).sort(compareNames).reduce(
+      (obj, [key, value]) => {
+        obj['id-'+ key] = value; // without 'id-' the object is sorted automatially by the id
         return obj;
       }, 
       {}
     );
-    setCustomRange(orderedRange)
+    innerSetCustomRange(orderedRange)
   }
   
   return (
-    <CustomRangeContext.Provider value={{customRange, setCustomRange, addCustomRange}}>
+    <CustomRangeContext.Provider value={{customRange, setCustomRange}}>
       {props.children}
     </CustomRangeContext.Provider>
   )
+}
+
+const compareNames = ( a, b ) => {
+  if ( a[1]['name'] < b[1]['name'] ){
+    return -1;
+  }
+  if ( a[1]['name'] > b[1]['name'] ){
+    return 1;
+  }
+  return 0;
 }
 
 export default CustomRange
