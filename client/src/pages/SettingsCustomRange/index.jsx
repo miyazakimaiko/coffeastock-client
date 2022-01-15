@@ -107,7 +107,7 @@ const SettingsCustomRange = ({parentCat, cat}) => {
       const parseRes = await response.json();
       if (parseRes.status === 'error') {
         toast.error(parseRes.message, {
-          position: toast.POSITION.TOP_CENTER
+          position: toast.POSITION.BOTTOM_CENTER
         });
       }
       else {
@@ -116,7 +116,7 @@ const SettingsCustomRange = ({parentCat, cat}) => {
       }
     } catch (error) {
       toast.error(error.message, {
-        position: toast.POSITION.TOP_CENTER
+        position: toast.POSITION.BOTTOM_CENTER
       });
     }
   }
@@ -140,7 +140,7 @@ const SettingsCustomRange = ({parentCat, cat}) => {
     event.preventDefault();
     if (editRangeName == '') {
       toast.error("Name cannot be empty.", {
-        position: toast.POSITION.TOP_CENTER
+        position: toast.POSITION.BOTTOM_CENTER
       });
       return;
     }
@@ -163,7 +163,7 @@ const SettingsCustomRange = ({parentCat, cat}) => {
       const parseRes = await response.json();
       if (parseRes.status === 'error') {
         toast.error(parseRes.message, {
-          position: toast.POSITION.TOP_CENTER
+          position: toast.POSITION.BOTTOM_CENTER
         });
       }
       else {
@@ -172,7 +172,7 @@ const SettingsCustomRange = ({parentCat, cat}) => {
       }
     } catch (error) {
       toast.error(error.message, {
-        position: toast.POSITION.TOP_CENTER
+        position: toast.POSITION.BOTTOM_CENTER
       });
     }
   }
@@ -203,7 +203,7 @@ const SettingsCustomRange = ({parentCat, cat}) => {
       const parseRes = await response.json();
       if (parseRes.status === 'error') {
         toast.error(parseRes.message, {
-          position: toast.POSITION.TOP_CENTER
+          position: toast.POSITION.BOTTOM_CENTER
         });
       }
       else {
@@ -213,7 +213,7 @@ const SettingsCustomRange = ({parentCat, cat}) => {
 
     } catch (error) {
       toast.error(error.message, {
-        position: toast.POSITION.TOP_CENTER
+        position: toast.POSITION.BOTTOM_CENTER
       });
     }
   } 

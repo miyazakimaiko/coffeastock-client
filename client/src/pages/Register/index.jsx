@@ -24,7 +24,7 @@ const Register = () => {
     UserPool.signUp(email, password, attributes, null, (err, data) => {
       if (err) {
         toast.error(err.message, {
-          position: toast.POSITION.TOP_CENTER
+          position: toast.POSITION.BOTTOM_CENTER
         });
       } else {
         try {
@@ -33,7 +33,7 @@ const Register = () => {
           toast.success("Registered successfully!");
         } catch (error) {
           toast.error(error.message, {
-            position: toast.POSITION.TOP_CENTER
+            position: toast.POSITION.BOTTOM_CENTER
           });
         }
       }
@@ -246,7 +246,7 @@ const Register = () => {
 
     } catch (error) {
       toast.error(error.message, {
-        position: toast.POSITION.TOP_CENTER
+        position: toast.POSITION.BOTTOM_CENTER
       });
     }
   }
