@@ -1,7 +1,5 @@
 require("dotenv").config();
 const db = require("../db");
-const express = require("express");
-const morgan = require("morgan");
 const { 
   getGetRangeBaseQuery, 
   getPostRangeBaseQuery,
@@ -14,9 +12,6 @@ const {
 
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
-  // primary middleware
-  app.use(morgan('dev'));
-  app.use(express.json());
 
   // Create custom ranges for a user
   app.post(endpoint + "/user/:userid", async (req, res, next) => {
@@ -81,6 +76,13 @@ module.exports = (app) => {
         aroma_range
       FROM users WHERE user_id = $1`, 
       [req.params.userid]);
+
+      if(results.rows.length === 0) {
+        res.status(404).json({
+          "status": "error",
+          "message": "Not Found"
+        });
+      }
       res.status(200).json(results.rows[0]);
 
     } catch (error) {

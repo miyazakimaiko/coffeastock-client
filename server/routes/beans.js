@@ -1,13 +1,8 @@
 require("dotenv").config();
 const db = require("../db");
-const express = require("express");
-const morgan = require("morgan");
 
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
-  // primary middleware
-  app.use(morgan('dev'));
-  app.use(express.json());
 
   // Get all beans of a user
   app.get(endpoint + "/user/:userid/beans", async (req, res, next) => {
