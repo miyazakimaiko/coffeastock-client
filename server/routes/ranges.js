@@ -2,6 +2,15 @@ require("dotenv").config();
 const db = require("../db");
 const express = require("express");
 const morgan = require("morgan");
+const { 
+  getGetRangeBaseQuery, 
+  getPostRangeBaseQuery,
+  getGetNextIdBaseQuery,
+  getUpdateNextIdBaseQuery,
+  getInsertRangeBaseQuery,
+  getDeleteRangeBaseQuery,
+  getFindEntryByIdBaseQuery
+} = require("../utils/query-generator");
 
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
@@ -9,15 +18,14 @@ module.exports = (app) => {
   app.use(morgan('dev'));
   app.use(express.json());
 
+  // Create custom ranges for a user
   app.post(endpoint + "/user/:userid", async (req, res, next) => {
     try {
       const existingUser = await db.query(`SELECT * FROM USERS WHERE user_id = $1`, [req.params.userid])
-
       if (existingUser.rows.length !== 0) {
         return res.status(409).json("Specified user already has a row.")
       }
 
-      console.log('entering insert query...')
       const result = await db.query(`
         INSERT INTO
         USERS (
@@ -49,7 +57,6 @@ module.exports = (app) => {
           JSON.stringify(req.body.aroma_range)
         ]
       );
-
       res.status(200).json('User ranges are set.');
 
     } catch (error) {
@@ -74,12 +81,143 @@ module.exports = (app) => {
         aroma_range
       FROM users WHERE user_id = $1`, 
       [req.params.userid]);
-      
       res.status(200).json(results.rows[0]);
+
     } catch (error) {
       next(error);
     }
   });
 
+  // Get specified range
+  app.get(endpoint + "/user/:userid/range/:rangename", async (req, res, next) => {
+    const baseQuery = getGetRangeBaseQuery(req.params.rangename)
+    try {
+      const results = await db.query(baseQuery, [req.params.userid]);
+      res.status(200).json(results.rows[0]['range']);
+    } catch (error) { next(error); }
+  });
 
+  // Find a specified entry
+  app.get(endpoint + "/user/:userid/range/:rangename/:id", async (req, res, next) => {
+    const baseQuery = getFindEntryByIdBaseQuery(req.params.rangename);
+    try {
+      const results = await db.query(baseQuery, [req.params.userid]);
+      results.rows.forEach(entry => {
+        if (entry['id'] === req.params.id) {
+          res.status(200).json(true);
+        }
+      });
+      res.status(200).json(false);
+    } catch (error) { next(error); }
+  });
+
+  // Add new entry in the specified range 
+  app.post(endpoint + "/user/:userid/range/:rangename", async (req, res, next) => {
+    const baseQuery = getPostRangeBaseQuery(req.params.rangename)
+    try {
+      let uniqueName = true;
+      const range = await db.query(baseQuery, [req.params.userid]);
+
+      for (const key of Object.keys(range.rows[0]['range'])) {
+        if (range.rows[0]['range'][key].name === req.body.name) {
+          uniqueName = false;
+        }
+      }
+
+      if (!uniqueName) {
+        res.status(500).json({
+          'status': 'error',
+          'message': 'An entry with the same name already exists.'});
+      } 
+      else {
+        // get the ID of the last entry to create new ID
+        const bqGetNextId = getGetNextIdBaseQuery(req.params.rangename)
+        const idResult = await db.query(bqGetNextId, [req.params.userid]);
+        const newid = idResult.rows[0]['next_id'];
+
+        // Update the next_id
+        const bqUpdateNextId = getUpdateNextIdBaseQuery(req.params.rangename)
+        await db.query(bqUpdateNextId, [newid + 1, req.params.userid]);
+
+        // Insert new entry
+        const newData = `{
+          "${newid}" : {
+            "name": "${req.body.name}",
+            "def": "${req.body.def}"
+          }
+        }`
+        const bqInsertRange = getInsertRangeBaseQuery(req.params.rangename)
+        const result = await db.query(bqInsertRange,[newData, req.params.userid]);
+      
+        res.status(200).json(result.rows[0][req.params.rangename + '_range']['range']);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }); 
+
+  // Edit an entry in a specified range 
+  app.post(endpoint + "/user/:userid/range/:rangename/:id", async (req, res, next) => {
+    try {
+      // Ensure the entry exists
+      let entryExists = false;
+      const bqFindEntry = getFindEntryByIdBaseQuery(req.params.rangename);
+      const results = await db.query(bqFindEntry, [req.params.userid]);
+      results.rows.forEach(entry => {
+        if (entry.id === req.params.id) {
+          entryExists = true;
+        }
+      });
+      if (!entryExists) {
+        res.status(500).json({
+          'status': 'error',
+          'message': 'Entry with the ID does not exist'
+        });
+      }
+      // Validate the uniqueness of the new name
+      let uniqueName = true;
+      const bqGetRange = getGetRangeBaseQuery(req.params.rangename)
+      const data = await db.query(bqGetRange, [req.params.userid]);
+      for (const key of Object.keys(data.rows[0]['range'])) {
+        if (data.rows[0]['range'][key].name === req.body.name && key !== req.params.id) {
+          uniqueName = false;
+        }
+      }
+      if (!uniqueName) {
+        res.status(500).json({
+          'status': 'error',
+          'message': 'An entry with the same name already exists.'
+        });
+      } 
+      else {
+        // Delete the entry to edit
+        const bqUpdateRange = getDeleteRangeBaseQuery(req.params.rangename)
+        await db.query(bqUpdateRange, [req.params.id, req.params.userid]);
+        // Insert new entry
+        const newData = `{
+          "${req.params.id}" : {
+            "name": "${req.body.name}",
+            "def": "${req.body.def}"
+          }
+        }`
+        const bqInsertRange = getInsertRangeBaseQuery(req.params.rangename)
+        const result = await db.query(bqInsertRange,[newData, req.params.userid]);
+        res.status(200).json(result.rows[0][req.params.rangename + '_range']['range']);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }); 
+
+  // Delete an entry from specified range
+  app.delete(endpoint + "/user/:userid/range/:rangename/:id", async (req, res, next) => {
+    try {
+      const bqDeleteRange = getDeleteRangeBaseQuery(req.params.rangename)
+      const result = await db.query(bqDeleteRange, [req.params.id, req.params.userid]);
+      res.status(200).json(result.rows[0][req.params.rangename + '_range']['range']);
+
+    } catch (error) {
+      next(error);
+    }
+  });
 }
