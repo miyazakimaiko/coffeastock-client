@@ -11,10 +11,18 @@ const Login = () => {
 
   const { setUserData, authenticate, getSession, setAuthenticated } = useContext(AccountContext);
 
+
+
   const onSubmit = (event) => {
     event.preventDefault();
 
-    authenticate(email, password)
+    if (email.length === 0 && password.length === 0) {
+      toast.error('Please enter Email Address and Password.', {
+        position: toast.POSITION.BOTTOM_CENTER
+      });
+    }
+    else {
+      authenticate(email, password)
       .then(data => {
         getSession().then((session) => {
           setUserData(session);
@@ -24,9 +32,10 @@ const Login = () => {
       })
       .catch(err => {
         toast.error(err.message, {
-          position: toast.POSITION.TOP_CENTER
+          position: toast.POSITION.BOTTOM_CENTER
         });
       })
+    }
   };
 
   return (
@@ -69,9 +78,11 @@ const Login = () => {
               </div>
             </div>
             <div className="text-center">
-              <button type="submit" className="shadow-sm rounded-3xl pl-6 pr-8 py-2 my-2 mx-auto bg-blue button-transition text-white text-base flex"
+              <button 
+                type="submit"
+                className="shadow-sm rounded-3xl pl-6 pr-8 py-2 my-2 mx-auto bg-blue button-transition text-white text-base flex"
               >
-                <LoginIcon className="h-5 w-5 my-auto"/>
+                <LoginIcon className="h-5 w-5 my-auto" />
                 <span className="ml-1">Login</span>
                 </button>
               <div className="forgot">
