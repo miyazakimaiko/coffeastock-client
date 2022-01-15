@@ -6,7 +6,8 @@ const port = process.env.PORT || 4001;
 const cors = require("cors");
 
 app.use(cors());
-app.use(morgan('dev'));
+app.use(morgan("combined", { skip: (req, res) => process.env.REACT_APP_NODE_ENV === 'test' }));
+app.use(express.json());
 
 require("./routes/beans.js")(app);
 require("./routes/recipes.js")(app);
