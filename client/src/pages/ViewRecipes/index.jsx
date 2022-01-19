@@ -10,7 +10,6 @@ const ViewRecipes = () => {
 
   return (
     <>
-      <Header title={title} />
       <div className="px-2">
         <h2 className="font-bold text-2xl text-center p-4">{coffeeName}</h2>
         <div className="w-full flex flex-wrap-reverse justify-center my-4">

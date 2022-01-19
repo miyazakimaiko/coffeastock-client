@@ -5,8 +5,6 @@ const AddRecipe = () => {
   const title = "Add New Recipe";
   return (
     <>
-      <Header title={title}/>
-      Add Recipe Page
     </>
   )
 }

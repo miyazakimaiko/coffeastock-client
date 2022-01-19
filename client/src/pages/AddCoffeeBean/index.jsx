@@ -5,8 +5,6 @@ const AddCoffeeBean = () => {
   const title = "Add New Coffee Bean";
   return (
     <>
-      <Header title={title}/>
-      Add Coffee Bean
     </>
   )
 }

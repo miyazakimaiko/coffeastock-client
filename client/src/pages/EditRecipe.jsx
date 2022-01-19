@@ -5,8 +5,6 @@ const EditRecipe = () => {
   const title = "Edit Recipe";
   return (
     <>
-      <Header title={title} />
-        Edit Recipe Page
       </>
     )
 }

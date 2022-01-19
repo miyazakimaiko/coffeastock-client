@@ -5,8 +5,6 @@ const EditCoffeeBean = () => {
   const title = "Edit Coffee Bean";
   return (
     <>
-      <Header title={title} />
-        Edit Coffee Bean Page
       </>
     )
 }
