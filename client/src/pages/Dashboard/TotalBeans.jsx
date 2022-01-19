@@ -3,7 +3,7 @@ import imgBeans from '../../images/beans.png'
 
 const TotalBeans = () => {
   return (
-    <div className="px-3 w-1/3">
+    <div className="px-3 mb-4 md:mb-0">
       <div
         className="
           w-full p-4 flex justify-between

@@ -80,7 +80,7 @@ export const data = {
 
 const ChartBarBeans = () => {
   return (
-    <div className="px-3 w-1/2">
+    <div className="px-3 mb-4 md:mb-0">
       <div
         className="
           w-full p-4
