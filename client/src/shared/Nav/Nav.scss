@@ -1,0 +1,28 @@
+@import "../../scss/breakpoints";
+
+.l-nav {
+  width: var(--nav-width);
+  position: fixed;
+  top: 0;
+  left: calc(var(--nav-width) * -1);
+  transition: .5s;
+  z-index: 100;
+
+  @include sm() {
+    width: var(--nav-width-sm);
+    left: calc(var(--nav-width-sm) * -1);
+  }
+}
+
+.nav-show {
+  left: 0;
+}
+
+.pushpin {
+  transform: rotate(45deg);
+  transition: transform 0.1s ease;
+}
+
+.pinned {
+  transform: rotate(0deg);
+}
