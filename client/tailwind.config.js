@@ -20,6 +20,7 @@ module.exports = {
         'sans': ['Nunito', ...defaultTheme.fontFamily.sans]
       },
       maxWidth: {
+        '1/2': '50%',
         '10': '10rem',
         '60pc': '60%',
         '350px': '350px',

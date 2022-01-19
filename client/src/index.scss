@@ -2,12 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "./scss/breakpoints";
+
+body {
+  position: relative;
+  transition: .5s;
+}
+
+.main {
+  min-width: 100vw;
+  transition: .5s;
+}
+
+.main-pd {
+  margin-left: var(--nav-width);
+
+  @include sm() {
+    margin-left: var(--nav-width-sm);
+  }
+  @include lg() {
+    margin-left: 0;
+    padding-left: var(--nav-width-sm);
+  }
+}
+
+
 :root {
   --toastify-color-info: #68B3C7;
   --toastify-color-success: #65c48f;
   --toastify-color-warning: #FF8F5D;
   --toastify-color-error: #EB5E28;
   --toastify-font-family: 'Nunito';
+  --nav-width: 70vw;
+  --nav-width-sm: 255px;
 }
 
 ::-webkit-scrollbar {
