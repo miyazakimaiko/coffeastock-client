@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { toast } from 'react-toastify'
 import { PencilAltIcon, PlusSmIcon, XIcon } from '@heroicons/react/outline'
-import Header from '../../shared/Header'
 import { CustomRangeContext } from '../../context/CustomRange';
 import { AccountContext } from '../../context/Account';
 
-const SettingsCustomRange = ({parentCat, cat}) => {
+const SettingsCustomRange = ({cat}) => {
   const { userData } = useContext(AccountContext);
   const { customRange, setCustomRange } = useContext(CustomRangeContext);
   let elements = [];
@@ -25,7 +24,7 @@ const SettingsCustomRange = ({parentCat, cat}) => {
   }, [cat]);
  
   const setElements = () => {
-    if (customRange !== null) {
+    if (Object.keys(customRange).length > 0) {
       Object.keys(customRange).forEach((key) => {
         elements.push(
           <tr id={`${cat}-${key}`}>
@@ -60,6 +59,13 @@ const SettingsCustomRange = ({parentCat, cat}) => {
           </tr>
         )
       })
+    }
+    else {
+      elements.push(
+        <tr>
+          <td className="text-center bg-white" colspan="3">No item</td>
+        </tr>
+      )
     }
   }
   setElements();
@@ -221,7 +227,6 @@ const SettingsCustomRange = ({parentCat, cat}) => {
 
   return (
     <>
-      <Header title={`Customize ${parentCat} Setting`}/>
       <div className="px-2">
         <div className="flex mb-4 w-full flex-wrap justify-center">
           <div className="px-3 w-full">
@@ -237,10 +242,8 @@ const SettingsCustomRange = ({parentCat, cat}) => {
               </button>
             </div>
             
-            <div 
-              className="mt-3 p-4 bg-white shadow-sm rounded-md max-w-5xl m-auto"
-            >
-              <table className="settings-table w-full">
+            <div className="mt-3 p-4 bg-white shadow-sm rounded-md max-w-5xl m-auto">
+              <table className="mb-4 settings-table w-full table-fixed">
                 <thead>
                   <tr>
                     <th>Name</th>
