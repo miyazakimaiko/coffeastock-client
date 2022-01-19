@@ -101,15 +101,14 @@ module.exports = (app) => {
 
   // Find a specified entry
   app.get(endpoint + "/user/:userid/range/:rangename/:id", async (req, res, next) => {
+    let found = false;
     const baseQuery = getFindEntryByIdBaseQuery(req.params.rangename);
     try {
       const results = await db.query(baseQuery, [req.params.userid]);
       results.rows.forEach(entry => {
-        if (entry['id'] === req.params.id) {
-          res.status(200).json(true);
-        }
+        if (entry['id'] === req.params.id) found = true;
       });
-      res.status(200).json(false);
+      res.status(200).json(found);
     } catch (error) { next(error); }
   });
 
