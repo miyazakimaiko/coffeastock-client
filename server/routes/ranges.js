@@ -120,7 +120,7 @@ module.exports = (app) => {
       const range = await db.query(baseQuery, [req.params.userid]);
 
       for (const key of Object.keys(range.rows[0]['range'])) {
-        if (range.rows[0]['range'][key].name === req.body.name) {
+        if (range.rows[0]['range'][key].label === req.body.label) {
           uniqueName = false;
         }
       }
@@ -143,7 +143,7 @@ module.exports = (app) => {
         // Insert new entry
         const newData = `{
           "${newid}" : {
-            "name": "${req.body.name}",
+            "label": "${req.body.label}",
             "def": "${req.body.def}"
           }
         }`
@@ -180,7 +180,7 @@ module.exports = (app) => {
       const bqGetRange = getGetRangeBaseQuery(req.params.rangename)
       const data = await db.query(bqGetRange, [req.params.userid]);
       for (const key of Object.keys(data.rows[0]['range'])) {
-        if (data.rows[0]['range'][key].name === req.body.name && key !== req.params.id) {
+        if (data.rows[0]['range'][key].label === req.body.label && key !== req.params.id) {
           uniqueName = false;
         }
       }
@@ -197,7 +197,7 @@ module.exports = (app) => {
         // Insert new entry
         const newData = `{
           "${req.params.id}" : {
-            "name": "${req.body.name}",
+            "label": "${req.body.label}",
             "def": "${req.body.def}"
           }
         }`
