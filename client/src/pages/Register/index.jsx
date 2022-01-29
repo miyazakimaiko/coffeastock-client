@@ -30,7 +30,9 @@ const Register = () => {
         try {
           const userId = data.userSub;
           setDefaultCustomRange(userId);
-          toast.success("Registered successfully!");
+          toast.success("Registered successfully!", {
+            position: toast.POSITION.BOTTOM_CENTER
+          });
         } catch (error) {
           toast.error(error.message, {
             position: toast.POSITION.BOTTOM_CENTER
@@ -54,23 +56,23 @@ const Register = () => {
               "next_id": 6,
               "range": {
                 "3" : {
-                  "name": "Yirgacheffe, Ethiopia",
+                  "label": "Yirgacheffe, Ethiopia",
                   "def": "Location details here..."
                 },
                 "2": {
-                  "name": "Sidamo, Ethiopia",
+                  "label": "Sidamo, Ethiopia",
                   "def": "Location details here..."
                 },
                 "5": {
-                  "name": "Kaffa, Ethiopia",
+                  "label": "Kaffa, Ethiopia",
                   "def": "Location details here..."
                 },
                 "4": {
-                  "name": "Ruiri, Kenya",
+                  "label": "Ruiri, Kenya",
                   "def": "Location details here..."
                 },
                 "1": {
-                  "name": "Thika, Kenya",
+                  "label": "Thika, Kenya",
                   "def": "Location details here..."
                 }
               }
@@ -79,15 +81,15 @@ const Register = () => {
               "next_id": 4,
               "range": {
                 "3" : {
-                  "name": "Farm 1",
+                  "label": "Farm 1",
                   "def": "details..."
                 },
                 "2": {
-                  "name": "Farm 2",
+                  "label": "Farm 2",
                   "def": "details..."
                 },
                 "1": {
-                  "name": "Farm 3",
+                  "label": "Farm 3",
                   "def": "details..."
                 }
               }
@@ -96,15 +98,15 @@ const Register = () => {
               "next_id": 4,
               "range": {
                 "1" : {
-                  "name": "Typica",
+                  "label": "Typica",
                   "def": "Details what typica is..."
                 },
                 "3": {
-                  "name": "Caturra",
+                  "label": "Caturra",
                   "def": "Details what caturra is..."
                 },
                 "2": {
-                  "name": "Burbon",
+                  "label": "Burbon",
                   "def": "Details what Burbon is..."
                 }
               }
@@ -113,15 +115,15 @@ const Register = () => {
               "next_id": 4,
               "range": {
                 "1" : {
-                  "name": "Washed",
+                  "label": "Washed",
                   "def": "Details what washed is..."
                 },
                 "2": {
-                  "name": "Semi-Washed",
+                  "label": "Semi-Washed",
                   "def": "Details what semi-washed is..."
                 },
                 "3": {
-                  "name": "Natural",
+                  "label": "Natural",
                   "def": "Details what natural is..."
                 }
               }
@@ -130,15 +132,15 @@ const Register = () => {
               "next_id": 4,
               "range": {
                 "3" : {
-                  "name": "Coffeeangel",
+                  "label": "Coffeeangel",
                   "def": "Definition of Coffeeangel..."
                 },
                 "1": {
-                  "name": "Coffee Collective",
+                  "label": "Coffee Collective",
                   "def": "Coffee Collective definition..."
                 },
                 "2": {
-                  "name": "Koppi",
+                  "label": "Koppi",
                   "def": "Koppi details..."
                 }
               }
@@ -147,15 +149,15 @@ const Register = () => {
               "next_id": 4,
                 "range": {
                 "1" : {
-                  "name": "French Press",
+                  "label": "French Press",
                   "def": "details..."
                 },
                 "3": {
-                  "name": "Espresso",
+                  "label": "Espresso",
                   "def": "details..."
                 },
                 "2": {
-                  "name": "Mocha Pot",
+                  "label": "Mocha Pot",
                   "def": "details..."
                 }
               }
@@ -164,11 +166,11 @@ const Register = () => {
               "next_id": 3,
               "range": {
                 "2" : {
-                  "name": "Water 1",
+                  "label": "Water 1",
                   "def": "details..."
                 },
                 "1": {
-                  "name": "Water 2",
+                  "label": "Water 2",
                   "def": "details..."
                 }
               }
@@ -177,15 +179,15 @@ const Register = () => {
               "next_id": 4,
               "range": {
                 "2" : {
-                  "name": "Hario Mini Handmill",
+                  "label": "Hario Mini Handmill",
                   "def": "details..."
                 },
                 "3": {
-                  "name": "EKS",
+                  "label": "EKS",
                   "def": "details..."
                 },
                 "1": {
-                  "name": "Sage espresso grinder",
+                  "label": "Sage espresso grinder",
                   "def": "details..."
                 }
               }
@@ -194,27 +196,27 @@ const Register = () => {
               "next_id": 7,
               "range": {
                 "5" : {
-                  "name": "sweet",
+                  "label": "sweet",
                   "def": "details..."
                 },
                 "2": {
-                  "name": "acnameic",
+                  "label": "aclabelic",
                   "def": "details..."
                 },
                 "4": {
-                  "name": "cherries",
+                  "label": "cherries",
                   "def": "details..."
                 },
                 "1" : {
-                  "name": "stonefruit",
+                  "label": "stonefruit",
                   "def": "details..."
                 },
                 "6": {
-                  "name": "citrus fruit",
+                  "label": "citrus fruit",
                   "def": "details..."
                 },
                 "3": {
-                  "name": "chocolate",
+                  "label": "chocolate",
                   "def": "details..."
                 }
               }
@@ -223,19 +225,19 @@ const Register = () => {
               "next_id": 5,
               "range": {
                 "4" : {
-                  "name": "Walnut",
+                  "label": "Walnut",
                   "def": "details..."
                 },
                 "2": {
-                  "name": "Peach",
+                  "label": "Peach",
                   "def": "details..."
                 },
                 "1": {
-                  "name": "Pineapple",
+                  "label": "Pineapple",
                   "def": "details..."
                 },
                 "3" : {
-                  "name": "Green apple",
+                  "label": "Green apple",
                   "def": "details..."
                 }
               }
