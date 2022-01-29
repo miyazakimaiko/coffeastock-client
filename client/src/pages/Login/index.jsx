@@ -1,16 +1,22 @@
 import { LoginIcon } from '@heroicons/react/outline'
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import { AccountContext } from '../../context/Account';
+import { CustomRangesContext } from '../../context/CustomRanges';
 
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { setUserData, authenticate, getSession, setAuthenticated } = useContext(AccountContext);
+  const { setUserData, userData, authenticate, getSession, setAuthenticated } = useContext(AccountContext);
+  const { customRanges, fetchCustomRanges } = useContext(CustomRangesContext)
 
+  useEffect(() => {
+    fetchCustomRanges(userData.sub);
+    console.log(customRanges)
+  }, [userData]);
 
 
   const onSubmit = (event) => {
@@ -27,8 +33,11 @@ const Login = () => {
         getSession().then((session) => {
           setUserData(session);
           setAuthenticated(true);
-          toast.success("LOGGED IN!")
+          toast.success("LOGGED IN!", {
+            position: toast.POSITION.BOTTOM_CENTER
+          })
         });
+        fetchCustomRanges(userData.sub);
       })
       .catch(err => {
         toast.error(err.message, {
@@ -37,6 +46,7 @@ const Login = () => {
       })
     }
   };
+
 
   return (
     <div className="h-full">
