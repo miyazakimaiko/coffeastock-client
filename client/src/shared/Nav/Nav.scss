@@ -6,7 +6,7 @@
   top: 0;
   left: calc(var(--nav-width) * -1);
   transition: .5s;
-  z-index: 100;
+  z-index: 40;
 
   @include sm() {
     width: var(--nav-width-sm);

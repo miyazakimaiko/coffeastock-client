@@ -28,23 +28,25 @@ const NavState = (props) => {
     if (pinnedNavbar) {
       forceUnpin();
     }
-    mainRef.classList.toggle('main-pd');
-    navRef.classList.toggle('nav-show');
-    // change icon
-    if (navRef.classList.contains('nav-show')) {
-      innerSetOpenNav(true);
-    } else innerSetOpenNav(false);
+    else {
+      mainRef.classList.toggle('main-pd');
+      navRef.classList.toggle('nav-show');
+      innerSetOpenNav(!openNav);
+    }
+  }
+
+  const forceUnpin = () => {
+    innerSetPinnedNavbar(false);
+    pushPinRef.classList.remove('pinned');
+    mainRef.classList.remove('main-pd');
+    navRef.classList.remove('nav-show');
+    innerSetOpenNav(false);
   }
 
   const [pinnedNavbar, innerSetPinnedNavbar] = useState(false);
   const setPinnedNavbar = () => {
     innerSetPinnedNavbar(!pinnedNavbar)
     pushPinRef.classList.toggle('pinned');
-  }
-
-  const forceUnpin = () => {
-    innerSetPinnedNavbar(false);
-    pushPinRef.classList.remove('pinned');
   }
 
   return (

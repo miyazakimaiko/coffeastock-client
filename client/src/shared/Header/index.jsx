@@ -10,7 +10,7 @@ import imgBeans from '../../images/beans.png'
 
 
 const Header = (props) => {
-  const { openNav, setMainRef, setNavRef, setPushPinRef, showNavbar } = useContext(NavStateContext);
+  const { openNav, setMainRef, setNavRef, setPushPinRef, showNavbar, forceUnpin } = useContext(NavStateContext);
   const { setAuthenticated, signout } = useContext(AccountContext);
 
   useEffect(() => {
@@ -20,9 +20,12 @@ const Header = (props) => {
   }, [props.navRef])
 
   const logout = () => {
+    forceUnpin();
     signout();
     setAuthenticated(false);
-    toast.success("Logged out successfully.")
+    toast.success("Logged out successfully.", {
+      position: toast.POSITION.BOTTOM_CENTER
+    })
   }
 
   return (
