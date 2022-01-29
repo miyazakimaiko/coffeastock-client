@@ -1,8 +1,15 @@
 import { XIcon } from '@heroicons/react/outline'
-import React from 'react'
+import { MultiSelect } from "react-multi-select-component";
+import React, { useState, useContext } from 'react'
 import './FloatingMenu.scss'
+import { CustomRangesContext } from '../../context/CustomRanges';
+
+
 
 const AddBeanModal = ({setOpenThisModal}) => {
+  const [selected, setSelected] = useState([]);
+  const { customRanges } = useContext(CustomRangesContext);
+
   return (
     <>
     <div
@@ -36,7 +43,18 @@ const AddBeanModal = ({setOpenThisModal}) => {
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+              <div>
+                <h1>Select Fruits</h1>
+                <pre>{JSON.stringify(selected)}</pre>
+                <MultiSelect
+                  options={customRanges.origin_range}
+                  value={selected}
+                onChange={setSelected}
+                  labelledBy="Select"
+                />
+              </div>
+            </div>
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
           </div>
