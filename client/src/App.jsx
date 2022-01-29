@@ -16,9 +16,9 @@ import 'bootstrap/dist/js/bootstrap'
 import '../src/bootstrap-custom/bootstrap.css'
 import './index.scss'
 import FloatingMenu from './shared/FloatingMenu';
-import SettingsCustomRange from './pages/SettingsCustomRange';
+import SettingsCustomRanges from './pages/SettingsCustomRanges';
 import { AccountContext } from './context/Account';
-import CustomRange from './context/CustomRange';
+import CustomRanges from './context/CustomRanges';
 import Header from './shared/Header';
 import NavState from './context/NavState';
 
@@ -39,12 +39,13 @@ const App = () => {
   }, []);
 
   return <>
-    <CustomRange>
+    <CustomRanges>
       <NavState>
         <div className="relative flex flex-col min-h-screen bg-creme font-sans">
           <Router>
             {authenticated ? <Nav navRef={navRef} mainRef={mainRef} headerRef={headerRef} pushpinRef={pushpinRef}/>: ""}
             <div ref={mainRef} className={"main w-full box-border text-sm text-burnt-sienna"}>
+              {/* https://stackoverflow.com/questions/58786766/dynamic-header-content-in-react */}
               {authenticated ? <Header title="Header" mainRef={mainRef} navRef={navRef} pushpinRef={pushpinRef}/>: ""}
               <Routes>
               <Route exact path='/login' element={authenticated ? <Navigate to="/" /> : <Login />} />
@@ -58,17 +59,17 @@ const App = () => {
               <Route exact path="/edit/:bean_id" element={authenticated ? <EditCoffeeBean /> : <Navigate to="/login" />} />
               <Route exact path="/edit/:recipe_id" element={authenticated ? <EditRecipe /> : <Navigate to="/login" />} />
 
-              <Route exact path="/settings/aroma" element={authenticated ? <SettingsCustomRange parentCat={'Coffee Beans'} cat={'aroma'}/> : <Navigate to="/login" />} />
-              <Route exact path="/settings/farm" element={authenticated ? <SettingsCustomRange parentCat={'Coffee Beans'} cat={'farm'}/> : <Navigate to="/login" />} />
-              <Route exact path="/settings/origin" element={authenticated ? <SettingsCustomRange parentCat={'Coffee Beans'} cat={'origin'}/> : <Navigate to="/login" />} />
-              <Route exact path="/settings/variety" element={authenticated ? <SettingsCustomRange parentCat={'Coffee Beans'} cat={'variety'}/> : <Navigate to="/login" />} />
-              <Route exact path="/settings/process" element={authenticated ? <SettingsCustomRange parentCat={'Coffee Beans'} cat={'process'} /> : <Navigate to="/login" />} />
-              <Route exact path="/settings/roaster" element={authenticated ? <SettingsCustomRange parentCat={'Coffee Beans'} cat={'roaster'} /> : <Navigate to="/login" />} />
+              <Route exact path="/settings/aroma" element={authenticated ? <SettingsCustomRanges parentCat={'Coffee Beans'} cat={'aroma'}/> : <Navigate to="/login" />} />
+              <Route exact path="/settings/farm" element={authenticated ? <SettingsCustomRanges parentCat={'Coffee Beans'} cat={'farm'}/> : <Navigate to="/login" />} />
+              <Route exact path="/settings/origin" element={authenticated ? <SettingsCustomRanges parentCat={'Coffee Beans'} cat={'origin'}/> : <Navigate to="/login" />} />
+              <Route exact path="/settings/variety" element={authenticated ? <SettingsCustomRanges parentCat={'Coffee Beans'} cat={'variety'}/> : <Navigate to="/login" />} />
+              <Route exact path="/settings/process" element={authenticated ? <SettingsCustomRanges parentCat={'Coffee Beans'} cat={'process'} /> : <Navigate to="/login" />} />
+              <Route exact path="/settings/roaster" element={authenticated ? <SettingsCustomRanges parentCat={'Coffee Beans'} cat={'roaster'} /> : <Navigate to="/login" />} />
 
-              <Route exact path="/settings/grinder" element={authenticated ? <SettingsCustomRange parentCat={'Recipes'} cat={'grinder'} /> : <Navigate to="/login" />} />
-              <Route exact path="/settings/method" element={authenticated ? <SettingsCustomRange parentCat={'Recipes'} cat={'method'} /> : <Navigate to="/login" />} />
-              <Route exact path="/settings/palate" element={authenticated ? <SettingsCustomRange parentCat={'Recipes'} cat={'palate'} /> : <Navigate to="/login" />} />
-              <Route exact path="/settings/water" element={authenticated ? <SettingsCustomRange parentCat={'Recipes'} cat={'water'} /> : <Navigate to="/login" />} />
+              <Route exact path="/settings/grinder" element={authenticated ? <SettingsCustomRanges parentCat={'Recipes'} cat={'grinder'} /> : <Navigate to="/login" />} />
+              <Route exact path="/settings/method" element={authenticated ? <SettingsCustomRanges parentCat={'Recipes'} cat={'method'} /> : <Navigate to="/login" />} />
+              <Route exact path="/settings/palate" element={authenticated ? <SettingsCustomRanges parentCat={'Recipes'} cat={'palate'} /> : <Navigate to="/login" />} />
+              <Route exact path="/settings/water" element={authenticated ? <SettingsCustomRanges parentCat={'Recipes'} cat={'water'} /> : <Navigate to="/login" />} />
               </Routes>
             </div>
           </Router>
@@ -76,7 +77,7 @@ const App = () => {
           <ToastContainer theme="colored" hideProgressBar={true}/>
         </div>
       </NavState>
-    </CustomRange>
+    </CustomRanges>
   </>
 }
 
