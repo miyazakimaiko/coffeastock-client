@@ -1,45 +1,37 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { toast } from 'react-toastify'
 import { PencilAltIcon, PlusSmIcon, XIcon } from '@heroicons/react/outline'
-import { CustomRangeContext } from '../../context/CustomRange';
+import { CustomRangesContext } from '../../context/CustomRanges';
 import { AccountContext } from '../../context/Account';
 
-const SettingsCustomRange = ({cat}) => {
+const SettingsCustomRanges = ({cat}) => {
   const { userData } = useContext(AccountContext);
-  const { customRange, setCustomRange } = useContext(CustomRangeContext);
+  const { customRanges, fetchCustomRange, setCustomRange } = useContext(CustomRangesContext);
   let elements = [];
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:4000/api/v1/user/${userData.sub}/range/${cat}`,
-          { method: "GET" }
-        );
-        const parseRes = await response.json();  
-        setCustomRange(parseRes);
-      } catch (error) {}
-    };
-    fetchData();
-  }, [cat]);
+    fetchCustomRange(userData.sub, cat)
+  }, [customRanges]);
  
   const setElements = () => {
-    if (Object.keys(customRange).length > 0) {
-      Object.keys(customRange).forEach((key) => {
+    const customRange = customRanges[cat + "_range"];
+    console.log(customRange.length)
+    if (customRange.length > 0) {
+      customRange.forEach((item) => {
         elements.push(
-          <tr id={`${cat}-${key}`}>
+          <tr id={`${cat}-${item['value']}`}>
             <td>
-              <p>{customRange[key]['name']}</p>
+              <p>{item['label']}</p>
             </td>
             <td>
-              <p>{customRange[key]['def']}</p>
+              <p>{item['def']}</p>
             </td>
             <td className="td-options">
               <button
                 onClick={() => setEditMode({
-                  'id': key,
-                  'name': customRange[key]['name'],
-                  'def': customRange[key]['def']
+                  'id': item['value'],
+                  'label': item['label'],
+                  'def': item['def']
                 })}
                 className="option-button"
               >
@@ -47,8 +39,8 @@ const SettingsCustomRange = ({cat}) => {
               </button>
               <button 
                 onClick={() => setDeleteMode({
-                  'id': key.replace('id-', ''),
-                  'name': customRange[key]['name']
+                  'id': item['value'],
+                  'label': item['label']
                 })}
                 type="button"
                 className="option-button delete-button"
@@ -75,14 +67,14 @@ const SettingsCustomRange = ({cat}) => {
   const closeAddEditModal = () => {
     setOpenAddEditModal(false);
     setAddRangeName('');
-    setAddRangeDef('');
+    setAddRangeValue('');
   }
 
   //====================================================================
-  //                             ADD 
+  //                             ADD
   //====================================================================
   const [addRangeName, setAddRangeName] = useState('');
-  const [addRangeDef, setAddRangeDef] = useState('')
+  const [addRangeValue, setAddRangeValue] = useState('')
   const setAddMode = () => {
     setMode('add')
     setOpenAddEditModal(true);
@@ -91,12 +83,21 @@ const SettingsCustomRange = ({cat}) => {
   const onAddSubmit = async (event) => {
     event.preventDefault();
     if (addRangeName == '') {
-      document.getElementById("nameError").innerHTML = 'This field is required.';
+      toast.error('Name field is required.', {
+        position: toast.POSITION.BOTTOM_CENTER
+      });
+      return;
+    }
+    if (addRangeValue.indexOf("\"") !== -1 || addRangeValue.indexOf("\'") !== -1) {
+      toast.error('Single/Double quote cannot be used in the fields.', {
+        position: toast.POSITION.BOTTOM_CENTER
+      });
       return;
     }
 
     try {
-      const OneLinerangeDef = addRangeDef.replace(/(\r\n|\n|\r)/gm, " ");
+      const OneLinerangeDef = addRangeValue.replace(/(\r\n|\n|\r)/gm, " ");
+      console.log(OneLinerangeDef)
       const response = await fetch(
         `http://localhost:4000/api/v1/user/${userData.sub}/range/${cat}`,
         {
@@ -105,7 +106,7 @@ const SettingsCustomRange = ({cat}) => {
             'Content-Type': "application/json"
           },
           body: JSON.stringify({
-            "name": addRangeName,
+            "label": addRangeName,
             "def": OneLinerangeDef
           })
         }
@@ -117,7 +118,7 @@ const SettingsCustomRange = ({cat}) => {
         });
       }
       else {
-        setCustomRange(parseRes);
+        setCustomRange(parseRes, cat);
         closeAddEditModal();
       }
     } catch (error) {
@@ -133,12 +134,12 @@ const SettingsCustomRange = ({cat}) => {
   //====================================================================
   const [editRangeId, setEditRangeId] = useState('');
   const [editRangeName, setEditRangeName] = useState('');
-  const [editRangeDef, setEditRangeDef] = useState('');
+  const [editRangeValue, setEditRangeValue] = useState('');
   const setEditMode = async (entry) => {
     setMode('edit');
-    await setEditRangeId(entry.id.replace('id-', ''));
-    await setEditRangeName(entry.name);
-    await setEditRangeDef(entry.def);
+    await setEditRangeId(entry.id);
+    await setEditRangeName(entry.label);
+    await setEditRangeValue(entry.def);
     setOpenAddEditModal(true);
   }
 
@@ -150,9 +151,15 @@ const SettingsCustomRange = ({cat}) => {
       });
       return;
     }
+    if (editRangeValue.indexOf("\"") !== -1 || editRangeValue.indexOf("\'") !== -1) {
+      toast.error('Single/Double quote cannot be used in the fields.', {
+        position: toast.POSITION.BOTTOM_CENTER
+      });
+      return;
+    }
 
     try {
-      const OneLineRangeDef = editRangeDef.replace(/(\r\n|\n|\r)/gm, " ");
+      const OneLineRangeValue = editRangeValue.replace(/(\r\n|\n|\r)/gm, " ");
       const response = await fetch(
         `http://localhost:4000/api/v1/user/${userData.sub}/range/${cat}/${editRangeId}`,
         {
@@ -161,8 +168,8 @@ const SettingsCustomRange = ({cat}) => {
             'Content-Type': "application/json"
           },
           body: JSON.stringify({
-            "name": editRangeName,
-            "def": OneLineRangeDef
+            "label": editRangeName,
+            "def": OneLineRangeValue
           })
         }
       );
@@ -173,7 +180,7 @@ const SettingsCustomRange = ({cat}) => {
         });
       }
       else {
-        setCustomRange(parseRes);
+        setCustomRange(parseRes, cat);
         closeAddEditModal();
       }
     } catch (error) {
@@ -191,7 +198,7 @@ const SettingsCustomRange = ({cat}) => {
   const setDeleteMode = async (entry) => {
     setEntryToDelete(entry);
     await setOpenDeleteModal(true);
-    document.getElementById("nameToDelete").innerHTML = entry.name;
+    document.getElementById("labelToDelete").innerHTML = entry.label;
   }
 
   const onDeleteSubmit = async (event) => {
@@ -213,7 +220,7 @@ const SettingsCustomRange = ({cat}) => {
         });
       }
       else {
-        setCustomRange(parseRes);
+        setCustomRange(parseRes, cat);
         setOpenDeleteModal(false);
       }
 
@@ -263,9 +270,9 @@ const SettingsCustomRange = ({cat}) => {
       {openAddEditModal ? 
       <>
         <div
-          className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+          className="justify-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
         >
-          <div className="relative w-1/2 my-6 mx-auto">
+          <div className="relative w-full md:w-550px p-2 mt-16 mx-auto">
             {/*content*/}
             <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
               {/*header*/}
@@ -294,7 +301,7 @@ const SettingsCustomRange = ({cat}) => {
                     <div className="card-content pt-3">
                       <div className="pb-3">
                         <label className="font-bold capitalize">{cat} name</label>
-                        <input type="text" name="name" placeholder={`${cat} name`} className="blue-outline-transition bg-creme block w-full text-base py-2 px-3 rounded-md"
+                        <input type="text" name="label" placeholder={`${cat} name`} className="blue-outline-transition bg-creme block w-full text-base py-2 px-3 rounded-md"
                           value={mode === 'add' ? addRangeName : mode === 'edit' ? editRangeName : null}
                           onChange={
                             mode === 'add' ? e => setAddRangeName(e.target.value) :
@@ -305,10 +312,10 @@ const SettingsCustomRange = ({cat}) => {
                       <div className="pb-3">
                         <label className="font-bold capitalize">{cat} details</label>
                         <textarea type="text" name="definition" placeholder={`${cat} details`} className="blue-outline-transition bg-creme block w-full h-32 text-base py-2 px-3 rounded-md"
-                          value={mode === 'add' ? addRangeDef : mode === 'edit' ? editRangeDef : null}
+                          value={mode === 'add' ? addRangeValue : mode === 'edit' ? editRangeValue : null}
                           onChange={
-                            mode === 'add' ? e => setAddRangeDef(e.target.value) :
-                            mode === 'edit' ? e => setEditRangeDef(e.target.value) : null
+                            mode === 'add' ? e => setAddRangeValue(e.target.value) :
+                            mode === 'edit' ? e => setEditRangeValue(e.target.value) : null
                           }
                         />
                       </div>
@@ -341,9 +348,9 @@ const SettingsCustomRange = ({cat}) => {
       {openDeleteModal ? 
       <>
         <div
-          className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+          className="justify-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
         >
-          <div className="relative w-1/3 my-6 mx-auto">
+          <div className="relative w-full md:w-550px p-2 mt-16 mx-auto">
             {/*content*/}
             <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
               {/*header*/}
@@ -357,7 +364,7 @@ const SettingsCustomRange = ({cat}) => {
               </div>
               {/*body*/}
               <div className="card-content px-3 pb-2">
-                <p className='text-center text-base'>Are you sure to delete the entry <strong id="nameToDelete"></strong> ?</p>
+                <p className='text-center text-base'>Are you sure to delete the entry <strong id="labelToDelete"></strong> ?</p>
               </div>
               <div className="flex items-center justify-end py-3 px-6 rounded-xl">
                 <button
@@ -385,4 +392,4 @@ const SettingsCustomRange = ({cat}) => {
   )
 }
 
-export default SettingsCustomRange
+export default SettingsCustomRanges
