@@ -15,9 +15,12 @@ const SettingsCustomRanges = ({cat}) => {
  
   const setElements = () => {
     const customRange = customRanges[cat + "_range"];
-    console.log(customRange.length)
-    if (customRange.length > 0) {
-      customRange.forEach((item) => {
+    console.log('customRange: ', customRange)
+    console.log('Object.keys(customRange).length: ', Object.keys(customRange).length)
+
+    if (Object.keys(customRange).length > 0) {
+      Object.entries(customRange).forEach((entry) => {
+        const item = entry[1];
         elements.push(
           <tr id={`${cat}-${item['value']}`}>
             <td>

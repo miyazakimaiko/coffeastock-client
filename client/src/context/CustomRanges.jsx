@@ -29,7 +29,7 @@ const CustomRanges = (props) => {
         }, 
         {}
       );
-      orderedRanges[range[0]] = Object.values(orderedRange)
+      orderedRanges[range[0]] = orderedRange;
     });
     innerSetCustomRanges(orderedRanges)
   }
@@ -57,8 +57,7 @@ const CustomRanges = (props) => {
       {}
     );
     let orderedRanges = customRanges;
-    orderedRanges[rangeName] = Object.values(orderedRange);
-    console.log('Object.values(orderedRange): ', Object.values(orderedRange))
+    orderedRanges[rangeName] = orderedRange;
     innerSetCustomRanges(orderedRanges);
   }
   
