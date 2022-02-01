@@ -52,7 +52,7 @@ body {
   border-radius: 100px;
 }
 
-.active {
+.nav-link-active {
   font-weight: inherit;
   color: #D57C58;
 }
@@ -67,11 +67,11 @@ body {
 }
 
 .blue-outline-transition {
-  outline: transparent solid 1px;
+  outline: #e9e8e3 solid 1px;
   transition: outline 0.2s ease;
 
   &:focus-visible {
-    outline: solid 1px ;
+    outline: solid 1px #68B3C7;
   }
 }
 
