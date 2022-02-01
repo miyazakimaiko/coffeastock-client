@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CoffeeBag = ({name}) => {
+const CoffeeBagLeft = ({name}) => {
 
   return (
     <div className="relative">
@@ -28,4 +28,4 @@ const CoffeeBag = ({name}) => {
   )
 }
 
-export default CoffeeBag
+export default CoffeeBagLeft
