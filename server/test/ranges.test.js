@@ -8,9 +8,10 @@ chai.use(chaiHttp);
 
 describe('Custom Ranges API', () => {
   const endpoint = process.env.API_ENDPOINT;
-  const existingUserId = 'fe045d0e-77ac-43fb-8850-9eb4f310e316'
-  const wrongUserId = 'aaaaaaaaaaaaaaaaaaaaaaa'
-
+  const existingUserId = '88b6bbc1-bfa4-462c-8691-73c021eeb5f3'
+  const wrongUserId = 'aaaaaaaaaaaaaaaaaaaaaaa';
+  const existingRangeId = 1;
+  const wrongRangeId = 30;
   /*
   * Test the GET ALL route
   */
@@ -153,5 +154,219 @@ describe('Custom Ranges API', () => {
           done();
         })
     })
+  });
+
+  describe(`GET ${endpoint}/user/:userid/range/:rangename/:id`, () => {
+    it("should FIND an entry of the each range of a user", (done) => {
+      chai.request(app)
+        .get(`${endpoint}/user/${existingUserId}/range/origin/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+        response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(true);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingUserId}/range/farm/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(true);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingUserId}/range/variety/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(true);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingUserId}/range/process/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(true);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingUserId}/range/roaster/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(true);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingUserId}/range/aroma/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(true);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingUserId}/range/grinder/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(true);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingUserId}/range/method/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(true);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingUserId}/range/water/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(true);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingUserId}/range/palate/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(true);
+          done();
+        })
+    });
+
+    it("should NOT FIND entry of a range with wrong entry ID", (done) => {
+      chai.request(app)
+        .get(`${endpoint}/user/${existingRangeId}/range/origin/${wrongRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingRangeId}/range/farm/${wrongRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingRangeId}/range/variety/${wrongRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingRangeId}/range/process/${wrongRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingRangeId}/range/roaster/${wrongRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingRangeId}/range/aroma/${wrongRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingRangeId}/range/grinder/${wrongRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingRangeId}/range/method/${wrongRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingRangeId}/range/water/${wrongRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);
+        })
+      chai.request(app)
+        .get(`${endpoint}/user/${existingRangeId}/range/palate/${wrongRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);
+          done();
+        })
+    });
+
+    it("should NOT FIND entry of a range with wrong user ID", (done) => {
+      chai.request(app)
+        .get(`${endpoint}/user/${wrongUserId}/range/origin/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);        })
+      chai.request(app)
+        .get(`${endpoint}/user/${wrongUserId}/range/farm/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);        })
+      chai.request(app)
+        .get(`${endpoint}/user/${wrongUserId}/range/variety/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);        })
+      chai.request(app)
+        .get(`${endpoint}/user/${wrongUserId}/range/process/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);        })
+      chai.request(app)
+        .get(`${endpoint}/user/${wrongUserId}/range/roaster/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);        })
+      chai.request(app)
+        .get(`${endpoint}/user/${wrongUserId}/range/aroma/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);        })
+      chai.request(app)
+        .get(`${endpoint}/user/${wrongUserId}/range/grinder/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);        })
+      chai.request(app)
+        .get(`${endpoint}/user/${wrongUserId}/range/method/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);        })
+      chai.request(app)
+        .get(`${endpoint}/user/${wrongUserId}/range/water/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);        })
+      chai.request(app)
+        .get(`${endpoint}/user/${wrongUserId}/range/palate/${existingRangeId}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('boolean');
+          response.body.should.be.a('boolean').eq(false);          done();
+        })
+    });
   });
 })
