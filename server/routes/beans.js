@@ -10,12 +10,8 @@ module.exports = (app) => {
       const results = await db.query(`
       SELECT * FROM beans WHERE user_id = $1`, 
       [req.params.userid]);
+      res.status(200).json(results.rows);
       
-      res.status(200).json({
-        status: "success",
-        results: results.rows.length,
-        data: results.rows,
-      });
     } catch (error) {
       next(error);
     }
@@ -28,7 +24,7 @@ module.exports = (app) => {
       INSERT INTO 
       BEANS (
         user_id, 
-        product_name,
+        label,
         blend_ratio,
         origin, 
         farm, 
@@ -46,7 +42,7 @@ module.exports = (app) => {
       RETURNING *`,
       [
         req.params.userid,
-        req.body.product_name,
+        req.body.label,
         req.body.blend_ratio,
         req.body.origin,
         req.body.farm,
@@ -61,11 +57,7 @@ module.exports = (app) => {
         req.body.aroma
       ]);
 
-      res.status(200).json({
-        status: "success",
-        results: results.rows.length,
-        data: results.rows,
-      });
+      res.status(200).json(results.rows);
         
     } catch (error) {
       next(error);
@@ -109,11 +101,7 @@ module.exports = (app) => {
         req.params.productid
       ]);
 
-      res.status(200).json({
-        status: "success",
-        results: results.rows.length,
-        body: results.rows
-      });
+      res.status(200).json(results.rows);
 
     } catch (error) {
       next(error);
@@ -127,10 +115,7 @@ module.exports = (app) => {
       DELETE FROM beans WHERE user_id = $1 AND product_id = $2`,
       [req.params.userid, req.params.productid]);
 
-      res.status(200).json({
-        status: "success",
-        body: results.body
-      });
+      res.status(200).json(results.body);
 
     } catch (error) {
       next(error);
