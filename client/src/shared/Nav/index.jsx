@@ -3,21 +3,16 @@ import { NavLink } from 'react-router-dom'
 import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, CogIcon, FilterIcon, HomeIcon } from '@heroicons/react/outline'
 import { Collapse } from 'react-bootstrap'
 import { useContext } from 'react'
-import { AccountContext } from '../../context/Account'
 import './Nav.scss'
 import { NavStateContext } from '../../context/NavState'
 import PushPinIcon from '../../svgs/PushPinIcon'
 
 const Nav = (props) => {
   const { showNavbar, pinnedNavbar, setPinnedNavbar } = useContext(NavStateContext);
-  const [openUserMenu, setOpenUserMenu] = useState(false);
   const [openProcess, setOpenProcess] = useState(false);
   const [openOrigin, setOpenOrigin] = useState(false);
   const [openSettingCoffeeBeans, setOpenSettingCoffeeBeans] = useState(false);
   const [openSettingRecipes, setOpenSettingRecipes] = useState(false);
-
-  const { userData } = useContext(AccountContext);
-
 
   return (
   <div id="nav-bar">
@@ -42,7 +37,7 @@ const Nav = (props) => {
           <li className="h-10 mx-6 flex items-center justify-between font-bold">
             <NavLink to="/"
               className={({ isActive }) => "flex items-center" 
-                + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                 onClick={pinnedNavbar ? null : showNavbar}
             >
               <HomeIcon className="h-4 w-4"></HomeIcon>
@@ -53,7 +48,7 @@ const Nav = (props) => {
           <li className="h-10 mx-6 flex items-center justify-between font-bold">
             <NavLink exact="true" to="coffees"
               className={({ isActive }) => "flex items-center" 
-              + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+              + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
               onClick={pinnedNavbar ? null : showNavbar}
             >
               <BookOpenIcon className="h-4 w-4"></BookOpenIcon>
@@ -95,7 +90,7 @@ const Nav = (props) => {
                   <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="ethiopia/1"
                       className={({ isActive }) => "flex items-center" 
-                      + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                      + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                     >
                       <span>Ethiopia</span>
                     </NavLink>
@@ -103,7 +98,7 @@ const Nav = (props) => {
                   <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="colombia/1"
                       className={({ isActive }) => "flex items-center" 
-                      + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                      + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                     >
                       <span>Colombia</span>
                     </NavLink>
@@ -175,7 +170,7 @@ const Nav = (props) => {
                   <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/origin"
                       className={({ isActive }) => "flex items-center" 
-                      + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                      + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                       onClick={pinnedNavbar ? null : showNavbar}
                     >
                       <span>Origin</span>
@@ -184,7 +179,7 @@ const Nav = (props) => {
                   <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/farm"
                       className={({ isActive }) => "flex items-center" 
-                      + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                      + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                       onClick={pinnedNavbar ? null : showNavbar}
                     >
                       <span>Farm</span>
@@ -193,7 +188,7 @@ const Nav = (props) => {
                   <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/variety"
                       className={({ isActive }) => "flex items-center" 
-                      + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                      + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                       onClick={pinnedNavbar ? null : showNavbar}
                     >
                       <span>Variety</span>
@@ -202,7 +197,7 @@ const Nav = (props) => {
                   <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/process"
                       className={({ isActive }) => "flex items-center" 
-                      + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                      + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                       onClick={pinnedNavbar ? null : showNavbar}
                     >
                       <span>process</span>
@@ -211,7 +206,7 @@ const Nav = (props) => {
                   <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/roaster"
                       className={({ isActive }) => "flex items-center" 
-                      + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                      + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                       onClick={pinnedNavbar ? null : showNavbar}
                     >
                       <span>roaster</span>
@@ -220,7 +215,7 @@ const Nav = (props) => {
                   <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/aroma"
                       className={({ isActive }) => "flex items-center" 
-                      + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                      + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                       onClick={pinnedNavbar ? null : showNavbar}
                     >
                       <span>aroma</span>
@@ -258,7 +253,7 @@ const Nav = (props) => {
                   <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/grinder"
                       className={({ isActive }) => "flex items-center" 
-                      + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                      + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                       onClick={pinnedNavbar ? null : showNavbar}
                     >
                       <span>grinder</span>
@@ -267,7 +262,7 @@ const Nav = (props) => {
                   <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/method"
                       className={({ isActive }) => "flex items-center" 
-                      + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                      + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                       onClick={pinnedNavbar ? null : showNavbar}
                     >
                       <span>method</span>
@@ -276,7 +271,7 @@ const Nav = (props) => {
                   <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/water"
                       className={({ isActive }) => "flex items-center" 
-                      + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                      + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                       onClick={pinnedNavbar ? null : showNavbar}
                     >
                       <span>water</span>
@@ -285,7 +280,7 @@ const Nav = (props) => {
                   <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/palate"
                       className={({ isActive }) => "flex items-center" 
-                      + (isActive ? ' active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                      + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                       onClick={pinnedNavbar ? null : showNavbar}
                     >
                       <span>palate</span>
