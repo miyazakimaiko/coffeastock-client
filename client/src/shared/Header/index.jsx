@@ -1,12 +1,14 @@
-import { MenuAlt2Icon, XIcon } from '@heroicons/react/outline'
+import { MenuAlt2Icon, PlusSmIcon, XIcon } from '@heroicons/react/outline'
 import { NavLink } from 'react-router-dom'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useContext } from 'react';
 import { toast } from 'react-toastify'
 import { NavStateContext } from '../../context/NavState';
 import './Header.scss'
 import { AccountContext } from '../../context/Account';
 import imgBeans from '../../images/beans.png'
+import AddBeanModal from './AddBeanModal';
+import AddRecipeModal from './AddRecipeModal';
 
 
 const Header = (props) => {
@@ -28,13 +30,45 @@ const Header = (props) => {
     })
   }
 
+  const [open, setOpen] = useState(false)
+
+  const [openAddBeanModal, innerSetOpenAddBeanModal] = useState(false)
+  const setOpenAddBeanModal = boolean => {
+    innerSetOpenAddBeanModal(boolean);
+  }
+
+  const [openAddRecipeModal, innerSetOpenAddRecipeModal] = useState(false)
+  const setOpenAddRecipeModal = boolean => {
+    innerSetOpenAddRecipeModal(boolean);
+  }
+
   return (
+    <>
     <div className="header h-16 w-full mb-4 px-4 items-center header-border">
       <div className="flex">
         <div className="flex items-center" onClick={showNavbar}>
           {openNav ? <XIcon className="h-8 w-8" /> : <MenuAlt2Icon className="h-8 w-8"/>}
         </div>
-        <h2 className="text-2xl ml-4">{props.title}</h2>
+        <button
+          onClick={() => innerSetOpenAddBeanModal(true)}
+          type="button"
+          className="flex items-center bg-orange text-white font-capitals uppercase font-bold text-xs tracking-widest rounded-3xl px-3 py-2 ml-4 mr-0"
+        >
+          <PlusSmIcon
+            className="h-4 w-4 mr-2" 
+          />
+          Coffee Bean
+        </button>
+        <button
+          onClick={() => innerSetOpenAddRecipeModal(true)}
+          type="button"
+          className="flex items-center bg-yellow text-white font-capitals uppercase font-bold text-xs tracking-widest rounded-3xl px-3 py-2 ml-4 mr-0"
+        >
+          <PlusSmIcon 
+            className="h-4 w-4 mr-2" 
+          />
+          Recipe
+        </button>
       </div>
       <div>
         <a href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -47,24 +81,13 @@ const Header = (props) => {
           <div class="dropdown-divider"></div>
           <button type="button" class="dropdown-item" onClick={logout}>Logout</button>
         </div>
+      </div>
     </div>
-      {/* <form 
-        action=""
-        className="relative flex items-center text-gray-400 focus-within:text-gray-500 w-64 max-w-1/2"
-      >
-        <SearchIcon className="w-5 h-5 ml-3 absolute pointer-events-none"></SearchIcon>
-          <input 
-            type="text"
-            name="search"
-            placeholder="Search recipes/beans"
-            autoComplete="off"
-            aria-label="Search"
-            className="w-full pl-10 pr-3 py-2 rounded-sm outline-none ring-1 
-              ring-gray-300 focus-visible:ring-gray-400 focus-visible:ring-2"
-          />
-      </form> */}
-    </div>
+    {openAddBeanModal ?  <AddBeanModal setOpenThisModal={setOpenAddBeanModal} /> : null}
+    {openAddRecipeModal ?  <AddRecipeModal setOpenThisModal={setOpenAddRecipeModal} /> : null}
+    </>
     )
 }
 
 export default Header
+
