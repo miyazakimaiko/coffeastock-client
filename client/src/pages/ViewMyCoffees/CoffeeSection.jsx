@@ -1,12 +1,43 @@
-import React from 'react'
-import CoffeeBag from '../../svgs/CoffeeBag'
-import { StarIcon } from '@heroicons/react/outline'
+import React, { useContext } from 'react'
+import CoffeeBagLeft from '../../svgs/CoffeeBagLeft'
 import { Link } from 'react-router-dom'
+import { CustomRangesContext } from '../../context/CustomRanges'
+import StarHalfIcon from '../../svgs/StarHalfIcon'
+import StarFullIcon from '../../svgs/StarFullIcon'
 
-const CoffeeSection = ({name}) => {
+const CoffeeSection = (props) => {
+  const { customRanges } = useContext(CustomRangesContext);
+  const bean = props.bean;
+  console.log('bean: ', bean)
+
+  // Get the label of origins from ID
+  const origins = [];
+  if (bean['origin']) {
+    bean['origin'].forEach(origin_id => {
+      const origin_range = customRanges['origin_range'];
+      origins.push(origin_range['id-' + origin_id]['label'])
+    })
+  }
+
+  const grading = [];
+  if (bean['grading']) {
+    const rounded = Math.ceil(bean['grading']/10)/2;
+    console.log('rounded: ', rounded)
+    for (let i = 1; i <= rounded; i ++) {
+      grading.push(
+        <StarFullIcon/>
+      )
+    }
+    if (rounded % 1 !== 0) {
+      grading.push(
+        <StarHalfIcon />
+      )
+    }
+  }
+
   return (
     <div className="relative p-3 w-1/3 max-w-350px min-w-250px">
-      <Link to="/recipes/1/1">
+      <Link to={`/coffee/${bean['coffee_bean_id']}`}>
         <div 
           className="
             absolute left-4 right-4 top-4 bottom-4 
@@ -19,20 +50,18 @@ const CoffeeSection = ({name}) => {
         </div>
         <div className="p-4 bg-white shadow-sm rounded-md">
           <div className="m-auto w-full max-w-10">
-            <CoffeeBag name={name} />
+            <CoffeeBagLeft name={bean['label']} />
           </div>
           <div className="text-center">
-            <h4 className="text-lg pt-2">Kenya</h4>
+            <h4 className="text-lg pt-2">
+              {origins}
+            </h4>
             <span className="flex justify-center pt-2 text-yellow">
-              <StarIcon className="h-5 w-5" />
-              <StarIcon className="h-5 w-5" />
-              <StarIcon className="h-5 w-5" />
-              <StarIcon className="h-5 w-5" />
-              <StarIcon className="h-5 w-5" />
+              {grading}
             </span>
             <div className="pt-2">
               <span>Roasted at </span>
-              <span>2021-12-21</span>
+              <span>{bean['roast_date'].split('T')[0]}</span>
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@ import React, { useState, useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import { AccountContext } from '../../context/Account';
+import { BeansContext } from '../../context/Beans';
 import { CustomRangesContext } from '../../context/CustomRanges';
 
 
@@ -11,11 +12,13 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const { setUserData, userData, authenticate, getSession, setAuthenticated } = useContext(AccountContext);
-  const { customRanges, fetchCustomRanges } = useContext(CustomRangesContext)
+  const { fetchCustomRanges } = useContext(CustomRangesContext);
+  const { fetchAllBeans } = useContext(BeansContext)
 
   useEffect(() => {
     fetchCustomRanges(userData.sub);
-    console.log(customRanges)
+    fetchAllBeans(userData.sub);
+    console.log(userData)
   }, [userData]);
 
 
@@ -38,6 +41,7 @@ const Login = () => {
           })
         });
         fetchCustomRanges(userData.sub);
+        fetchAllBeans(userData.sub);
       })
       .catch(err => {
         toast.error(err.message, {
