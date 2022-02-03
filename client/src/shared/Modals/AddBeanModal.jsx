@@ -14,6 +14,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
   const { beans } = useContext(BeansContext);
   const [selectedBeans, setSelectedBeans] = useState([]);
   console.log('Beans: ', beans)
+  console.log('customRanges: ', customRanges)
 
   return (
     <>
