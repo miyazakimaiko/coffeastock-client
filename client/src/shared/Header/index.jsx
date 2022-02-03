@@ -7,8 +7,8 @@ import { NavStateContext } from '../../context/NavState';
 import './Header.scss'
 import { AccountContext } from '../../context/Account';
 import imgBeans from '../../images/beans.png'
-import AddBeanModal from './AddBeanModal';
-import AddRecipeModal from './AddRecipeModal';
+import AddBeanModal from '../Modals/AddBeanModal';
+import AddRecipeModal from '../Modals/AddRecipeModal';
 
 
 const Header = (props) => {
@@ -25,22 +25,14 @@ const Header = (props) => {
     forceUnpin();
     signout();
     setAuthenticated(false);
-    toast.success("Logged out successfully.", {
-      position: toast.POSITION.BOTTOM_CENTER
-    })
+    toast.success("Logged out successfully.", { position: toast.POSITION.BOTTOM_CENTER })
   }
-
-  const [open, setOpen] = useState(false)
 
   const [openAddBeanModal, innerSetOpenAddBeanModal] = useState(false)
-  const setOpenAddBeanModal = boolean => {
-    innerSetOpenAddBeanModal(boolean);
-  }
+  const setOpenAddBeanModal = boolean => innerSetOpenAddBeanModal(boolean);
 
   const [openAddRecipeModal, innerSetOpenAddRecipeModal] = useState(false)
-  const setOpenAddRecipeModal = boolean => {
-    innerSetOpenAddRecipeModal(boolean);
-  }
+  const setOpenAddRecipeModal = boolean => innerSetOpenAddRecipeModal(boolean);
 
   return (
     <>
@@ -49,27 +41,22 @@ const Header = (props) => {
         <div className="flex items-center" onClick={showNavbar}>
           {openNav ? <XIcon className="h-8 w-8" /> : <MenuAlt2Icon className="h-8 w-8"/>}
         </div>
-        <button
+
+        <button type="button"
           onClick={() => innerSetOpenAddBeanModal(true)}
-          type="button"
-          className="flex items-center bg-orange text-white font-capitals uppercase font-bold text-xs tracking-widest rounded-3xl px-3 py-2 ml-4 mr-0"
-        >
-          <PlusSmIcon
-            className="h-4 w-4 mr-2" 
-          />
+          className="flex items-center bg-orange text-white font-capitals uppercase font-bold text-xs tracking-widest rounded-3xl px-3 py-2 ml-4 mr-0">
+          <PlusSmIcon className="h-4 w-4 mr-2" />
           Coffee Bean
         </button>
-        <button
+
+        <button type="button"
           onClick={() => innerSetOpenAddRecipeModal(true)}
-          type="button"
-          className="flex items-center bg-yellow text-white font-capitals uppercase font-bold text-xs tracking-widest rounded-3xl px-3 py-2 ml-4 mr-0"
-        >
-          <PlusSmIcon 
-            className="h-4 w-4 mr-2" 
-          />
+          className="flex items-center bg-yellow text-white font-capitals uppercase font-bold text-xs tracking-widest rounded-3xl px-3 py-2 ml-4 mr-0">
+          <PlusSmIcon className="h-4 w-4 mr-2" />
           Recipe
         </button>
       </div>
+
       <div>
         <a href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <div className="h-9 w-9 rounded-3xl border-2 border-burnt-sienna flex-shrink-0">
@@ -83,8 +70,10 @@ const Header = (props) => {
         </div>
       </div>
     </div>
+
     {openAddBeanModal ?  <AddBeanModal setOpenThisModal={setOpenAddBeanModal} /> : null}
     {openAddRecipeModal ?  <AddRecipeModal setOpenThisModal={setOpenAddRecipeModal} /> : null}
+    
     </>
     )
 }
