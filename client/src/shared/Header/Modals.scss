@@ -1,0 +1,53 @@
+.active {
+  opacity: 1;
+}
+.form-section {
+  padding: 0.5rem 1rem;
+
+  label {
+    display: inline-block;
+    margin-bottom: 0.3rem;
+  }
+  .divider {
+    position: relative;
+    display: block;
+    margin-bottom: 10px;
+  
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      width: 100%;
+      background-color: #e9e8e3;
+    }
+  }
+  .percent-char {
+    input {
+      text-align: right;
+    }
+    &::after {
+      content: "%";
+      margin-left: 14px;
+    }
+  }
+}
+.confirm-section {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+}
+.confirm-divider {
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      height: 2px;
+      left: 0;
+      right: 0;
+      background-color: #e9e8e3;
+      border-radius: 10px;
+    }
+}
