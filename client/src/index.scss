@@ -77,10 +77,19 @@ body {
 
 .button-transition {
   opacity: 0.8;
-  transition: opacity 0.2s ease;
+  transition: all 0.4s ease;
 
   &:hover {
     opacity: 1;
+  }
+
+  &:disabled,
+  &[disabled]{
+    background-color: #cccccc;
+    color: #666666;
+    &:hover {
+      opacity: 0.8;
+    }
   }
 }
 

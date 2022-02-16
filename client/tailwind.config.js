@@ -35,6 +35,9 @@ module.exports = {
         '250px': '250px',
         '150px': '150px'
       },
+      maxHeight: {
+        '600px': '600px'
+      },
       transitionProperty: {
         'width': 'width'
       }
