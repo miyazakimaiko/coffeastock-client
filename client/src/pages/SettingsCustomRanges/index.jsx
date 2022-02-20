@@ -7,16 +7,14 @@ import { AccountContext } from '../../context/Account';
 const SettingsCustomRanges = ({cat}) => {
   const { userData } = useContext(AccountContext);
   const { customRanges, fetchCustomRange, setCustomRange } = useContext(CustomRangesContext);
-  let elements = [];
-
+  
   useEffect(() => {
     fetchCustomRange(userData.sub, cat)
   }, [customRanges]);
  
-  const setElements = () => {
+  const makeRangeElements = () => {
+    let elements = [];
     const customRange = customRanges[cat + "_range"];
-    console.log('customRange: ', customRange)
-    console.log('Object.keys(customRange).length: ', Object.keys(customRange).length)
 
     if (Object.keys(customRange).length > 0) {
       Object.entries(customRange).forEach((entry) => {
@@ -62,8 +60,9 @@ const SettingsCustomRanges = ({cat}) => {
         </tr>
       )
     }
+    return elements
   }
-  setElements();
+  const rangeElements = makeRangeElements();
 
   const [mode, setMode] = useState('');
   const [openAddEditModal, setOpenAddEditModal] = useState(false);
@@ -262,7 +261,7 @@ const SettingsCustomRanges = ({cat}) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {elements}
+                  {rangeElements}
                 </tbody>
               </table>
             </div>
@@ -291,7 +290,7 @@ const SettingsCustomRanges = ({cat}) => {
                 </button>
               </div>
               {/*body*/}
-              <div class="content">
+              <div className="content">
                 <form 
                   id={`${cat}AddForm`}
                   className="w-full"
