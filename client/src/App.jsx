@@ -1,20 +1,20 @@
 import React, { useEffect, useContext, createRef } from 'react';
+import {BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import 'bootstrap/dist/js/bootstrap';
+import '../src/bootstrap-custom/bootstrap.css'
+import './index.scss'
+import Nav from './shared/Nav';
+import Header from './shared/Header';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import ViewRecipes from './pages/ViewRecipes';
 import ViewMyCoffees from './pages/ViewMyCoffees';
-import Nav from './shared/Nav';
-import {BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import 'bootstrap/dist/js/bootstrap'
-import '../src/bootstrap-custom/bootstrap.css'
-import './index.scss'
 import SettingsCustomRanges from './pages/SettingsCustomRanges';
 import { AccountContext } from './context/Account';
 import CustomRanges from './context/CustomRanges';
-import Header from './shared/Header';
 import NavState from './context/NavState';
 import Beans from './context/Beans';
 
@@ -42,7 +42,6 @@ const App = () => {
             <Router>
               {authenticated ? <Nav navRef={navRef} mainRef={mainRef} headerRef={headerRef} pushpinRef={pushpinRef}/>: ""}
               <div ref={mainRef} className={"main w-full box-border text-sm text-burnt-sienna"}>
-                {/* https://stackoverflow.com/questions/58786766/dynamic-header-content-in-react */}
                 {authenticated ? <Header mainRef={mainRef} navRef={navRef} pushpinRef={pushpinRef}/>: ""}
                 <Routes>
                 <Route exact path='/login' element={authenticated ? <Navigate to="/" /> : <Login />} />
