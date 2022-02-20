@@ -63,10 +63,10 @@ const Header = (props) => {
             <img src={imgBeans} className="h-full w-full"/>
           </div>
         </a>
-        <div class="dropdown-menu dropdown-menu-end border-none shadow-md animate slideIn" aria-labelledby="navbarDropdown">
+        <div className="dropdown-menu dropdown-menu-end border-none shadow-md animate slideIn" aria-labelledby="navbarDropdown">
           <NavLink exact="true" to="/my-profile" className="dropdown-item">My Account</NavLink>
-          <div class="dropdown-divider"></div>
-          <button type="button" class="dropdown-item" onClick={logout}>Logout</button>
+          <div className="dropdown-divider"></div>
+          <button type="button" className="dropdown-item" onClick={logout}>Logout</button>
         </div>
       </div>
     </div>

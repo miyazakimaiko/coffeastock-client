@@ -85,7 +85,7 @@ const ViewRecipes = () => {
               <CoffeeBagRight name={coffeeName} />
             </div>
             <div className="my-4 mx-10">
-              <div class="flex justify-between bg-gray-200">
+              <div className="flex justify-between bg-gray-200">
                 <div>
                   <h2 className="font-bold text-2xl">{coffeeName}</h2>
                   <p>By {roasters}</p>
