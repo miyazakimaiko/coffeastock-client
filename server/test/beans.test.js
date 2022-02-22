@@ -6,9 +6,9 @@ let app = require("../app")
 chai.should();
 chai.use(chaiHttp);
 
-describe('Custom Ranges API', () => {
+describe('Beans API', () => {
   const endpoint = process.env.API_ENDPOINT;
-  const existingUserId = 'fe045d0e-77ac-43fb-8850-9eb4f310e316'
+  const existingUserId = '30a80906-2334-48ec-9f5d-88e0f68210fc'
   const wrongUserId = 'aaaaaaaaaaaaaaaaaaaaaaa';
   const existingRangeId = 1;
   const wrongRangeId = 30;
@@ -21,9 +21,237 @@ describe('Custom Ranges API', () => {
         .get(`${endpoint}/user/${existingUserId}/beans`)
         .end((err, response) => {
           response.should.have.status(200);
-          response.body.should.be.a('object');
+          response.body.should.be.a('array');
           done();
         })
     })
+  });
+
+  describe(`POST ${endpoint}/user/:userid/bean`, () => {
+    it("should return error if Name input is empty", (done) => {
+      chai.request(app)
+        .post(`${endpoint}/user/${existingUserId}/bean`)
+        .send({
+          "label": "",
+          "single_origin": true,
+          "origin": [1, 2], 
+          "farm": [3, 3], 
+          "variety": [1, 3], 
+          "process": [1, 2], 
+          "altitude": "2000 MASL",
+          "grading": 82.5,
+          "harvest_date": "Oct 2020",
+          "roaster": [1, 2],
+          "roast_level": 8.5,
+          "roast_date": 2021-10-12,
+          "aroma": [1, 3, 5],
+          "memo": "Testing..."
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          done();
+        })
+    });
+    it("should return error if Name input is longer than 60 characters", (done) => {
+      chai.request(app)
+        .post(`${endpoint}/user/${existingUserId}/bean`)
+        .send({
+          "label": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aen",
+          "single_origin": true,
+          "origin": [1, 2], 
+          "farm": [3, 3], 
+          "variety": [1, 3], 
+          "process": [1, 2], 
+          "altitude": "2000 MASL",
+          "grading": 82.5,
+          "harvest_date": "Oct 2020",
+          "roaster": [1, 2],
+          "roast_level": 8.5,
+          "roast_date": 2021-10-12,
+          "aroma": [1, 3, 5],
+          "memo": "Testing..."
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          response.body.should.have.property('message', 'Invalid Name');
+          done();
+        })
+    });
+    it("should return error if Single Origin is not boolean", (done) => {
+      chai.request(app)
+        .post(`${endpoint}/user/${existingUserId}/bean`)
+        .send({
+          "label": "Test",
+          "single_origin": "test",
+          "origin": [1, 2], 
+          "farm": [3, 3], 
+          "variety": [1, 3], 
+          "process": [1, 2], 
+          "altitude": "2000 MASL",
+          "grading": 82.5,
+          "harvest_date": "Oct 2020",
+          "roaster": [1, 2],
+          "roast_level": 8.5,
+          "roast_date": 2021-10-12,
+          "aroma": [1, 3, 5],
+          "memo": "Testing..."
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          response.body.should.have.property('message', 'Invalid Single Origin');
+          done();
+        })
+    });
+    it("should return error if blend ratio is not JSON object", (done) => {
+      chai.request(app)
+        .post(`${endpoint}/user/${existingUserId}/bean`)
+        .send({
+          "label": "Test",
+          "single_origin": true,
+          "blend_ratio": 10,
+          "origin": [1, 2], 
+          "farm": [3, 3], 
+          "variety": [1, 3], 
+          "process": [1, 2], 
+          "altitude": "2000 MASL",
+          "grading": 82.5,
+          "harvest_date": "Oct 2020",
+          "roaster": [1, 2],
+          "roast_level": 8.5,
+          "roast_date": 2021-10-12,
+          "aroma": [1, 3, 5],
+          "memo": "Testing..."
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          response.body.should.have.property('message', 'Invalid Blend Ratio');
+          done();
+        })
+    });
+    it("should return error if roast level is not 0 - 10", (done) => {
+      chai.request(app)
+        .post(`${endpoint}/user/${existingUserId}/bean`)
+        .send({
+          "label": "Test",
+          "single_origin": true,
+          "origin": [1, 2], 
+          "farm": [3, 3], 
+          "variety": [1, 3], 
+          "process": [1, 2], 
+          "altitude": "2000 MASL",
+          "grading": 82.5,
+          "harvest_date": "Oct 2020",
+          "roaster": [1, 2],
+          "roast_level": 12,
+          "roast_date": 2021-10-12,
+          "aroma": [1, 3, 5],
+          "memo": "Testing..."
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          response.body.should.have.property('message', 'Invalid Roast Level');
+          done();
+        })
+    });
+    it("should return error if roast level is not 0 - 10", (done) => {
+      chai.request(app)
+        .post(`${endpoint}/user/${existingUserId}/bean`)
+        .send({
+          "label": "Test",
+          "single_origin": true,
+          "origin": [1, 2], 
+          "farm": [3, 3], 
+          "variety": [1, 3], 
+          "process": [1, 2], 
+          "altitude": "2000 MASL",
+          "grading": 82.5,
+          "harvest_date": "Oct 2020",
+          "roaster": [1, 2],
+          "roast_level": ["test"],
+          "roast_date": 2021-10-12,
+          "aroma": [1, 3, 5],
+          "memo": "Testing..."
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          response.body.should.have.property('message', 'Invalid Roast Level');
+          done();
+        })
+    });
+    it("should return error if grading is not 0 - 100", (done) => {
+      chai.request(app)
+        .post(`${endpoint}/user/${existingUserId}/bean`)
+        .send({
+          "label": "Test",
+          "single_origin": true,
+          "origin": [1, 2], 
+          "farm": [3, 3], 
+          "variety": [1, 3], 
+          "process": [1, 2], 
+          "altitude": "2000 MASL",
+          "grading": 102.5,
+          "harvest_date": "Oct 2020",
+          "roaster": [1, 2],
+          "roast_level": 10,
+          "roast_date": 2021-10-12,
+          "aroma": [1, 3, 5],
+          "memo": "Testing..."
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          response.body.should.have.property('message', 'Invalid Grade');
+          done();
+        })
+    });
+    it("should return error if grading is not 0 - 100", (done) => {
+      chai.request(app)
+        .post(`${endpoint}/user/${existingUserId}/bean`)
+        .send({
+          "label": "Test",
+          "single_origin": true,
+          "origin": [1, 2], 
+          "farm": [3, 3], 
+          "variety": [1, 3], 
+          "process": [1, 2], 
+          "altitude": "2000 MASL",
+          "grading": "test",
+          "harvest_date": "Oct 2020",
+          "roaster": [1, 2],
+          "roast_level": 9.5,
+          "roast_date": 2021-10-12,
+          "aroma": [1, 3, 5],
+          "memo": "Testing..."
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          response.body.should.have.property('message', 'Invalid Grade');
+          done();
+        })
+    });
+    it("should return error if memo is too long", (done) => {
+      chai.request(app)
+        .post(`${endpoint}/user/${existingUserId}/bean`)
+        .send({
+          "label": "Test",
+          "single_origin": true,
+          "origin": [1, 2], 
+          "farm": [3, 3], 
+          "variety": [1, 3], 
+          "process": [1, 2], 
+          "altitude": "2000 MASL",
+          "grading": 100,
+          "harvest_date": "Oct 2020",
+          "roaster": [1, 2],
+          "roast_level": 10,
+          "roast_date": 2021-10-12,
+          "aroma": [1, 3, 5],
+          "memo": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui."
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          response.body.should.have.property('message', 'Invalid Memo');
+          done();
+        })
+    });
   })
 })
