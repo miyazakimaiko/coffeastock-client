@@ -1,38 +1,62 @@
-import { MenuAlt2Icon, PlusSmIcon, XIcon } from '@heroicons/react/outline'
-import { NavLink } from 'react-router-dom'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useContext } from 'react';
-import { toast } from 'react-toastify'
+import { toast } from 'react-toastify';
+import { NavLink } from 'react-router-dom';
+import { MenuAlt2Icon, PlusSmIcon, XIcon } from '@heroicons/react/outline'
+
 import { NavStateContext } from '../../context/NavState';
-import './Header.scss'
 import { AccountContext } from '../../context/Account';
 import imgBeans from '../../images/beans.png'
 import AddBeanModal from '../Modals/AddBeanModal';
 import AddRecipeModal from '../Modals/AddRecipeModal';
-
+import './Header.scss'
 
 const Header = (props) => {
-  const { openNav, setMainRef, setNavRef, setPushPinRef, showNavbar, forceUnpin } = useContext(NavStateContext);
-  const { setAuthenticated, signout } = useContext(AccountContext);
+  const { 
+    openNav, 
+    setMainRef, 
+    setNavRef, 
+    setPushPinRef, 
+    showNavbar, 
+    forceUnpin 
+  } = useContext(NavStateContext);
+
+  const { 
+    setAuthenticated, 
+    signout 
+  } = useContext(AccountContext);
+
+  const [
+    openAddBeanModal, 
+    innerSetOpenAddBeanModal
+  ] = useState(false);
+
+  const setOpenAddBeanModal = boolean => 
+    innerSetOpenAddBeanModal(boolean);
+
+  const [
+    openAddRecipeModal, 
+    innerSetOpenAddRecipeModal
+  ] = useState(false)
+
+  const setOpenAddRecipeModal = boolean => 
+    innerSetOpenAddRecipeModal(boolean);
+
+  const logout = () => {
+    forceUnpin();
+    signout();
+    setAuthenticated(false);
+    toast.success(
+      "Logged out successfully.", 
+      { position: toast.POSITION.BOTTOM_CENTER }
+    )
+  }
 
   useEffect(() => {
     setMainRef(props.mainRef.current);
     setNavRef(props.navRef.current);
     setPushPinRef(props.pushpinRef.current);
   }, [props.navRef])
-
-  const logout = () => {
-    forceUnpin();
-    signout();
-    setAuthenticated(false);
-    toast.success("Logged out successfully.", { position: toast.POSITION.BOTTOM_CENTER })
-  }
-
-  const [openAddBeanModal, innerSetOpenAddBeanModal] = useState(false)
-  const setOpenAddBeanModal = boolean => innerSetOpenAddBeanModal(boolean);
-
-  const [openAddRecipeModal, innerSetOpenAddRecipeModal] = useState(false)
-  const setOpenAddRecipeModal = boolean => innerSetOpenAddRecipeModal(boolean);
 
   return (
     <>
@@ -44,14 +68,16 @@ const Header = (props) => {
 
         <button type="button"
           onClick={() => innerSetOpenAddBeanModal(true)}
-          className="flex items-center bg-orange text-white font-capitals uppercase font-bold text-xs tracking-widest rounded-3xl px-3 py-2 ml-4 mr-0">
+          className="flex items-center bg-transparent text-burnt-sienna 
+          font-capitals uppercase font-bold text-xs tracking-widest border-2 
+          border-burnt-sienna rounded-3xl px-3 py-2 ml-4 mr-0">
           <PlusSmIcon className="h-4 w-4 mr-2" />
           Coffee Bean
         </button>
 
         <button type="button"
           onClick={() => innerSetOpenAddRecipeModal(true)}
-          className="flex items-center bg-yellow text-white font-capitals uppercase font-bold text-xs tracking-widest rounded-3xl px-3 py-2 ml-4 mr-0">
+          className="flex items-center bg-burnt-sienna text-white font-capitals uppercase font-bold text-xs tracking-widest rounded-3xl px-3 py-2 ml-4 mr-0">
           <PlusSmIcon className="h-4 w-4 mr-2" />
           Recipe
         </button>
