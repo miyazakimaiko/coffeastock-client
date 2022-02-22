@@ -6,11 +6,101 @@ import { AccountContext } from '../../context/Account';
 
 const SettingsCustomRanges = ({cat}) => {
   const { userData } = useContext(AccountContext);
-  const { customRanges, fetchCustomRange, setCustomRange } = useContext(CustomRangesContext);
-  
-  useEffect(() => {
-    fetchCustomRange(userData.sub, cat)
-  }, [customRanges]);
+  const { customRanges, getCustomRange, insertEntry, editEntry, deleteEntry } = useContext(CustomRangesContext);
+
+  const [addRangeName, setAddRangeName] = useState('');
+  const [addRangeValue, setAddRangeValue] = useState('')
+  const [editRangeId, setEditRangeId] = useState('');
+  const [editRangeName, setEditRangeName] = useState('');
+  const [editRangeValue, setEditRangeValue] = useState('');
+  const [entryToDelete, setEntryToDelete] = useState({})
+
+  const [openAddEditModal, setOpenAddEditModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  const [mode, setMode] = useState('');
+  const setAddMode = () => {
+    setMode('add')
+    setOpenAddEditModal(true);
+  }
+  const setEditMode = async (entry) => {
+    setMode('edit');
+    setEditRangeId(entry.id);
+    setEditRangeName(entry.label);
+    setEditRangeValue(entry.def);
+    setOpenAddEditModal(true);
+  }
+  const setDeleteMode = async (entry) => {
+    setEntryToDelete(entry);
+    await setOpenDeleteModal(true);
+    document.getElementById("labelToDelete").innerHTML = entry.label;
+  }
+
+  const closeAddEditModal = () => {
+    setOpenAddEditModal(false);
+    setAddRangeName('');
+    setAddRangeValue('');
+  }
+
+  const onAddSubmit = async (event) => {
+    event.preventDefault();
+    if (addRangeName == '') {
+      toast.error('Name field is required.', {
+        position: toast.POSITION.BOTTOM_CENTER
+      });
+      return;
+    }
+    if (addRangeValue.indexOf("\"") !== -1 || addRangeValue.indexOf("\'") !== -1) {
+      toast.error('Single/Double quote cannot be used in the fields.', {
+        position: toast.POSITION.BOTTOM_CENTER
+      });
+      return;
+    }
+
+    const OneLinerangeDef = addRangeValue.replace(/(\r\n|\n|\r)/gm, " ");
+    const insertBody = {
+      "label": addRangeName,
+      "def": OneLinerangeDef
+    }
+    const insertSuccess = await insertEntry(userData.sub, cat, insertBody);
+    if (insertSuccess) {
+      closeAddEditModal();
+    }
+  }
+
+  const onEditSubmit = async (event) => {
+    event.preventDefault();
+    if (editRangeName == '') {
+      toast.error("Name cannot be empty.", {
+        position: toast.POSITION.BOTTOM_CENTER
+      });
+      return;
+    }
+    if (editRangeValue.indexOf("\"") !== -1 || editRangeValue.indexOf("\'") !== -1) {
+      toast.error('Single/Double quote cannot be used in the fields.', {
+        position: toast.POSITION.BOTTOM_CENTER
+      });
+      return;
+    }
+
+    const OneLineRangeValue = editRangeValue.replace(/(\r\n|\n|\r)/gm, " ");
+    const body = {
+      "label": editRangeName,
+      "def": OneLineRangeValue
+    }
+    const editSuccess = await editEntry(userData.sub, cat, editRangeId, body);
+    if (editSuccess) {
+      closeAddEditModal();
+    }
+  }
+
+  const onDeleteSubmit = async (event) => {
+    event.preventDefault();
+    const deleteSuccess = await deleteEntry(userData.sub, cat, entryToDelete.id);
+    if (deleteSuccess) {
+      setOpenDeleteModal(false);
+    }
+  } 
  
   const makeRangeElements = () => {
     let elements = [];
@@ -29,23 +119,21 @@ const SettingsCustomRanges = ({cat}) => {
             </td>
             <td className="td-options">
               <button
+                className="option-button"
                 onClick={() => setEditMode({
                   'id': item['value'],
                   'label': item['label'],
                   'def': item['def']
-                })}
-                className="option-button"
-              >
+                })}>
                 <PencilAltIcon className="icon text-green" />
               </button>
-              <button 
+              <button
+                type="button"
+                className="option-button delete-button" 
                 onClick={() => setDeleteMode({
                   'id': item['value'],
                   'label': item['label']
-                })}
-                type="button"
-                className="option-button delete-button"
-              >
+                })}>
                 <XIcon className="icon text-red" />
               </button>
             </td>
@@ -64,175 +152,9 @@ const SettingsCustomRanges = ({cat}) => {
   }
   const rangeElements = makeRangeElements();
 
-  const [mode, setMode] = useState('');
-  const [openAddEditModal, setOpenAddEditModal] = useState(false);
-  const closeAddEditModal = () => {
-    setOpenAddEditModal(false);
-    setAddRangeName('');
-    setAddRangeValue('');
-  }
-
-  //====================================================================
-  //                             ADD
-  //====================================================================
-  const [addRangeName, setAddRangeName] = useState('');
-  const [addRangeValue, setAddRangeValue] = useState('')
-  const setAddMode = () => {
-    setMode('add')
-    setOpenAddEditModal(true);
-  }
-
-  const onAddSubmit = async (event) => {
-    event.preventDefault();
-    if (addRangeName == '') {
-      toast.error('Name field is required.', {
-        position: toast.POSITION.BOTTOM_CENTER
-      });
-      return;
-    }
-    if (addRangeValue.indexOf("\"") !== -1 || addRangeValue.indexOf("\'") !== -1) {
-      toast.error('Single/Double quote cannot be used in the fields.', {
-        position: toast.POSITION.BOTTOM_CENTER
-      });
-      return;
-    }
-
-    try {
-      const OneLinerangeDef = addRangeValue.replace(/(\r\n|\n|\r)/gm, " ");
-      console.log(OneLinerangeDef)
-      const response = await fetch(
-        `http://localhost:4000/api/v1/user/${userData.sub}/range/${cat}`,
-        {
-          method: "POST",
-          headers: {
-            'Content-Type': "application/json"
-          },
-          body: JSON.stringify({
-            "label": addRangeName,
-            "def": OneLinerangeDef
-          })
-        }
-      );
-      const parseRes = await response.json();
-      if (parseRes.status === 'error') {
-        toast.error(parseRes.message, {
-          position: toast.POSITION.BOTTOM_CENTER
-        });
-      }
-      else {
-        setCustomRange(parseRes, cat);
-        closeAddEditModal();
-      }
-    } catch (error) {
-      toast.error(error.message, {
-        position: toast.POSITION.BOTTOM_CENTER
-      });
-    }
-  }
-
-
-  //====================================================================
-  //                             EDIT 
-  //====================================================================
-  const [editRangeId, setEditRangeId] = useState('');
-  const [editRangeName, setEditRangeName] = useState('');
-  const [editRangeValue, setEditRangeValue] = useState('');
-  const setEditMode = async (entry) => {
-    setMode('edit');
-    await setEditRangeId(entry.id);
-    await setEditRangeName(entry.label);
-    await setEditRangeValue(entry.def);
-    setOpenAddEditModal(true);
-  }
-
-  const onEditSubmit = async (event) => {
-    event.preventDefault();
-    if (editRangeName == '') {
-      toast.error("Name cannot be empty.", {
-        position: toast.POSITION.BOTTOM_CENTER
-      });
-      return;
-    }
-    if (editRangeValue.indexOf("\"") !== -1 || editRangeValue.indexOf("\'") !== -1) {
-      toast.error('Single/Double quote cannot be used in the fields.', {
-        position: toast.POSITION.BOTTOM_CENTER
-      });
-      return;
-    }
-
-    try {
-      const OneLineRangeValue = editRangeValue.replace(/(\r\n|\n|\r)/gm, " ");
-      const response = await fetch(
-        `http://localhost:4000/api/v1/user/${userData.sub}/range/${cat}/${editRangeId}`,
-        {
-          method: "POST",
-          headers: {
-            'Content-Type': "application/json"
-          },
-          body: JSON.stringify({
-            "label": editRangeName,
-            "def": OneLineRangeValue
-          })
-        }
-      );
-      const parseRes = await response.json();
-      if (parseRes.status === 'error') {
-        toast.error(parseRes.message, {
-          position: toast.POSITION.BOTTOM_CENTER
-        });
-      }
-      else {
-        setCustomRange(parseRes, cat);
-        closeAddEditModal();
-      }
-    } catch (error) {
-      toast.error(error.message, {
-        position: toast.POSITION.BOTTOM_CENTER
-      });
-    }
-  }
-
-  //====================================================================
-  //                             DELETE
-  //====================================================================
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [entryToDelete, setEntryToDelete] = useState({})
-  const setDeleteMode = async (entry) => {
-    setEntryToDelete(entry);
-    await setOpenDeleteModal(true);
-    document.getElementById("labelToDelete").innerHTML = entry.label;
-  }
-
-  const onDeleteSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const response = await fetch(
-        `http://localhost:4000/api/v1/user/${userData.sub}/range/${cat}/${entryToDelete.id}`,
-        {
-          method: "DELETE",
-          headers: {
-            'Content-Type': "application/json"
-          }
-        }
-      );
-      const parseRes = await response.json();
-      if (parseRes.status === 'error') {
-        toast.error(parseRes.message, {
-          position: toast.POSITION.BOTTOM_CENTER
-        });
-      }
-      else {
-        setCustomRange(parseRes, cat);
-        setOpenDeleteModal(false);
-      }
-
-    } catch (error) {
-      toast.error(error.message, {
-        position: toast.POSITION.BOTTOM_CENTER
-      });
-    }
-  } 
-
+  useEffect(() => {
+    getCustomRange(userData.sub, cat)
+  }, [customRanges]);
 
   return (
     <>

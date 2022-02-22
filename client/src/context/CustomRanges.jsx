@@ -1,68 +1,137 @@
-import React, { useState } from 'react'
-import { createContext } from 'react'
+import React, { useState } from 'react';
+import { createContext } from 'react';
+import { toast } from 'react-toastify';
 
 export const CustomRangesContext = createContext();
 
 const CustomRanges = (props) => {
   // All Ranges
-  const [customRanges, innerSetCustomRanges] = useState({})
+  const [customRanges, setCustomRanges] = useState({});
 
-  const fetchCustomRanges = async (userid) => {
+  const getCustomRanges = async (userid) => {
     try {
       const response = await fetch(
         `http://localhost:4000/api/v1/user/${userid}/ranges`,
         { method: "GET" }
       );
       const parseRes = await response.json();  
-      setCustomRanges(parseRes);
+      const orderedRanges = reorderAllRanges(parseRes);
+      setCustomRanges(orderedRanges)
     } catch (error) {}
   };
 
-  const setCustomRanges = (newRanges) => {
-    const orderedRanges = {};
-    Object.entries(newRanges).map(range => {
-      const orderedRange = Object.entries(range[1]['range']).sort(compareNames).reduce(
-        (obj, [key, value]) => {
-          value['value'] = key; // ID is named as value to enable react-multi-select-component correctly
-          obj['id-' + key] = value; // without 'id-' the object is sorted automatially by the id
-          return obj;
-        }, 
-        {}
-      );
-      orderedRanges[range[0]] = orderedRange;
-    });
-    innerSetCustomRanges(orderedRanges)
-  }
-
   // Certain range
-  const fetchCustomRange = async (userid, category) => {
+  const getCustomRange = async (userid, category) => {
     try {
       const response = await fetch(
         `http://localhost:4000/api/v1/user/${userid}/range/${category}`,
         { method: "GET" }
       );
       const parseRes = await response.json();
-      setCustomRange(parseRes, category);
+      setNewRange(parseRes, category)
     } catch (error) {}
   }
 
-  const setCustomRange = (newRange, category) => {
+  const insertEntry = async (userId, category, body) => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/v1/user/${userId}/range/${category}`,
+        {
+          method: "POST",
+          headers: {
+            'Content-Type': "application/json"
+          },
+          body: JSON.stringify(body)
+        }
+      );
+      const parseRes = await response.json();
+      if (parseRes.status === 'error') {
+        toast.error(parseRes.message, {
+          position: toast.POSITION.BOTTOM_CENTER
+        });
+      }
+      else {
+        setNewRange(parseRes, category);
+        return true;
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: toast.POSITION.BOTTOM_CENTER
+      });
+    }
+    return false;
+  }
+
+  const editEntry = async (userId, category, entryId, body) => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/v1/user/${userId}/range/${category}/${entryId}`,
+        {
+          method: "POST",
+          headers: {
+            'Content-Type': "application/json"
+          },
+          body: JSON.stringify(body)
+        }
+      );
+      const parseRes = await response.json();
+      if (parseRes.status === 'error') {
+        toast.error(parseRes.message, {
+          position: toast.POSITION.BOTTOM_CENTER
+        });
+      }
+      else {
+        setNewRange(parseRes, category);
+        return true;
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: toast.POSITION.BOTTOM_CENTER
+      });
+    }
+    return false;
+  }
+
+  const deleteEntry = async (userId, category, entryId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/v1/user/${userId}/range/${category}/${entryId}`,
+        {
+          method: "DELETE",
+          headers: {
+            'Content-Type': "application/json"
+          }
+        }
+      );
+      const parseRes = await response.json();
+      if (parseRes.status === 'error') {
+        toast.error(parseRes.message, {
+          position: toast.POSITION.BOTTOM_CENTER
+        });
+      }
+      else {
+        setNewRange(parseRes, category);
+        return true;
+      }
+
+    } catch (error) {
+      toast.error(error.message, {
+        position: toast.POSITION.BOTTOM_CENTER
+      });
+    }
+    return false;
+  }
+
+  const setNewRange = (newRange, category) => {
     const rangeName = category + "_range";
-    const orderedRange = Object.entries(newRange).sort(compareNames).reduce(
-      (obj, [key, value]) => {
-        value['value'] = key; // ID is named as value to enable react-multi-select-component correctly
-        obj['id-' + key] = value; // without 'id-' the object is sorted automatially by the id
-        return obj;
-      }, 
-      {}
-    );
+    const orderedRange = reorderRange(newRange)
     let orderedRanges = customRanges;
     orderedRanges[rangeName] = orderedRange;
-    innerSetCustomRanges(orderedRanges);
+    setCustomRanges(orderedRanges);
   }
   
   return (
-    <CustomRangesContext.Provider value={{customRanges, setCustomRanges, fetchCustomRanges, fetchCustomRange, setCustomRange }}>
+    <CustomRangesContext.Provider value={{customRanges, getCustomRanges, getCustomRange, insertEntry, editEntry, deleteEntry }}>
       {props.children}
     </CustomRangesContext.Provider>
   )
@@ -76,6 +145,34 @@ const compareNames = ( a, b ) => {
     return 1;
   }
   return 0;
+}
+
+const reorderAllRanges = (ranges) => {
+  const orderedRanges = {};
+  Object.entries(ranges).map(range => {
+    const orderedRange = Object.entries(range[1]['range']).sort(compareNames).reduce(
+      (obj, [key, value]) => {
+        value['value'] = key; // ID is named as value to enable react-multi-select-component correctly
+        obj['id-' + key] = value; // without 'id-' the object is sorted automatially by the id
+        return obj;
+      }, 
+      {}
+    );
+    orderedRanges[range[0]] = orderedRange;
+  });
+  return orderedRanges;
+}
+
+const reorderRange = (range) => {
+  const orderedRange = Object.entries(range).sort(compareNames).reduce(
+    (obj, [key, value]) => {
+      value['value'] = key; // ID is named as value to enable react-multi-select-component correctly
+      obj['id-' + key] = value; // without 'id-' the object is sorted automatially by the id
+      return obj;
+    }, 
+    {}
+  );
+  return orderedRange;
 }
 
 export default CustomRanges
