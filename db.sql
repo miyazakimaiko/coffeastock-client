@@ -28,147 +28,147 @@ VALUES (
   '123455', 
   '{
     "1" : {
-      "name": "Yirgacheffe, Ethiopia",
+      "label": "Yirgacheffe, Ethiopia",
       "def": "Location details here..."
     },
     "2": {
-      "name": "Sidamo, Ethiopia",
+      "label": "Sidamo, Ethiopia",
       "def": "Location details here..."
     },
     "3": {
-      "name": "Kaffa, Ethiopia",
+      "label": "Kaffa, Ethiopia",
       "def": "Location details here..."
     },
     "4": {
-      "name": "Ruiri, Kenya",
+      "label": "Ruiri, Kenya",
       "def": "Location details here..."
     },
     "5": {
-      "name": "Thika, Kenya",
+      "label": "Thika, Kenya",
       "def": "Location details here..."
     }
   }',
   '{
     "1" : {
-      "name": "Typica",
+      "label": "Typica",
       "def": "Details what typica is..."
     },
     "2": {
-      "name": "Caturra",
+      "label": "Caturra",
       "def": "Details what caturra is..."
     },
     "3": {
-      "name": "Burbon",
+      "label": "Burbon",
       "def": "Details what Burbon is..."
     } 
   }', 
   '{
     "1" : {
-      "name": "Washed",
+      "label": "Washed",
       "def": "Details what washed is..."
     },
     "2": {
-      "name": "Semi-Washed",
+      "label": "Semi-Washed",
       "def": "Details what semi-washed is..."
     },
     "3": {
-      "name": "Natural",
+      "label": "Natural",
       "def": "Details what natural is..."
     }
   }', 
   '{
     "1" : {
-      "name": "Coffeeangel",
+      "label": "Coffeeangel",
       "def": "Definition of Coffeeangel..."
     },
     "2": {
-      "name": "Coffee Collective",
+      "label": "Coffee Collective",
       "def": "Coffee Collective definition..."
     },
     "3": {
-      "name": "Koppi",
+      "label": "Koppi",
       "def": "Koppi details..."
     }
   }',
   '{
     "1" : {
-      "name": "French Press",
+      "label": "French Press",
       "def": "details..."
     },
     "2": {
-      "name": "Espresso",
+      "label": "Espresso",
       "def": "details..."
     },
     "3": {
-      "name": "Mocha Pot",
+      "label": "Mocha Pot",
       "def": "details..."
     }
   }',
   '{
     "1" : {
-      "name": "Water 1",
+      "label": "Water 1",
       "def": "details..."
     },
     "2": {
-      "name": "Water 2",
+      "label": "Water 2",
       "def": "details..."
     }
   }',
   '{
     "1" : {
-      "name": "Hario Mini Handmill",
+      "label": "Hario Mini Handmill",
       "def": "details..."
     },
     "2": {
-      "name": "EKS",
+      "label": "EKS",
       "def": "details..."
     },
     "3": {
-      "name": "Sage espresso grinder",
+      "label": "Sage espresso grinder",
       "def": "details..."
     }
   }',
   '{
     "1" : {
-      "name": "sweet",
+      "label": "sweet",
       "def": "details..."
     },
     "2": {
-      "name": "acidic",
+      "label": "acidic",
       "def": "details..."
     },
     "3": {
-      "name": "cherries",
+      "label": "cherries",
       "def": "details..."
     },
     "4" : {
-      "name": "stonefruit",
+      "label": "stonefruit",
       "def": "details..."
     },
     "5": {
-      "name": "citrus fruit",
+      "label": "citrus fruit",
       "def": "details..."
     },
     "6": {
-      "name": "chocolate",
+      "label": "chocolate",
       "def": "details..."
     }
   }',
   '{
     "1" : {
-      "name": "Walnut",
+      "label": "Walnut",
       "def": "details..."
     },
     "2": {
-      "name": "Peach",
+      "label": "Peach",
       "def": "details..."
     },
     "3": {
-      "name": "Pineapple",
+      "label": "Pineapple",
       "def": "details..."
     },
     "4" : {
-      "name": "Green apple",
+      "label": "Green apple",
       "def": "details..."
     }
   }'
@@ -176,53 +176,119 @@ VALUES (
 
 CREATE TABLE BEANS (
     coffee_bean_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id uuid NOT NULL,
-    coffee_bean_name varchar(60) NOT NULL,
+    user_id varchar(255) NOT NULL,
+    label varchar(60) NOT NULL,
+    single_origin boolean NOT NULL,
     blend_ratio jsonb,
-    origin INT,
+    origin INT [],
     farm INT [],
-    varieties INT [],
-    processing INT,
+    variety INT [],
+    process INT [],
     altitude varchar(60),
     grading float,
     harvest_date varchar(60),
-    roaster INT,
+    roaster INT [],
     roast_level float,
     roast_date date,
     aroma INT [],
+    memo varchar(400),
     FOREIGN KEY (user_id)
         REFERENCES USERS (user_id)
 );
 
 INSERT INTO BEANS (
   user_id, 
-  coffee_bean_name,
+  label,
+  single_origin,
   origin, 
   farm, 
-  varieties, 
-  processing, 
+  variety, 
+  process, 
   altitude,
   grading,
   harvest_date,
   roaster,
   roast_level,
   roast_date,
-  aroma
+  aroma,
+  memo
 )
 VALUES (
-  '6021b8e4-8e58-4d81-a00a-81a19ad8df63', 
-  'Kieni', 
-  1, 
-  '{1}', 
+  '30a80906-2334-48ec-9f5d-88e0f68210fc', 
+  'SO Beans 3', 
+  'f',
+  '{2}', 
   '{1, 2}', 
-  2, 
+  '{1}', 
+  '{2}', 
   '1100-1200 MASL',
-  8.5,
+  55.5,
   'Sept - Oct 2020',
-  3,
+  '{1}',
   5,
-  '2021-10-21',
-  '{1, 2, 4}'
+  '2021-10-18',
+  '{1, 2, 4}',
+  'Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. Ev'
+);
+
+INSERT INTO BEANS (
+  user_id, 
+  label,
+  single_origin,
+  blend_ratio,
+  grading,
+  roaster,
+  roast_level,
+  roast_date,
+  aroma,
+  memo
+)
+VALUES (
+  '30a80906-2334-48ec-9f5d-88e0f68210fc', 
+  'Blend 1',
+  't',
+  '{"b08b8b04-9903-42f6-aad0-d9c72ec11dd4": "60%", "07452d28-9a6d-4224-b150-f3d065fa2220": "40%"}',
+  92.8,
+  '{2}',
+  5.5,
+  '2021-12-10',
+  '{2, 3}',
+  'The European languages are members of the same family. Their separate existence is a myth. For science, music, sport, etc, Europe uses the same vocabulary. The languages only differ in their grammar, their pronunciation and their most common words. Everyone realizes why a new common language would be desirable: one could refuse to pay expensive translators. To achieve this, it would be necessary t'
+);
+
+INSERT INTO BEANS (
+  user_id, 
+  label,
+  single_origin,
+  origin, 
+  farm, 
+  variety, 
+  process, 
+  altitude,
+  grading,
+  harvest_date,
+  roaster,
+  roast_level,
+  roast_date,
+  aroma,
+  memo
+)
+VALUES (
+  '30a80906-2334-48ec-9f5d-88e0f68210fc', 
+  'SO Beans 2',
+  'f',
+  '{2}', 
+  '{3}', 
+  '{2, 3}', 
+  '{1}', 
+  '1200-1300 MASL',
+  90.0,
+  'Aug - Oct 2021',
+  '{2}',
+  5.5,
+  '2021-12-10',
+  '{2, 3}',
+  'But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure r'
 );
 
 
@@ -241,7 +307,7 @@ CREATE TABLE RECIPES (
     extraction_time interval,
     tds float,
     palate_rates jsonb,
-    comment text,
+    memo text,
     FOREIGN KEY (coffee_bean_id)
         REFERENCES BEANS (coffee_bean_id)
 );
@@ -261,7 +327,7 @@ INSERT INTO RECIPES (
   extraction_time,
   tds,
   palate_rates,
-  comment
+  memo
 )
 VALUES (
   'da1f2bd8-c7de-4e82-a0c2-a319274025e7',
