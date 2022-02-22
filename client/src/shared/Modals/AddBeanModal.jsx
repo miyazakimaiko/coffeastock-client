@@ -1,17 +1,19 @@
-import React, { useEffect, useState, useContext, useRef } from 'react'
+import React, { useEffect, useCallback, useState, useContext, useRef } from 'react'
 import { MultiSelect } from "react-multi-select-component";
 import { XIcon } from '@heroicons/react/outline'
+import { AccountContext } from '../../context/Account';
 import { CustomRangesContext } from '../../context/CustomRanges';
 import { BeansContext } from '../../context/Beans';
 import './Modals.scss'
 
 const AddBeanModal = ({setOpenThisModal}) => {
+  const { userData } = useContext(AccountContext);
   const { customRanges } = useContext(CustomRangesContext);
-  const { beans } = useContext(BeansContext);
-
+  const { beans, insertBean } = useContext(BeansContext);
   const roasterRange = Object.values(customRanges.roaster_range);
   const originRange = Object.values(customRanges.origin_range);
   const farmRange = Object.values(customRanges.farm_range);
+  const processRange = Object.values(customRanges.process_range);
   const aromaRange = Object.values(customRanges.aroma_range);
   const varietyRange = Object.values(customRanges.variety_range);
   const beansRange = Object.values(beans).map((
@@ -28,8 +30,9 @@ const AddBeanModal = ({setOpenThisModal}) => {
 
   // multi select
   const [selectedOrigin, setSelectedOrigin] = useState([]);
-  const [selectedRoasterRange, setSelectedRoasterRange] = useState([]);
+  const [selectedRoaster, setSelectedRoaster] = useState([]);
   const [selectedFarm, setSelectedFarm] = useState([]);
+  const [selectedProcess, setSelectedProcess] = useState([]);
   const [selectedAroma, setSelectedAroma] = useState([]);
   const [selectedVariety, setSelectedVariety] = useState([]);
   const [selectedBlendBeans, innerSetSelectedBlendBeans] = useState([]);
@@ -57,28 +60,76 @@ const AddBeanModal = ({setOpenThisModal}) => {
     ));
   }
 
-  let blendRatioElements = makeBlendRatioElements(selectedBlendBeans, blendRatios, setBlendRatio);
+  let blendRatioElements = makeBlendRatioElements(
+    selectedBlendBeans, blendRatios, setBlendRatio
+  );
 
   // To toggle click from the Next button
   const detailsTab = useRef(null);
-  const showDetailsSection = () => { detailsTab.current.click() }
+  
+  const showDetailsSection = () => 
+    detailsTab.current.click();
 
   const confirmationTab = useRef(null);
-  const showConfirmationSection = () => { confirmationTab.current.click() }
+
+  const showConfirmationSection = () =>
+    confirmationTab.current.click();
 
   const [canGoToConfirmation, setCanGoToConfirmation] = useState(false);
-  const checkCanGoToConfirmation = () => {
+  const checkCanGoToConfirmation = useCallback(() => {
     if (isSingleOrigin && selectedOrigin.length > 0)
       setCanGoToConfirmation(true);
     else if (!isSingleOrigin && selectedBlendBeans.length > 0)
       setCanGoToConfirmation(true);
     else setCanGoToConfirmation(false);
+  }, [isSingleOrigin, selectedBlendBeans.length, selectedOrigin.length]);
+
+  const makeBeanFinalVersion = () => {
+    let bean = {}
+    if (isSingleOrigin) {
+      bean = {
+        "label": name,
+        "single_origin": isSingleOrigin,
+        "origin": selectedOrigin.map(entry => parseInt(entry.value)), 
+        "farm": selectedFarm.map(entry => parseInt(entry.value)), 
+        "variety": selectedVariety.map(entry => parseInt(entry.value)), 
+        "process": selectedProcess.map(entry => parseInt(entry.value)), 
+        "altitude": altitude,
+        "grading": parseFloat(grade),
+        "harvest_date": harvestPeriod,
+        "roaster": selectedRoaster.map(entry => parseInt(entry.value)),
+        "roast_level": parseFloat(roastLevel),
+        "roast_date": roastDate,
+        "aroma": selectedAroma.map(entry => parseInt(entry.value)),
+        "memo": memo
+      }
+    } else {
+      bean = {
+        "label": name,
+        "single_origin": isSingleOrigin,
+        "blend_ratio": blendRatios,
+        "grading": parseFloat(grade),
+        "roaster": selectedRoaster.map(entry => parseInt(entry.value)),
+        "roast_level": parseFloat(roastLevel),
+        "roast_date": roastDate,
+        "aroma": selectedAroma.map(entry => parseInt(entry.value)),
+        "memo": memo
+      }
+    }
+    return bean;
+  }
+
+  const insertNewBean = async () => {
+    const bean = makeBeanFinalVersion();
+    const insertSuccess = await insertBean(userData.sub, bean);
+    if (insertSuccess)
+      setOpenThisModal(false);
   }
 
   // To enable/disable Next button to go to confirmation section
   useEffect(() => {
     checkCanGoToConfirmation();
-  }, [isSingleOrigin, selectedOrigin, selectedBlendBeans]);
+  }, [isSingleOrigin, selectedOrigin, selectedBlendBeans, checkCanGoToConfirmation]); 
 
   // To delete unselected BlendBean from the blendRatios object
   useEffect(() => {
@@ -91,7 +142,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
         if (!found) delete blendRatios[beanId];
       };
     }
-  }, [selectedBlendBeans]);
+  }, [selectedBlendBeans, blendRatios]);
 
   return (
     <>
@@ -122,9 +173,10 @@ const AddBeanModal = ({setOpenThisModal}) => {
             className="nav nav-tabs text-center" 
             id="myTab" 
             role="tablist">
-            <li 
+            <li
               className="nav-item w-1/3" 
-              role="presentation">
+              role="presentation"
+              key="base-info">
               <button 
                 className="active w-full h-full py-2 
                 text-white bg-burnt-sienna opacity-50" 
@@ -140,7 +192,8 @@ const AddBeanModal = ({setOpenThisModal}) => {
             </li>
             <li 
               className="nav-item w-1/3" 
-              role="presentation">
+              role="presentation"
+              key="details">
               <button 
                 className="w-full h-full py-2 
                 text-white bg-burnt-sienna opacity-50" 
@@ -158,7 +211,8 @@ const AddBeanModal = ({setOpenThisModal}) => {
             </li>
             <li 
               className="nav-item w-1/3" 
-              role="presentation">
+              role="presentation"
+              key="confirmation">
               <button 
                 className="w-full h-full py-2 
                 text-white bg-burnt-sienna opacity-50" 
@@ -247,8 +301,8 @@ const AddBeanModal = ({setOpenThisModal}) => {
                     <label className="font-semibold capitalize">Roaster</label>
                     <MultiSelect
                       options={roasterRange}
-                      value={selectedRoasterRange}
-                      onChange={setSelectedRoasterRange}
+                      value={selectedRoaster}
+                      onChange={setSelectedRoaster}
                       labelledBy="Select"
                     />
                   </div>
@@ -268,16 +322,16 @@ const AddBeanModal = ({setOpenThisModal}) => {
               </div>
               <div className="flex items-center justify-between pl-8 pr-8 pb-8">
                 <button
-                  className="text-red-500 background-transparent 
-                  font-bold uppercase px-6 py-2 text-sm outline-none 
-                  focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  className="border-2 border-red text-red opacity-80 
+                  hover:opacity-100 font-bold uppercase text-sm 
+                  px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
                   type="button"
                   onClick={() => setOpenThisModal(false)}
                 > Cancel </button>
                 <button
                   type="button"
                   disabled={name === ''}
-                  className="bg-blue text-white opacity-80 hover:opacity-100 font-bold blue-button
+                  className="border-2 border-blue bg-blue text-white opacity-80 hover:opacity-100 font-bold blue-button
                   uppercase text-sm px-6 py-2 rounded-3xl button-transition"
                   onClick={showDetailsSection}
                 > Next </button>
@@ -377,9 +431,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       onChange={e => setHarvestPeriod(e.target.value)}
                     />
                   </div>
-                </div>
 
-                <div className="w-1/2">
                   <div className="form-section">
                     <label className="font-semibold capitalize">Altitude</label>
                     <input 
@@ -390,6 +442,18 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       block w-full text-base py-2 px-3 rounded-md border-1"
                       value={altitude}
                       onChange={e => setAltitude(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="w-1/2">
+                  <div className="form-section">
+                    <label className="font-semibold capitalize">Process</label>
+                    <MultiSelect
+                      options={processRange}
+                      value={selectedProcess}
+                      onChange={setSelectedProcess}
+                      labelledBy="Select"
                     />
                   </div>
 
@@ -420,14 +484,14 @@ const AddBeanModal = ({setOpenThisModal}) => {
 
               <div className="flex items-center justify-between pl-8 pr-8 pb-8">
                 <button
-                  className="text-red-500 background-transparent 
-                  font-bold uppercase px-6 py-2 text-sm outline-none 
-                  focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  className="border-2 border-red text-red opacity-80 
+                  hover:opacity-100 font-bold uppercase text-sm 
+                  px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
                   type="button"
                   onClick={() => setOpenThisModal(false)}
                 > Cancel </button>
                 <button
-                  className="bg-blue text-white opacity-80 hover:opacity-100 font-bold blue-button
+                  className="border-2 border-blue bg-blue text-white opacity-80 hover:opacity-100 font-bold blue-button
                   uppercase text-sm px-6 py-2 rounded-3xl button-transition"
                   type="button"
                   disabled={!canGoToConfirmation}
@@ -442,82 +506,177 @@ const AddBeanModal = ({setOpenThisModal}) => {
               role="tabpanel" 
               aria-labelledby="confirmation-tab">
                 
-              <div className="flex px-8 my-8">
-                <div className="flex flex-col w-1/2">
-                  <div className="mb-10">
-                    <div className="mx-4 mb-4 confirm-divider">
-                      <h3 className="text-xl pb-4">Base Info</h3>
-                    </div>
-                    <div className="confirm-section">
-                      <label className="font-semibold capitalize">Name</label>
-                      <p className="">Seasonal House Blend</p>
-                    </div>
-                    <div className="confirm-section">
-                      <label className="font-semibold capitalize">Grade (0 - 100)</label>
-                      <p>85.5</p>
-                    </div>
-                    <div className="confirm-section">
-                      <label className="font-semibold capitalize">Roast Level (0 - 10)</label>
-                      <p>6.5</p>
-                    </div>
-                    <div className="confirm-section">
-                      <label className="font-semibold capitalize">Single Origin</label>
-                      <p>Yes</p>
-                    </div>
-                    <div className="confirm-section">
-                      <label className="font-semibold capitalize">Roast Date</label>
-                      <p>2021-12-10</p>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="mx-4 mb-4 confirm-divider">
-                      <h3 className="text-xl pb-4">Memo</h3>
-                    </div>
-                    <div className="confirm-section">
-                    <div className="w-full">
-                      <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure r</p>
-                    </div>
-                  </div>
-                  </div>
-                </div>
-                <div className="w-1/2">
-                  <div className="mx-4 mb-4 confirm-divider">
-                    <h3 className="text-xl pb-4">Details</h3>
-                  </div>
-                  <div className="confirm-section">
-                    <div className="w-full">
-                      <label className="block font-semibold capitalize pb-2">Blend Ratio</label>
-                      <div>
-                        <div className="flex justify-between items-center py-2">
-                          <label className="pl-3">Kenya</label>
-                          <p>80%</p>
+              <div className="px-8 my-10">
+                <div className="flex mb-8">
+                  <div className="flex flex-col w-1/2">
+                    <div>
+                      <div className="mx-4 mb-4 confirm-divider">
+                        <h3 className="text-xl pb-4">Base Info</h3>
+                      </div>
+                      <div className="confirm-section">
+                        <label className="font-semibold capitalize">Name</label>
+                        <p className="">{name}</p>
+                      </div>
+
+                      <div className="confirm-section">
+                        <label className="font-semibold capitalize">Single Origin</label>
+                        <p>{isSingleOrigin ? 'Yes' : 'No'}</p>
+                      </div>
+
+                      <div className="confirm-section">
+                        <label className="font-semibold capitalize">Grade (0 - 100)</label>
+                        <p>{grade ? grade : 'No Data'}</p>
+                      </div>
+
+                      <div className="confirm-section">
+                        <label className="font-semibold capitalize">Roaster</label>
+                        <div className="tag-section">
+                          {selectedRoaster.length <= 0 ? 
+                            <p>Not Selected</p> :
+                          selectedRoaster.map((roaster) => (
+                              <span>{roaster.label}</span>
+                          ))}
                         </div>
-                        <div className="flex justify-between items-center py-2">
-                          <label className="pl-3">Kenya</label>
-                          <p>20%</p>
-                        </div>
+                      </div>
+
+                      <div className="confirm-section">
+                        <label className="font-semibold capitalize">Roast Level (0 - 10)</label>
+                        <p>{roastLevel? roastLevel : 'No Data'}</p>
+                      </div>
+
+                      <div className="confirm-section">
+                        <label className="font-semibold capitalize">Roast Date</label>
+                        <p>{roastDate ? roastDate : 'No Data'}</p>
                       </div>
                     </div>
                   </div>
 
+                  <div className="w-1/2">
+                    <div className="mx-4 mb-4 confirm-divider">
+                      <h3 className="text-xl pb-4">Details</h3>
+                    </div>
+
+                    { isSingleOrigin ? 
+                      <>
+                      <div className="confirm-section">
+                        <label className="font-semibold capitalize">Origin</label>
+                        <div className="tag-section">
+                        {selectedOrigin.map((entry) => (
+                            <span>{entry.label}</span>
+                        ))}
+                        </div>
+                      </div>
+
+                      <div className="confirm-section">
+                        <label className="font-semibold capitalize">Farm</label>
+                        <div className="tag-section">
+                        {selectedFarm.length <= 0 ? 
+                          <p>Not Selected</p> :
+                        selectedFarm.map((entry) => (
+                            <span>{entry.label}</span>
+                        ))}
+                        </div>
+                      </div>
+
+                      <div className="confirm-section">
+                        <label className="font-semibold capitalize">Variety</label>
+                        <div className="tag-section">
+                        {selectedVariety.length <= 0 ? 
+                          <p>Not Selected</p> :
+                        selectedVariety.map((entry) => (
+                            <span>{entry.label}</span>
+                        ))}
+                        </div>
+                      </div>
+
+                      <div className="confirm-section">
+                        <label className="font-semibold capitalize">Harvest Period</label>
+                        <p>{harvestPeriod? harvestPeriod : 'No Data'}</p>
+                      </div>
+
+                      <div className="confirm-section">
+                        <label className="font-semibold capitalize">Altitude</label>
+                        <p>{altitude? altitude : 'No Data'}</p>
+                      </div>
+
+                      <div className="confirm-section">
+                        <label className="font-semibold capitalize">Process</label>
+                        <div className="tag-section">
+                        {selectedProcess.length <= 0 ? 
+                          <p>Not Selected</p> :
+                        selectedProcess.map((entry) => (
+                            <span>{entry.label}</span>
+                        ))}
+                        </div>
+                      </div>
+
+                      <div className="confirm-section">
+                        <label className="font-semibold capitalize">Aroma</label>
+                        <div className="tag-section">
+                        {selectedAroma.length <= 0 ? 
+                          <p>Not Selected</p> :
+                        selectedAroma.map((entry) => (
+                            <span>{entry.label}</span>
+                        ))}
+                        </div>
+                      </div>
+                      </>
+                      : 
+                      // Blend Beans
+                      <>
+                      <div className="confirm-section">
+                        <label className="font-semibold capitalize">Aroma</label>
+                        <div className="tag-section">
+                        {selectedAroma.length <= 0 ? 
+                          <p>Not Selected</p> :
+                        selectedAroma.map((entry) => (
+                          <span>{entry.label}</span>
+                        ))}
+                        </div>
+                      </div>
+
+                      <div className="confirm-section">
+                        <label className="font-semibold capitalize">Blend Ratio</label>
+                        <div className="tag-section">
+                        {selectedBlendBeans.map((entry) => (
+                          <span>{entry.label}: {blendRatios[entry.value]}%</span>
+                        ))}
+                        </div>
+                      </div>
+                      </>
+                    }
+                  </div>
+                </div>
+
+                <div>
+                  <div className="mx-4 mb-4 confirm-divider">
+                    <h3 className="text-xl pb-4">Memo</h3>
+                  </div>
+                  <div className="confirm-section">
+                    <div className="w-full">
+                      <p>{memo ? memo : 'No Data'}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
+
+
               <div className="flex items-center justify-between pl-8 pr-8 pb-8">
                 <button
-                  className="text-red-500 background-transparent 
-                  font-bold uppercase px-6 py-2 text-sm outline-none 
-                  focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  className="border-2 border-red text-red opacity-80 
+                  hover:opacity-100 font-bold uppercase text-sm 
+                  px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
                   type="button"
                   onClick={() => setOpenThisModal(false)}
                 >
                   Cancel
                 </button>
                 <button
-                  className="bg-blue text-white opacity-80 
+                  className="border-2 border-blue bg-blue text-white opacity-80 
                   hover:opacity-100 font-bold uppercase text-sm 
                   px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
                   type="button"
-                  onClick={() => setOpenThisModal(false)}
+                  onClick={insertNewBean}
                 >
                   Submit
                 </button>
