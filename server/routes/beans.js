@@ -1,5 +1,16 @@
 require("dotenv").config();
 const db = require("../db");
+const { body, validationResult } = require('express-validator');
+
+let validator = [
+  body('label', 'Invalid Name').not().isEmpty().isLength({ max: 60 }),
+  body('single_origin', 'Invalid Single Origin').isBoolean(),
+  body('blend_ratio', 'Invalid Blend Ratio').isJSON().optional({ nullable: true }),
+  body('roast_level', 'Invalid Roast Level').isFloat({ min: 0, max: 10 }).optional({ nullable: true }),
+  body('grading', 'Invalid Grade').isFloat({ min: 0, max: 100 }).optional({ nullable: true }),
+  // .isDate().optional({ nullable: true }) doesnt allow null value, thus eliminated
+  body('memo', 'Invalid Memo').isLength({ max: 400 }).optional({ nullable: true }),
+]
 
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
@@ -18,18 +29,30 @@ module.exports = (app) => {
   });
 
   // create beans of a user
-  app.post(endpoint + "/user/:userid/bean", async (req, res, next) => {
+  app.post(endpoint + "/user/:userid/bean", 
+    validator,
+    async (req, res, next) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ 
+        status: 'error',
+        message: errors.array()[0]['msg']
+      });
+    }
+
     try {
       const results = await db.query(`
       INSERT INTO 
       BEANS (
         user_id, 
         label,
+        single_origin,
         blend_ratio,
         origin, 
         farm, 
-        varieties, 
-        processing, 
+        variety, 
+        process, 
         altitude,
         grading,
         harvest_date,
@@ -38,16 +61,17 @@ module.exports = (app) => {
         roast_date,
         aroma
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
       RETURNING *`,
       [
         req.params.userid,
         req.body.label,
+        req.body.single_origin,
         req.body.blend_ratio,
         req.body.origin,
         req.body.farm,
-        req.body.varieties,
-        req.body.processing,
+        req.body.variety,
+        req.body.process,
         req.body.altitude,
         req.body.grading,
         req.body.harvest_date,
@@ -65,32 +89,45 @@ module.exports = (app) => {
   }); 
   
   // update beans of a user
-  app.post(endpoint + "/user/:userid/bean/:productid", async (req, res, next) => {
+  app.post(endpoint + "/user/:userid/bean/:productid",
+    validator,
+    async (req, res, next) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ 
+        status: 'error',
+        message: errors.array()[0]['msg']
+      });
+    }
+
     try {
       const results = await db.query(`
       UPDATE beans 
       SET 
-        product_name = $1, 
-        blend_ratio = $2,
-        origin = $3, 
-        farm = $4, 
-        varieties = $5, 
-        processing = $6, 
-        grading = $7,
-        harvest_date = $8, 
-        roaster = $9, 
-        roast_level = $10, 
-        roast_date = $11,
-        aroma = $12
-      WHERE user_id = $13 AND product_id = $14 
+        label = $1, 
+        single_origin = $2, 
+        blend_ratio = $3,
+        origin = $4, 
+        farm = $5, 
+        variety = $6, 
+        process = $7, 
+        grading = $8,
+        harvest_date = $9, 
+        roaster = $10, 
+        roast_level = $11, 
+        roast_date = $12,
+        aroma = $13
+      WHERE user_id = $14 AND product_id = $15 
       RETURNING *`,
       [
-        req.body.product_name,
+        req.body.label,
+        req.body.single_origin,
         req.body.blend_ratio,
         req.body.origin,
         req.body.farm,
-        req.body.varieties,
-        req.body.processing,
+        req.body.variety,
+        req.body.process,
         req.body.grading,
         req.body.harvest_date,
         req.body.roaster,
