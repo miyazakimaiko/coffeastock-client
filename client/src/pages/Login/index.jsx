@@ -12,11 +12,11 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const { setUserData, userData, authenticate, getSession, setAuthenticated } = useContext(AccountContext);
-  const { fetchCustomRanges } = useContext(CustomRangesContext);
+  const { getCustomRanges } = useContext(CustomRangesContext);
   const { fetchAllBeans } = useContext(BeansContext)
 
   useEffect(() => {
-    fetchCustomRanges(userData.sub);
+    getCustomRanges(userData.sub);
     fetchAllBeans(userData.sub);
     console.log(userData)
   }, [userData]);
@@ -40,7 +40,7 @@ const Login = () => {
             position: toast.POSITION.BOTTOM_CENTER
           })
         });
-        fetchCustomRanges(userData.sub);
+        getCustomRanges(userData.sub);
         fetchAllBeans(userData.sub);
       })
       .catch(err => {
