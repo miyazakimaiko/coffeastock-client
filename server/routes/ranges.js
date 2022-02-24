@@ -212,13 +212,51 @@ module.exports = (app) => {
 
   // Delete an entry from specified range
   app.delete(endpoint + "/user/:userid/range/:rangename/:id", async (req, res, next) => {
-    try {
-      const bqDeleteRange = getDeleteRangeBaseQuery(req.params.rangename)
-      const result = await db.query(bqDeleteRange, [req.params.id, req.params.userid]);
-      res.status(200).json(result.rows[0][req.params.rangename + '_range']['range']);
+    // get all beans if the range is related to beans
+    const searchRangeInUse = async () => {
+      let inUse = false;
+      let query = '';
+      const coffeeRanges = ['origin', 'farm', 'variety', 'process', 'roaster', 'aroma'];
+      const recipeRanges = ['grinder', 'method', 'water', 'palate'];
+      
+      if (coffeeRanges.includes(req.params.rangename)) {
+        query = 'SELECT * FROM beans WHERE user_id = $1';
+      } 
+      else if (recipeRanges.includes(req.params.rangename)) {
+        query = 'SELECT * FROM recipes WHERE user_id = $1';
+      }
+    
+      try {
+        const selectResult = await db.query(query, [req.params.userid]);
+        const beans = selectResult.rows;
+        beans.forEach(bean => {
+          bean[req.params.rangename].forEach(entryId => {
+            if (parseInt(entryId) === parseInt(req.params.id)) { 
+              inUse = true;
+            };
+          })
+        });
+      } catch (error) {
+        next(error);
+      }
+      return inUse;
+    }
 
-    } catch (error) {
-      next(error);
+    const inUse = await searchRangeInUse();
+    if (inUse) {
+      res.status(500).json({
+        'status': 'error',
+        'message': 'This entry cannot be deleted since it is in use by beans or recipes.'
+      });
+    } else {
+      try {
+        const bqDeleteRange = getDeleteRangeBaseQuery(req.params.rangename)
+        const result = await db.query(bqDeleteRange, [req.params.id, req.params.userid]);
+        res.status(200).json(result.rows[0][req.params.rangename + '_range']['range']);
+  
+      } catch (error) {
+        next(error);
+      }
     }
   });
 }
