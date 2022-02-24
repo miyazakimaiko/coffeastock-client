@@ -158,11 +158,11 @@ const SettingsCustomRanges = ({cat}) => {
 
   return (
     <>
-      <div className="px-2">
+      <div className="px-4 pt-8">
         <div className="flex mb-4 w-full flex-wrap justify-center">
           <div className="px-3 w-full">
             <div className="p-4 flex justify-center">
-              <h3 className="mr-3 font-bold text-2xl text-center capitalize">{cat} range</h3>
+              <h3 className="mr-3 text-xl text-center font-capitals uppercase tracking-widest">{cat} range</h3>
               <button
                 onClick={setAddMode}
                 type="button"
@@ -173,13 +173,13 @@ const SettingsCustomRanges = ({cat}) => {
               </button>
             </div>
             
-            <div className="mt-3 p-4 bg-white shadow-sm rounded-md max-w-5xl m-auto">
+            <div className="mt-3 px-8 py-4 bg-white shadow-sm rounded-md max-w-5xl m-auto">
               <table className="mb-4 settings-table w-full table-fixed">
                 <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Details</th>
-                    <th>Options</th>
+                  <tr className="uppercase tracking-widest">
+                    <th className="text-left font-medium">Name</th>
+                    <th className="text-left font-medium">Details</th>
+                    <th className="font-medium">Options</th>
                   </tr>
                 </thead>
                 <tbody>
