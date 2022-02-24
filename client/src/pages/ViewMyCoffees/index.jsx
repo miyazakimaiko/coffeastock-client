@@ -22,7 +22,7 @@ const ViewMyCoffees = () => {
 
   return (
     <>
-      <div className="px-2">
+      <div className="px-4 pt-8">
         <h2 className="font-bold text-2xl text-center p-4">Waltz Coffee Roastery</h2>
         <div className="flex mb-4 w-full flex-wrap justify-center">
           {innerHtml}

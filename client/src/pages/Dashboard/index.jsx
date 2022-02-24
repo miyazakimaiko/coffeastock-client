@@ -6,16 +6,15 @@ import TotalBrews from './TotalBrews'
 import TotalRecipes from './TotalRecipes'
 
 const Dashboard = () => {
-  const title = "Dashboard";
   return (
     <>
-      <div className="px-2">
-        <div className="grid grid-cols-1 md:grid-cols-3 md:mb-4">
+      <div className="px-4 pt-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 md:mb-6">
           <TotalBrews />
           <TotalRecipes />
           <TotalBeans />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 md:mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 md:mb-6">
           <ChartBarBeans />
           <ChartBarRecipes />
         </div>

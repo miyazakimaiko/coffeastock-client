@@ -2,7 +2,7 @@ import { BookOpenIcon, GlobeIcon, LightBulbIcon } from '@heroicons/react/outline
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import CoffeeBag from '../../svgs/CoffeeBag'
+import CoffeeBagLeft from '../../svgs/CoffeeBagLeft'
 import UserPool from '../../utils/UserPool'
 import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
 
@@ -260,7 +260,7 @@ const Register = () => {
         flex items-center justify-between"
       >
         <Link to="/register" className="text-2xl w-8 h-8">
-          <CoffeeBag />
+          <CoffeeBagLeft />
         </Link>
         <Link to="/login">
           <div className="px-8 py-2 rounded-3xl sinenna-button-transition">Login</div>

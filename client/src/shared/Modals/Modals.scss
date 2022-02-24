@@ -36,18 +36,19 @@
 }
 .confirm-section {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   padding: 0.5rem 1rem;
+  border-bottom: 1px dashed lightgray;
 }
-.confirm-divider {
-    position: relative;
-    &::after {
-      content: "";
-      position: absolute;
-      height: 2px;
-      left: 0;
-      right: 0;
-      background-color: #e9e8e3;
-      border-radius: 10px;
-    }
+
+.tag-section {
+  text-align: end;
+  span {
+    display: inline-block;
+    padding: 2px 7px;
+    margin: 4px 0 4px 8px;
+    border-radius: 15px;
+    border: 1px solid lightgray;
+  }
 }
