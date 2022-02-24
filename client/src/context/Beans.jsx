@@ -27,26 +27,27 @@ const Beans = (props) => {
   }
 
   const insertBean = async (userid, body) => {
+    console.log('body: ', body)
     try {
       const response = await fetch(
         `http://localhost:4000/api/v1/user/${userid}/bean`,
         {
           method: "POST",
-          headers: {
-            'Content-Type': "application/json"
-          },
+          headers: { 'Content-Type': "application/json" },
           body: JSON.stringify(body)
         }
       );
       const parseRes = await response.json();
-      if (parseRes.status === 'error') {
-        toast.error(parseRes.message, {
+      console.log('response: ', response)
+      if (response.status !== 200) {
+        toast.error(
+          parseRes.message ? parseRes.message : response.statusText, {
           position: toast.POSITION.BOTTOM_CENTER
         });
       }
       else {
         fetchAllBeans(userid);
-        toast.success("New coffee bean is added.", {
+        toast.success("New coffee bean is added successfully.", {
           position: toast.POSITION.BOTTOM_CENTER
         });
         return true
