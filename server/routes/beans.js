@@ -5,11 +5,11 @@ const { body, validationResult } = require('express-validator');
 let validator = [
   body('label', 'Invalid Name').not().isEmpty().isLength({ max: 60 }),
   body('single_origin', 'Invalid Single Origin').isBoolean(),
-  body('blend_ratio', 'Invalid Blend Ratio').isJSON().optional({ nullable: true }),
+  body('blend_ratio', 'Invalid Blend Ratio').isObject().optional({ checkFalsy: true }),
   body('roast_level', 'Invalid Roast Level').isFloat({ min: 0, max: 10 }).optional({ nullable: true }),
-  body('grading', 'Invalid Grade').isFloat({ min: 0, max: 100 }).optional({ nullable: true }),
-  // .isDate().optional({ nullable: true }) doesnt allow null value, thus eliminated
-  body('memo', 'Invalid Memo').isLength({ max: 400 }).optional({ nullable: true }),
+  body('grade', 'Invalid Grade').isFloat({ min: 0, max: 100 }).optional({ nullable: true }),
+  body('roast_date', 'Invalid Roast Date').isDate().optional({ checkFalsy: true }),
+  body('memo', 'Invalid Memo').isLength({ max: 400 }).optional({ checkFalsy: true }),
 ]
 
 module.exports = (app) => {
@@ -54,7 +54,7 @@ module.exports = (app) => {
         variety, 
         process, 
         altitude,
-        grading,
+        grade,
         harvest_date,
         roaster,
         roast_level,
@@ -73,7 +73,7 @@ module.exports = (app) => {
         req.body.variety,
         req.body.process,
         req.body.altitude,
-        req.body.grading,
+        req.body.grade,
         req.body.harvest_date,
         req.body.roaster,
         req.body.roast_level,
@@ -112,7 +112,7 @@ module.exports = (app) => {
         farm = $5, 
         variety = $6, 
         process = $7, 
-        grading = $8,
+        grade = $8,
         harvest_date = $9, 
         roaster = $10, 
         roast_level = $11, 
@@ -128,7 +128,7 @@ module.exports = (app) => {
         req.body.farm,
         req.body.variety,
         req.body.process,
-        req.body.grading,
+        req.body.grade,
         req.body.harvest_date,
         req.body.roaster,
         req.body.roast_level,
