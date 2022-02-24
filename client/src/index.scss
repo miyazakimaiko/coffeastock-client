@@ -86,6 +86,7 @@ body {
   &:disabled,
   &[disabled]{
     background-color: #cccccc;
+    border-color: #cccccc;
     color: #666666;
     &:hover {
       opacity: 0.8;
