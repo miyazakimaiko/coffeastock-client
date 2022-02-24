@@ -45,13 +45,17 @@ const CustomRanges = (props) => {
         }
       );
       const parseRes = await response.json();
-      if (parseRes.status === 'error') {
-        toast.error(parseRes.message, {
+      if (response.status !== 200) {
+        toast.error(
+          parseRes.message ? parseRes.message : response.statusText, {
           position: toast.POSITION.BOTTOM_CENTER
         });
       }
       else {
         setNewRange(parseRes, category);
+        toast.success("Entry is added successfully.", {
+          position: toast.POSITION.BOTTOM_CENTER
+        });
         return true;
       }
     } catch (error) {
@@ -75,13 +79,17 @@ const CustomRanges = (props) => {
         }
       );
       const parseRes = await response.json();
-      if (parseRes.status === 'error') {
-        toast.error(parseRes.message, {
+      if (response.status !== 200) {
+        toast.error(
+          parseRes.message ? parseRes.message : response.statusText, {
           position: toast.POSITION.BOTTOM_CENTER
         });
       }
       else {
         setNewRange(parseRes, category);
+        toast.success("Change is saved successfully.", {
+          position: toast.POSITION.BOTTOM_CENTER
+        });
         return true;
       }
     } catch (error) {
@@ -104,13 +112,17 @@ const CustomRanges = (props) => {
         }
       );
       const parseRes = await response.json();
-      if (parseRes.status === 'error') {
-        toast.error(parseRes.message, {
+      if (response.status !== 200) {
+        toast.error(
+          parseRes.message ? parseRes.message : response.statusText, {
           position: toast.POSITION.BOTTOM_CENTER
         });
       }
       else {
         setNewRange(parseRes, category);
+        toast.success("Entry is deleted successfully.", {
+          position: toast.POSITION.BOTTOM_CENTER
+        });
         return true;
       }
 
