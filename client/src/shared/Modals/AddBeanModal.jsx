@@ -85,36 +85,32 @@ const AddBeanModal = ({setOpenThisModal}) => {
   }, [isSingleOrigin, selectedBlendBeans.length, selectedOrigin.length]);
 
   const makeBeanFinalVersion = () => {
-    let bean = {}
+    let bean = {
+      "label": name,
+      "single_origin": isSingleOrigin,
+      "grade": grade,
+      "roast_level": roastLevel,
+      "memo": memo,
+      "roast_date": roastDate.length > 0 ? roastDate : null,
+      "roaster": selectedRoaster.map(entry => parseInt(entry.value)),
+      "aroma": selectedAroma.map(entry => parseInt(entry.value)),
+    }
     if (isSingleOrigin) {
-      bean = {
-        "label": name,
-        "single_origin": isSingleOrigin,
-        "origin": selectedOrigin.map(entry => parseInt(entry.value)), 
-        "farm": selectedFarm.map(entry => parseInt(entry.value)), 
-        "variety": selectedVariety.map(entry => parseInt(entry.value)), 
-        "process": selectedProcess.map(entry => parseInt(entry.value)), 
-        "altitude": altitude,
-        "grading": parseFloat(grade),
-        "harvest_date": harvestPeriod,
-        "roaster": selectedRoaster.map(entry => parseInt(entry.value)),
-        "roast_level": parseFloat(roastLevel),
-        "roast_date": roastDate,
-        "aroma": selectedAroma.map(entry => parseInt(entry.value)),
-        "memo": memo
-      }
+      bean["blend_ratio"] = null;
+      bean["origin"] = selectedOrigin.map(entry => parseInt(entry.value));
+      bean["farm"] = selectedFarm.map(entry => parseInt(entry.value));
+      bean["variety"] = selectedVariety.map(entry => parseInt(entry.value));
+      bean["process"] = selectedProcess.map(entry => parseInt(entry.value));
+      bean["altitude"] = altitude;
+      bean["harvest_date"] = harvestPeriod;
     } else {
-      bean = {
-        "label": name,
-        "single_origin": isSingleOrigin,
-        "blend_ratio": blendRatios,
-        "grading": parseFloat(grade),
-        "roaster": selectedRoaster.map(entry => parseInt(entry.value)),
-        "roast_level": parseFloat(roastLevel),
-        "roast_date": roastDate,
-        "aroma": selectedAroma.map(entry => parseInt(entry.value)),
-        "memo": memo
-      }
+      bean["blend_ratio"] = blendRatios;
+      bean["origin"] = null;
+      bean["farm"] = null;
+      bean["variety"] = null;
+      bean["process"] = null;
+      bean["altitude"] = null;
+      bean["harvest_date"] = null;
     }
     return bean;
   }
@@ -158,7 +154,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
 
           {/*header*/}
           <div className="py-8">
-            <h3 className="text-xl font-light text-center">
+            <h3 className="text-xl font-light text-center font-capitals uppercase tracking-widest">
               Add New Coffee Beans
             </h3>
             <button
@@ -243,7 +239,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
               <div className="flex px-8 my-8">
                 <div className="flex flex-col w-1/2">
                   <div className="form-section">
-                    <label className="font-semibold capitalize">Name</label>
+                    <label className="font-semibold uppercase tracking-widest">Name</label>
                     <input 
                       type="text" 
                       name="label" 
@@ -256,7 +252,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   </div>
                   <div className="form-section">
                     <label 
-                      className="font-semibold capitalize">
+                      className="font-semibold uppercase tracking-widest">
                       Grade (0 - 100)
                     </label>
                     <input 
@@ -271,7 +267,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   </div>
                   <div className="form-section">
                     <label 
-                      className="font-semibold capitalize">
+                      className="font-semibold uppercase tracking-widest">
                       Roast Level (0 - 10)
                     </label>
                     <input 
@@ -298,7 +294,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                     </div>
                   </div>
                   <div className="form-section">
-                    <label className="font-semibold capitalize">Roaster</label>
+                    <label className="font-semibold uppercase tracking-widest">Roaster</label>
                     <MultiSelect
                       options={roasterRange}
                       value={selectedRoaster}
@@ -307,7 +303,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                     />
                   </div>
                   <div className="form-section">
-                    <label className="font-semibold capitalize">Roast Date</label>
+                    <label className="font-semibold uppercase tracking-widest">Roast Date</label>
                     <input 
                       type="date" 
                       name="roastdate" 
@@ -347,7 +343,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
               <div className={`flex px-8 my-8 ${isSingleOrigin ? "hidden" : ""}`}>
                 <div className="flex flex-col w-1/2">
                   <div className="form-section">
-                    <label className="font-semibold capitalize">Blend of</label>
+                    <label className="font-semibold uppercase tracking-widest">Blend of</label>
                     <MultiSelect
                       labelledBy="Select"
                       options={beansRange}
@@ -356,7 +352,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                     />
                   </div>
                   <div className="form-section my-4">
-                    <label className="font-semibold capitalize divider">Blend Ratio</label>
+                    <label className="font-semibold uppercase tracking-widest divider">Blend Ratio</label>
                     <div>
                       { blendRatioElements }
                     </div>
@@ -365,7 +361,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
 
                 <div className="w-1/2">
                   <div className="form-section">
-                    <label className="font-semibold capitalize">Aroma</label>
+                    <label className="font-semibold uppercase tracking-widest">Aroma</label>
                     <MultiSelect
                       labelledBy="Select"
                       options={aromaRange}
@@ -374,7 +370,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                     />
                   </div>
                   <div className="form-section">
-                    <label className="font-semibold capitalize">Memo</label>
+                    <label className="font-semibold uppercase tracking-widest">Memo</label>
                     <textarea 
                       name="memo" 
                       placeholder="e.g. Where you bought this coffee, the price, how you like it, not liked it..." 
@@ -390,7 +386,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
               <div className={`flex px-8 my-8 ${isSingleOrigin ? "" : "hidden"}`}>
                 <div className="flex flex-col w-1/2">
                   <div className="form-section">
-                    <label className="font-semibold capitalize">Origin</label>
+                    <label className="font-semibold uppercase tracking-widest">Origin</label>
                     <MultiSelect
                       options={originRange}
                       value={selectedOrigin}
@@ -400,7 +396,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   </div>
 
                   <div className="form-section">
-                    <label className="font-semibold capitalize">Farm</label>
+                    <label className="font-semibold uppercase tracking-widest">Farm</label>
                     <MultiSelect
                       options={farmRange}
                       value={selectedFarm}
@@ -410,7 +406,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   </div>
 
                   <div className="form-section">
-                    <label className="font-semibold capitalize">Variety</label>
+                    <label className="font-semibold uppercase tracking-widest">Variety</label>
                     <MultiSelect
                       options={varietyRange}
                       value={selectedVariety}
@@ -420,7 +416,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   </div>
 
                   <div className="form-section">
-                    <label className="font-semibold capitalize">Harvest Period</label>
+                    <label className="font-semibold uppercase tracking-widest">Harvest Period</label>
                     <input 
                       type="text" 
                       name="harvest-period" 
@@ -433,7 +429,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   </div>
 
                   <div className="form-section">
-                    <label className="font-semibold capitalize">Altitude</label>
+                    <label className="font-semibold uppercase tracking-widest">Altitude</label>
                     <input 
                       type="text" 
                       name="altitude" 
@@ -448,7 +444,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
 
                 <div className="w-1/2">
                   <div className="form-section">
-                    <label className="font-semibold capitalize">Process</label>
+                    <label className="font-semibold uppercase tracking-widest">Process</label>
                     <MultiSelect
                       options={processRange}
                       value={selectedProcess}
@@ -458,7 +454,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   </div>
 
                   <div className="form-section">
-                    <label className="font-semibold capitalize">Aroma</label>
+                    <label className="font-semibold uppercase tracking-widest">Aroma</label>
                     <MultiSelect
                       options={aromaRange}
                       value={selectedAroma}
@@ -468,7 +464,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   </div>
 
                   <div className="form-section">
-                    <label className="font-semibold capitalize">Memo</label>
+                    <label className="font-semibold uppercase tracking-widest">Memo</label>
                     <textarea 
                       name="memo" 
                       placeholder="e.g. Where you bought this coffee, the price and weight" 
@@ -507,161 +503,162 @@ const AddBeanModal = ({setOpenThisModal}) => {
               aria-labelledby="confirmation-tab">
                 
               <div className="px-8 my-10">
-                <div className="flex mb-8">
+                <div className="flex">
                   <div className="flex flex-col w-1/2">
                     <div>
-                      <div className="mx-4 mb-4 confirm-divider">
-                        <h3 className="text-xl pb-4">Base Info</h3>
+                      <div className="mx-4">
+                        <h3 className="text-lg uppercase font-capitals tracking-widest">Base Info</h3>
                       </div>
-                      <div className="confirm-section">
-                        <label className="font-semibold capitalize">Name</label>
-                        <p className="">{name}</p>
-                      </div>
-
-                      <div className="confirm-section">
-                        <label className="font-semibold capitalize">Single Origin</label>
-                        <p>{isSingleOrigin ? 'Yes' : 'No'}</p>
-                      </div>
-
-                      <div className="confirm-section">
-                        <label className="font-semibold capitalize">Grade (0 - 100)</label>
-                        <p>{grade ? grade : 'No Data'}</p>
-                      </div>
-
-                      <div className="confirm-section">
-                        <label className="font-semibold capitalize">Roaster</label>
-                        <div className="tag-section">
-                          {selectedRoaster.length <= 0 ? 
-                            <p>Not Selected</p> :
-                          selectedRoaster.map((roaster) => (
-                              <span>{roaster.label}</span>
-                          ))}
+                      <div className="m-8">
+                        <div className="confirm-section">
+                          <label className="text-xs font-semibold uppercase tracking-widest">Name</label>
+                          <p className="">{name}</p>
                         </div>
-                      </div>
 
-                      <div className="confirm-section">
-                        <label className="font-semibold capitalize">Roast Level (0 - 10)</label>
-                        <p>{roastLevel? roastLevel : 'No Data'}</p>
-                      </div>
+                        <div className="confirm-section">
+                          <label className="text-xs font-semibold uppercase tracking-widest">Single Origin</label>
+                          <p>{isSingleOrigin ? 'Yes' : 'No'}</p>
+                        </div>
 
-                      <div className="confirm-section">
-                        <label className="font-semibold capitalize">Roast Date</label>
-                        <p>{roastDate ? roastDate : 'No Data'}</p>
+                        <div className="confirm-section">
+                          <label className="text-xs font-semibold uppercase tracking-widest">Grade (0 - 100)</label>
+                          <p>{grade ? grade : 'No Data'}</p>
+                        </div>
+
+                        <div className="confirm-section">
+                          <label className="text-xs font-semibold uppercase tracking-widest">Roaster</label>
+                          <div className="tag-section">
+                            {selectedRoaster.length <= 0 ? 
+                              <p>Not Selected</p> :
+                            selectedRoaster.map((roaster) => (
+                                <span>{roaster.label}</span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="confirm-section">
+                          <label className="text-xs font-semibold uppercase tracking-widest">Roast Level (0 - 10)</label>
+                          <p>{roastLevel? roastLevel : 'No Data'}</p>
+                        </div>
+
+                        <div className="confirm-section">
+                          <label className="text-xs font-semibold uppercase tracking-widest">Roast Date</label>
+                          <p>{roastDate ? roastDate : 'No Data'}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   <div className="w-1/2">
-                    <div className="mx-4 mb-4 confirm-divider">
-                      <h3 className="text-xl pb-4">Details</h3>
+                    <div className="mx-4 mb-4 ">
+                      <h3 className="text-lg uppercase font-capitals tracking-widest">Details</h3>
                     </div>
+                    <div className="m-8">
+                      { isSingleOrigin ? 
+                        <>
+                        <div className="confirm-section">
+                          <label className="text-xs font-semibold uppercase tracking-widest">Origin</label>
+                          <div className="tag-section">
+                          {selectedOrigin.map((entry) => (
+                              <span>{entry.label}</span>
+                          ))}
+                          </div>
+                        </div>
 
-                    { isSingleOrigin ? 
-                      <>
-                      <div className="confirm-section">
-                        <label className="font-semibold capitalize">Origin</label>
-                        <div className="tag-section">
-                        {selectedOrigin.map((entry) => (
+                        <div className="confirm-section">
+                          <label className="text-xs font-semibold uppercase tracking-widest">Farm</label>
+                          <div className="tag-section">
+                          {selectedFarm.length <= 0 ? 
+                            <p>Not Selected</p> :
+                          selectedFarm.map((entry) => (
+                              <span>{entry.label}</span>
+                          ))}
+                          </div>
+                        </div>
+
+                        <div className="confirm-section">
+                          <label className="text-xs font-semibold uppercase tracking-widest">Variety</label>
+                          <div className="tag-section">
+                          {selectedVariety.length <= 0 ? 
+                            <p>Not Selected</p> :
+                          selectedVariety.map((entry) => (
+                              <span>{entry.label}</span>
+                          ))}
+                          </div>
+                        </div>
+
+                        <div className="confirm-section">
+                          <label className="text-xs font-semibold uppercase tracking-widest">Harvest Period</label>
+                          <p>{harvestPeriod? harvestPeriod : 'No Data'}</p>
+                        </div>
+
+                        <div className="confirm-section">
+                          <label className="text-xs font-semibold uppercase tracking-widest">Altitude</label>
+                          <p>{altitude? altitude : 'No Data'}</p>
+                        </div>
+
+                        <div className="confirm-section">
+                          <label className="text-xs font-semibold uppercase tracking-widest">Process</label>
+                          <div className="tag-section">
+                          {selectedProcess.length <= 0 ? 
+                            <p>Not Selected</p> :
+                          selectedProcess.map((entry) => (
+                              <span>{entry.label}</span>
+                          ))}
+                          </div>
+                        </div>
+
+                        <div className="confirm-section">
+                          <label className="text-xs font-semibold uppercase tracking-widest">Aroma</label>
+                          <div className="tag-section">
+                          {selectedAroma.length <= 0 ? 
+                            <p>Not Selected</p> :
+                          selectedAroma.map((entry) => (
+                              <span>{entry.label}</span>
+                          ))}
+                          </div>
+                        </div>
+                        </>
+                        : 
+                        // Blend Beans
+                        <>
+                        <div className="confirm-section">
+                          <label className="text-xs font-semibold uppercase tracking-widest">Aroma</label>
+                          <div className="tag-section">
+                          {selectedAroma.length <= 0 ? 
+                            <p>Not Selected</p> :
+                          selectedAroma.map((entry) => (
                             <span>{entry.label}</span>
-                        ))}
+                          ))}
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="confirm-section">
-                        <label className="font-semibold capitalize">Farm</label>
-                        <div className="tag-section">
-                        {selectedFarm.length <= 0 ? 
-                          <p>Not Selected</p> :
-                        selectedFarm.map((entry) => (
-                            <span>{entry.label}</span>
-                        ))}
+                        <div className="confirm-section">
+                          <label className="text-xs font-semibold uppercase tracking-widest">Blend Ratio</label>
+                          <div className="tag-section">
+                          {selectedBlendBeans.map((entry) => (
+                            <span>{entry.label}: {blendRatios[entry.value]}%</span>
+                          ))}
+                          </div>
                         </div>
-                      </div>
-
-                      <div className="confirm-section">
-                        <label className="font-semibold capitalize">Variety</label>
-                        <div className="tag-section">
-                        {selectedVariety.length <= 0 ? 
-                          <p>Not Selected</p> :
-                        selectedVariety.map((entry) => (
-                            <span>{entry.label}</span>
-                        ))}
-                        </div>
-                      </div>
-
-                      <div className="confirm-section">
-                        <label className="font-semibold capitalize">Harvest Period</label>
-                        <p>{harvestPeriod? harvestPeriod : 'No Data'}</p>
-                      </div>
-
-                      <div className="confirm-section">
-                        <label className="font-semibold capitalize">Altitude</label>
-                        <p>{altitude? altitude : 'No Data'}</p>
-                      </div>
-
-                      <div className="confirm-section">
-                        <label className="font-semibold capitalize">Process</label>
-                        <div className="tag-section">
-                        {selectedProcess.length <= 0 ? 
-                          <p>Not Selected</p> :
-                        selectedProcess.map((entry) => (
-                            <span>{entry.label}</span>
-                        ))}
-                        </div>
-                      </div>
-
-                      <div className="confirm-section">
-                        <label className="font-semibold capitalize">Aroma</label>
-                        <div className="tag-section">
-                        {selectedAroma.length <= 0 ? 
-                          <p>Not Selected</p> :
-                        selectedAroma.map((entry) => (
-                            <span>{entry.label}</span>
-                        ))}
-                        </div>
-                      </div>
-                      </>
-                      : 
-                      // Blend Beans
-                      <>
-                      <div className="confirm-section">
-                        <label className="font-semibold capitalize">Aroma</label>
-                        <div className="tag-section">
-                        {selectedAroma.length <= 0 ? 
-                          <p>Not Selected</p> :
-                        selectedAroma.map((entry) => (
-                          <span>{entry.label}</span>
-                        ))}
-                        </div>
-                      </div>
-
-                      <div className="confirm-section">
-                        <label className="font-semibold capitalize">Blend Ratio</label>
-                        <div className="tag-section">
-                        {selectedBlendBeans.map((entry) => (
-                          <span>{entry.label}: {blendRatios[entry.value]}%</span>
-                        ))}
-                        </div>
-                      </div>
-                      </>
-                    }
+                        </>
+                      }
+                    </div>
                   </div>
                 </div>
 
                 <div>
-                  <div className="mx-4 mb-4 confirm-divider">
-                    <h3 className="text-xl pb-4">Memo</h3>
-                  </div>
-                  <div className="confirm-section">
+                  <div className="mx-6 my-2">
                     <div className="w-full">
-                      <p>{memo ? memo : 'No Data'}</p>
+                      <h3 className="text-md uppercase font-capitals tracking-widest inline">Memo: </h3>
+                      <p className="inline">{memo ? memo : 'No Data'}</p>
                     </div>
                   </div>
                 </div>
               </div>
 
 
-              <div className="flex items-center justify-between pl-8 pr-8 pb-8">
+              <div className="flex items-center justify-between px-8 py-8">
                 <button
                   className="border-2 border-red text-red opacity-80 
                   hover:opacity-100 font-bold uppercase text-sm 
