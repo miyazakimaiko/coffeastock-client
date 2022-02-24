@@ -8,7 +8,6 @@ import StarFullIcon from '../../svgs/StarFullIcon'
 const CoffeeSection = (props) => {
   const { customRanges } = useContext(CustomRangesContext);
   const bean = props.bean;
-  console.log('bean: ', bean)
 
   // Get the label of origins from ID
   const origins = [];
@@ -19,20 +18,24 @@ const CoffeeSection = (props) => {
     })
   }
 
-  const grading = [];
-  if (bean['grading']) {
-    const rounded = Math.ceil(bean['grading']/10)/2;
-    console.log('rounded: ', rounded)
+  const grade = [];
+  if (bean['grade']) {
+    const rounded = Math.ceil(bean['grade']/10)/2;
     for (let i = 1; i <= rounded; i ++) {
-      grading.push(
+      grade.push(
         <StarFullIcon/>
       )
     }
     if (rounded % 1 !== 0) {
-      grading.push(
+      grade.push(
         <StarHalfIcon />
       )
     }
+  }
+
+  let roastDate = "";
+  if (bean['roast_date']) {
+    roastDate = bean['roast_date'].split('T')[0]
   }
 
   return (
@@ -40,7 +43,7 @@ const CoffeeSection = (props) => {
       <Link to={`/coffee/${bean['coffee_bean_id']}`}>
         <div 
           className="
-            absolute left-4 right-4 top-4 bottom-4 
+            absolute left-3 right-3 top-3 bottom-3 
             bg-burnt-sienna rounded-md z-10 
             transition-opacity duration-300 ease-out opacity-0 hover:opacity-80
         ">
@@ -48,7 +51,7 @@ const CoffeeSection = (props) => {
             View Recipes
           </span>
         </div>
-        <div className="p-4 bg-white shadow-sm rounded-md">
+        <div className="h-full p-4 bg-white shadow-sm rounded-md">
           <div className="m-auto w-full max-w-10">
             <CoffeeBagLeft name={bean['label']} />
           </div>
@@ -57,11 +60,11 @@ const CoffeeSection = (props) => {
               {origins}
             </h4>
             <span className="flex justify-center pt-2 text-yellow">
-              {grading}
+              {grade}
             </span>
             <div className="pt-2">
               <span>Roasted at </span>
-              <span>{bean['roast_date'].split('T')[0]}</span>
+              <span>{roastDate}</span>
             </div>
           </div>
         </div>

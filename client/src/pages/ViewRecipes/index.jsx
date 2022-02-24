@@ -38,7 +38,7 @@ const ViewRecipes = () => {
 
   const coffeeName = beans[id]['label'];
   const roasters = getLabelsFromIds('roaster')
-  const roastDate = beans[id]['roast_date'].split('T')[0];
+  const roastDate = beans[id]['roast_date'] ? beans[id]['roast_date'].split('T')[0] : null;
   const aroma = getLabelsFromIds('aroma')
   const origins = getLabelsFromIds('origin')
   const process = getLabelsFromIds('process');
@@ -49,14 +49,14 @@ const ViewRecipes = () => {
   const roastLevel = beans[id]['roast_level'];
   const memo = beans[id]['memo'];
 
-  const grading = [];
-  if (beans[id]['grading']) {
-    const rounded = Math.ceil(beans[id]['grading']/10)/2;
+  const grade = [];
+  if (beans[id]['grade']) {
+    const rounded = Math.ceil(beans[id]['grade']/10)/2;
     for (let i = 1; i <= rounded; i ++) {
-      grading.push(<StarFullIcon/>)
+      grade.push(<StarFullIcon/>)
     }
     if (rounded % 1 !== 0) {
-      grading.push(<StarHalfIcon />)
+      grade.push(<StarHalfIcon />)
     }
   }
 
@@ -100,7 +100,7 @@ const ViewRecipes = () => {
               <div className="flex bg-gray-300">
                 <ul>
                   <li>{roastDate}</li>
-                  <li className="flex">{grading} ({beans[id]['grading']}/100)</li>
+                  <li className="flex">{grade} ({beans[id]['grade']}/100)</li>
                   <li>{roastLevel}</li>
                   <li>{aroma}</li>
                 </ul>
