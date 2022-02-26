@@ -79,8 +79,9 @@ module.exports = (app) => {
 
       if(results.rows.length === 0) {
         res.status(404).json({
-          "status": "error",
-          "message": "Not Found"
+          'error': {
+            "message": "Not Found"
+          }
         });
       }
       res.status(200).json(results.rows[0]);
@@ -126,9 +127,11 @@ module.exports = (app) => {
       }
 
       if (!uniqueName) {
-        res.status(500).json({
-          'status': 'error',
-          'message': 'An entry with the same name already exists.'});
+        res.status(422).json({
+          'error': {
+            'message': 'An entry with the same name already exists.'
+          }
+        });
       } 
       else {
         // get the ID of the last entry to create new ID
@@ -171,8 +174,9 @@ module.exports = (app) => {
       });
       if (!entryExists) {
         res.status(500).json({
-          'status': 'error',
-          'message': 'Entry with the ID does not exist'
+          'error': {
+            'message': 'Entry with the ID does not exist.'
+          }
         });
       }
       // Validate the uniqueness of the new name
@@ -186,8 +190,9 @@ module.exports = (app) => {
       }
       if (!uniqueName) {
         res.status(500).json({
-          'status': 'error',
-          'message': 'An entry with the same name already exists.'
+          'error': {
+            'message': 'An entry with the same name already exists.'
+          }
         });
       } 
       else {
@@ -228,14 +233,21 @@ module.exports = (app) => {
     
       try {
         const selectResult = await db.query(query, [req.params.userid]);
+
         const beans = selectResult.rows;
-        beans.forEach(bean => {
-          bean[req.params.rangename].forEach(entryId => {
-            if (parseInt(entryId) === parseInt(req.params.id)) { 
-              inUse = true;
-            };
-          })
-        });
+        if (beans.length > 0) {
+          beans.forEach(bean => {
+            if (bean[req.params.rangename] !== null) {
+              if (bean[req.params.rangename].length > 0) {
+                bean[req.params.rangename].forEach(entryId => {
+                  if (parseInt(entryId) === parseInt(req.params.id)) { 
+                    inUse = true;
+                  };
+                })
+              }
+            }
+          });
+        }
       } catch (error) {
         next(error);
       }
@@ -245,8 +257,9 @@ module.exports = (app) => {
     const inUse = await searchRangeInUse();
     if (inUse) {
       res.status(500).json({
-        'status': 'error',
-        'message': 'This entry cannot be deleted since it is in use by beans or recipes.'
+        'error': {
+          'message': 'This entry cannot be deleted since it is in use by beans or recipes.'
+        }
       });
     } else {
       try {

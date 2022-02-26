@@ -36,8 +36,9 @@ module.exports = (app) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({ 
-        status: 'error',
-        message: errors.array()[0]['msg']
+        error: {
+          message: errors.array()[0]['msg']
+        }
       });
     }
 
@@ -95,9 +96,10 @@ module.exports = (app) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(422).json({ 
-        status: 'error',
-        message: errors.array()[0]['msg']
+      return res.status(422).json({
+        error: {
+          message: errors.array()[0]['msg']
+        } 
       });
     }
 
