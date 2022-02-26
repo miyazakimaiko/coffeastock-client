@@ -1,39 +1,7 @@
 .active {
   opacity: 1;
 }
-.form-section {
-  padding: 0.5rem 1rem;
 
-  label {
-    display: inline-block;
-    margin-bottom: 0.3rem;
-  }
-  .divider {
-    position: relative;
-    display: block;
-    margin-bottom: 10px;
-  
-    &::after {
-      content: "";
-      position: absolute;
-      bottom: -6px;
-      left: 0;
-      right: 0;
-      height: 1px;
-      width: 100%;
-      background-color: #e9e8e3;
-    }
-  }
-  .percent-char {
-    input {
-      text-align: right;
-    }
-    &::after {
-      content: "%";
-      margin-left: 14px;
-    }
-  }
-}
 .confirm-section {
   display: flex;
   align-items: center;
@@ -49,6 +17,6 @@
     padding: 2px 7px;
     margin: 4px 0 4px 8px;
     border-radius: 15px;
-    border: 1px solid lightgray;
+    background-color: #66615b5b;
   }
 }

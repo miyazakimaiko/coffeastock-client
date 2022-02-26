@@ -7,6 +7,10 @@
 body {
   position: relative;
   transition: .5s;
+  letter-spacing: 0.1em;
+  button, input, textarea {
+    letter-spacing: 0.1em;
+  }
 }
 
 .main {
@@ -34,7 +38,7 @@ body {
   --toastify-color-error: #EB5E28;
   --toastify-font-family: 'Nunito';
   --nav-width: 70vw;
-  --nav-width-sm: 220px;
+  --nav-width-sm: 280px;
 }
 
 ::-webkit-scrollbar {
@@ -117,9 +121,6 @@ body {
   tbody {
     tr {
       border-top: 1px solid lightgray;
-      &:nth-child(odd) {
-        background-color: #F4F3EE;
-      }
       td {
         padding: 15px 8px;
       }
@@ -137,4 +138,68 @@ body {
       }
     }
   }
+}
+
+.form-section {
+  padding: 0.5rem 1rem;
+
+  label {
+    display: inline-block;
+    margin-bottom: 0.3rem;
+  }
+  .divider {
+    position: relative;
+    display: block;
+    margin-bottom: 10px;
+  
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      width: 100%;
+      background-color: #e9e8e3;
+    }
+  }
+  .percent-char {
+    input {
+      text-align: right;
+    }
+    &::after {
+      content: "%";
+      margin-left: 14px;
+    }
+  }
+}
+
+.animate {
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0rem);
+    opacity: 1;
+  }
+
+  0% {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+}
+
+.slideIn {
+  animation-name: slideIn;
+}
+
+.show {
+  inset: 60px 20px auto auto !important;
 }
