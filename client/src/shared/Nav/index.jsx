@@ -1,6 +1,6 @@
 import React, { useState} from 'react'
 import { NavLink } from 'react-router-dom'
-import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, CogIcon, FilterIcon, HomeIcon } from '@heroicons/react/outline'
+import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, CogIcon, HomeIcon } from '@heroicons/react/outline'
 import { Collapse } from 'react-bootstrap'
 import { useContext } from 'react'
 import './Nav.scss'
@@ -9,8 +9,6 @@ import PushPinIcon from '../../svgs/PushPinIcon'
 
 const Nav = (props) => {
   const { showNavbar, pinnedNavbar, setPinnedNavbar } = useContext(NavStateContext);
-  const [openProcess, setOpenProcess] = useState(false);
-  const [openOrigin, setOpenOrigin] = useState(false);
   const [openSettingCoffeeBeans, setOpenSettingCoffeeBeans] = useState(false);
   const [openSettingRecipes, setOpenSettingRecipes] = useState(false);
 
@@ -22,19 +20,19 @@ const Nav = (props) => {
       className="l-nav fixed top-0 bottom-0 overflow-auto
         bg-burnt-sienna border-r text-white"
     >
-      <div className=" border-b border-creme border-opacity-20 h-16 flex justify-between items-center px-3">
+      <div className=" border-b border-creme border-opacity-20 h-16 px-6 flex justify-between items-center">
         <h1 className="uppercase text-lg font-capitals">Coffee Journal</h1>
         <button type="button" ref={el => { props.pushpinRef.current = el; }} className="h-4 w-4 pushpin hidden lg:block" onClick={setPinnedNavbar}>
           <PushPinIcon />
         </button>
       </div>
 
-      <div className="my-8 text-xs tracking-widest font-capitals uppercase">
-        <h3 className="mx-6 my-2 opacity-50">
+      <div className="my-8 text-sm font-capitals uppercase">
+        <h3 className="mx-6 my-3 text-xs opacity-50">
           Main
         </h3>
-        <ul>
-          <li className="h-10 mx-6 flex items-center justify-between font-bold">
+        <ul className="ml-10">
+          <li className="h-12 flex items-center justify-between">
             <NavLink to="/"
               className={({ isActive }) => "flex items-center" 
                 + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
@@ -45,7 +43,7 @@ const Nav = (props) => {
             </NavLink>
           </li>
 
-          <li className="h-10 mx-6 flex items-center justify-between font-bold">
+          <li className="h-12 flex items-center justify-between">
             <NavLink exact="true" to="coffees"
               className={({ isActive }) => "flex items-center" 
               + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
@@ -58,94 +56,14 @@ const Nav = (props) => {
         </ul>
       </div>
 
-      <div className="my-8 text-xs tracking-widest font-capitals uppercase">
-        <h3 className="mx-6 my-2 opacity-50">
-            Filter by
+      <div className="my-8 text-sm font-capitals uppercase">
+        <h3 className="mx-6 my-3 text-xs opacity-50">
+            Customize Range
         </h3>
-        <ul>
-          <li className="ml-6 mr-4">
+        <ul className="ml-6">
+          <li className="mr-6">
             <div className="
-              h-10 flex items-center justify-between font-bold
-              transition-opacity duration-300
-              ease-out opacity-70 hover:opacity-100
-              cursor-pointer"
-              onClick={() => setOpenOrigin(!openOrigin)}
-              aria-controls="origin-content"
-              aria-expanded={openOrigin}
-            >
-              <div className="flex items-center">
-                <FilterIcon className="h-4 w-4"></FilterIcon>
-                <span className="ml-4">Origin</span>
-              </div>
-
-              { openOrigin === true ? (
-                <ChevronUpIcon className="h-4 w-4"></ChevronUpIcon>
-              ) :
-                <ChevronDownIcon className="h-4 w-4"></ChevronDownIcon>
-              }
-            </div>
-            <Collapse in={openOrigin}>
-              <div id="origin-content">
-                <ul>
-                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
-                    <NavLink exact="true" to="ethiopia/1"
-                      className={({ isActive }) => "flex items-center" 
-                      + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
-                    >
-                      <span>Ethiopia</span>
-                    </NavLink>
-                  </li>
-                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
-                    <NavLink exact="true" to="colombia/1"
-                      className={({ isActive }) => "flex items-center" 
-                      + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
-                    >
-                      <span>Colombia</span>
-                    </NavLink>
-                  </li>
-                </ul>
-              </div>
-            </Collapse>
-          </li>
-
-          <li className="ml-6 mr-4">
-            <div className="
-              h-10 flex items-center justify-between font-bold
-              transition-opacity duration-300
-              ease-out opacity-70 hover:opacity-100
-              cursor-pointer"
-              onClick={() => setOpenProcess(!openProcess)}
-              aria-controls="process-content"
-              aria-expanded={openProcess}
-            >
-              <div className="flex items-center">
-                <FilterIcon className="h-4 w-4"></FilterIcon>
-                <span className="ml-4">Process</span>
-              </div>
-
-              { openProcess === true ? (
-                <ChevronUpIcon className="h-4 w-4"></ChevronUpIcon>
-              ) :
-                <ChevronDownIcon className="h-4 w-4"></ChevronDownIcon>
-              }
-            </div>
-            <Collapse in={openProcess}>
-              <div id="process-content">
-                Test
-              </div>
-            </Collapse>
-          </li>
-        </ul>
-      </div>
-
-      <div className="my-8 text-xs tracking-widest font-capitals uppercase">
-        <h3 className="mx-6 my-2  opacity-50">
-            Customize
-        </h3>
-        <ul>
-          <li className="ml-6 mr-4">
-            <div className="
-              h-10 flex items-center justify-between font-bold
+              h-12 flex items-center justify-between
               transition-opacity duration-300
               ease-out opacity-70 hover:opacity-100
               cursor-pointer"
@@ -155,7 +73,7 @@ const Nav = (props) => {
             >
               <div className="flex items-center">
                 <CogIcon className="h-4 w-4"></CogIcon>
-                <span className="ml-4">Coffee Beans</span>
+                <span className="ml-4">For Coffee Beans</span>
               </div>
 
               { openSettingCoffeeBeans === true ? (
@@ -167,7 +85,7 @@ const Nav = (props) => {
             <Collapse in={openSettingCoffeeBeans}>
               <div id="origin-content">
                 <ul>
-                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/origin"
                       className={({ isActive }) => "flex items-center" 
                       + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
@@ -176,7 +94,7 @@ const Nav = (props) => {
                       <span>Origin</span>
                     </NavLink>
                   </li>
-                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/farm"
                       className={({ isActive }) => "flex items-center" 
                       + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
@@ -185,7 +103,7 @@ const Nav = (props) => {
                       <span>Farm</span>
                     </NavLink>
                   </li>
-                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/variety"
                       className={({ isActive }) => "flex items-center" 
                       + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
@@ -194,7 +112,7 @@ const Nav = (props) => {
                       <span>Variety</span>
                     </NavLink>
                   </li>
-                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/process"
                       className={({ isActive }) => "flex items-center" 
                       + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
@@ -203,7 +121,7 @@ const Nav = (props) => {
                       <span>process</span>
                     </NavLink>
                   </li>
-                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/roaster"
                       className={({ isActive }) => "flex items-center" 
                       + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
@@ -212,7 +130,7 @@ const Nav = (props) => {
                       <span>roaster</span>
                     </NavLink>
                   </li>
-                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/aroma"
                       className={({ isActive }) => "flex items-center" 
                       + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
@@ -226,9 +144,9 @@ const Nav = (props) => {
             </Collapse>
           </li>
 
-          <li className="ml-6 mr-4">
+          <li className="mr-6">
             <div className="
-              h-10 flex items-center justify-between font-bold
+              h-12 flex items-center justify-between
               transition-opacity duration-300
               ease-out opacity-70 hover:opacity-100
               cursor-pointer"
@@ -238,7 +156,7 @@ const Nav = (props) => {
             >
               <div className="flex items-center">
                 <CogIcon className="h-4 w-4"></CogIcon>
-                <span className="ml-4">Recipes</span>
+                <span className="ml-4">For Recipes</span>
               </div>
 
               { openSettingRecipes === true ? (
@@ -250,7 +168,7 @@ const Nav = (props) => {
             <Collapse in={openSettingRecipes}>
               <div id="origin-content">
                 <ul>
-                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/grinder"
                       className={({ isActive }) => "flex items-center" 
                       + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
@@ -259,7 +177,7 @@ const Nav = (props) => {
                       <span>grinder</span>
                     </NavLink>
                   </li>
-                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/method"
                       className={({ isActive }) => "flex items-center" 
                       + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
@@ -268,7 +186,7 @@ const Nav = (props) => {
                       <span>method</span>
                     </NavLink>
                   </li>
-                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/water"
                       className={({ isActive }) => "flex items-center" 
                       + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
@@ -277,7 +195,7 @@ const Nav = (props) => {
                       <span>water</span>
                     </NavLink>
                   </li>
-                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
                     <NavLink exact="true" to="settings/palate"
                       className={({ isActive }) => "flex items-center" 
                       + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
