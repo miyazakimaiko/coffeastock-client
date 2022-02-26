@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { toast } from 'react-toastify'
-import { PencilAltIcon, PlusSmIcon, XIcon } from '@heroicons/react/outline'
+import { PencilAltIcon, PlusIcon, XIcon } from '@heroicons/react/outline'
+
 import { CustomRangesContext } from '../../context/CustomRanges';
 import { AccountContext } from '../../context/Account';
 
@@ -56,14 +57,22 @@ const SettingsCustomRanges = ({cat}) => {
       });
       return;
     }
-
     const OneLinerangeDef = addRangeValue.replace(/(\r\n|\n|\r)/gm, " ");
     const insertBody = {
       "label": addRangeName,
       "def": OneLinerangeDef
     }
-    const insertSuccess = await insertEntry(userData.sub, cat, insertBody);
-    if (insertSuccess) {
+    const insertStatus = await insertEntry(userData.sub, cat, insertBody);
+
+    if (typeof insertStatus == 'object') {
+      toast.error(insertStatus.error.message, {
+        position: toast.POSITION.BOTTOM_CENTER
+      });
+    }
+    else if (insertStatus == true) {
+      toast.success("Entry is added successfully.", {
+        position: toast.POSITION.BOTTOM_CENTER
+      });
       closeAddEditModal();
     }
   }
@@ -144,7 +153,7 @@ const SettingsCustomRanges = ({cat}) => {
     else {
       elements.push(
         <tr>
-          <td className="text-center bg-white" colspan="3">No item</td>
+          <td className="text-center bg-white" colspan="3">There's no entry in this range.</td>
         </tr>
       )
     }
@@ -161,22 +170,27 @@ const SettingsCustomRanges = ({cat}) => {
       <div className="px-4 pt-8">
         <div className="flex mb-4 w-full flex-wrap justify-center">
           <div className="px-3 w-full">
-            <div className="p-4 flex justify-center">
-              <h3 className="mr-3 text-xl text-center font-capitals uppercase tracking-widest">{cat} range</h3>
+            <div className="h-16 flex items-center justify-center mb-8">
+              <h3 className="mr-3 text-xl text-center font-capitals uppercase">
+                {cat} range
+              </h3>
               <button
                 onClick={setAddMode}
                 type="button"
-                className="bg-blue text-white rounded-3xl px-2 py-1 flex items-center font-capitals uppercase font-bold text-xs tracking-widest"
+                className="flex items-center text-burnt-sienna 
+                font-capitals uppercase text-sm 
+                px-3 ml-4 mr-0 opacity-80 
+                hover:opacity-100 ease-linear transition-all duration-150"
                 >
-                <PlusSmIcon className="w-4 h-4 mr-1 inline" />
-                Add New
+                <PlusIcon className="w-4 h-4 mr-1 inline" />
+                New {cat}
               </button>
             </div>
             
             <div className="mt-3 px-8 py-4 bg-white shadow-sm rounded-md max-w-5xl m-auto">
               <table className="mb-4 settings-table w-full table-fixed">
                 <thead>
-                  <tr className="uppercase tracking-widest">
+                  <tr className="uppercase">
                     <th className="text-left font-medium">Name</th>
                     <th className="text-left font-medium">Details</th>
                     <th className="font-medium">Options</th>
@@ -194,20 +208,25 @@ const SettingsCustomRanges = ({cat}) => {
       {openAddEditModal ? 
       <>
         <div
-          className="justify-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-        >
-          <div className="relative w-full md:w-550px p-2 mt-16 mx-auto">
+          className="justify-center flex 
+          overflow-x-hidden overflow-y-auto 
+          fixed inset-0 z-50 outline-none focus:outline-none">
+          <div className="relative w-full md:w-550px px-2 my-16 mx-auto">
             {/*content*/}
-            <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+            <div
+              className="border-0 rounded-lg 
+              shadow-lg relative flex flex-col 
+              w-full bg-white outline-none focus:outline-none">
               {/*header*/}
-              <div className="flex items-center justify-between p-4 rounded-t">
-                <h3 className="text-xl font-light capitalize">
+              <div 
+                className="flex justify-center py-8 rounded-t 
+                border-b border-burnt-sienna border-opacity-20">
+                <h3 className="text-lg font-light font-capitals uppercase">
                   {mode === 'add' ? <>add new</>: mode === 'edit' ? <>edit</>: null} {cat}
                 </h3>
                 <button
-                  className="p-1 ml-auto border-0 text-black float-right"
-                  onClick={closeAddEditModal}
-                >
+                  className="absolute top-4 right-4 text-black"
+                  onClick={closeAddEditModal}>
                   <XIcon className="h-6 w-6"/>
                 </button>
               </div>
@@ -222,10 +241,15 @@ const SettingsCustomRanges = ({cat}) => {
                   }
                 >
                   <div className="bg-white px-6 shadow-sm rounded-md">
-                    <div className="card-content pt-3">
-                      <div className="pb-3">
-                        <label className="font-bold capitalize">{cat} name</label>
-                        <input type="text" name="label" placeholder={`${cat} name`} className="blue-outline-transition bg-creme block w-full text-base py-2 px-3 rounded-md"
+                    <div className="card-content mt-3 mb-6">
+                      <div className="form-section">
+                        <label className="font-semibold uppercase mb-2">{cat} name</label>
+                        <input
+                          type="text" 
+                          name="label" 
+                          placeholder={`${cat} name`} 
+                          className="blue-outline-transition 
+                          bg-creme block w-full text-base py-2 px-3 rounded-md"
                           value={mode === 'add' ? addRangeName : mode === 'edit' ? editRangeName : null}
                           onChange={
                             mode === 'add' ? e => setAddRangeName(e.target.value) :
@@ -233,9 +257,14 @@ const SettingsCustomRanges = ({cat}) => {
                           }
                         />
                       </div>
-                      <div className="pb-3">
-                        <label className="font-bold capitalize">{cat} details</label>
-                        <textarea type="text" name="definition" placeholder={`${cat} details`} className="blue-outline-transition bg-creme block w-full h-32 text-base py-2 px-3 rounded-md"
+                      <div className="form-section">
+                        <label className="font-semibold uppercase">{cat} details</label>
+                        <textarea 
+                          type="text" 
+                          name="definition" 
+                          placeholder={`${cat} details`} 
+                          className="blue-outline-transition 
+                          bg-creme block w-full h-32 text-base py-2 px-3 rounded-lg"
                           value={mode === 'add' ? addRangeValue : mode === 'edit' ? editRangeValue : null}
                           onChange={
                             mode === 'add' ? e => setAddRangeValue(e.target.value) :
@@ -244,16 +273,20 @@ const SettingsCustomRanges = ({cat}) => {
                         />
                       </div>
                     </div>
-                    <div className="flex items-center justify-end py-4 rounded-b">
+                    <div className="flex items-center justify-between pl-4 pr-4 pb-8">
                       <button
-                        className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                        className="text-red-500 background-transparent 
+                        font-bold uppercase px-6 py-2 text-sm outline-none 
+                        focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
                         onClick={closeAddEditModal}
                       >
                         Cancel
                       </button>
                       <button
-                        className="bg-blue text-white opacity-80 hover:opacity-100 font-bold uppercase text-sm px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
+                        className="bg-blue text-white opacity-80 
+                        hover:opacity-100 font-bold uppercase text-sm 
+                        px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
                         type="submit"
                       >
                         Save Changes
@@ -272,13 +305,18 @@ const SettingsCustomRanges = ({cat}) => {
       {openDeleteModal ? 
       <>
         <div
-          className="justify-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-        >
-          <div className="relative w-full md:w-550px p-2 mt-16 mx-auto">
+          className="justify-center flex overflow-x-hidden 
+          overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">        
+          <div className="relative w-full md:w-550px px-2 my-16 mx-auto">
             {/*content*/}
-            <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+            <div
+              className="border-0 rounded-lg
+              shadow-lg relative flex flex-col 
+              w-full bg-white outline-none focus:outline-none">
               {/*header*/}
-              <div className="flex items-center justify-between p-3 rounded-t">
+              <div 
+                className="flex items-center justify-between p-3 rounded-t 
+                border-b border-burnt-sienna border-opacity-20">
                 <button
                   className="p-1 ml-auto border-0 text-black float-right"
                   onClick={() => setOpenDeleteModal(false)}
@@ -287,19 +325,25 @@ const SettingsCustomRanges = ({cat}) => {
                 </button>
               </div>
               {/*body*/}
-              <div className="card-content px-3 pb-2">
-                <p className='text-center text-base'>Are you sure to delete the entry <strong id="labelToDelete"></strong> ?</p>
+              <div className="card-content px-3 py-10">
+                <p className='text-center text-base'>
+                  Are you sure to delete the entry <strong id="labelToDelete"></strong> ?
+                </p>
               </div>
-              <div className="flex items-center justify-end py-3 px-6 rounded-xl">
+              <div className="flex items-center justify-between px-8 pb-8">
                 <button
-                  className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  className="text-red-500 background-transparent 
+                  font-bold uppercase px-6 py-2 text-sm outline-none 
+                  focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="button"
                   onClick={() => setOpenDeleteModal(false)}
                 >
                   Cancel
                 </button>
                 <button
-                  className="bg-red text-white opacity-80 hover:opacity-100 font-bold uppercase text-sm px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
+                  className="bg-red text-white opacity-80 
+                  hover:opacity-100 font-bold uppercase text-sm 
+                  px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
                   type="submit"
                   onClick={onDeleteSubmit}
                 >

@@ -41,7 +41,7 @@ const Beans = (props) => {
       console.log('response: ', response)
       if (response.status !== 200) {
         toast.error(
-          parseRes.message ? parseRes.message : response.statusText, {
+          parseRes.error.message ? parseRes.error.message : response.statusText, {
           position: toast.POSITION.BOTTOM_CENTER
         });
       }
