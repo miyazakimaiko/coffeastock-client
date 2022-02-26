@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { toast } from 'react-toastify';
 import { NavLink } from 'react-router-dom';
-import { ChevronDownIcon, MenuAlt2Icon, PlusIcon, PlusSmIcon, XIcon } from '@heroicons/react/outline'
+import { ChevronDownIcon, MenuAlt2Icon, PlusIcon, XIcon } from '@heroicons/react/outline'
 
 import { NavStateContext } from '../../context/NavState';
 import { AccountContext } from '../../context/Account';
@@ -71,7 +71,7 @@ const Header = (props) => {
         <button type="button"
           onClick={() => innerSetOpenAddBeanModal(true)}
           className="flex items-center text-burnt-sienna 
-          font-capitals uppercase text-sm tracking-widest px-3 py-2 ml-4 mr-0 
+          font-capitals uppercase text-sm px-3 py-2 ml-4 mr-0 
           opacity-80 hover:opacity-100 ease-linear transition-all duration-150">
           <PlusIcon className="h-4 w-4 mr-2" />
           Coffee Bean
@@ -80,7 +80,7 @@ const Header = (props) => {
         <button type="button"
           onClick={() => innerSetOpenAddRecipeModal(true)}
           className="flex items-center text-burnt-sienna 
-          font-capitals uppercase text-sm tracking-widest px-3 py-2 ml-4 mr-0 
+          font-capitals uppercase text-sm px-3 py-2 ml-4 mr-0 
           opacity-80 hover:opacity-100 ease-linear transition-all duration-150">
           <PlusIcon className="h-4 w-4 mr-2" />
           Recipe
@@ -94,7 +94,7 @@ const Header = (props) => {
           </div>
           <div className="mx-3">
             <a
-              className="flex items-center tracking-widest" 
+              className="flex items-center" 
               href="#" 
               id="navbarDropdown" 
               role="button" 
@@ -104,7 +104,10 @@ const Header = (props) => {
               {userData.nickname}
               <ChevronDownIcon className="h-4 w-4 ml-2"/>
             </a>
-            <div className="dropdown-menu dropdown-menu-end border-none shadow-md animate slideIn" aria-labelledby="navbarDropdown">
+            <div 
+              className="dropdown-menu dropdown-menu-end 
+              border-none shadow-md animate slideIn text-burnt-sienna top-0" 
+              aria-labelledby="navbarDropdown">
               <NavLink exact="true" to="/my-profile" className="dropdown-item">My Account</NavLink>
               <div className="dropdown-divider"></div>
               <button type="button" className="dropdown-item" onClick={logout}>Logout</button>
