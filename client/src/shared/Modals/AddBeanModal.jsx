@@ -8,7 +8,7 @@ import './Modals.scss'
 
 const AddBeanModal = ({setOpenThisModal}) => {
   const { userData } = useContext(AccountContext);
-  const { customRanges } = useContext(CustomRangesContext);
+  const { customRanges, getCustomRanges, insertEntry } = useContext(CustomRangesContext);
   const { beans, insertBean } = useContext(BeansContext);
   const roasterRange = Object.values(customRanges.roaster_range);
   const originRange = Object.values(customRanges.origin_range);
@@ -28,7 +28,6 @@ const AddBeanModal = ({setOpenThisModal}) => {
   const [isSingleOrigin, setIsSingleOrigin] = useState(false);
   const [memo, setMemo] = useState('');
 
-  // multi select
   const [selectedOrigin, setSelectedOrigin] = useState([]);
   const [selectedRoaster, setSelectedRoaster] = useState([]);
   const [selectedFarm, setSelectedFarm] = useState([]);
@@ -85,6 +84,17 @@ const AddBeanModal = ({setOpenThisModal}) => {
   }, [isSingleOrigin, selectedBlendBeans.length, selectedOrigin.length]);
 
   const makeBeanFinalVersion = () => {
+    const makeIdList = (selectedRange, category) => {
+      const idList = [];
+      selectedRange.forEach(range => {
+        for (const [id, entry] of Object.entries(customRanges[category + '_range'])) {
+          if (entry['label'] === range['label']) {
+            idList.push(parseInt(entry['value']));
+          }
+        }
+      })
+      return idList;
+    }
     let bean = {
       "label": name,
       "single_origin": isSingleOrigin,
@@ -92,15 +102,15 @@ const AddBeanModal = ({setOpenThisModal}) => {
       "roast_level": roastLevel,
       "memo": memo,
       "roast_date": roastDate.length > 0 ? roastDate : null,
-      "roaster": selectedRoaster.map(entry => parseInt(entry.value)),
-      "aroma": selectedAroma.map(entry => parseInt(entry.value)),
+      "roaster": makeIdList(selectedRoaster, "roaster"),
+      "aroma": makeIdList(selectedAroma, "aroma"),
     }
     if (isSingleOrigin) {
       bean["blend_ratio"] = null;
-      bean["origin"] = selectedOrigin.map(entry => parseInt(entry.value));
-      bean["farm"] = selectedFarm.map(entry => parseInt(entry.value));
-      bean["variety"] = selectedVariety.map(entry => parseInt(entry.value));
-      bean["process"] = selectedProcess.map(entry => parseInt(entry.value));
+      bean["origin"] = makeIdList(selectedOrigin, "origin");
+      bean["farm"] = makeIdList(selectedFarm, "farm");
+      bean["variety"] = makeIdList(selectedVariety, "variety");
+      bean["process"] = makeIdList(selectedProcess, "process");
       bean["altitude"] = altitude;
       bean["harvest_date"] = harvestPeriod;
     } else {
@@ -115,8 +125,36 @@ const AddBeanModal = ({setOpenThisModal}) => {
     return bean;
   }
 
+  const getNewRangeList = (selectedRange) => {
+    let newRanges = selectedRange.filter((x) => "__isNew__" in x);
+    return newRanges;
+  }
+
+  const insertNewRanges = async () => {
+    let newRanges = {
+      'origin': getNewRangeList(selectedOrigin),
+      'roaster': getNewRangeList(selectedRoaster),
+      'farm': getNewRangeList(selectedFarm),
+      'process': getNewRangeList(selectedProcess),
+      'aroma': getNewRangeList(selectedAroma),
+      'variety': getNewRangeList(selectedVariety)
+    }
+
+    for (const [category, entries] of Object.entries(newRanges)) {
+      entries.forEach(entry => {
+        try {
+          let body = { "label": entry.label, "def": "" };
+          insertEntry(userData.sub, category, body);
+        } catch (error) {
+          console.log('error: ', error)
+        }
+      });
+    }
+  }
+
   const insertNewBean = async () => {
     const bean = makeBeanFinalVersion();
+    console.log('bean: ', bean)
     const insertSuccess = await insertBean(userData.sub, bean);
     if (insertSuccess)
       setOpenThisModal(false);
@@ -125,7 +163,8 @@ const AddBeanModal = ({setOpenThisModal}) => {
   // To enable/disable Next button to go to confirmation section
   useEffect(() => {
     checkCanGoToConfirmation();
-  }, [isSingleOrigin, selectedOrigin, selectedBlendBeans, checkCanGoToConfirmation]); 
+  }, [isSingleOrigin, selectedOrigin, selectedBlendBeans, checkCanGoToConfirmation]);
+
 
   // To delete unselected BlendBean from the blendRatios object
   useEffect(() => {
@@ -143,18 +182,18 @@ const AddBeanModal = ({setOpenThisModal}) => {
   return (
     <>
     <div
-      className="justify-center items-center flex overflow-x-hidden 
+      className="justify-center flex overflow-x-hidden 
       overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
 
       <div 
-        className="w-full max-w-6xl relative my-6 mx-auto">
+        className="relative h-fit w-full max-w-6xl px-2 my-16 mx-auto">
         <div 
           className="w-full border-0 rounded-lg shadow-lg relative 
           flex flex-col bg-white outline-none focus:outline-none">
 
           {/*header*/}
           <div className="py-8">
-            <h3 className="text-xl font-light text-center font-capitals uppercase tracking-widest">
+            <h3 className="text-lg font-light text-center font-capitals uppercase">
               Add New Coffee Beans
             </h3>
             <button
@@ -220,7 +259,8 @@ const AddBeanModal = ({setOpenThisModal}) => {
                 aria-controls="confirmation" 
                 aria-selected="false"
                 ref={confirmationTab}
-                disabled={!canGoToConfirmation}>
+                disabled={!canGoToConfirmation}
+                onClick={insertNewRanges}>
                 Confirmation
               </button>
             </li>
@@ -239,7 +279,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
               <div className="flex px-8 my-8">
                 <div className="flex flex-col w-1/2">
                   <div className="form-section">
-                    <label className="font-semibold uppercase tracking-widest">Name</label>
+                    <label className="font-semibold uppercase">Name</label>
                     <input 
                       type="text" 
                       name="label" 
@@ -252,7 +292,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   </div>
                   <div className="form-section">
                     <label 
-                      className="font-semibold uppercase tracking-widest">
+                      className="font-semibold uppercase">
                       Grade (0 - 100)
                     </label>
                     <input 
@@ -267,7 +307,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   </div>
                   <div className="form-section">
                     <label 
-                      className="font-semibold uppercase tracking-widest">
+                      className="font-semibold uppercase">
                       Roast Level (0 - 10)
                     </label>
                     <input 
@@ -294,16 +334,17 @@ const AddBeanModal = ({setOpenThisModal}) => {
                     </div>
                   </div>
                   <div className="form-section">
-                    <label className="font-semibold uppercase tracking-widest">Roaster</label>
+                    <label className="font-semibold uppercase">Roaster</label>
                     <MultiSelect
                       options={roasterRange}
                       value={selectedRoaster}
                       onChange={setSelectedRoaster}
+                      isCreatable={true}
                       labelledBy="Select"
                     />
                   </div>
                   <div className="form-section">
-                    <label className="font-semibold uppercase tracking-widest">Roast Date</label>
+                    <label className="font-semibold uppercase">Roast Date</label>
                     <input 
                       type="date" 
                       name="roastdate" 
@@ -343,7 +384,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
               <div className={`flex px-8 my-8 ${isSingleOrigin ? "hidden" : ""}`}>
                 <div className="flex flex-col w-1/2">
                   <div className="form-section">
-                    <label className="font-semibold uppercase tracking-widest">Blend of</label>
+                    <label className="font-semibold uppercase">Blend of</label>
                     <MultiSelect
                       labelledBy="Select"
                       options={beansRange}
@@ -352,7 +393,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                     />
                   </div>
                   <div className="form-section my-4">
-                    <label className="font-semibold uppercase tracking-widest divider">Blend Ratio</label>
+                    <label className="font-semibold uppercase divider">Blend Ratio</label>
                     <div>
                       { blendRatioElements }
                     </div>
@@ -361,16 +402,17 @@ const AddBeanModal = ({setOpenThisModal}) => {
 
                 <div className="w-1/2">
                   <div className="form-section">
-                    <label className="font-semibold uppercase tracking-widest">Aroma</label>
+                    <label className="font-semibold uppercase">Aroma</label>
                     <MultiSelect
                       labelledBy="Select"
                       options={aromaRange}
                       value={selectedAroma}
+                      isCreatable={true}
                       onChange={setSelectedAroma}
                     />
                   </div>
                   <div className="form-section">
-                    <label className="font-semibold uppercase tracking-widest">Memo</label>
+                    <label className="font-semibold uppercase">Memo</label>
                     <textarea 
                       name="memo" 
                       placeholder="e.g. Where you bought this coffee, the price, how you like it, not liked it..." 
@@ -386,37 +428,40 @@ const AddBeanModal = ({setOpenThisModal}) => {
               <div className={`flex px-8 my-8 ${isSingleOrigin ? "" : "hidden"}`}>
                 <div className="flex flex-col w-1/2">
                   <div className="form-section">
-                    <label className="font-semibold uppercase tracking-widest">Origin</label>
+                    <label className="font-semibold uppercase">Origin</label>
                     <MultiSelect
                       options={originRange}
                       value={selectedOrigin}
                       onChange={setSelectedOrigin}
+                      isCreatable={true}
                       labelledBy="Select"
                     />
                   </div>
 
                   <div className="form-section">
-                    <label className="font-semibold uppercase tracking-widest">Farm</label>
+                    <label className="font-semibold uppercase">Farm</label>
                     <MultiSelect
                       options={farmRange}
                       value={selectedFarm}
                       onChange={setSelectedFarm}
+                      isCreatable={true}
                       labelledBy="Select"
                     />
                   </div>
 
                   <div className="form-section">
-                    <label className="font-semibold uppercase tracking-widest">Variety</label>
+                    <label className="font-semibold uppercase">Variety</label>
                     <MultiSelect
                       options={varietyRange}
                       value={selectedVariety}
                       onChange={setSelectedVariety}
+                      isCreatable={true}
                       labelledBy="Select"
                     />
                   </div>
 
                   <div className="form-section">
-                    <label className="font-semibold uppercase tracking-widest">Harvest Period</label>
+                    <label className="font-semibold uppercase">Harvest Period</label>
                     <input 
                       type="text" 
                       name="harvest-period" 
@@ -429,7 +474,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   </div>
 
                   <div className="form-section">
-                    <label className="font-semibold uppercase tracking-widest">Altitude</label>
+                    <label className="font-semibold uppercase">Altitude</label>
                     <input 
                       type="text" 
                       name="altitude" 
@@ -444,27 +489,29 @@ const AddBeanModal = ({setOpenThisModal}) => {
 
                 <div className="w-1/2">
                   <div className="form-section">
-                    <label className="font-semibold uppercase tracking-widest">Process</label>
+                    <label className="font-semibold uppercase">Process</label>
                     <MultiSelect
                       options={processRange}
                       value={selectedProcess}
                       onChange={setSelectedProcess}
+                      isCreatable={true}
                       labelledBy="Select"
                     />
                   </div>
 
                   <div className="form-section">
-                    <label className="font-semibold uppercase tracking-widest">Aroma</label>
+                    <label className="font-semibold uppercase">Aroma</label>
                     <MultiSelect
                       options={aromaRange}
                       value={selectedAroma}
                       onChange={setSelectedAroma}
+                      isCreatable={true}
                       labelledBy="Select"
                     />
                   </div>
 
                   <div className="form-section">
-                    <label className="font-semibold uppercase tracking-widest">Memo</label>
+                    <label className="font-semibold uppercase">Memo</label>
                     <textarea 
                       name="memo" 
                       placeholder="e.g. Where you bought this coffee, the price and weight" 
@@ -507,26 +554,26 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   <div className="flex flex-col w-1/2">
                     <div>
                       <div className="mx-4">
-                        <h3 className="text-lg uppercase font-capitals tracking-widest">Base Info</h3>
+                        <h3 className="text-lg uppercase font-capitals">Base Info</h3>
                       </div>
                       <div className="m-8">
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase tracking-widest">Name</label>
+                          <label className="text-xs font-semibold uppercase">Name</label>
                           <p className="">{name}</p>
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase tracking-widest">Single Origin</label>
+                          <label className="text-xs font-semibold uppercase">Single Origin</label>
                           <p>{isSingleOrigin ? 'Yes' : 'No'}</p>
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase tracking-widest">Grade (0 - 100)</label>
+                          <label className="text-xs font-semibold uppercase">Grade (0 - 100)</label>
                           <p>{grade ? grade : 'No Data'}</p>
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase tracking-widest">Roaster</label>
+                          <label className="text-xs font-semibold uppercase">Roaster</label>
                           <div className="tag-section">
                             {selectedRoaster.length <= 0 ? 
                               <p>Not Selected</p> :
@@ -537,12 +584,12 @@ const AddBeanModal = ({setOpenThisModal}) => {
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase tracking-widest">Roast Level (0 - 10)</label>
+                          <label className="text-xs font-semibold uppercase">Roast Level (0 - 10)</label>
                           <p>{roastLevel? roastLevel : 'No Data'}</p>
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase tracking-widest">Roast Date</label>
+                          <label className="text-xs font-semibold uppercase">Roast Date</label>
                           <p>{roastDate ? roastDate : 'No Data'}</p>
                         </div>
                       </div>
@@ -551,13 +598,13 @@ const AddBeanModal = ({setOpenThisModal}) => {
 
                   <div className="w-1/2">
                     <div className="mx-4 mb-4 ">
-                      <h3 className="text-lg uppercase font-capitals tracking-widest">Details</h3>
+                      <h3 className="text-lg uppercase font-capitals">Details</h3>
                     </div>
                     <div className="m-8">
                       { isSingleOrigin ? 
                         <>
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase tracking-widest">Origin</label>
+                          <label className="text-xs font-semibold uppercase">Origin</label>
                           <div className="tag-section">
                           {selectedOrigin.map((entry) => (
                               <span>{entry.label}</span>
@@ -566,7 +613,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase tracking-widest">Farm</label>
+                          <label className="text-xs font-semibold uppercase">Farm</label>
                           <div className="tag-section">
                           {selectedFarm.length <= 0 ? 
                             <p>Not Selected</p> :
@@ -577,7 +624,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase tracking-widest">Variety</label>
+                          <label className="text-xs font-semibold uppercase">Variety</label>
                           <div className="tag-section">
                           {selectedVariety.length <= 0 ? 
                             <p>Not Selected</p> :
@@ -588,17 +635,17 @@ const AddBeanModal = ({setOpenThisModal}) => {
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase tracking-widest">Harvest Period</label>
+                          <label className="text-xs font-semibold uppercase">Harvest Period</label>
                           <p>{harvestPeriod? harvestPeriod : 'No Data'}</p>
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase tracking-widest">Altitude</label>
+                          <label className="text-xs font-semibold uppercase">Altitude</label>
                           <p>{altitude? altitude : 'No Data'}</p>
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase tracking-widest">Process</label>
+                          <label className="text-xs font-semibold uppercase">Process</label>
                           <div className="tag-section">
                           {selectedProcess.length <= 0 ? 
                             <p>Not Selected</p> :
@@ -609,7 +656,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase tracking-widest">Aroma</label>
+                          <label className="text-xs font-semibold uppercase">Aroma</label>
                           <div className="tag-section">
                           {selectedAroma.length <= 0 ? 
                             <p>Not Selected</p> :
@@ -623,7 +670,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                         // Blend Beans
                         <>
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase tracking-widest">Aroma</label>
+                          <label className="text-xs font-semibold uppercase">Aroma</label>
                           <div className="tag-section">
                           {selectedAroma.length <= 0 ? 
                             <p>Not Selected</p> :
@@ -634,7 +681,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase tracking-widest">Blend Ratio</label>
+                          <label className="text-xs font-semibold uppercase">Blend Ratio</label>
                           <div className="tag-section">
                           {selectedBlendBeans.map((entry) => (
                             <span>{entry.label}: {blendRatios[entry.value]}%</span>
@@ -650,7 +697,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                 <div>
                   <div className="mx-6 my-2">
                     <div className="w-full">
-                      <h3 className="text-md uppercase font-capitals tracking-widest inline">Memo: </h3>
+                      <h3 className="text-md uppercase font-capitals inline">Memo: </h3>
                       <p className="inline">{memo ? memo : 'No Data'}</p>
                     </div>
                   </div>

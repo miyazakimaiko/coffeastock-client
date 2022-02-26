@@ -16,8 +16,10 @@ const CustomRanges = (props) => {
       );
       const parseRes = await response.json();  
       const orderedRanges = reorderAllRanges(parseRes);
-      setCustomRanges(orderedRanges)
+      setCustomRanges(orderedRanges);
+      return true;
     } catch (error) {}
+    return false;
   };
 
   // Certain range
@@ -45,17 +47,23 @@ const CustomRanges = (props) => {
         }
       );
       const parseRes = await response.json();
+      if (response.status === 422) {
+        const message = parseRes.error.message ? parseRes.error.message : response.statusText;
+        // returns message instead of throwing toast, because when this is done during Add New Coffee Bean is in process, we don't want this toast pop up.
+        return {
+          error: {
+            message: message
+          }
+        }
+      }
       if (response.status !== 200) {
         toast.error(
-          parseRes.message ? parseRes.message : response.statusText, {
+          parseRes.error.message ? parseRes.error.message : response.statusText, {
           position: toast.POSITION.BOTTOM_CENTER
         });
       }
       else {
         setNewRange(parseRes, category);
-        toast.success("Entry is added successfully.", {
-          position: toast.POSITION.BOTTOM_CENTER
-        });
         return true;
       }
     } catch (error) {
@@ -81,7 +89,7 @@ const CustomRanges = (props) => {
       const parseRes = await response.json();
       if (response.status !== 200) {
         toast.error(
-          parseRes.message ? parseRes.message : response.statusText, {
+          parseRes.error.message ? parseRes.error.message : response.statusText, {
           position: toast.POSITION.BOTTOM_CENTER
         });
       }
@@ -114,7 +122,7 @@ const CustomRanges = (props) => {
       const parseRes = await response.json();
       if (response.status !== 200) {
         toast.error(
-          parseRes.message ? parseRes.message : response.statusText, {
+          parseRes.error.message ? parseRes.error.message : response.statusText, {
           position: toast.POSITION.BOTTOM_CENTER
         });
       }
