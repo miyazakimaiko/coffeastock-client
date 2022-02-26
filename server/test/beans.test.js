@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 
 describe('Beans API', () => {
   const endpoint = process.env.API_ENDPOINT;
-  const existingUserId = '30a80906-2334-48ec-9f5d-88e0f68210fc'
+  const existingUserId = 'dd06bab3-e36c-481b-94f6-76029216327b'
   const wrongUserId = 'aaaaaaaaaaaaaaaaaaaaaaa';
   const existingRangeId = 1;
   const wrongRangeId = 30;
@@ -39,11 +39,11 @@ describe('Beans API', () => {
           "variety": [1, 3], 
           "process": [1, 2], 
           "altitude": "2000 MASL",
-          "grading": 82.5,
+          "grade": 82.5,
           "harvest_date": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": 8.5,
-          "roast_date": 2021-10-12,
+          "roast_date": "2021-10-12",
           "aroma": [1, 3, 5],
           "memo": "Testing..."
         })
@@ -63,11 +63,11 @@ describe('Beans API', () => {
           "variety": [1, 3], 
           "process": [1, 2], 
           "altitude": "2000 MASL",
-          "grading": 82.5,
+          "grade": 82.5,
           "harvest_date": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": 8.5,
-          "roast_date": 2021-10-12,
+          "roast_date": "2021-10-12",
           "aroma": [1, 3, 5],
           "memo": "Testing..."
         })
@@ -88,11 +88,11 @@ describe('Beans API', () => {
           "variety": [1, 3], 
           "process": [1, 2], 
           "altitude": "2000 MASL",
-          "grading": 82.5,
+          "grade": 82.5,
           "harvest_date": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": 8.5,
-          "roast_date": 2021-10-12,
+          "roast_date": "2021-10-12",
           "aroma": [1, 3, 5],
           "memo": "Testing..."
         })
@@ -114,11 +114,11 @@ describe('Beans API', () => {
           "variety": [1, 3], 
           "process": [1, 2], 
           "altitude": "2000 MASL",
-          "grading": 82.5,
+          "grade": 82.5,
           "harvest_date": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": 8.5,
-          "roast_date": 2021-10-12,
+          "roast_date": "2021-10-12",
           "aroma": [1, 3, 5],
           "memo": "Testing..."
         })
@@ -139,11 +139,11 @@ describe('Beans API', () => {
           "variety": [1, 3], 
           "process": [1, 2], 
           "altitude": "2000 MASL",
-          "grading": 82.5,
+          "grade": 82.5,
           "harvest_date": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": 12,
-          "roast_date": 2021-10-12,
+          "roast_date": "2021-10-12",
           "aroma": [1, 3, 5],
           "memo": "Testing..."
         })
@@ -164,11 +164,11 @@ describe('Beans API', () => {
           "variety": [1, 3], 
           "process": [1, 2], 
           "altitude": "2000 MASL",
-          "grading": 82.5,
+          "grade": 82.5,
           "harvest_date": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": ["test"],
-          "roast_date": 2021-10-12,
+          "roast_date": "2021-10-12",
           "aroma": [1, 3, 5],
           "memo": "Testing..."
         })
@@ -178,7 +178,7 @@ describe('Beans API', () => {
           done();
         })
     });
-    it("should return error if grading is not 0 - 100", (done) => {
+    it("should return error if grade is not 0 - 100", (done) => {
       chai.request(app)
         .post(`${endpoint}/user/${existingUserId}/bean`)
         .send({
@@ -189,11 +189,11 @@ describe('Beans API', () => {
           "variety": [1, 3], 
           "process": [1, 2], 
           "altitude": "2000 MASL",
-          "grading": 102.5,
+          "grade": 102.5,
           "harvest_date": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": 10,
-          "roast_date": 2021-10-12,
+          "roast_date": "2021-10-12",
           "aroma": [1, 3, 5],
           "memo": "Testing..."
         })
@@ -203,7 +203,7 @@ describe('Beans API', () => {
           done();
         })
     });
-    it("should return error if grading is not 0 - 100", (done) => {
+    it("should return error if grade is not 0 - 100", (done) => {
       chai.request(app)
         .post(`${endpoint}/user/${existingUserId}/bean`)
         .send({
@@ -214,11 +214,11 @@ describe('Beans API', () => {
           "variety": [1, 3], 
           "process": [1, 2], 
           "altitude": "2000 MASL",
-          "grading": "test",
+          "grade": "test",
           "harvest_date": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": 9.5,
-          "roast_date": 2021-10-12,
+          "roast_date": "2021-10-12",
           "aroma": [1, 3, 5],
           "memo": "Testing..."
         })
@@ -239,11 +239,11 @@ describe('Beans API', () => {
           "variety": [1, 3], 
           "process": [1, 2], 
           "altitude": "2000 MASL",
-          "grading": 100,
+          "grade": 100,
           "harvest_date": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": 10,
-          "roast_date": 2021-10-12,
+          "roast_date": "2021-10-12",
           "aroma": [1, 3, 5],
           "memo": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui."
         })
