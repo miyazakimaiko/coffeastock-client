@@ -32,10 +32,19 @@ body {
 
 
 :root {
-  --toastify-color-info: #68B3C7;
-  --toastify-color-success: #65c48f;
-  --toastify-color-warning: #FF8F5D;
-  --toastify-color-error: #EB5E28;
+  --burnt-sienna: #66615B;
+  --blue: #68B3C7;
+  --orange: #FF8F5D;
+  --green: #79C29A;
+  --red: #EB5E28;
+  --creme: #F4F3EE;
+  --greycreme: #e9e8e3;
+  --lime: #D6E4A3;
+  --yellow: #F3BB44;
+  --toastify-color-info: var(--blue);
+  --toastify-color-success: var(--green);
+  --toastify-color-warning: var(--orange);
+  --toastify-color-error: var(--red);
   --toastify-font-family: 'Nunito';
   --nav-width: 70vw;
   --nav-width-sm: 280px;
@@ -58,7 +67,7 @@ body {
 
 .nav-link-active {
   font-weight: inherit;
-  color: #D57C58;
+  color: var(--orange);
 }
 
 .orange-outline-transition {
@@ -66,7 +75,7 @@ body {
   transition: outline 0.2s ease;
 
   &:focus-visible {
-    outline: solid 1px #FF8F5D;
+    outline: solid 1px var(--orange);
   }
 }
 
@@ -75,7 +84,7 @@ body {
   transition: outline 0.2s ease;
 
   &:focus-visible {
-    outline: solid 1px #68B3C7;
+    outline: solid 1px var(--blue);
   }
 }
 
@@ -91,7 +100,7 @@ body {
   &[disabled]{
     background-color: #cccccc;
     border-color: #cccccc;
-    color: #666666;
+    color: var(--burnt-sienna);
     &:hover {
       opacity: 0.8;
     }
@@ -99,13 +108,13 @@ body {
 }
 
 .sinenna-button-transition {
-  border: 2px solid #66615B;
+  border: 2px solid var(--burnt-sienna);
   background-color: transparent;
   transition: all 0.2s ease;
 
   &:hover {
     color: white;
-    background-color: #66615B;
+    background-color: var(--burnt-sienna);
   }
 }
 
@@ -170,6 +179,21 @@ body {
     &::after {
       content: "%";
       margin-left: 14px;
+    }
+  }
+}
+
+.dropdown-item {
+  color: var(--burnt-sienna);
+  &.active, &:active {
+    color: var(--burnt-sienna);
+    text-decoration: none;
+    background-color: white;
+  }
+  &.active {
+    &::before {
+      content: "●";
+      margin-right: 5px;
     }
   }
 }
