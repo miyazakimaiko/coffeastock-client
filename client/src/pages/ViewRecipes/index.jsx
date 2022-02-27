@@ -7,15 +7,15 @@ import CoffeeBagRight from '../../svgs/CoffeeBagRight';
 import StarFullIcon from '../../svgs/StarFullIcon';
 import StarHalfIcon from '../../svgs/StarHalfIcon';
 import RecipeSection from './RecipeSection';
+import { unescapeHtml } from '../../utils/HtmlConverter'
 import './ViewRecipes.scss'
+
 
 const ViewRecipes = () => {
   const { id } = useParams();
   const { customRanges } = useContext(CustomRangesContext);
   const { beans } = useContext(BeansContext);
   const bean = beans[id];
-  console.log('bean: ', bean)
-  console.log("customRanges['roaster_range']: " , customRanges['roaster_range']);
 
   const getLabelsFromIds = (cat) => {
     const result = [];
@@ -26,7 +26,7 @@ const ViewRecipes = () => {
         if (count !== 0) {
           result.push(' / ')
         }
-        result.push(range['id-' + id]['label']);
+        result.push(unescapeHtml(range['id-' + id]['label']));
         count++;
       })
     }
@@ -36,7 +36,7 @@ const ViewRecipes = () => {
     return result;
   }
 
-  const coffeeName = beans[id]['label'];
+  const coffeeName = unescapeHtml(beans[id]['label']);
   const roasters = getLabelsFromIds('roaster')
   const roastDate = beans[id]['roast_date'] ? beans[id]['roast_date'].split('T')[0] : null;
   const aroma = getLabelsFromIds('aroma')
@@ -44,10 +44,10 @@ const ViewRecipes = () => {
   const process = getLabelsFromIds('process');
   const variety = getLabelsFromIds('variety');
   const farm = getLabelsFromIds('farm');
-  const altitude = beans[id]['altitude'];
-  const harvestDate = beans[id]['harvest_date'];
+  const altitude = unescapeHtml(beans[id]['altitude']);
+  const harvestDate = unescapeHtml(beans[id]['harvest_date']);
   const roastLevel = beans[id]['roast_level'];
-  const memo = beans[id]['memo'];
+  const memo = unescapeHtml(beans[id]['memo']);
 
   const grade = [];
   if (beans[id]['grade']) {
@@ -69,7 +69,7 @@ const ViewRecipes = () => {
       }
       const id = item[0];
       const ratio = item[1];
-      blendRatio.push(`${beans[id]['label']} (${ratio})`);
+      blendRatio.push(`${unescapeHtml(beans[id]['label'])} (${ratio})`);
       blendCount++;
     }
   } else {

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { toast } from 'react-toastify'
 import { PencilAltIcon, PlusIcon, XIcon } from '@heroicons/react/outline'
-
 import { CustomRangesContext } from '../../context/CustomRanges';
 import { AccountContext } from '../../context/Account';
+import { unescapeHtml } from '../../utils/HtmlConverter'
 
 const SettingsCustomRanges = ({cat}) => {
   const { userData } = useContext(AccountContext);
@@ -51,12 +51,7 @@ const SettingsCustomRanges = ({cat}) => {
       });
       return;
     }
-    if (addRangeValue.indexOf("\"") !== -1 || addRangeValue.indexOf("\'") !== -1) {
-      toast.error('Single/Double quote cannot be used in the fields.', {
-        position: toast.POSITION.BOTTOM_CENTER
-      });
-      return;
-    }
+
     const OneLinerangeDef = addRangeValue.replace(/(\r\n|\n|\r)/gm, " ");
     const insertBody = {
       "label": addRangeName,
@@ -81,12 +76,6 @@ const SettingsCustomRanges = ({cat}) => {
     event.preventDefault();
     if (editRangeName == '') {
       toast.error("Name cannot be empty.", {
-        position: toast.POSITION.BOTTOM_CENTER
-      });
-      return;
-    }
-    if (editRangeValue.indexOf("\"") !== -1 || editRangeValue.indexOf("\'") !== -1) {
-      toast.error('Single/Double quote cannot be used in the fields.', {
         position: toast.POSITION.BOTTOM_CENTER
       });
       return;
@@ -121,10 +110,10 @@ const SettingsCustomRanges = ({cat}) => {
         elements.push(
           <tr id={`${cat}-${item['value']}`}>
             <td>
-              <p>{item['label']}</p>
+              <p>{unescapeHtml(item['label'])}</p>
             </td>
             <td>
-              <p>{item['def']}</p>
+              <p>{unescapeHtml(item['def'])}</p>
             </td>
             <td className="td-options">
               <button
@@ -250,7 +239,7 @@ const SettingsCustomRanges = ({cat}) => {
                           placeholder={`${cat} name`} 
                           className="blue-outline-transition 
                           bg-creme block w-full text-base py-2 px-3 rounded-md"
-                          value={mode === 'add' ? addRangeName : mode === 'edit' ? editRangeName : null}
+                          value={mode === 'add' ? addRangeName : mode === 'edit' ? unescapeHtml(editRangeName) : null}
                           onChange={
                             mode === 'add' ? e => setAddRangeName(e.target.value) :
                             mode === 'edit' ? e => setEditRangeName(e.target.value) : null
@@ -265,7 +254,7 @@ const SettingsCustomRanges = ({cat}) => {
                           placeholder={`${cat} details`} 
                           className="blue-outline-transition 
                           bg-creme block w-full h-32 text-base py-2 px-3 rounded-lg"
-                          value={mode === 'add' ? addRangeValue : mode === 'edit' ? editRangeValue : null}
+                          value={mode === 'add' ? addRangeValue : mode === 'edit' ? unescapeHtml(editRangeValue) : null}
                           onChange={
                             mode === 'add' ? e => setAddRangeValue(e.target.value) :
                             mode === 'edit' ? e => setEditRangeValue(e.target.value) : null

@@ -27,13 +27,14 @@ const Beans = (props) => {
   }
 
   const insertBean = async (userid, body) => {
-    console.log('body: ', body)
     try {
       const response = await fetch(
         `http://localhost:4000/api/v1/user/${userid}/bean`,
         {
           method: "POST",
-          headers: { 'Content-Type': "application/json" },
+          headers: {
+            'Content-Type': "application/json"
+          },
           body: JSON.stringify(body)
         }
       );

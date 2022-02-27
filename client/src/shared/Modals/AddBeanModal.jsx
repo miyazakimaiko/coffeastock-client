@@ -1,14 +1,15 @@
 import React, { useEffect, useCallback, useState, useContext, useRef } from 'react'
 import { MultiSelect } from "react-multi-select-component";
-import { XIcon } from '@heroicons/react/outline'
+import { PencilAltIcon, XIcon } from '@heroicons/react/outline'
 import { AccountContext } from '../../context/Account';
 import { CustomRangesContext } from '../../context/CustomRanges';
 import { BeansContext } from '../../context/Beans';
+import { escapeHtml } from '../../utils/HtmlConverter'
 import './Modals.scss'
 
 const AddBeanModal = ({setOpenThisModal}) => {
   const { userData } = useContext(AccountContext);
-  const { customRanges, getCustomRanges, insertEntry } = useContext(CustomRangesContext);
+  const { customRanges, insertEntry } = useContext(CustomRangesContext);
   const { beans, insertBean } = useContext(BeansContext);
   const roasterRange = Object.values(customRanges.roaster_range);
   const originRange = Object.values(customRanges.origin_range);
@@ -19,14 +20,14 @@ const AddBeanModal = ({setOpenThisModal}) => {
   const beansRange = Object.values(beans).map((
     { coffee_bean_id: value, ...rest }) => ({ value, ...rest } ));
   
-  const [name, setName] = useState('');
-  const [grade, setGrade] = useState('');
-  const [roastLevel, setRoastLevel] = useState('');
+  const [name, innerSetName] = useState('');
+  const [grade, innerSetGrade] = useState('');
+  const [roastLevel, innerSetRoastLevel] = useState('');
   const [roastDate, setRoastDate] = useState('');
-  const [harvestPeriod, setHarvestPeriod] = useState('');
-  const [altitude, setAltitude] = useState('');
+  const [harvestPeriod, innerSetHarvestPeriod] = useState('');
+  const [altitude, innerSetAltitude] = useState('');
   const [isSingleOrigin, setIsSingleOrigin] = useState(false);
-  const [memo, setMemo] = useState('');
+  const [memo, innerSetMemo] = useState('');
 
   const [selectedOrigin, setSelectedOrigin] = useState([]);
   const [selectedRoaster, setSelectedRoaster] = useState([]);
@@ -36,6 +37,12 @@ const AddBeanModal = ({setOpenThisModal}) => {
   const [selectedVariety, setSelectedVariety] = useState([]);
   const [selectedBlendBeans, innerSetSelectedBlendBeans] = useState([]);
   const [blendRatios, innerSetBlendRatio] = useState({});
+  const [nameWarningText, setNameWarningText] = useState("");
+  const [periodWarningText, setPeriodWarningText] = useState("");
+  const [altitudeWarningText, setAltitudeWarningText] = useState("");
+  const [gradeWarningText, setGradeWarningText] = useState("");
+  const [roastLevelWarningText, setRoastLevelWarningText] = useState("");
+  const [memoWarningText, setMemoWarningText] = useState("");
 
   const setSelectedBlendBeans = (e) => {
     innerSetSelectedBlendBeans(e);
@@ -58,12 +65,72 @@ const AddBeanModal = ({setOpenThisModal}) => {
       { ...blendRatios, ...newRatio }
     ));
   }
+  let blendRatioElements = makeBlendRatioElements(selectedBlendBeans, blendRatios, setBlendRatio);
 
-  let blendRatioElements = makeBlendRatioElements(
-    selectedBlendBeans, blendRatios, setBlendRatio
-  );
+  const setName = (name) => {
+    innerSetName(name);
+    const encoded = escapeHtml(name);
+    if (encoded.length > 60) {
+      setNameWarningText(<span className="text-red">{60 - encoded.length}/60</span>)
+    } else {
+      setNameWarningText(`${60 - encoded.length}/60`)
+    }
+  }
+
+  const setHarvestPeriod = (period) => {
+    innerSetHarvestPeriod(period);
+    const encoded = escapeHtml(period);
+    if (encoded.length > 60) {
+      setPeriodWarningText(<span className="text-red">{60 - encoded.length}/60</span>)
+    } else {
+      setPeriodWarningText(`${60 - encoded.length}/60`)
+    }
+  }
+
+  const setAltitude = (altitude) => {
+    innerSetAltitude(altitude);
+    const encoded = escapeHtml(altitude);
+    if (encoded.length > 60) {
+      setAltitudeWarningText(<span className="text-red">{60 - encoded.length}/60</span>)
+    } else {
+      setAltitudeWarningText(`${60 - encoded.length}/60`)
+    }
+  }
+
+  const setGrade = (grade) => {
+    innerSetGrade(grade);
+    if (grade < 0.0 || grade > 100.0) {
+      setGradeWarningText(<span className="text-red">* Please enter a number between 0.0 and 100.0"</span>)
+    } else {
+      setGradeWarningText("")
+    }
+  }
+
+  const setRoastLevel = (level) => {
+    innerSetRoastLevel(level);
+    if (level < 0.0 || level > 10.0) {
+      setRoastLevelWarningText(<span className="text-red">* Please enter a number between 0.0 and 10.0</span>)
+    } else {
+      setRoastLevelWarningText("")
+    }
+  }
+
+  const setMemo = (memo) => {
+    innerSetMemo(memo);
+    const encoded = escapeHtml(memo);
+    if (encoded.length > 400) {
+      setMemoWarningText(<span className="text-red">{400 - encoded.length}/400</span>)
+    } else {
+      setMemoWarningText(`${400 - encoded.length}/400`)
+    }
+  }
 
   // To toggle click from the Next button
+  const baseInfoTab = useRef(null);
+  
+  const showBaseInfoSection = () => 
+    baseInfoTab.current.click();
+
   const detailsTab = useRef(null);
   
   const showDetailsSection = () => 
@@ -98,8 +165,8 @@ const AddBeanModal = ({setOpenThisModal}) => {
     let bean = {
       "label": name,
       "single_origin": isSingleOrigin,
-      "grade": grade,
-      "roast_level": roastLevel,
+      "grade": grade === "" ? null : grade,
+      "roast_level": roastLevel === "" ? null : roastLevel,
       "memo": memo,
       "roast_date": roastDate.length > 0 ? roastDate : null,
       "roaster": makeIdList(selectedRoaster, "roaster"),
@@ -154,7 +221,6 @@ const AddBeanModal = ({setOpenThisModal}) => {
 
   const insertNewBean = async () => {
     const bean = makeBeanFinalVersion();
-    console.log('bean: ', bean)
     const insertSuccess = await insertBean(userData.sub, bean);
     if (insertSuccess)
       setOpenThisModal(false);
@@ -221,7 +287,8 @@ const AddBeanModal = ({setOpenThisModal}) => {
                 type="button" 
                 role="tab" 
                 aria-controls="base-info" 
-                aria-selected="true">
+                aria-selected="true"
+                ref={baseInfoTab}>
                 Base Info
               </button>
             </li>
@@ -280,6 +347,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                 <div className="flex flex-col w-1/2">
                   <div className="form-section">
                     <label className="font-semibold uppercase">Name</label>
+                    <span className="ml-2 text-xs">* Required</span>
                     <input 
                       type="text" 
                       name="label" 
@@ -289,29 +357,30 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       value={name}
                       onChange={e => setName(e.target.value)}
                     />
+                    <span className="text-xs float-right mt-1">{nameWarningText}</span>
                   </div>
                   <div className="form-section">
-                    <label 
-                      className="font-semibold uppercase">
-                      Grade (0 - 100)
-                    </label>
+                    <label className="font-semibold uppercase">Grade (0.0 - 100.0)</label>
+                    <span className="ml-2 text-xs">{gradeWarningText}</span>
                     <input 
-                      type="text" 
+                      type="number" 
+                      step="0.1"
                       name="grade" 
                       placeholder="e.g. 85.5" 
                       className="blue-outline-transition bg-creme 
                       block w-full text-base py-2 px-3 rounded-md border-1"
                       value={grade}
-                      onChange={e => setGrade(e.target.value)}
+                      onChange={e => {
+                        setGrade(e.target.value)
+                      }}
                     />
                   </div>
                   <div className="form-section">
-                    <label 
-                      className="font-semibold uppercase">
-                      Roast Level (0 - 10)
-                    </label>
+                    <label className="font-semibold uppercase">Roast Level (0.0 - 10.0)</label>
+                    <span className="ml-2 text-xs">{roastLevelWarningText}</span>
                     <input 
-                      type="text" 
+                      type="number" 
+                      step="0.1" 
                       name="roastlevel" 
                       placeholder="e.g. 6.5" 
                       className="blue-outline-transition bg-creme 
@@ -385,6 +454,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                 <div className="flex flex-col w-1/2">
                   <div className="form-section">
                     <label className="font-semibold uppercase">Blend of</label>
+                    <span className="ml-2 text-xs">*Required</span>
                     <MultiSelect
                       labelledBy="Select"
                       options={beansRange}
@@ -421,6 +491,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       value={memo}
                       onChange={e => setMemo(e.target.value)}
                     />
+                    <span className="text-xs float-right mt-1">{memoWarningText}</span>
                   </div>
                 </div>
               </div>
@@ -429,6 +500,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                 <div className="flex flex-col w-1/2">
                   <div className="form-section">
                     <label className="font-semibold uppercase">Origin</label>
+                    <span className="ml-2 text-xs">*Required</span>
                     <MultiSelect
                       options={originRange}
                       value={selectedOrigin}
@@ -471,6 +543,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       value={harvestPeriod}
                       onChange={e => setHarvestPeriod(e.target.value)}
                     />
+                    <span className="text-xs float-right mt-1">{periodWarningText}</span>
                   </div>
 
                   <div className="form-section">
@@ -484,6 +557,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       value={altitude}
                       onChange={e => setAltitude(e.target.value)}
                     />
+                    <span className="text-xs float-right mt-1">{altitudeWarningText}</span>
                   </div>
                 </div>
 
@@ -520,6 +594,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       value={memo}
                       onChange={e => setMemo(e.target.value)}
                     />
+                    <span className="text-xs float-right mt-1">{memoWarningText}</span>
                   </div>
 
                 </div>
@@ -553,8 +628,15 @@ const AddBeanModal = ({setOpenThisModal}) => {
                 <div className="flex">
                   <div className="flex flex-col w-1/2">
                     <div>
-                      <div className="mx-4">
+                      <div className="flex mx-4 mb-4">
                         <h3 className="text-lg uppercase font-capitals">Base Info</h3>
+                        <button
+                        type="button"
+                        className="opacity-80 hover:opacity-100 
+                        ease-linear transition-all duration-150"
+                        onClick={showBaseInfoSection} > 
+                        <PencilAltIcon className="h-5 w-5 ml-4" />
+                      </button>
                       </div>
                       <div className="m-8">
                         <div className="confirm-section">
@@ -569,7 +651,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
 
                         <div className="confirm-section">
                           <label className="text-xs font-semibold uppercase">Grade (0 - 100)</label>
-                          <p>{grade ? grade : 'No Data'}</p>
+                          <p>{grade ? grade : 'Not Entered'}</p>
                         </div>
 
                         <div className="confirm-section">
@@ -585,20 +667,28 @@ const AddBeanModal = ({setOpenThisModal}) => {
 
                         <div className="confirm-section">
                           <label className="text-xs font-semibold uppercase">Roast Level (0 - 10)</label>
-                          <p>{roastLevel? roastLevel : 'No Data'}</p>
+                          <p>{roastLevel? roastLevel : 'Not Entered'}</p>
                         </div>
 
                         <div className="confirm-section">
                           <label className="text-xs font-semibold uppercase">Roast Date</label>
-                          <p>{roastDate ? roastDate : 'No Data'}</p>
+                          <p>{roastDate ? roastDate : 'Not Entered'}</p>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   <div className="w-1/2">
-                    <div className="mx-4 mb-4 ">
+                    <div className="flex mx-4 mb-4">
                       <h3 className="text-lg uppercase font-capitals">Details</h3>
+                      <button
+                        type="button"
+                        disabled={name === ''}
+                        className="opacity-80 hover:opacity-100 
+                        ease-linear transition-all duration-150"
+                        onClick={showDetailsSection} > 
+                        <PencilAltIcon className="h-5 w-5 ml-4" />
+                      </button>
                     </div>
                     <div className="m-8">
                       { isSingleOrigin ? 
@@ -636,12 +726,12 @@ const AddBeanModal = ({setOpenThisModal}) => {
 
                         <div className="confirm-section">
                           <label className="text-xs font-semibold uppercase">Harvest Period</label>
-                          <p>{harvestPeriod? harvestPeriod : 'No Data'}</p>
+                          <p>{harvestPeriod? harvestPeriod : 'Not Entered'}</p>
                         </div>
 
                         <div className="confirm-section">
                           <label className="text-xs font-semibold uppercase">Altitude</label>
-                          <p>{altitude? altitude : 'No Data'}</p>
+                          <p>{altitude? altitude : 'Not Entered'}</p>
                         </div>
 
                         <div className="confirm-section">
@@ -697,8 +787,18 @@ const AddBeanModal = ({setOpenThisModal}) => {
                 <div>
                   <div className="mx-6 my-2">
                     <div className="w-full">
-                      <h3 className="text-md uppercase font-capitals inline">Memo: </h3>
-                      <p className="inline">{memo ? memo : 'No Data'}</p>
+                      <h3 className="text-md uppercase font-capitals inline">Memo</h3>
+                      <p className="inline relative">
+                        <button
+                          type="button"
+                          disabled={name === ''}
+                          className="absolute left-1 opacity-80 
+                          hover:opacity-100 ease-linear transition-all duration-150"
+                          onClick={showDetailsSection} > 
+                          <PencilAltIcon className="h-5 w-5" />
+                        </button>
+                      </p>
+                      <p className="inline ml-8">: {memo ? memo : 'Not Entered'}</p>
                     </div>
                   </div>
                 </div>
