@@ -1,4 +1,5 @@
 require("dotenv").config();
+const { body, validationResult } = require('express-validator');
 const db = require("../db");
 const { 
   getGetRangeBaseQuery, 
@@ -114,7 +115,20 @@ module.exports = (app) => {
   });
 
   // Add new entry in the specified range 
-  app.post(endpoint + "/user/:userid/range/:rangename", async (req, res, next) => {
+  app.post(endpoint + "/user/:userid/range/:rangename", 
+  body('label').escape(),
+  body('def').escape(),
+  async (req, res, next) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ 
+        error: {
+          message: errors.array()[0]['msg']
+        }
+      });
+    }
+
     const baseQuery = getPostRangeBaseQuery(req.params.rangename)
     try {
       let uniqueName = true;

@@ -3,20 +3,23 @@ const db = require("../db");
 const { body, validationResult } = require('express-validator');
 
 let validator = [
-  body('label', 'Invalid Name').not().isEmpty().isLength({ max: 60 }),
-  body('single_origin', 'Invalid Single Origin').isBoolean(),
+  body('label', 'Invalid Name').escape().isLength({ max: 60 }).optional({ nullable: false }),
+  body('single_origin', 'Invalid Single Origin').isBoolean().optional({ nullable: false }),
   body('blend_ratio', 'Invalid Blend Ratio').isObject().optional({ checkFalsy: true }),
-  body('roast_level', 'Invalid Roast Level').isFloat({ min: 0, max: 10 }).optional({ nullable: true }),
-  body('grade', 'Invalid Grade').isFloat({ min: 0, max: 100 }).optional({ nullable: true }),
+  body('roast_level', 'Invalid Roast Level').isFloat({ min: 0, max: 10 }).optional({ checkFalsy: true }),
+  body('grade', 'Invalid Grade').isFloat({ min: 0, max: 100 }).optional({ checkFalsy: true }),
   body('roast_date', 'Invalid Roast Date').isDate().optional({ checkFalsy: true }),
-  body('memo', 'Invalid Memo').isLength({ max: 400 }).optional({ checkFalsy: true }),
+  body('memo', 'Invalid Memo').escape().isLength({ max: 400 }).optional({ checkFalsy: true }),
+  body('altitude').escape(),
+  body('harvest_date').escape(),
 ]
 
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
 
   // Get all beans of a user
-  app.get(endpoint + "/user/:userid/beans", async (req, res, next) => {
+  app.get(endpoint + "/user/:userid/beans", 
+  async (req, res, next) => {
     try {
       const results = await db.query(`
       SELECT * FROM beans WHERE user_id = $1`, 
@@ -32,7 +35,6 @@ module.exports = (app) => {
   app.post(endpoint + "/user/:userid/bean", 
     validator,
     async (req, res, next) => {
-
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({ 
@@ -41,7 +43,6 @@ module.exports = (app) => {
         }
       });
     }
-
     try {
       const results = await db.query(`
       INSERT INTO 
@@ -60,9 +61,10 @@ module.exports = (app) => {
         roaster,
         roast_level,
         roast_date,
-        aroma
+        aroma,
+        memo
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
       RETURNING *`,
       [
         req.params.userid,
@@ -79,7 +81,8 @@ module.exports = (app) => {
         req.body.roaster,
         req.body.roast_level,
         req.body.roast_date,
-        req.body.aroma
+        req.body.aroma,
+        req.body.memo
       ]);
 
       res.status(200).json(results.rows);
@@ -90,7 +93,7 @@ module.exports = (app) => {
   }); 
   
   // update beans of a user
-  app.post(endpoint + "/user/:userid/bean/:productid",
+  app.post(endpoint + "/user/:userid/bean/:beanid",
     validator,
     async (req, res, next) => {
 
@@ -119,8 +122,9 @@ module.exports = (app) => {
         roaster = $10, 
         roast_level = $11, 
         roast_date = $12,
-        aroma = $13
-      WHERE user_id = $14 AND product_id = $15 
+        aroma = $13,
+        memo = $14,
+      WHERE user_id = $15 AND coffee_bean_id = $16 
       RETURNING *`,
       [
         req.body.label,
@@ -136,8 +140,9 @@ module.exports = (app) => {
         req.body.roast_level,
         req.body.roast_date,
         req.body.aroma,
+        req.body.memo,
         req.params.userid,
-        req.params.productid
+        req.params.beanid
       ]);
 
       res.status(200).json(results.rows);
@@ -148,11 +153,11 @@ module.exports = (app) => {
   });
 
   // delete beans
-  app.delete(endpoint + "/user/:userid/bean/:productid", async (req, res, next) => {
+  app.delete(endpoint + "/user/:userid/bean/:beanid", async (req, res, next) => {
     try {
       const results = await db.query(`
-      DELETE FROM beans WHERE user_id = $1 AND product_id = $2`,
-      [req.params.userid, req.params.productid]);
+      DELETE FROM beans WHERE user_id = $1 AND coffee_bean_id = $2`,
+      [req.params.userid, req.params.beanid]);
 
       res.status(200).json(results.body);
 
