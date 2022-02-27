@@ -5,13 +5,9 @@ const CoffeeBagRight = ({name}) => {
   return (
     <div className="relative">
     <div 
-      className="
-        absolute top-20 bottom-6 left-14 right-0
-        transform -skew-y-6 -skew-x-2
-        font-bold
-      "
-    >
-      <div className="h-full w-full text-xs flex items-center justify-center text-center uppercase">{name}</div>
+      className="absolute top-20 bottom-6 
+      left-16 right-1 transform -skew-y-6 -skew-x-2 font-bold">
+      <div className="h-full w-full text-md flex items-center justify-center text-center">{name}</div>
     </div>
     <svg width="174" height="231" viewBox="0 0 174 231" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M147 33.9706H26L20 74.7353L5 127.956V173.25V207.787L29 231L172 173.25V123.426L158 74.7353L147 33.9706Z" fill="#DCB38B"/>
