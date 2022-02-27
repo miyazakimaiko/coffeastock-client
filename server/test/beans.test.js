@@ -49,6 +49,7 @@ describe('Beans API', () => {
         })
         .end((err, response) => {
           response.should.have.status(422);
+          response.body.error.should.have.property('message', 'Invalid Name');
           done();
         })
     });
@@ -73,7 +74,7 @@ describe('Beans API', () => {
         })
         .end((err, response) => {
           response.should.have.status(422);
-          response.body.should.have.property('message', 'Invalid Name');
+          response.body.error.should.have.property('message', 'Invalid Name');
           done();
         })
     });
@@ -98,7 +99,7 @@ describe('Beans API', () => {
         })
         .end((err, response) => {
           response.should.have.status(422);
-          response.body.should.have.property('message', 'Invalid Single Origin');
+          response.body.error.should.have.property('message', 'Invalid Single Origin');
           done();
         })
     });
@@ -124,7 +125,7 @@ describe('Beans API', () => {
         })
         .end((err, response) => {
           response.should.have.status(422);
-          response.body.should.have.property('message', 'Invalid Blend Ratio');
+          response.body.error.should.have.property('message', 'Invalid Blend Ratio');
           done();
         })
     });
@@ -149,7 +150,7 @@ describe('Beans API', () => {
         })
         .end((err, response) => {
           response.should.have.status(422);
-          response.body.should.have.property('message', 'Invalid Roast Level');
+          response.body.error.should.have.property('message', 'Invalid Roast Level');
           done();
         })
     });
@@ -174,7 +175,7 @@ describe('Beans API', () => {
         })
         .end((err, response) => {
           response.should.have.status(422);
-          response.body.should.have.property('message', 'Invalid Roast Level');
+          response.body.error.should.have.property('message', 'Invalid Roast Level');
           done();
         })
     });
@@ -199,7 +200,7 @@ describe('Beans API', () => {
         })
         .end((err, response) => {
           response.should.have.status(422);
-          response.body.should.have.property('message', 'Invalid Grade');
+          response.body.error.should.have.property('message', 'Invalid Grade');
           done();
         })
     });
@@ -224,7 +225,7 @@ describe('Beans API', () => {
         })
         .end((err, response) => {
           response.should.have.status(422);
-          response.body.should.have.property('message', 'Invalid Grade');
+          response.body.error.should.have.property('message', 'Invalid Grade');
           done();
         })
     });
@@ -249,7 +250,7 @@ describe('Beans API', () => {
         })
         .end((err, response) => {
           response.should.have.status(422);
-          response.body.should.have.property('message', 'Invalid Memo');
+          response.body.error.should.have.property('message', 'Invalid Memo');
           done();
         })
     });
