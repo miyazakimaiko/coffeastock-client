@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { ArrowsExpandIcon, DuplicateIcon, PencilAltIcon, StarIcon, TrashIcon, XIcon } from '@heroicons/react/outline'
 import ChartRadarTaste from './ChartRadarTaste'
-import { Collapse } from 'react-bootstrap';
 
 const RecipeSection = ({recipeId}) => {
   const [hasExpanded, setExpanded] = useState(false);
@@ -31,7 +30,7 @@ const RecipeSection = ({recipeId}) => {
                 </div>
               </div>
             </div>
-            <Collapse in={hasExpanded} dimension="width" className="px-4  mx-auto max-w-screen-md">
+            {/* <Collapse in={hasExpanded} dimension="width" className="px-4  mx-auto max-w-screen-md">
               <div id={recipeId}>
                 <table className="coffee-details-table">
                   <tbody>
@@ -82,7 +81,7 @@ const RecipeSection = ({recipeId}) => {
                   </tbody>
                 </table>            
               </div>
-            </Collapse>
+            </Collapse> */}
           </div>
           
           <div className="flex justify-evenly pt-4 border-t-2 border-gray-100">

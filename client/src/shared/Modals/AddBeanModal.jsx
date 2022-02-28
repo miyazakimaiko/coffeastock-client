@@ -631,12 +631,12 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       <div className="flex mx-4 mb-4">
                         <h3 className="text-lg uppercase font-capitals">Base Info</h3>
                         <button
-                        type="button"
-                        className="opacity-80 hover:opacity-100 
-                        ease-linear transition-all duration-150"
-                        onClick={showBaseInfoSection} > 
-                        <PencilAltIcon className="h-5 w-5 ml-4" />
-                      </button>
+                          type="button"
+                          className="opacity-80 hover:opacity-100 
+                          ease-linear transition-all duration-150"
+                          onClick={showBaseInfoSection} > 
+                          <PencilAltIcon className="h-5 w-5 ml-4" />
+                        </button>
                       </div>
                       <div className="m-8">
                         <div className="confirm-section">

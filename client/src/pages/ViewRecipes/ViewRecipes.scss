@@ -1,3 +1,25 @@
+.coffee-bag-container {
+  width: 200px;
+}
+
+.coffee-detail-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px dashed lightgray;
+  
+  .tag-section {
+    span {
+      background-color: transparent;
+      &::before {
+        content: "#";
+        margin-right: 2px;
+      }
+    }
+  }
+}
+
 .coffee-details-table tr:not(:last-child) {
   border-bottom: solid 1px #CCC5B9;
 }

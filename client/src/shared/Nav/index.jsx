@@ -1,7 +1,6 @@
 import React, { useState} from 'react'
 import { NavLink } from 'react-router-dom'
 import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, CogIcon, HomeIcon } from '@heroicons/react/outline'
-import { Collapse } from 'react-bootstrap'
 import { useContext } from 'react'
 import './Nav.scss'
 import { NavStateContext } from '../../context/NavState'
@@ -82,7 +81,7 @@ const Nav = (props) => {
                 <ChevronDownIcon className="h-4 w-4"></ChevronDownIcon>
               }
             </div>
-            <Collapse in={openSettingCoffeeBeans}>
+            {/* <Collapse in={openSettingCoffeeBeans}>
               <div id="origin-content">
                 <ul>
                   <li className="h-12 ml-8 mr-6 flex items-center justify-between">
@@ -141,7 +140,7 @@ const Nav = (props) => {
                   </li>
                 </ul>
               </div>
-            </Collapse>
+            </Collapse> */}
           </li>
 
           <li className="mr-6">
@@ -165,7 +164,7 @@ const Nav = (props) => {
                 <ChevronDownIcon className="h-4 w-4"></ChevronDownIcon>
               }
             </div>
-            <Collapse in={openSettingRecipes}>
+            {/* <Collapse in={openSettingRecipes}>
               <div id="origin-content">
                 <ul>
                   <li className="h-12 ml-8 mr-6 flex items-center justify-between">
@@ -206,7 +205,7 @@ const Nav = (props) => {
                   </li>
                 </ul>
               </div>
-            </Collapse>
+            </Collapse> */}
           </li>
 
         </ul>

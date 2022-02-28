@@ -2,8 +2,6 @@ import React, { useEffect, useContext, createRef } from 'react';
 import {BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import 'bootstrap/dist/js/bootstrap';
-import '../src/bootstrap-custom/bootstrap.css'
 import './index.scss'
 import Nav from './shared/Nav';
 import Header from './shared/Header';
