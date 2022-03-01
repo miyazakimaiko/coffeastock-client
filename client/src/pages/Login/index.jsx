@@ -18,7 +18,6 @@ const Login = () => {
   useEffect(() => {
     getCustomRanges(userData.sub);
     fetchAllBeans(userData.sub);
-    console.log(userData)
   }, [userData]);
 
 
