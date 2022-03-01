@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useContext, useRef } from 'react'
+import React, { useEffect, useCallback, useState, useContext, createRef } from 'react'
 import { MultiSelect } from "react-multi-select-component";
 import { PencilAltIcon, XIcon } from '@heroicons/react/outline'
 import { AccountContext } from '../../context/Account';
@@ -125,21 +125,49 @@ const AddBeanModal = ({setOpenThisModal}) => {
     }
   }
 
+  const [openBaseInfoTab, innerSetOpenBaseInfoTab] = useState(true);
+  const [openDetailsTab, innerSetOpenDetailsTab] = useState(false);
+  const [openConfirmationTab, innerSetOpenConfirmationTab] = useState(false);
+  const baseInfoPage = createRef(null);
+  const detailsPage = createRef(null);
+  const confirmationPage = createRef(null);
+
   // To toggle click from the Next button
-  const baseInfoTab = useRef(null);
-  
-  const showBaseInfoSection = () => 
-    baseInfoTab.current.click();
+  const setOpenBaseInfoTab = () => {
+    baseInfoPage.current.style.opacity = 1;
+    baseInfoPage.current.style.height = "auto";
+    detailsPage.current.style.opacity = 0;
+    detailsPage.current.style.height = 0;
+    confirmationPage.current.style.opacity = 0;
+    confirmationPage.current.style.height = 0;
+    innerSetOpenBaseInfoTab(true);
+    innerSetOpenDetailsTab(false);
+    innerSetOpenConfirmationTab(false);
+ } 
 
-  const detailsTab = useRef(null);
-  
-  const showDetailsSection = () => 
-    detailsTab.current.click();
+  const setOpenDetailsTab = () => {
+    baseInfoPage.current.style.opacity = 0;
+    baseInfoPage.current.style.height = 0;
+    detailsPage.current.style.opacity = 1;
+    detailsPage.current.style.height = "auto";
+    confirmationPage.current.style.opacity = 0;
+    confirmationPage.current.style.height = 0;
+    innerSetOpenBaseInfoTab(false);
+    innerSetOpenDetailsTab(true);
+    innerSetOpenConfirmationTab(false);
+  }
 
-  const confirmationTab = useRef(null);
-
-  const showConfirmationSection = () =>
-    confirmationTab.current.click();
+  const setOpenConfirmationTab = () => {
+    baseInfoPage.current.style.opacity = 0;
+    baseInfoPage.current.style.height = 0;
+    detailsPage.current.style.opacity = 0;
+    detailsPage.current.style.height = 0;
+    confirmationPage.current.style.opacity = 1;
+    confirmationPage.current.style.height = "auto";
+    innerSetOpenBaseInfoTab(false);
+    innerSetOpenDetailsTab(false);
+    innerSetOpenConfirmationTab(true);
+  }
 
   const [canGoToConfirmation, setCanGoToConfirmation] = useState(false);
   const checkCanGoToConfirmation = useCallback(() => {
@@ -271,24 +299,18 @@ const AddBeanModal = ({setOpenThisModal}) => {
 
           {/*body*/}
           <ul 
-            className="nav nav-tabs text-center" 
-            id="myTab" 
-            role="tablist">
+            className="flex">
             <li
               className="nav-item w-1/3" 
-              role="presentation"
               key="base-info">
               <button 
-                className="active w-full h-full py-2 
-                text-white bg-burnt-sienna opacity-50" 
-                id="base-info-tab" 
-                data-bs-toggle="tab" 
-                data-bs-target="#base-info" 
+                role="tab"
                 type="button" 
-                role="tab" 
-                aria-controls="base-info" 
-                aria-selected="true"
-                ref={baseInfoTab}>
+                onClick={setOpenBaseInfoTab}
+                className={
+                  (openBaseInfoTab ? "active " : "") + 
+                  "w-full h-full py-2 text-white bg-burnt-sienna opacity-50"
+                } >
                 Base Info
               </button>
             </li>
@@ -296,18 +318,15 @@ const AddBeanModal = ({setOpenThisModal}) => {
               className="nav-item w-1/3" 
               role="presentation"
               key="details">
-              <button 
-                className="w-full h-full py-2 
-                text-white bg-burnt-sienna opacity-50" 
-                id="details-tab" 
-                data-bs-toggle="tab" 
-                data-bs-target="#details" 
-                type="button" 
-                role="tab" 
-                aria-controls="details" 
-                aria-selected="false"
-                ref={detailsTab}
-                disabled={name === ''}>
+              <button                
+                role="tab"
+                type="button"
+                disabled={name === ''}
+                onClick={setOpenDetailsTab}
+                className={
+                  (openDetailsTab ? "active " : "") + 
+                  "w-full h-full py-2 text-white bg-burnt-sienna opacity-50"
+                } >
                 Details
               </button>
             </li>
@@ -315,34 +334,27 @@ const AddBeanModal = ({setOpenThisModal}) => {
               className="nav-item w-1/3" 
               role="presentation"
               key="confirmation">
-              <button 
-                className="w-full h-full py-2 
-                text-white bg-burnt-sienna opacity-50" 
-                id="confirmation-tab" 
-                data-bs-toggle="tab" 
-                data-bs-target="#confirmation" 
-                type="button" 
-                role="tab" 
-                aria-controls="confirmation" 
-                aria-selected="false"
-                ref={confirmationTab}
+              <button                
+                role="tab"
+                type="button"
                 disabled={!canGoToConfirmation}
-                onClick={insertNewRanges}>
+                onClick={() => {
+                  setOpenConfirmationTab();
+                  insertNewRanges();
+                }}
+                className={
+                  (openConfirmationTab ? "active " : "") + 
+                  "w-full h-full py-2 text-white bg-burnt-sienna opacity-50"
+                } >
                 Confirmation
               </button>
             </li>
           </ul>
           
-          <form 
-            className="tab-content" 
-            id="myTabContent">
+          <form className="tab-content" >
             <div 
-              className="tab-pane fade show active" 
-              id="base-info"
-              data-testid="base-info"
-              role="tabpanel" 
-              aria-labelledby="base-info-tab">
-
+              ref={baseInfoPage}
+              className="overflow-hidden ease-linear transition-all duration-300" >
               <div className="flex px-8 my-8">
                 <div className="flex flex-col w-1/2">
                   <div className="form-section">
@@ -439,16 +451,14 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   disabled={name === ''}
                   className="border-2 border-blue bg-blue text-white opacity-80 hover:opacity-100 font-bold blue-button
                   uppercase text-sm px-6 py-2 rounded-3xl button-transition"
-                  onClick={showDetailsSection}
+                  onClick={setOpenDetailsTab}
                 > Next </button>
               </div>
             </div>
 
-            <div className="tab-pane fade" 
-              id="details"
-              data-testid="details"
-              role="tabpanel" 
-              aria-labelledby="details-tab">
+            <div 
+              ref={detailsPage}
+              className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300" >
 
               <div className={`flex px-8 my-8 ${isSingleOrigin ? "hidden" : ""}`}>
                 <div className="flex flex-col w-1/2">
@@ -613,16 +623,14 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   uppercase text-sm px-6 py-2 rounded-3xl button-transition"
                   type="button"
                   disabled={!canGoToConfirmation}
-                  onClick={showConfirmationSection}
+                  onClick={setOpenConfirmationTab}
                 > Next </button>
               </div>
             </div>
 
             <div 
-              className="tab-pane fade" 
-              id="confirmation" 
-              role="tabpanel" 
-              aria-labelledby="confirmation-tab">
+              ref={confirmationPage}
+              className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300" >
                 
               <div className="px-8 my-10">
                 <div className="flex">
@@ -634,7 +642,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                           type="button"
                           className="opacity-80 hover:opacity-100 
                           ease-linear transition-all duration-150"
-                          onClick={showBaseInfoSection} > 
+                          onClick={setOpenBaseInfoTab} > 
                           <PencilAltIcon className="h-5 w-5 ml-4" />
                         </button>
                       </div>
@@ -686,7 +694,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                         disabled={name === ''}
                         className="opacity-80 hover:opacity-100 
                         ease-linear transition-all duration-150"
-                        onClick={showDetailsSection} > 
+                        onClick={setOpenDetailsTab} > 
                         <PencilAltIcon className="h-5 w-5 ml-4" />
                       </button>
                     </div>
@@ -794,7 +802,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                           disabled={name === ''}
                           className="absolute left-1 opacity-80 
                           hover:opacity-100 ease-linear transition-all duration-150"
-                          onClick={showDetailsSection} > 
+                          onClick={setOpenDetailsTab} > 
                           <PencilAltIcon className="h-5 w-5" />
                         </button>
                       </p>
