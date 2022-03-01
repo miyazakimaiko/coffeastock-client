@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { toast } from 'react-toastify';
 import { NavLink } from 'react-router-dom';
-import { ChevronDownIcon, MenuAlt2Icon, PlusIcon, XIcon } from '@heroicons/react/outline'
+import { MenuAlt2Icon, PlusIcon, XIcon } from '@heroicons/react/outline'
 
 import { NavStateContext } from '../../context/NavState';
 import { AccountContext } from '../../context/Account';
@@ -10,6 +10,7 @@ import imgFace from '../../images/face.jpg'
 import AddBeanModal from '../Modals/AddBeanModal';
 import AddRecipeModal from '../Modals/AddRecipeModal';
 import './Header.scss'
+import Dropdown from '../Dropdown';
 
 const Header = (props) => {
   const { 
@@ -93,25 +94,13 @@ const Header = (props) => {
             <img src={imgFace} className="h-full w-full rounded-3xl"/>
           </div>
           <div className="mx-3">
-            <a
-              className="flex items-center" 
-              href="#" 
-              id="navbarDropdown" 
-              role="button" 
-              data-bs-toggle="dropdown" 
-              aria-haspopup="true" 
-              aria-expanded="false">
-              {userData.nickname}
-              <ChevronDownIcon className="h-4 w-4 ml-2"/>
-            </a>
-            <div 
-              className="dropdown-menu dropdown-menu-end 
-              border-none shadow-md animate slideIn text-burnt-sienna top-0" 
-              aria-labelledby="navbarDropdown">
-              <NavLink exact="true" to="/my-profile" className="dropdown-item">My Account</NavLink>
-              <div className="dropdown-divider"></div>
-              <button type="button" className="dropdown-item" onClick={logout}>Logout</button>
-            </div>
+            <Dropdown dropdownText={userData.nickname}>
+              <div className="dropdown-content" >
+                <NavLink exact="true" to="/my-profile" className="dropdown-item">My Account</NavLink>
+                <div className="dropdown-divider"></div>
+                <button type="button" className="dropdown-item" onClick={logout}>Logout</button>
+              </div>
+            </Dropdown>
           </div>
         </div>
       </div>
