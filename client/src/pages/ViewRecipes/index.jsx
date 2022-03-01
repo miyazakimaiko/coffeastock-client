@@ -1,5 +1,5 @@
-import { PencilAltIcon } from '@heroicons/react/outline';
-import React, { useContext } from 'react'
+import { InformationCircleIcon, PencilAltIcon } from '@heroicons/react/outline';
+import React, { useContext, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import { BeansContext } from '../../context/Beans';
 import { CustomRangesContext } from '../../context/CustomRanges';
@@ -9,75 +9,149 @@ import StarHalfIcon from '../../svgs/StarHalfIcon';
 import RecipeSection from './RecipeSection';
 import { unescapeHtml } from '../../utils/HtmlConverter'
 import './ViewRecipes.scss'
+import Tooltip from '../../shared/Tooltip';
 
 const ViewRecipes = () => {
   const { id } = useParams();
   const { customRanges } = useContext(CustomRangesContext);
   const { beans } = useContext(BeansContext);
-  const bean = beans[id];
+  const targetBean = beans[id];
+
+  const [singleOrigin, setSingleOrigin] = useState(false);
+  const [coffeeName, setCoffeeName] = useState("");
+  const [roastDate, setRoastDate] = useState("");
+  const [altitude, setAltitude] = useState("");
+  const [harvestDate, setHarvestDate] = useState("");
+  const [roastLevel, setRoastLevel] = useState("");
+  const [memo, setMemo] = useState("");
+  const [roasters, setRoasters] = useState([]);
+  const [aroma, setAroma] = useState([]);
+  const [origins, setOrigins] = useState([]);
+  const [process, setProcess] = useState([]);
+  const [variety, setVariety] = useState([]);
+  const [farm, setFarm] = useState([]);
+  const [grade, setGrade] = useState([])
+  const [blendRatio, setBlendRatio] = useState([])
+
 
   const makeHtmlTags = (category) => {
     const result = [];
-    if (bean[category]) {
-      bean[category].forEach(id => {
+    if (targetBean[category]) {
+      targetBean[category].forEach(id => {
         const range = customRanges[category + '_range'];
+        const label = unescapeHtml(range['id-' + id]['label']);
+        const info = unescapeHtml(range['id-' + id]['def']);
+        const text = `${info === "" ? "No Info" : info}`
         result.push(
-          <>
-            <button data-tooltip-target={`tooltip-${category}-${id}`} type="button">{unescapeHtml(range['id-' + id]['label'])}</button>
-            <div id={`tooltip-${category}-${id}`} role="tooltip" class="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip dark:bg-gray-700">
-              Tooltip content
-              <div class="tooltip-arrow" data-popper-arrow></div>
-            </div>
-          </>
+          <div 
+            className="flex justify-end"
+            style={{ paddingTop: "4px", paddingBottom: "4px" }}>
+            <Tooltip category={category} itemId={id} tooltipText={text}>
+              <div className="flex items-center" id={`tooltip-${category}-${id}`} >
+                <p className="text-right">{label}</p>
+                <InformationCircleIcon className="h-4 w-4 ml-2 flex-shrink-0" />
+              </div>
+            </Tooltip>
+          </div>
         );
       })
-    }
-    else {
-      result.push('No Data')
     }
     return result;
   }
 
-  const coffeeName = unescapeHtml(beans[id]['label']);
-  const roasters = makeHtmlTags('roaster')
-  const roastDate = beans[id]['roast_date'] ? beans[id]['roast_date'].split('T')[0] : null;
-  const aroma = makeHtmlTags('aroma')
-  const origins = makeHtmlTags('origin')
-  const process = makeHtmlTags('process');
-  const variety = makeHtmlTags('variety');
-  const farm = makeHtmlTags('farm');
-  const altitude = unescapeHtml(beans[id]['altitude']);
-  const harvestDate = unescapeHtml(beans[id]['harvest_date']);
-  const roastLevel = beans[id]['roast_level'];
-  const memo = beans[id]['memo'] === null ? "" : unescapeHtml(beans[id]['memo']);
-  const singleOrigin = bean['single_origin']
-
-  const grade = [];
-  if (beans[id]['grade']) {
-    const rounded = Math.ceil(beans[id]['grade']/10)/2;
-    for (let i = 1; i <= rounded; i ++) {
-      grade.push(<StarFullIcon/>)
+  const makeNameListHtml = (category, bean) => {
+    const ids = bean[category] ? bean[category] : [];
+    let nameListHtml = ids.map(
+      id => <span>{customRanges[category + '_range']["id-" + id]['label']}</span>
+    );
+    if (nameListHtml.length === 0) {
+      nameListHtml = <span>No Data</span>
     }
-    if (rounded % 1 !== 0) {
-      grade.push(<StarHalfIcon />)
-    }
+    return nameListHtml;
   }
 
-  const blendRatio = [];
-  let blendCount = 0;
-  if (beans[id]['blend_ratio']) {
-    for(const item of Object.entries(beans[id]['blend_ratio'])) {
-      if (blendCount !== 0) {
-        blendRatio.push(' / ')
+  const makeBlendRatioHtmlTags = () => {
+    const result = [];  
+    if (targetBean['blend_ratio']) {
+      const blend = targetBean['blend_ratio'];
+      for(const beanId of Object.keys(blend)) {
+        const ratio = blend[beanId];
+        const blendBean = beans[beanId];
+        const originNames = makeNameListHtml('origin', blendBean);
+        const roasterNames = makeNameListHtml('roaster', blendBean);
+        const processNames = makeNameListHtml('process', blendBean);
+        const varietyNames = makeNameListHtml('variety', blendBean);
+        const farmNames = makeNameListHtml('farm', blendBean);
+        const aromaNames = makeNameListHtml('aroma', blendBean);
+        const altitude = blendBean['altitude'] === null ? "No Data" : blendBean['altitude'];
+        const harvestPeriod = blendBean['harvest_date'] === null ? "No Data" : blendBean['harvest_date'];
+        const text = <>
+          <p className="py-1 slash-end"><strong className="text-yellow">Roaster: </strong>{roasterNames}</p>
+          <p className="py-1 slash-end"><strong className="text-yellow">Origin:</strong> {originNames}</p>
+          <p className="py-1 slash-end"><strong className="text-yellow">Process:</strong> {processNames}</p>
+          <p className="py-1 slash-end"><strong className="text-yellow">Variety:</strong> {varietyNames}</p>
+          <p className="py-1 slash-end"><strong className="text-yellow">Farm:</strong> {farmNames}</p>
+          <p className="py-1 slash-end"><strong className="text-yellow">Altitude:</strong> {altitude}</p>
+          <p className="py-1 slash-end"><strong className="text-yellow">Harvest Period:</strong> {harvestPeriod}</p>
+          <p className="py-1 slash-end"><strong className="text-yellow">Aroma:</strong> {aromaNames}</p>
+        </>;
+  
+        result.push(
+          <div 
+            className="flex justify-end"
+            style={{ paddingTop: "4px", paddingBottom: "4px" }}>
+            <Tooltip category="blend" itemId={beanId} tooltipText={text}>            
+              <div 
+                className="flex items-center" 
+                id={`tooltip-blend-${beanId}`} >
+                <div className="text-right">
+                  {`${unescapeHtml(beans[beanId]['label'])}: ${ratio}%`}
+                </div>
+                <InformationCircleIcon className="h-4 w-4 ml-2 flex-shrink-0" />
+              </div>
+            </Tooltip>
+          </div>
+        );
       }
-      const id = item[0];
-      const ratio = item[1];
-      blendRatio.push(`${unescapeHtml(beans[id]['label'])} (${ratio})`);
-      blendCount++;
     }
-  } else {
-    blendRatio.push('-')
+    return result;
   }
+
+  const makeGradeStarList = () => {
+    if (targetBean['grade']) {
+      const result = []
+      const rounded = Math.ceil(targetBean['grade']/10)/2;
+      for (let i = 1; i <= rounded; i ++) {
+        result.push(<StarFullIcon/>)
+      }
+      if (rounded % 1 !== 0) {
+        result.push(<StarHalfIcon />)
+      }
+      return result;
+    }
+  }
+
+  useEffect(() => {
+    setSingleOrigin(targetBean['single_origin']);
+    setCoffeeName(unescapeHtml(targetBean['label']));
+    setAltitude(unescapeHtml(targetBean['altitude']));
+    setHarvestDate(unescapeHtml(targetBean['harvest_date']));
+    setRoasters(makeHtmlTags('roaster'));
+    setAroma(makeHtmlTags('aroma'));
+    setOrigins(makeHtmlTags('origin'));
+    setProcess(makeHtmlTags('process'));
+    setVariety(makeHtmlTags('variety'));
+    setFarm(makeHtmlTags('farm'));
+    setRoastLevel(targetBean['roast_level'])
+    setRoastDate(
+      targetBean['roast_date'] ? targetBean['roast_date'].split('T')[0] : null
+    );
+    setMemo(
+      targetBean['memo'] === null ? "" : unescapeHtml(targetBean['memo'])
+    )
+    setGrade(makeGradeStarList());
+    setBlendRatio(makeBlendRatioHtmlTags());
+  }, []);
 
   return (
     <>
@@ -101,67 +175,114 @@ const ViewRecipes = () => {
               </div>
               <div className="flex flex-wrap justify-center mt-16">
                 <div className="w-1/2 my-4 px-4">
+                  { roasters.length !== 0 ? 
                   <div className="coffee-detail-section">
-                    <label className="text-xs font-semibold uppercase">Roasted By</label>
-                    <div className="tag-section">{roasters}</div>
+                    <label className="text-xs font-semibold uppercase mr-3">Roasted By</label>
+                    <div>{roasters}</div>
                   </div>
+                  : null
+                  }
+
+                  { roastDate ? 
                   <div className="coffee-detail-section">
-                    <label className="text-xs font-semibold uppercase">Roast Date</label>
+                    <label className="text-xs font-semibold uppercase mr-3">Roast Date</label>
                     <p>{roastDate}</p>
                   </div>
+                  : null
+                  }
+
+                  { targetBean['grade'] ? 
                   <div className="coffee-detail-section">
-                    <label className="text-xs font-semibold uppercase">Grade</label>
+                    <label className="text-xs font-semibold uppercase mr-3">Grade</label>
                     <div className="flex">
                       {grade} 
-                      <span className="ml-2">({beans[id]['grade']}/100)</span>
+                      <span className="ml-2">({targetBean['grade']}/100)</span>
                     </div>
-                    </div>
+                  </div>
+                  : null
+                  }
+
+                  { roastLevel ? 
                   <div className="coffee-detail-section">
-                    <label className="text-xs font-semibold uppercase">Roast Level</label>
+                    <label className="text-xs font-semibold uppercase mr-3">Roast Level</label>
                     <p>({roastLevel}/10)</p>
                   </div>
+                  : null
+                  }
                 </div>
+
                 <div className="w-1/2 my-4 px-4">
-                  {singleOrigin ? 
+                  { singleOrigin ? 
                   <>
                     <div className="coffee-detail-section">
-                      <label className="text-xs font-semibold uppercase">Origin</label>
-                      <div className="tag-section">{origins}</div >
+                      <label className="text-xs font-semibold uppercase mr-6">Origin</label>
+                      <div>{origins}</div >
                     </div>
+
+                    { process.length !== 0 ? 
                     <div className="coffee-detail-section">
-                      <label className="text-xs font-semibold uppercase">Process</label>
-                      <div className="tag-section">{process}</div>
+                      <label className="text-xs font-semibold uppercase mr-3">Process</label>
+                      <div>{process}</div>
                     </div>
+                    : null
+                    }
+
+                    { variety.length !== 0 ? 
                     <div className="coffee-detail-section">
-                      <label className="text-xs font-semibold uppercase">Variety</label>
-                      <div className="tag-section">{variety}</div>
+                      <label className="text-xs font-semibold uppercase mr-3">Variety</label>
+                      <div>{variety}</div>
                     </div>
+                    : null
+                    }
+
+                    { farm.length !== 0 ? 
                     <div className="coffee-detail-section">
-                      <label className="text-xs font-semibold uppercase">Farm</label>
-                      <div className="tag-section">{farm}</div>
+                      <label className="text-xs font-semibold uppercase mr-3">Farm</label>
+                      <div>{farm}</div>
                     </div>
+                    : null
+                    }
+
+                    { altitude ?
                     <div className="coffee-detail-section">
-                      <label className="text-xs font-semibold uppercase">Altitude</label>
+                      <label className="text-xs font-semibold uppercase mr-3">Altitude</label>
                       <p>{altitude}</p>
                     </div>
+                    : null
+                    }
+
+                    { harvestDate ? 
                     <div className="coffee-detail-section">
-                      <label className="text-xs font-semibold uppercase">Harvest Period</label>
+                      <label className="text-xs font-semibold uppercase mr-3">Harvest Period</label>
                       <p>{harvestDate}</p>
                     </div>
+                    : null
+                    }
                   </>
                   :
-                  <div className="coffee-detail-section">{blendRatio}</div>
-                  }
                   <div className="coffee-detail-section">
-                    <label className="text-xs font-semibold uppercase">Aroma</label>
-                    <div className="tag-section">{aroma}</div>
+                    <label className="text-xs font-semibold uppercase mr-3">Blend Ratio</label>
+                    <div>{blendRatio}</div>
                   </div>
+                  }
+
+                  { aroma.length !== 0 ? 
+                  <div className="coffee-detail-section">
+                    <label className="text-xs font-semibold uppercase mr-3">Aroma</label>
+                    <div>{aroma}</div>
+                  </div>
+                  : null
+                  }
                 </div>
               </div>
+              
+              { memo.length !== 0 ? 
               <div className="px-6 pt-4">
-                <label className="text-xs font-semibold uppercase">Memo: </label>
+                <label className="text-xs font-semibold uppercase mr-3">Memo: </label>
                 <div className="inline-block">{memo}</div>
               </div>
+              : null
+              }
             </div>
           </div>
           <div className="flex mb-4 w-full flex-wrap justify-center">
