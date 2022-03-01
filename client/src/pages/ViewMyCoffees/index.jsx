@@ -1,9 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { ChevronDownIcon } from '@heroicons/react/outline';
 import { CustomRangesContext } from '../../context/CustomRanges';
 import { BeansContext } from '../../context/Beans';
 import CoffeeSection from './CoffeeSection'
 import { unescapeHtml } from '../../utils/HtmlConverter'
+import Dropdown from '../../shared/Dropdown';
 
 const ViewMyCoffees = () => {
   const { customRanges } = useContext(CustomRangesContext);
@@ -105,154 +105,132 @@ const ViewMyCoffees = () => {
           <h3 className="mr-3 text-xl text-center font-capitals uppercase">
             My Coffee Beans
           </h3>
-          <div className="relative h-full flex items-center">
-            <a
-              className="flex items-center text-burnt-sienna 
-              font-capitals uppercase text-sm px-3 ml-4 mr-0 opacity-80 
-              hover:opacity-100 ease-linear transition-all duration-150" 
-              href="#" 
-              id="showByDropdown" 
-              role="button" 
-              data-bs-toggle="dropdown" 
-              aria-haspopup="true" 
-              aria-expanded="false">
-              {getViewStatus()}
-              <ChevronDownIcon className="h-4 w-4 ml-2"/>
-            </a>
-            <div className="dropdown-menu dropdown-menu-end border-none shadow-md animate slideIn" aria-labelledby="showByDropdown">
-              <button 
-                type="button"
-                onClick={() => {
-                  setShowAll(true);
-                  setShowBlend(false);
-                  setShowSingleOrigin(false);
-                }}
-                className={(showAll ? "active " : "") + "dropdown-item"}>
-                  All
-              </button>
-              <div className="dropdown-divider"></div>
-              <button 
-                type="button" 
-                onClick={() => {
-                  setShowAll(false);
-                  setShowBlend(false);
-                  setShowSingleOrigin(true);
-                }}
-                className={(showSingleOrigin ? "active " : "") + "dropdown-item"}>
-                  Single Origin Only
-              </button>
-              <div className="dropdown-divider"></div>
-              <button 
-                type="button" 
-                onClick={() => {
-                  setShowAll(false);
-                  setShowBlend(true);
-                  setShowSingleOrigin(false);
-                }}
-                className={(showBlend ? "active " : "") + "dropdown-item"}>
-                  Blend Only
-              </button>
-            </div>
+          <div className="relative h-full flex items-center mx-6">
+            <Dropdown dropdownText={getViewStatus()}>
+              <div className="dropdown-content">
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setShowAll(true);
+                    setShowBlend(false);
+                    setShowSingleOrigin(false);
+                  }}
+                  className={(showAll ? "active " : "") + "dropdown-item"}>
+                    All
+                </button>
+                <div className="dropdown-divider"></div>
+                <button 
+                  type="button" 
+                  onClick={() => {
+                    setShowAll(false);
+                    setShowBlend(false);
+                    setShowSingleOrigin(true);
+                  }}
+                  className={(showSingleOrigin ? "active " : "") + "dropdown-item"}>
+                    Single Origin Only
+                </button>
+                <div className="dropdown-divider"></div>
+                <button 
+                  type="button" 
+                  onClick={() => {
+                    setShowAll(false);
+                    setShowBlend(true);
+                    setShowSingleOrigin(false);
+                  }}
+                  className={(showBlend ? "active " : "") + "dropdown-item"}>
+                    Blend Only
+                </button>
+              </div>
+            </Dropdown>
           </div>
           <div className="relative h-full flex items-center">
-            <a
-              className="flex items-center text-burnt-sienna 
-              font-capitals uppercase text-sm px-3 ml-4 mr-0 opacity-80 
-              hover:opacity-100 ease-linear transition-all duration-150" 
-              href="#" 
-              id="groupByDropdown" 
-              role="button" 
-              data-bs-toggle="dropdown" 
-              aria-haspopup="true" 
-              aria-expanded="false">
-              {getGroupStatus()}
-              <ChevronDownIcon className="h-4 w-4 ml-2"/>
-            </a>
-            <div className="dropdown-menu dropdown-menu-end border-none shadow-md animate slideIn" aria-labelledby="groupByDropdown">
-              <button 
-                type="button"
-                onClick={() => {
-                  setGroupByRoaster(true); 
-                  setGroupByOrigin(false);
-                  setGroupByFarm(false);
-                  setGroupByVariety(false);
-                  setGroupByProcess(false);
-                  setGroupByAroma(false); 
-                }}
-                className={(groupByRoaster ? "active " : "") + "dropdown-item"}>
-                  Roaster
-              </button>
-              <div className="dropdown-divider"></div>
-              <button 
-                type="button"
-                onClick={() => {
-                  setGroupByRoaster(false); 
-                  setGroupByOrigin(true);
-                  setGroupByFarm(false);
-                  setGroupByVariety(false);
-                  setGroupByProcess(false);
-                  setGroupByAroma(false); 
-                }}
-                className={(groupByOrigin ? "active " : "") + "dropdown-item"}>
-                  Origin
-              </button>
-              <div className="dropdown-divider"></div>
-              <button 
-                type="button"
-                onClick={() => {
-                  setGroupByRoaster(false); 
-                  setGroupByOrigin(false);
-                  setGroupByFarm(true);
-                  setGroupByVariety(false);
-                  setGroupByProcess(false);
-                  setGroupByAroma(false); 
-                }}
-                className={(groupByFarm ? "active " : "") + "dropdown-item"}>
-                  Farm
-              </button>
-              <div className="dropdown-divider"></div>
-              <button 
-                type="button"
-                onClick={() => {
-                  setGroupByRoaster(false); 
-                  setGroupByOrigin(false);
-                  setGroupByFarm(false);
-                  setGroupByVariety(true);
-                  setGroupByProcess(false);
-                  setGroupByAroma(false); 
-                }}
-                className={(groupByVariety ? "active " : "") + "dropdown-item"}>
-                  Variety
-              </button>
-              <div className="dropdown-divider"></div>
-              <button 
-                type="button"
-                onClick={() => {
-                  setGroupByRoaster(false); 
-                  setGroupByOrigin(false);
-                  setGroupByFarm(false);
-                  setGroupByVariety(false);
-                  setGroupByProcess(true);
-                  setGroupByAroma(false); 
-                }}
-                className={(groupByProcess ? "active " : "") + "dropdown-item"}>
-                  Process
-              </button>
-              <div className="dropdown-divider"></div>
-              <button 
-                type="button"
-                onClick={() => {
-                  setGroupByRoaster(false); 
-                  setGroupByOrigin(false);
-                  setGroupByFarm(false);
-                  setGroupByVariety(false);
-                  setGroupByProcess(false);
-                  setGroupByAroma(true); 
-                }}
-                className={(groupByAroma ? "active " : "") + "dropdown-item"}>
-                  Aroma
-              </button>
-            </div>
+            <Dropdown dropdownText={getGroupStatus()}>
+              <div className="dropdown-content">
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setGroupByRoaster(true); 
+                    setGroupByOrigin(false);
+                    setGroupByFarm(false);
+                    setGroupByVariety(false);
+                    setGroupByProcess(false);
+                    setGroupByAroma(false); 
+                  }}
+                  className={(groupByRoaster ? "active " : "") + "dropdown-item"}>
+                    Roaster
+                </button>
+                <div className="dropdown-divider"></div>
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setGroupByRoaster(false); 
+                    setGroupByOrigin(true);
+                    setGroupByFarm(false);
+                    setGroupByVariety(false);
+                    setGroupByProcess(false);
+                    setGroupByAroma(false); 
+                  }}
+                  className={(groupByOrigin ? "active " : "") + "dropdown-item"}>
+                    Origin
+                </button>
+                <div className="dropdown-divider"></div>
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setGroupByRoaster(false); 
+                    setGroupByOrigin(false);
+                    setGroupByFarm(true);
+                    setGroupByVariety(false);
+                    setGroupByProcess(false);
+                    setGroupByAroma(false); 
+                  }}
+                  className={(groupByFarm ? "active " : "") + "dropdown-item"}>
+                    Farm
+                </button>
+                <div className="dropdown-divider"></div>
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setGroupByRoaster(false); 
+                    setGroupByOrigin(false);
+                    setGroupByFarm(false);
+                    setGroupByVariety(true);
+                    setGroupByProcess(false);
+                    setGroupByAroma(false); 
+                  }}
+                  className={(groupByVariety ? "active " : "") + "dropdown-item"}>
+                    Variety
+                </button>
+                <div className="dropdown-divider"></div>
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setGroupByRoaster(false); 
+                    setGroupByOrigin(false);
+                    setGroupByFarm(false);
+                    setGroupByVariety(false);
+                    setGroupByProcess(true);
+                    setGroupByAroma(false); 
+                  }}
+                  className={(groupByProcess ? "active " : "") + "dropdown-item"}>
+                    Process
+                </button>
+                <div className="dropdown-divider"></div>
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setGroupByRoaster(false); 
+                    setGroupByOrigin(false);
+                    setGroupByFarm(false);
+                    setGroupByVariety(false);
+                    setGroupByProcess(false);
+                    setGroupByAroma(true); 
+                  }}
+                  className={(groupByAroma ? "active " : "") + "dropdown-item"}>
+                    Aroma
+                </button>
+              </div>
+            </Dropdown>
           </div>
         </div>
         {innerHtml}
