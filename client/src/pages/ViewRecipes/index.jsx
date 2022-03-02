@@ -1,28 +1,30 @@
-import { InformationCircleIcon, PencilAltIcon } from '@heroicons/react/outline';
 import React, { useContext, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
-import { BeansContext } from '../../context/Beans';
-import { CustomRangesContext } from '../../context/CustomRanges';
+import { InformationCircleIcon, PencilAltIcon } from '@heroicons/react/outline';
+import { unescapeHtml } from '../../utils/HtmlConverter'
+import { AttributeRangeContext } from '../../context/AttributeRangeContext';
+import { BeansContext } from '../../context/BeansContext';
 import CoffeeBagRight from '../../svgs/CoffeeBagRight';
 import StarFullIcon from '../../svgs/StarFullIcon';
 import StarHalfIcon from '../../svgs/StarHalfIcon';
-import RecipeSection from './RecipeSection';
-import { unescapeHtml } from '../../utils/HtmlConverter'
-import './ViewRecipes.scss'
+import FireFullIcon from '../../svgs/FireFullIcon';
+import FireHalfIcon from '../../svgs/FireHalfIcon';
 import Tooltip from '../../shared/Tooltip';
+import RecipeSection from './RecipeSection';
+import './ViewRecipes.scss'
+
 
 const ViewRecipes = () => {
   const { id } = useParams();
-  const { customRanges } = useContext(CustomRangesContext);
-  const { beans } = useContext(BeansContext);
-  const targetBean = beans[id];
+  const { attributeRangeList } = useContext(AttributeRangeContext);
+  const { beanList } = useContext(BeansContext);
+  const targetBean = beanList[id];
 
   const [singleOrigin, setSingleOrigin] = useState(false);
   const [coffeeName, setCoffeeName] = useState("");
   const [roastDate, setRoastDate] = useState("");
   const [altitude, setAltitude] = useState("");
   const [harvestDate, setHarvestDate] = useState("");
-  const [roastLevel, setRoastLevel] = useState("");
   const [memo, setMemo] = useState("");
   const [roasters, setRoasters] = useState([]);
   const [aroma, setAroma] = useState([]);
@@ -30,7 +32,8 @@ const ViewRecipes = () => {
   const [process, setProcess] = useState([]);
   const [variety, setVariety] = useState([]);
   const [farm, setFarm] = useState([]);
-  const [grade, setGrade] = useState([])
+  const [grade, setGrade] = useState([]);
+  const [roastLevel, setRoastLevel] = useState([]);
   const [blendRatio, setBlendRatio] = useState([])
 
 
@@ -38,7 +41,7 @@ const ViewRecipes = () => {
     const result = [];
     if (targetBean[category]) {
       targetBean[category].forEach(id => {
-        const range = customRanges[category + '_range'];
+        const range = attributeRangeList[category + '_range'];
         const label = unescapeHtml(range['id-' + id]['label']);
         const info = unescapeHtml(range['id-' + id]['def']);
         const text = `${info === "" ? "No Info" : info}`
@@ -62,7 +65,7 @@ const ViewRecipes = () => {
   const makeNameListHtml = (category, bean) => {
     const ids = bean[category] ? bean[category] : [];
     let nameListHtml = ids.map(
-      id => <span>{customRanges[category + '_range']["id-" + id]['label']}</span>
+      id => <span>{attributeRangeList[category + '_range']["id-" + id]['label']}</span>
     );
     if (nameListHtml.length === 0) {
       nameListHtml = <span>No Data</span>
@@ -76,15 +79,21 @@ const ViewRecipes = () => {
       const blend = targetBean['blend_ratio'];
       for(const beanId of Object.keys(blend)) {
         const ratio = blend[beanId];
-        const blendBean = beans[beanId];
+        const blendBean = beanList[beanId];
         const originNames = makeNameListHtml('origin', blendBean);
         const roasterNames = makeNameListHtml('roaster', blendBean);
         const processNames = makeNameListHtml('process', blendBean);
         const varietyNames = makeNameListHtml('variety', blendBean);
         const farmNames = makeNameListHtml('farm', blendBean);
         const aromaNames = makeNameListHtml('aroma', blendBean);
-        const altitude = blendBean['altitude'] === null ? "No Data" : blendBean['altitude'];
-        const harvestPeriod = blendBean['harvest_date'] === null ? "No Data" : blendBean['harvest_date'];
+        const altitude = 
+          blendBean['altitude'] === "" || 
+          blendBean['altitude'] === null ? 
+          "No Data" : blendBean['altitude'];
+        const harvestPeriod = 
+          blendBean['harvest_period'] === "" || 
+          blendBean['harvest_period'] === null ? 
+          "No Data" : blendBean['harvest_period'];
         const text = <>
           <p className="py-1 slash-end"><strong className="text-yellow">Roaster: </strong>{roasterNames}</p>
           <p className="py-1 slash-end"><strong className="text-yellow">Origin:</strong> {originNames}</p>
@@ -105,7 +114,7 @@ const ViewRecipes = () => {
                 className="flex items-center" 
                 id={`tooltip-blend-${beanId}`} >
                 <div className="text-right">
-                  {`${unescapeHtml(beans[beanId]['label'])}: ${ratio}%`}
+                  {`${unescapeHtml(beanList[beanId]['label'])}: ${ratio}%`}
                 </div>
                 <InformationCircleIcon className="h-4 w-4 ml-2 flex-shrink-0" />
               </div>
@@ -117,7 +126,7 @@ const ViewRecipes = () => {
     return result;
   }
 
-  const makeGradeStarList = () => {
+  const makeGradeIconList = () => {
     if (targetBean['grade']) {
       const result = []
       const rounded = Math.ceil(targetBean['grade']/10)/2;
@@ -131,25 +140,39 @@ const ViewRecipes = () => {
     }
   }
 
+  const makeRoastLevelIconList = () => {
+    if (targetBean['roast_level']) {
+      const result = []
+      const rounded = Math.ceil(targetBean['roast_level'])/2;
+      for (let i = 1; i <= rounded; i ++) {
+        result.push(<FireFullIcon/>)
+      }
+      if (rounded % 1 !== 0) {
+        result.push(<FireHalfIcon />)
+      }
+      return result;
+    }
+  }
+
   useEffect(() => {
     setSingleOrigin(targetBean['single_origin']);
     setCoffeeName(unescapeHtml(targetBean['label']));
     setAltitude(unescapeHtml(targetBean['altitude']));
-    setHarvestDate(unescapeHtml(targetBean['harvest_date']));
+    setHarvestDate(unescapeHtml(targetBean['harvest_period']));
     setRoasters(makeHtmlTags('roaster'));
     setAroma(makeHtmlTags('aroma'));
     setOrigins(makeHtmlTags('origin'));
     setProcess(makeHtmlTags('process'));
     setVariety(makeHtmlTags('variety'));
     setFarm(makeHtmlTags('farm'));
-    setRoastLevel(targetBean['roast_level'])
     setRoastDate(
       targetBean['roast_date'] ? targetBean['roast_date'].split('T')[0] : null
     );
     setMemo(
       targetBean['memo'] === null ? "" : unescapeHtml(targetBean['memo'])
     )
-    setGrade(makeGradeStarList());
+    setGrade(makeGradeIconList());
+    setRoastLevel(makeRoastLevelIconList());
     setBlendRatio(makeBlendRatioHtmlTags());
   }, []);
 
@@ -202,10 +225,13 @@ const ViewRecipes = () => {
                   : null
                   }
 
-                  { roastLevel ? 
+                  { targetBean['roast_level'] ? 
                   <div className="coffee-detail-section">
                     <label className="text-xs font-semibold uppercase mr-3">Roast Level</label>
-                    <p>({roastLevel}/10)</p>
+                    <div className="flex">
+                      {roastLevel}
+                      <span className="ml-2">({targetBean['roast_level']}/10)</span>
+                    </div>
                   </div>
                   : null
                   }
