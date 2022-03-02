@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 
 describe('Beans API', () => {
   const endpoint = process.env.API_ENDPOINT;
-  const existingUserId = 'dd06bab3-e36c-481b-94f6-76029216327b'
+  const existingUserId = 'dbc49e6c-d79e-4741-9fc4-90a26f8924f7'
   const wrongUserId = 'aaaaaaaaaaaaaaaaaaaaaaa';
   const existingRangeId = 1;
   const wrongRangeId = 30;
@@ -40,7 +40,7 @@ describe('Beans API', () => {
           "process": [1, 2], 
           "altitude": "2000 MASL",
           "grade": 82.5,
-          "harvest_date": "Oct 2020",
+          "harvest_period": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": 8.5,
           "roast_date": "2021-10-12",
@@ -65,7 +65,7 @@ describe('Beans API', () => {
           "process": [1, 2], 
           "altitude": "2000 MASL",
           "grade": 82.5,
-          "harvest_date": "Oct 2020",
+          "harvest_period": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": 8.5,
           "roast_date": "2021-10-12",
@@ -90,7 +90,7 @@ describe('Beans API', () => {
           "process": [1, 2], 
           "altitude": "2000 MASL",
           "grade": 82.5,
-          "harvest_date": "Oct 2020",
+          "harvest_period": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": 8.5,
           "roast_date": "2021-10-12",
@@ -116,7 +116,7 @@ describe('Beans API', () => {
           "process": [1, 2], 
           "altitude": "2000 MASL",
           "grade": 82.5,
-          "harvest_date": "Oct 2020",
+          "harvest_period": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": 8.5,
           "roast_date": "2021-10-12",
@@ -141,7 +141,7 @@ describe('Beans API', () => {
           "process": [1, 2], 
           "altitude": "2000 MASL",
           "grade": 82.5,
-          "harvest_date": "Oct 2020",
+          "harvest_period": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": 12,
           "roast_date": "2021-10-12",
@@ -166,7 +166,7 @@ describe('Beans API', () => {
           "process": [1, 2], 
           "altitude": "2000 MASL",
           "grade": 82.5,
-          "harvest_date": "Oct 2020",
+          "harvest_period": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": ["test"],
           "roast_date": "2021-10-12",
@@ -191,7 +191,7 @@ describe('Beans API', () => {
           "process": [1, 2], 
           "altitude": "2000 MASL",
           "grade": 102.5,
-          "harvest_date": "Oct 2020",
+          "harvest_period": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": 10,
           "roast_date": "2021-10-12",
@@ -216,7 +216,7 @@ describe('Beans API', () => {
           "process": [1, 2], 
           "altitude": "2000 MASL",
           "grade": "test",
-          "harvest_date": "Oct 2020",
+          "harvest_period": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": 9.5,
           "roast_date": "2021-10-12",
@@ -241,7 +241,7 @@ describe('Beans API', () => {
           "process": [1, 2], 
           "altitude": "2000 MASL",
           "grade": 100,
-          "harvest_date": "Oct 2020",
+          "harvest_period": "Oct 2020",
           "roaster": [1, 2],
           "roast_level": 10,
           "roast_date": "2021-10-12",

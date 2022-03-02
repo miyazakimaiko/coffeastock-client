@@ -11,6 +11,11 @@ const {
   getFindEntryByIdBaseQuery
 } = require("../utils/query-generator");
 
+const validator = [
+  body('label', 'Invalid Name').escape().isLength({ max: 60 }).optional({ nullable: false }),
+  body('def', 'Invalid Details').escape().isLength({ max: 400 }).optional({ checkFalsy: true })
+];
+
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
 
@@ -116,8 +121,7 @@ module.exports = (app) => {
 
   // Add new entry in the specified range 
   app.post(endpoint + "/user/:userid/range/:rangename", 
-  body('label').escape(),
-  body('def').escape(),
+  validator,
   async (req, res, next) => {
 
     const errors = validationResult(req);
@@ -175,7 +179,18 @@ module.exports = (app) => {
   }); 
 
   // Edit an entry in a specified range 
-  app.post(endpoint + "/user/:userid/range/:rangename/:id", async (req, res, next) => {
+  app.post(endpoint + "/user/:userid/range/:rangename/:id", 
+  validator,
+  async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        error: {
+          message: errors.array()[0]['msg']
+        } 
+      });
+    }
+    
     try {
       // Ensure the entry exists
       let entryExists = false;
@@ -235,13 +250,13 @@ module.exports = (app) => {
     const searchRangeInUse = async () => {
       let inUse = false;
       let query = '';
-      const coffeeRanges = ['origin', 'farm', 'variety', 'process', 'roaster', 'aroma'];
-      const recipeRanges = ['grinder', 'method', 'water', 'palate'];
+      const coffeeRangeList = ['origin', 'farm', 'variety', 'process', 'roaster', 'aroma'];
+      const recipeRangeList = ['grinder', 'method', 'water', 'palate'];
       
-      if (coffeeRanges.includes(req.params.rangename)) {
+      if (coffeeRangeList.includes(req.params.rangename)) {
         query = 'SELECT * FROM beans WHERE user_id = $1';
       } 
-      else if (recipeRanges.includes(req.params.rangename)) {
+      else if (recipeRangeList.includes(req.params.rangename)) {
         query = 'SELECT * FROM recipes WHERE user_id = $1';
       }
     

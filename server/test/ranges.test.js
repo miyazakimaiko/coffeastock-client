@@ -6,9 +6,9 @@ let app = require("../app")
 chai.should();
 chai.use(chaiHttp);
 
-describe('Custom Ranges API', () => {
+describe('Custom RangeList API', () => {
   const endpoint = process.env.API_ENDPOINT;
-  const existingUserId = 'dd06bab3-e36c-481b-94f6-76029216327b'
+  const existingUserId = 'dbc49e6c-d79e-4741-9fc4-90a26f8924f7'
   const wrongUserId = 'aaaaaaaaaaaaaaaaaaaaaaa';
   const existingRangeId = 1;
   const wrongRangeId = 30;
