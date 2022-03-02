@@ -18,7 +18,7 @@ const CoffeeBagRight = ({name}) => {
           requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
           <div xmlns="http://www.w3.org/1999/xhtml"
             className="absolute top-20 bottom-6 
-            left-14 right-3 transform -skew-y-6 -skew-x-2 font-bold">
+            left-16 right-4 transform -skew-y-6 -skew-x-2 font-bold">
             <p xmlns="http://www.w3.org/1999/xhtml" className="h-full w-full flex items-center justify-center text-center">{name}</p>
           </div>
         </foreignObject>
