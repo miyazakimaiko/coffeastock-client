@@ -3,7 +3,7 @@ import { createContext } from 'react'
 
 export const NavStateContext = createContext();
 
-const NavState = (props) => {
+const NavStateProvider = (props) => {
   const [openNav, innerSetOpenNav] = useState(false);
   const setOpenNav = boolean => {
     innerSetOpenNav(boolean);
@@ -58,4 +58,4 @@ const NavState = (props) => {
   )
 }
 
-export default NavState
+export default NavStateProvider

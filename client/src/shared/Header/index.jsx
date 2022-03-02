@@ -4,8 +4,8 @@ import { toast } from 'react-toastify';
 import { NavLink } from 'react-router-dom';
 import { MenuAlt2Icon, PlusIcon, XIcon } from '@heroicons/react/outline'
 
-import { NavStateContext } from '../../context/NavState';
-import { AccountContext } from '../../context/Account';
+import { NavStateContext } from '../../context/NavStateContext';
+import { AccountContext } from '../../context/AccountContext';
 import imgFace from '../../images/face.jpg'
 import AddBeanModal from '../Modals/AddBeanModal';
 import AddRecipeModal from '../Modals/AddRecipeModal';

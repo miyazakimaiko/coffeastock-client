@@ -4,7 +4,7 @@ import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 
 export const AccountContext = createContext();
 
-const Account = (props) => {
+const AccountProvider = (props) => {
   const [userData, innerSetUserData] = useState({})
 
   const setUserData = (data) => {
@@ -88,4 +88,4 @@ const Account = (props) => {
   )
 }
 
-export default Account
+export default AccountProvider

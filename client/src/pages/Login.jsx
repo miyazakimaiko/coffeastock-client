@@ -2,9 +2,9 @@ import { LoginIcon } from '@heroicons/react/outline'
 import React, { useState, useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify';
-import { AccountContext } from '../../context/Account';
-import { BeansContext } from '../../context/Beans';
-import { CustomRangesContext } from '../../context/CustomRanges';
+import { AccountContext } from '../context/AccountContext';
+import { BeansContext } from '../context/BeansContext';
+import { AttributeRangeContext } from '../context/AttributeRangeContext';
 
 
 const Login = () => {
@@ -12,12 +12,12 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const { setUserData, userData, authenticate, getSession, setAuthenticated } = useContext(AccountContext);
-  const { getCustomRanges } = useContext(CustomRangesContext);
-  const { fetchAllBeans } = useContext(BeansContext)
+  const { fetchAttributeRangeList } = useContext(AttributeRangeContext);
+  const { fetchBeanList } = useContext(BeansContext)
 
   useEffect(() => {
-    getCustomRanges(userData.sub);
-    fetchAllBeans(userData.sub);
+    fetchAttributeRangeList(userData.sub);
+    fetchBeanList(userData.sub);
   }, [userData]);
 
 
@@ -39,8 +39,8 @@ const Login = () => {
             position: toast.POSITION.BOTTOM_CENTER
           })
         });
-        getCustomRanges(userData.sub);
-        fetchAllBeans(userData.sub);
+        fetchAttributeRangeList(userData.sub);
+        fetchBeanList(userData.sub);
       })
       .catch(err => {
         toast.error(err.message, {

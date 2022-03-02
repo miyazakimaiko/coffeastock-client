@@ -1,23 +1,25 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { toast } from 'react-toastify'
 import { PencilAltIcon, PlusIcon, XIcon } from '@heroicons/react/outline'
-import { CustomRangesContext } from '../../context/CustomRanges';
-import { AccountContext } from '../../context/Account';
-import { unescapeHtml } from '../../utils/HtmlConverter'
+import { AttributeRangeContext } from '../context/AttributeRangeContext';
+import { AccountContext } from '../context/AccountContext';
+import { unescapeHtml } from '../utils/HtmlConverter'
 
-const SettingsCustomRanges = ({cat}) => {
+const ManageAttributeRanges = ({cat}) => {
   const { userData } = useContext(AccountContext);
-  const { customRanges, getCustomRange, insertEntry, editEntry, deleteEntry } = useContext(CustomRangesContext);
-
-  const [addRangeName, setAddRangeName] = useState('');
+  const { attributeRangeList, fetchAttributeRangeList, insertEntry, editEntry, deleteEntry } = useContext(AttributeRangeContext);
+  const [addRangeName, innerSetAddRangeName] = useState('');
   const [addRangeValue, setAddRangeValue] = useState('')
   const [editRangeId, setEditRangeId] = useState('');
-  const [editRangeName, setEditRangeName] = useState('');
+  const [editRangeName, innerSetEditRangeName] = useState('');
   const [editRangeValue, setEditRangeValue] = useState('');
   const [entryToDelete, setEntryToDelete] = useState({})
+  const [nameWarningText, setNameWarningText] = useState('')
 
   const [openAddEditModal, setOpenAddEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  const [rangeElements, setRangeElements] = useState([]);
 
   const [mode, setMode] = useState('');
   const setAddMode = () => {
@@ -41,6 +43,44 @@ const SettingsCustomRanges = ({cat}) => {
     setOpenAddEditModal(false);
     setAddRangeName('');
     setAddRangeValue('');
+  }
+
+  const setAddRangeName = (name) => {
+    const banned = ['&', '<', '>', '"', "'"];
+    let includesBannedChar = false;
+    banned.forEach(char => {
+      if (name.includes(char)) includesBannedChar = true;
+    })
+    if (includesBannedChar) {
+      setNameWarningText(<span className="text-red">Special characters cannot be used in this field.</span>)
+    }     
+    else if (name.length > 60) {
+      setNameWarningText(<span className="text-red">{60 - name.length}/60</span>)
+      innerSetAddRangeName(name);
+    } 
+    else {
+      setNameWarningText(`${60 - name.length}/60`)
+      innerSetAddRangeName(name);
+    }
+  }
+
+  const setEditRangeName = (name) => {
+    const banned = ['&', '<', '>', '"', "'"];
+    let includesBannedChar = false;
+    banned.forEach(char => {
+      if (name.includes(char)) includesBannedChar = true;
+    })
+    if (includesBannedChar) {
+      setNameWarningText(<span className="text-red">Special characters cannot be used in this field.</span>)
+    }     
+    else if (name.length > 60) {
+      setNameWarningText(<span className="text-red">{60 - name.length}/60</span>)
+      innerSetEditRangeName(name);
+    } 
+    else {
+      setNameWarningText(`${60 - name.length}/60`)
+      innerSetEditRangeName(name);
+    }
   }
 
   const onAddSubmit = async (event) => {
@@ -100,12 +140,12 @@ const SettingsCustomRanges = ({cat}) => {
     }
   } 
  
-  const makeRangeElements = () => {
+  const makeRangeElements = (attributeRangeList) => {
     let elements = [];
-    const customRange = customRanges[cat + "_range"];
+    const attributeRange = attributeRangeList[cat + "_range"];
 
-    if (Object.keys(customRange).length > 0) {
-      Object.entries(customRange).forEach((entry) => {
+    if (Object.keys(attributeRange).length > 0) {
+      Object.entries(attributeRange).forEach((entry) => {
         const item = entry[1];
         elements.push(
           <tr id={`${cat}-${item['value']}`}>
@@ -148,11 +188,16 @@ const SettingsCustomRanges = ({cat}) => {
     }
     return elements
   }
-  const rangeElements = makeRangeElements();
 
   useEffect(() => {
-    getCustomRange(userData.sub, cat)
-  }, [customRanges]);
+    fetchAttributeRangeList(userData.sub)
+  }, []);
+
+  useEffect(() => {
+    if (Object.keys(attributeRangeList).length !== 0) {
+      setRangeElements(makeRangeElements(attributeRangeList));
+    }
+  }, [attributeRangeList]);
 
   return (
     <>
@@ -230,27 +275,33 @@ const SettingsCustomRanges = ({cat}) => {
                   }
                 >
                   <div className="bg-white px-6 shadow-sm rounded-md">
-                    <div className="card-content mt-3 mb-6">
+                    <div className="mt-3 mb-6">
                       <div className="form-section">
                         <label className="font-semibold uppercase mb-2">{cat} name</label>
                         <input
                           type="text" 
-                          name="label" 
+                          name="label"
+                          autoComplete="off"
                           placeholder={`${cat} name`} 
                           className="blue-outline-transition 
                           bg-creme block w-full text-base py-2 px-3 rounded-md"
-                          value={mode === 'add' ? addRangeName : mode === 'edit' ? unescapeHtml(editRangeName) : null}
+                          value={
+                            mode === 'add' ? addRangeName : 
+                            mode === 'edit' ? unescapeHtml(editRangeName) : null
+                          }
                           onChange={
                             mode === 'add' ? e => setAddRangeName(e.target.value) :
                             mode === 'edit' ? e => setEditRangeName(e.target.value) : null
                           }
                         />
+                        <span className="text-xs float-right mt-1">{nameWarningText}</span>
                       </div>
                       <div className="form-section">
                         <label className="font-semibold uppercase">{cat} details</label>
                         <textarea 
                           type="text" 
-                          name="definition" 
+                          name="definition"
+                          autoComplete="off"
                           placeholder={`${cat} details`} 
                           className="blue-outline-transition 
                           bg-creme block w-full h-32 text-base py-2 px-3 rounded-lg"
@@ -349,4 +400,4 @@ const SettingsCustomRanges = ({cat}) => {
   )
 }
 
-export default SettingsCustomRanges
+export default ManageAttributeRanges

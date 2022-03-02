@@ -2,8 +2,8 @@ import { BookOpenIcon, GlobeIcon, LightBulbIcon } from '@heroicons/react/outline
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import CoffeeBagLeft from '../../svgs/CoffeeBagLeft'
-import UserPool from '../../utils/UserPool'
+import CoffeeBagLeft from '../svgs/CoffeeBagLeft'
+import UserPool from '../utils/UserPool'
 import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
 
 const Register = () => {
@@ -29,7 +29,7 @@ const Register = () => {
       } else {
         try {
           const userId = data.userSub;
-          setDefaultCustomRange(userId);
+          setDefaultAttributeRange(userId);
           toast.success("Registered successfully!", {
             position: toast.POSITION.BOTTOM_CENTER
           });
@@ -42,7 +42,7 @@ const Register = () => {
     });
   };
 
-  const setDefaultCustomRange = async (userid) => {
+  const setDefaultAttributeRange = async (userid) => {
     try {
       const response = await fetch(
         `http://localhost:4000/api/v1/user/${userid}`,

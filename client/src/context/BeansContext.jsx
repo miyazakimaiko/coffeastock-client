@@ -4,26 +4,27 @@ import { toast } from 'react-toastify';
 
 export const BeansContext = createContext();
 
-const Beans = (props) => {
-  const [beans, innerSetBeans] = useState({});
+const BeansProvider = (props) => {
+  const [beanList, innerSetBeanList] = useState({});
 
-  const fetchAllBeans = async (userid) => {
+  const fetchBeanList = async (userid) => {
     try {
       const response = await fetch(
         `http://localhost:4000/api/v1/user/${userid}/beans`,
         { method: "GET" }
       );
       const parseRes = await response.json();  
-      setBeans(parseRes);
+      setBeanList(parseRes);
     } catch (error) {}
+    return beanList;
   };
 
-  const setBeans = (beans) => {
+  const setBeanList = (beans) => {
     const beansObj = {};
     beans.forEach(element => {
       beansObj[element['coffee_bean_id']] = element;
     });
-    innerSetBeans(beansObj);
+    innerSetBeanList(beansObj);
   }
 
   const insertBean = async (userid, body) => {
@@ -47,7 +48,7 @@ const Beans = (props) => {
         });
       }
       else {
-        fetchAllBeans(userid);
+        fetchBeanList(userid);
         toast.success("New coffee bean is added successfully.", {
           position: toast.POSITION.BOTTOM_CENTER
         });
@@ -62,10 +63,10 @@ const Beans = (props) => {
   }
 
   return (
-    <BeansContext.Provider value={{beans, fetchAllBeans, setBeans, insertBean}}>
+    <BeansContext.Provider value={{beanList, fetchBeanList, setBeanList, insertBean}}>
     {props.children}
     </BeansContext.Provider>
   );
 };
 
-export default Beans;
+export default BeansProvider;

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, CogIcon, HomeIcon } from '@heroicons/react/outline'
 import PushPinIcon from '../../svgs/PushPinIcon'
-import { NavStateContext } from '../../context/NavState'
+import { NavStateContext } from '../../context/NavStateContext'
 import './Nav.scss'
 
 const Nav = (props) => {
@@ -14,7 +14,6 @@ const Nav = (props) => {
   const [recipesOpacity, setRecipesOpacity] = useState(0);
   const [beansMarginTop, setBeansMarginTop] = useState("-400px");
   const [recipesMarginTop, setRecipesMarginTop] = useState("-400px");
-
 
   const toggleOpenBeansAccordion = () => {
     if (openBeansAccordion) {
@@ -55,7 +54,6 @@ const Nav = (props) => {
       return() => clearTimeout(recipesAccordionTimer)
     }
   }, [openRecipesAccordion]);
-
 
   return (
   <div>
