@@ -1,13 +1,16 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { CustomRangesContext } from '../../context/CustomRanges';
-import { BeansContext } from '../../context/Beans';
+import { AttributeRangeContext } from '../../context/AttributeRangeContext';
+import { BeansContext } from '../../context/BeansContext';
 import CoffeeSection from './CoffeeSection'
 import { unescapeHtml } from '../../utils/HtmlConverter'
 import Dropdown from '../../shared/Dropdown';
+import { AccountContext } from '../../context/AccountContext';
 
 const ViewMyCoffees = () => {
-  const { customRanges } = useContext(CustomRangesContext);
-  const { beans } = useContext(BeansContext);
+  const { userData } = useContext(AccountContext);
+  const { attributeRangeList, fetchAttributeRangeList } = useContext(AttributeRangeContext);
+  const { beanList, fetchBeanList } = useContext(BeansContext);
+
   const [showAll, setShowAll] = useState(true);
   const [showBlend, setShowBlend] = useState(false);
   const [showSingleOrigin, setShowSingleOrigin] = useState(false);
@@ -19,23 +22,34 @@ const ViewMyCoffees = () => {
   const [groupByAroma, setGroupByAroma] = useState(false);
   const [innerHtml, setInnerHtml] = useState([]);
 
-  const makeInnerHtml = (category) => {
+  const makeInnerHtml = (attributeRangeList, category) => {
     const innerHtml = [];
-    if (Object.keys(customRanges[category + '_range']).length > 0) {
-      Object.values(customRanges[category + '_range']).forEach(range => {
+    if (Object.keys(attributeRangeList[category + '_range']).length > 0) {
+      Object.values(attributeRangeList[category + '_range']).forEach(range => {
         const coffeeElements = [];
 
-        if (Object.keys(beans).length > 0) {
-          Object.values(beans).forEach(entry => {
+        if (Object.keys(beanList).length > 0) {
+          Object.values(beanList).forEach(entry => {
             const rangeId = parseInt(range['value']);
-            if (entry[category] !== null) {
-              if (showBlend && entry['single_origin'] === false && entry[category].includes(rangeId)) {
-                coffeeElements.push(<CoffeeSection bean={entry} />);
-              } else if (showSingleOrigin && entry['single_origin'] === true && entry[category].includes(rangeId)) {
-                coffeeElements.push(<CoffeeSection bean={entry} />);
-              } else if (showAll && entry[category].includes(rangeId)) {
-                coffeeElements.push(<CoffeeSection bean={entry} />);
+            const entryIsSingleOrigin = entry['single_origin'];
+            const entryHasSelectedCategoryValue = entry[category] !== null && entry[category] !== [];
+
+            if ((showBlend || showAll) && !entryIsSingleOrigin && !entryHasSelectedCategoryValue) {
+              for (const beanId of Object.keys(entry['blend_ratio'])) {
+                if (beanList[beanId][category].includes(rangeId)) {
+                  coffeeElements.push(<CoffeeSection bean={entry} />);
+                  break;
+                }
               }
+            }
+            else if ((showBlend || showAll) && !entryIsSingleOrigin && entry[category].includes(rangeId)) {
+              coffeeElements.push(<CoffeeSection bean={entry} />);
+            } 
+            else if (showSingleOrigin && entryIsSingleOrigin && entryHasSelectedCategoryValue && entry[category].includes(rangeId)) {
+              coffeeElements.push(<CoffeeSection bean={entry} />);
+            } 
+            else if (showAll && entryIsSingleOrigin && entryHasSelectedCategoryValue && entry[category].includes(rangeId)) {
+              coffeeElements.push(<CoffeeSection bean={entry} />);
             }
           });
         }
@@ -48,9 +62,7 @@ const ViewMyCoffees = () => {
             <div className="h-36 flex items-center justify-center pt-4">
               <h2 className="text-xl text-center font-capitals uppercase font-bold">{unescapeHtml(range.label)}</h2>
             </div>
-            <div className="flex mb-4 w-full flex-wrap justify-center">
-              {coffeeElements}
-            </div>
+            <div className="flex mb-4 w-full flex-wrap justify-center">{coffeeElements}</div>
           </div>
         )
       })
@@ -76,17 +88,24 @@ const ViewMyCoffees = () => {
   }
 
   useEffect(() => {
-    let innerHtml = [];
-    if (groupByRoaster) innerHtml = makeInnerHtml('roaster');
-    else if (groupByOrigin) innerHtml = makeInnerHtml('origin');
-    else if (groupByFarm) innerHtml = makeInnerHtml('farm');
-    else if (groupByVariety) innerHtml = makeInnerHtml('variety');
-    else if (groupByProcess) innerHtml = makeInnerHtml('process');
-    else if (groupByAroma) innerHtml = makeInnerHtml('aroma');
-    setInnerHtml(innerHtml);
+    fetchAttributeRangeList(userData.sub);
+    fetchBeanList(userData.sub);
+  },[])
+
+  useEffect(() => {
+    if (Object.keys(beanList).length !== 0 && Object.keys(attributeRangeList).length !== 0) {
+      let innerHtml = [];
+      if (groupByRoaster) innerHtml = makeInnerHtml(attributeRangeList, 'roaster');
+      else if (groupByOrigin) innerHtml = makeInnerHtml(attributeRangeList, 'origin');
+      else if (groupByFarm) innerHtml = makeInnerHtml(attributeRangeList, 'farm');
+      else if (groupByVariety) innerHtml = makeInnerHtml(attributeRangeList, 'variety');
+      else if (groupByProcess) innerHtml = makeInnerHtml(attributeRangeList, 'process');
+      else if (groupByAroma) innerHtml = makeInnerHtml(attributeRangeList, 'aroma');
+      setInnerHtml(innerHtml);
+    }
   }, 
   [
-    beans,
+    beanList,
     showAll, 
     showBlend, 
     showSingleOrigin, 
