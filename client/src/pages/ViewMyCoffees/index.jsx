@@ -125,7 +125,7 @@ const ViewMyCoffees = () => {
 
   return (
     <>
-      <div className="px-4 pt-8">
+      <div className="px-4 pt-8 w-full max-w-980px mx-auto">
         <div className="h-16 flex items-center justify-center mb-8">
           <h3 className="mr-3 text-xl text-center font-capitals uppercase">
             My Coffee Beans

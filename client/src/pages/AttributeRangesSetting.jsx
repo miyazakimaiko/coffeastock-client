@@ -7,7 +7,7 @@ import { unescapeHtml } from '../utils/HtmlConverter'
 
 const ManageAttributeRanges = ({cat}) => {
   const { userData } = useContext(AccountContext);
-  const { attributeRangeList, fetchAttributeRangeList, insertEntry, editEntry, deleteEntry } = useContext(AttributeRangeContext);
+  const { attributeRangeList, fetchAttributeRangeList, insertEntry, editAttribute, deleteAttribute } = useContext(AttributeRangeContext);
   const [addRangeName, innerSetAddRangeName] = useState('');
   const [addRangeValue, setAddRangeValue] = useState('')
   const [editRangeId, setEditRangeId] = useState('');
@@ -56,12 +56,11 @@ const ManageAttributeRanges = ({cat}) => {
     }     
     else if (name.length > 60) {
       setNameWarningText(<span className="text-red">{60 - name.length}/60</span>)
-      innerSetAddRangeName(name);
     } 
     else {
       setNameWarningText(`${60 - name.length}/60`)
-      innerSetAddRangeName(name);
     }
+    innerSetAddRangeName(name);
   }
 
   const setEditRangeName = (name) => {
@@ -75,12 +74,11 @@ const ManageAttributeRanges = ({cat}) => {
     }     
     else if (name.length > 60) {
       setNameWarningText(<span className="text-red">{60 - name.length}/60</span>)
-      innerSetEditRangeName(name);
     } 
     else {
       setNameWarningText(`${60 - name.length}/60`)
-      innerSetEditRangeName(name);
     }
+    innerSetEditRangeName(name);
   }
 
   const onAddSubmit = async (event) => {
@@ -126,7 +124,7 @@ const ManageAttributeRanges = ({cat}) => {
       "label": editRangeName,
       "def": OneLineRangeValue
     }
-    const editSuccess = await editEntry(userData.sub, cat, editRangeId, body);
+    const editSuccess = await editAttribute(userData.sub, cat, editRangeId, body);
     if (editSuccess) {
       closeAddEditModal();
     }
@@ -134,7 +132,7 @@ const ManageAttributeRanges = ({cat}) => {
 
   const onDeleteSubmit = async (event) => {
     event.preventDefault();
-    const deleteSuccess = await deleteEntry(userData.sub, cat, entryToDelete.id);
+    const deleteSuccess = await deleteAttribute(userData.sub, cat, entryToDelete.id);
     if (deleteSuccess) {
       setOpenDeleteModal(false);
     }
@@ -214,7 +212,7 @@ const ManageAttributeRanges = ({cat}) => {
                 onClick={setAddMode}
                 type="button"
                 className="flex items-center text-burnt-sienna 
-                font-capitals uppercase text-sm 
+                font-capitals uppercase text-md 
                 px-3 ml-4 mr-0 opacity-80 
                 hover:opacity-100 ease-linear transition-all duration-150"
                 >
@@ -296,7 +294,7 @@ const ManageAttributeRanges = ({cat}) => {
                             mode === 'edit' ? e => setEditRangeName(e.target.value) : null
                           }
                         />
-                        <span className="text-xs float-right mt-1">{nameWarningText}</span>
+                        <span className="text-sm float-right mt-1">{nameWarningText}</span>
                       </div>
                       <div className="form-section">
                         <label className="font-semibold uppercase">{cat} details</label>
@@ -318,7 +316,7 @@ const ManageAttributeRanges = ({cat}) => {
                     <div className="flex items-center justify-between pl-4 pr-4 pb-8">
                       <button
                         className="text-red-500 background-transparent 
-                        font-bold uppercase px-6 py-2 text-sm outline-none 
+                        font-bold uppercase px-6 py-2 text-md outline-none 
                         focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
                         onClick={closeAddEditModal}
@@ -327,7 +325,7 @@ const ManageAttributeRanges = ({cat}) => {
                       </button>
                       <button
                         className="bg-blue text-white opacity-80 
-                        hover:opacity-100 font-bold uppercase text-sm 
+                        hover:opacity-100 font-bold uppercase text-md 
                         px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
                         type="submit"
                       >
@@ -375,7 +373,7 @@ const ManageAttributeRanges = ({cat}) => {
               <div className="flex items-center justify-between px-8 pb-8">
                 <button
                   className="text-red-500 background-transparent 
-                  font-bold uppercase px-6 py-2 text-sm outline-none 
+                  font-bold uppercase px-6 py-2 text-md outline-none 
                   focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="button"
                   onClick={() => setOpenDeleteModal(false)}
@@ -384,7 +382,7 @@ const ManageAttributeRanges = ({cat}) => {
                 </button>
                 <button
                   className="bg-red text-white opacity-80 
-                  hover:opacity-100 font-bold uppercase text-sm 
+                  hover:opacity-100 font-bold uppercase text-md 
                   px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
                   type="submit"
                   onClick={onDeleteSubmit}

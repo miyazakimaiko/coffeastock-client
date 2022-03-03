@@ -73,8 +73,8 @@ const Nav = (props) => {
         </button>
       </div>
 
-      <div className="my-8 text-sm font-capitals uppercase">
-        <h3 className="mx-6 my-3 text-xs opacity-50">
+      <div className="my-8 text-md font-capitals uppercase">
+        <h3 className="mx-6 my-3 text-sm opacity-50">
           Main
         </h3>
         <ul className="ml-10">
@@ -100,8 +100,8 @@ const Nav = (props) => {
         </ul>
       </div>
 
-      <div className="my-8 text-sm font-capitals uppercase">
-        <h3 className="mx-6 my-3 text-xs opacity-50">
+      <div className="my-8 text-md font-capitals uppercase">
+        <h3 className="mx-6 my-3 text-sm opacity-50">
             Customize Range
         </h3>
         <ul className="ml-6">

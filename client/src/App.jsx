@@ -43,7 +43,7 @@ const App = () => {
       <div className="relative flex flex-col min-h-screen bg-creme font-sans">
         <NavStateProvider>
           {authenticated ? <Nav navRef={navRef} mainRef={mainRef} headerRef={headerRef} pushpinRef={pushpinRef}/>: ""}
-          <div ref={mainRef} className={"main w-full box-border text-sm text-burnt-sienna"}>
+          <div ref={mainRef} className={"main w-full box-border text-md text-burnt-sienna"}>
             {authenticated ? <Header mainRef={mainRef} navRef={navRef} pushpinRef={pushpinRef}/>: ""}
 
             { authenticated ? 

@@ -379,7 +379,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                 <div className="flex flex-col w-1/2">
                   <div className="form-section">
                     <label className="font-semibold uppercase">Name</label>
-                    <span className="ml-2 text-xs">* Required</span>
+                    <span className="ml-2 text-sm">* Required</span>
                     <input 
                       type="text" 
                       name="label" 
@@ -390,7 +390,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       value={name}
                       onChange={e => setName(e.target.value)}
                     />
-                    <span className="text-xs float-right mt-1">{nameWarningText}</span>
+                    <span className="text-sm float-right mt-1">{nameWarningText}</span>
                   </div>
                   <div className="form-section">
                     <label className="font-semibold uppercase">Grade (0.0 - 100.0)</label>
@@ -407,7 +407,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                         setGrade(e.target.value)
                       }}
                     />
-                    <span className="mt-1 text-xs float-right">{gradeWarningText}</span>
+                    <span className="mt-1 text-sm float-right">{gradeWarningText}</span>
                   </div>
                   <div className="form-section">
                     <label className="font-semibold uppercase">Roast Level (0.0 - 10.0)</label>
@@ -422,7 +422,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       value={roastLevel}
                       onChange={e => setRoastLevel(e.target.value)}
                     />
-                    <span className="mt-1 text-xs float-right">{roastLevelWarningText}</span>
+                    <span className="mt-1 text-sm float-right">{roastLevelWarningText}</span>
                   </div>
                 </div>
                 <div className="w-1/2">
@@ -464,7 +464,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
               <div className="flex items-center justify-between pl-8 pr-8 pb-8">
                 <button
                   className="border-2 border-red text-red opacity-80 
-                  hover:opacity-100 font-bold uppercase text-sm 
+                  hover:opacity-100 font-bold uppercase text-md 
                   px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
                   type="button"
                   onClick={() => setOpenThisModal(false)}
@@ -473,7 +473,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   type="button"
                   disabled={name === ''}
                   className="border-2 border-blue bg-blue text-white opacity-80 hover:opacity-100 font-bold blue-button
-                  uppercase text-sm px-6 py-2 rounded-3xl button-transition"
+                  uppercase text-md px-6 py-2 rounded-3xl button-transition"
                   onClick={setOpenDetailsTab}
                 > Next </button>
               </div>
@@ -487,7 +487,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                 <div className="flex flex-col w-1/2">
                   <div className="form-section">
                     <label className="font-semibold uppercase">Blend of</label>
-                    <span className="ml-2 text-xs">*Required</span>
+                    <span className="ml-2 text-sm">*Required</span>
                     <MultiSelect
                       labelledBy="Select"
                       options={beansRange}
@@ -525,7 +525,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       value={memo}
                       onChange={e => setMemo(e.target.value)}
                     />
-                    <span className="text-xs float-right mt-1">{memoWarningText}</span>
+                    <span className="text-sm float-right mt-1">{memoWarningText}</span>
                   </div>
                 </div>
               </div>
@@ -534,7 +534,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                 <div className="flex flex-col w-1/2">
                   <div className="form-section">
                     <label className="font-semibold uppercase">Origin</label>
-                    <span className="ml-2 text-xs">*Required</span>
+                    <span className="ml-2 text-sm">*Required</span>
                     <MultiSelect
                       options={originRange}
                       value={selectedOrigin}
@@ -578,7 +578,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       value={harvestPeriod}
                       onChange={e => setHarvestPeriod(e.target.value)}
                     />
-                    <span className="text-xs float-right mt-1">{periodWarningText}</span>
+                    <span className="text-sm float-right mt-1">{periodWarningText}</span>
                   </div>
 
                   <div className="form-section">
@@ -593,7 +593,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       value={altitude}
                       onChange={e => setAltitude(e.target.value)}
                     />
-                    <span className="text-xs float-right mt-1">{altitudeWarningText}</span>
+                    <span className="text-sm float-right mt-1">{altitudeWarningText}</span>
                   </div>
                 </div>
 
@@ -631,7 +631,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       value={memo}
                       onChange={e => setMemo(e.target.value)}
                     />
-                    <span className="text-xs float-right mt-1">{memoWarningText}</span>
+                    <span className="text-sm float-right mt-1">{memoWarningText}</span>
                   </div>
 
                 </div>
@@ -640,14 +640,14 @@ const AddBeanModal = ({setOpenThisModal}) => {
               <div className="flex items-center justify-between pl-8 pr-8 pb-8">
                 <button
                   className="border-2 border-red text-red opacity-80 
-                  hover:opacity-100 font-bold uppercase text-sm 
+                  hover:opacity-100 font-bold uppercase text-md 
                   px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
                   type="button"
                   onClick={() => setOpenThisModal(false)}
                 > Cancel </button>
                 <button
                   className="border-2 border-blue bg-blue text-white opacity-80 hover:opacity-100 font-bold blue-button
-                  uppercase text-sm px-6 py-2 rounded-3xl button-transition"
+                  uppercase text-md px-6 py-2 rounded-3xl button-transition"
                   type="button"
                   disabled={!canGoToConfirmation}
                   onClick={() => {
@@ -678,22 +678,22 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       </div>
                       <div className="m-8">
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase mr-4">Name</label>
+                          <label className="text-sm font-semibold uppercase mr-4">Name</label>
                           <p>{name}</p>
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase mr-4">Single Origin</label>
+                          <label className="text-sm font-semibold uppercase mr-4">Single Origin</label>
                           <p>{isSingleOrigin ? 'Yes' : 'No'}</p>
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase mr-4">Grade (0 - 100)</label>
+                          <label className="text-sm font-semibold uppercase mr-4">Grade (0 - 100)</label>
                           <p>{grade ? grade : 'Not Entered'}</p>
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase mr-4">Roaster</label>
+                          <label className="text-sm font-semibold uppercase mr-4">Roaster</label>
                           <div className="tag-section">
                             {selectedRoaster.length <= 0 ? 
                               <p>Not Selected</p> :
@@ -704,12 +704,12 @@ const AddBeanModal = ({setOpenThisModal}) => {
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase mr-4">Roast Level (0 - 10)</label>
+                          <label className="text-sm font-semibold uppercase mr-4">Roast Level (0 - 10)</label>
                           <p>{roastLevel? roastLevel : 'Not Entered'}</p>
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase mr-4">Roast Date</label>
+                          <label className="text-sm font-semibold uppercase mr-4">Roast Date</label>
                           <p>{roastDate ? roastDate : 'Not Entered'}</p>
                         </div>
                       </div>
@@ -732,7 +732,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       { isSingleOrigin ? 
                         <>
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase mr-4">Origin</label>
+                          <label className="text-sm font-semibold uppercase mr-4">Origin</label>
                           <div className="tag-section">
                           {selectedOrigin.map((entry) => (
                               <span>{entry.label}</span>
@@ -741,7 +741,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase mr-4">Farm</label>
+                          <label className="text-sm font-semibold uppercase mr-4">Farm</label>
                           <div className="tag-section">
                           {selectedFarm.length <= 0 ? 
                             <p>Not Selected</p> :
@@ -752,7 +752,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase mr-4">Variety</label>
+                          <label className="text-sm font-semibold uppercase mr-4">Variety</label>
                           <div className="tag-section">
                           {selectedVariety.length <= 0 ? 
                             <p>Not Selected</p> :
@@ -763,17 +763,17 @@ const AddBeanModal = ({setOpenThisModal}) => {
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase mr-4">Harvest Period</label>
+                          <label className="text-sm font-semibold uppercase mr-4">Harvest Period</label>
                           <p>{harvestPeriod? harvestPeriod : 'Not Entered'}</p>
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase mr-4">Altitude</label>
+                          <label className="text-sm font-semibold uppercase mr-4">Altitude</label>
                           <p>{altitude? altitude : 'Not Entered'}</p>
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase mr-4">Process</label>
+                          <label className="text-sm font-semibold uppercase mr-4">Process</label>
                           <div className="tag-section">
                           {selectedProcess.length <= 0 ? 
                             <p>Not Selected</p> :
@@ -784,7 +784,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase mr-4">Aroma</label>
+                          <label className="text-sm font-semibold uppercase mr-4">Aroma</label>
                           <div className="tag-section">
                           {selectedAroma.length <= 0 ? 
                             <p>Not Selected</p> :
@@ -798,7 +798,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                         // Blend Beans
                         <>
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase mr-4">Aroma</label>
+                          <label className="text-sm font-semibold uppercase mr-4">Aroma</label>
                           <div className="tag-section">
                           {selectedAroma.length <= 0 ? 
                             <p>Not Selected</p> :
@@ -809,7 +809,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                         </div>
 
                         <div className="confirm-section">
-                          <label className="text-xs font-semibold uppercase mr-4">Blend Ratio</label>
+                          <label className="text-sm font-semibold uppercase mr-4">Blend Ratio</label>
                           <div className="tag-section">
                           {selectedBlendBeans.map((entry) => (
                             <span>{entry.label}: {blendRatios[entry.value]}%</span>
@@ -846,7 +846,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
               <div className="flex items-center justify-between px-8 py-8">
                 <button
                   className="border-2 border-red text-red opacity-80 
-                  hover:opacity-100 font-bold uppercase text-sm 
+                  hover:opacity-100 font-bold uppercase text-md 
                   px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
                   type="button"
                   onClick={() => setOpenThisModal(false)}
@@ -855,7 +855,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                 </button>
                 <button
                   className="border-2 border-blue bg-blue text-white opacity-80 
-                  hover:opacity-100 font-bold uppercase text-sm 
+                  hover:opacity-100 font-bold uppercase text-md 
                   px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
                   type="button"
                   onClick={insertNewBean}
@@ -887,7 +887,7 @@ const makeBlendRatioElements = (selectedBeans, blendRatios, setBlendRatio) => {
     let newRatio = {};
     elements.push(
       <div className="flex justify-between items-center py-2">
-      <label className="text-sm">{bean.label}</label>
+      <label className="text-md">{bean.label}</label>
       <div className="percent-char">
         <input 
           type="text" 

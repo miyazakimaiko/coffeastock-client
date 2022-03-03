@@ -19,7 +19,13 @@ const CoffeeBagRight = ({name}) => {
           <div xmlns="http://www.w3.org/1999/xhtml"
             className="absolute top-20 bottom-6 
             left-16 right-4 transform -skew-y-6 -skew-x-2 font-bold">
-            <p xmlns="http://www.w3.org/1999/xhtml" className="h-full w-full flex items-center justify-center text-center">{name}</p>
+            <p xmlns="http://www.w3.org/1999/xhtml" 
+              className="h-full w-full flex items-center justify-center text-center">
+                {name.length < 35
+                  ? `${name}`
+                  : `${name.substring(0, 32)}...`
+                }
+            </p>
           </div>
         </foreignObject>
       </svg>

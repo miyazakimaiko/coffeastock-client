@@ -72,7 +72,7 @@ const Header = (props) => {
         <button type="button"
           onClick={() => innerSetOpenAddBeanModal(true)}
           className="flex items-center text-burnt-sienna 
-          font-capitals uppercase text-sm px-3 py-2 ml-4 mr-0 
+          font-capitals uppercase text-md px-3 py-2 ml-4 mr-0 
           opacity-80 hover:opacity-100 ease-linear transition-all duration-150">
           <PlusIcon className="h-4 w-4 mr-2" />
           Coffee Bean
@@ -81,7 +81,7 @@ const Header = (props) => {
         <button type="button"
           onClick={() => innerSetOpenAddRecipeModal(true)}
           className="flex items-center text-burnt-sienna 
-          font-capitals uppercase text-sm px-3 py-2 ml-4 mr-0 
+          font-capitals uppercase text-md px-3 py-2 ml-4 mr-0 
           opacity-80 hover:opacity-100 ease-linear transition-all duration-150">
           <PlusIcon className="h-4 w-4 mr-2" />
           Recipe

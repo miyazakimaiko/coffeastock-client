@@ -196,14 +196,14 @@ const ViewRecipes = () => {
 
   return (
     <>
-      <div className="px-4 pt-8">
-        <div className="px-2">
+      <div className="px-4 pt-8 w-full max-w-980px mx-auto">
+        <div>
           <div className="h-16 flex items-center justify-center mb-8">
             <h3 className="mr-3 text-xl text-center font-capitals uppercase">
               {singleOrigin? "Single Origin" : "Blend"}
             </h3>
           </div>
-          <div className="w-full max-w-980px my-4 mx-auto">
+          <div className="my-4">
             <div className="relative bg-white py-16 px-2 rounded-lg shadow-sm">
               <button
                 type="button"
@@ -218,7 +218,7 @@ const ViewRecipes = () => {
                 <div className="w-1/2 my-4 px-4">
                   { roasters.length !== 0 ? 
                   <div className="coffee-detail-section">
-                    <label className="text-xs font-semibold uppercase mr-3">Roasted By</label>
+                    <label className="text-sm font-semibold uppercase mr-3">Roasted By</label>
                     <div>{roasters}</div>
                   </div>
                   : null
@@ -226,7 +226,7 @@ const ViewRecipes = () => {
 
                   { roastDate ? 
                   <div className="coffee-detail-section">
-                    <label className="text-xs font-semibold uppercase mr-3">Roast Date</label>
+                    <label className="text-sm font-semibold uppercase mr-3">Roast Date</label>
                     <p>{roastDate}</p>
                   </div>
                   : null
@@ -234,7 +234,7 @@ const ViewRecipes = () => {
 
                   { gradeText ? 
                   <div className="coffee-detail-section">
-                    <label className="text-xs font-semibold uppercase mr-3">Grade</label>
+                    <label className="text-sm font-semibold uppercase mr-3">Grade</label>
                     <div className="flex">
                       {gradeStarIcons} 
                       <span className="ml-2">({gradeText}/100)</span>
@@ -245,7 +245,7 @@ const ViewRecipes = () => {
 
                   { roastLevelText ? 
                   <div className="coffee-detail-section">
-                    <label className="text-xs font-semibold uppercase mr-3">Roast Level</label>
+                    <label className="text-sm font-semibold uppercase mr-3">Roast Level</label>
                     <div className="flex">
                       {roastLevelFireIcons}
                       <span className="ml-2">({gradeText}/10)</span>
@@ -259,13 +259,13 @@ const ViewRecipes = () => {
                   { singleOrigin ? 
                   <>
                     <div className="coffee-detail-section">
-                      <label className="text-xs font-semibold uppercase mr-6">Origin</label>
+                      <label className="text-sm font-semibold uppercase mr-6">Origin</label>
                       <div>{origins}</div >
                     </div>
 
                     { process.length !== 0 ? 
                     <div className="coffee-detail-section">
-                      <label className="text-xs font-semibold uppercase mr-3">Process</label>
+                      <label className="text-sm font-semibold uppercase mr-3">Process</label>
                       <div>{process}</div>
                     </div>
                     : null
@@ -273,7 +273,7 @@ const ViewRecipes = () => {
 
                     { variety.length !== 0 ? 
                     <div className="coffee-detail-section">
-                      <label className="text-xs font-semibold uppercase mr-3">Variety</label>
+                      <label className="text-sm font-semibold uppercase mr-3">Variety</label>
                       <div>{variety}</div>
                     </div>
                     : null
@@ -281,7 +281,7 @@ const ViewRecipes = () => {
 
                     { farm.length !== 0 ? 
                     <div className="coffee-detail-section">
-                      <label className="text-xs font-semibold uppercase mr-3">Farm</label>
+                      <label className="text-sm font-semibold uppercase mr-3">Farm</label>
                       <div>{farm}</div>
                     </div>
                     : null
@@ -289,7 +289,7 @@ const ViewRecipes = () => {
 
                     { altitude ?
                     <div className="coffee-detail-section">
-                      <label className="text-xs font-semibold uppercase mr-3">Altitude</label>
+                      <label className="text-sm font-semibold uppercase mr-3">Altitude</label>
                       <p>{altitude}</p>
                     </div>
                     : null
@@ -297,7 +297,7 @@ const ViewRecipes = () => {
 
                     { harvestDate ? 
                     <div className="coffee-detail-section">
-                      <label className="text-xs font-semibold uppercase mr-3">Harvest Period</label>
+                      <label className="text-sm font-semibold uppercase mr-3">Harvest Period</label>
                       <p>{harvestDate}</p>
                     </div>
                     : null
@@ -305,14 +305,14 @@ const ViewRecipes = () => {
                   </>
                   :
                   <div className="coffee-detail-section">
-                    <label className="text-xs font-semibold uppercase mr-3">Blend Ratio</label>
+                    <label className="text-sm font-semibold uppercase mr-3">Blend Ratio</label>
                     <div>{blendRatio}</div>
                   </div>
                   }
 
                   { aroma.length !== 0 ? 
                   <div className="coffee-detail-section">
-                    <label className="text-xs font-semibold uppercase mr-3">Aroma</label>
+                    <label className="text-sm font-semibold uppercase mr-3">Aroma</label>
                     <div>{aroma}</div>
                   </div>
                   : null
@@ -322,7 +322,7 @@ const ViewRecipes = () => {
               
               { memo.length !== 0 ? 
               <div className="px-6 pt-4">
-                <label className="text-xs font-semibold uppercase mr-3">Memo: </label>
+                <label className="text-sm font-semibold uppercase mr-3">Memo: </label>
                 <div className="inline-block">{memo}</div>
               </div>
               : null
