@@ -190,7 +190,9 @@ const ManageAttributeRanges = ({cat}) => {
   }
 
   useEffect(() => {
-    fetchAttributeRangeList(userData.sub)
+    if (Object.keys(attributeRangeList).length === 0) {
+      fetchAttributeRangeList(userData.sub);
+    }
   }, []);
 
   useEffect(() => {
