@@ -18,7 +18,7 @@ module.exports = {
       },
       fontFamily: {
         'capitals': ['Sen', ...defaultTheme.fontFamily.sans],
-        'sans': ['Nunito', ...defaultTheme.fontFamily.sans]
+        'sans': ['Mukta', ...defaultTheme.fontFamily.sans]
       },
       width: {
         '550px': '550px'
