@@ -12,7 +12,10 @@ const {
 } = require("../utils/query-generator");
 
 const validator = [
-  body('label', 'Invalid Name').escape().isLength({ max: 60 }).optional({ nullable: false }),
+  body('label', 'Invalid Name').not().contains('<')
+    .not().contains('>').not().contains('"').not().contains("'")
+    .not().contains('&').not().contains('/').isLength({ max: 60 })
+    .optional({ nullable: false }),
   body('def', 'Invalid Details').escape().isLength({ max: 400 }).optional({ checkFalsy: true })
 ];
 
