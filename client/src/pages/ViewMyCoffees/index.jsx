@@ -88,8 +88,13 @@ const ViewMyCoffees = () => {
   }
 
   useEffect(() => {
-    fetchAttributeRangeList(userData.sub);
-    fetchBeanList(userData.sub);
+    window.scroll({ top: 0, behavior: 'smooth' });
+    if (Object.keys(attributeRangeList).length === 0) {
+      fetchAttributeRangeList(userData.sub);
+    }
+    if (Object.keys(beanList).length === 0) {
+      fetchBeanList(userData.sub);
+    }
   },[])
 
   useEffect(() => {
@@ -106,6 +111,7 @@ const ViewMyCoffees = () => {
   }, 
   [
     beanList,
+    attributeRangeList,
     showAll, 
     showBlend, 
     showSingleOrigin, 

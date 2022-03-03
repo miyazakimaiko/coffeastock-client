@@ -15,6 +15,7 @@ import { AccountContext } from './context/AccountContext';
 import NavStateProvider from './context/NavStateContext';
 import { AttributeRangeContext } from './context/AttributeRangeContext';
 import { BeansContext } from './context/BeansContext';
+import ScrollBackButton from './shared/ScrollBackButton';
 
 const App = () => {
   const mainRef = createRef();
@@ -73,6 +74,7 @@ const App = () => {
           </div>
         </NavStateProvider>
         <ToastContainer theme="colored" hideProgressBar={true}/>
+        <ScrollBackButton />
       </div>
     </Router>
   </>

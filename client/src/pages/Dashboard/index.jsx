@@ -6,12 +6,18 @@ import ChartBarRecipes from './ChartBarRecipes'
 import TotalBeans from './TotalBeans'
 import TotalBrews from './TotalBrews'
 import TotalRecipes from './TotalRecipes'
+import { useEffect } from 'react'
 
 const Dashboard = () => {
   const { attributeRangeList } = useContext(AttributeRangeContext);
   const { beanList } = useContext(BeansContext);
   console.log('attributeRangeList In Dashboard: ', attributeRangeList)
   console.log('beans In Dashboard: ', beanList)
+
+  useEffect(() => {
+    window.scroll({ top: 0, behavior: 'smooth' });
+  }, []);
+  
   return (
     <>
       <div className="px-4 pt-8">
