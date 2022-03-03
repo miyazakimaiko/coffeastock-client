@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import { InformationCircleIcon, PencilAltIcon } from '@heroicons/react/outline';
 import { unescapeHtml } from '../../utils/HtmlConverter'
+import { AccountContext } from '../../context/AccountContext';
 import { AttributeRangeContext } from '../../context/AttributeRangeContext';
 import { BeansContext } from '../../context/BeansContext';
 import CoffeeBagRight from '../../svgs/CoffeeBagRight';
@@ -16,9 +17,9 @@ import './ViewRecipes.scss'
 
 const ViewRecipes = () => {
   const { id } = useParams();
-  const { attributeRangeList } = useContext(AttributeRangeContext);
-  const { beanList } = useContext(BeansContext);
-  const targetBean = beanList[id];
+  const { userData } = useContext(AccountContext);
+  const { attributeRangeList, fetchAttributeRangeList } = useContext(AttributeRangeContext);
+  const { beanList, fetchBeanList } = useContext(BeansContext);
 
   const [singleOrigin, setSingleOrigin] = useState(false);
   const [coffeeName, setCoffeeName] = useState("");
@@ -26,18 +27,20 @@ const ViewRecipes = () => {
   const [altitude, setAltitude] = useState("");
   const [harvestDate, setHarvestDate] = useState("");
   const [memo, setMemo] = useState("");
+  const [gradeText, setGradeText] = useState("");
+  const [roastLevelText, setRoastLevelText] = useState("");
   const [roasters, setRoasters] = useState([]);
   const [aroma, setAroma] = useState([]);
   const [origins, setOrigins] = useState([]);
   const [process, setProcess] = useState([]);
   const [variety, setVariety] = useState([]);
   const [farm, setFarm] = useState([]);
-  const [grade, setGrade] = useState([]);
-  const [roastLevel, setRoastLevel] = useState([]);
+  const [gradeStarIcons, setGradeStarIcons] = useState([]);
+  const [roastLevelFireIcons, setRoastLevelFireIcons] = useState([]);
   const [blendRatio, setBlendRatio] = useState([])
 
 
-  const makeHtmlTags = (category) => {
+  const makeHtmlTags = (targetBean, category) => {
     const result = [];
     if (targetBean[category]) {
       targetBean[category].forEach(id => {
@@ -73,7 +76,7 @@ const ViewRecipes = () => {
     return nameListHtml;
   }
 
-  const makeBlendRatioHtmlTags = () => {
+  const makeBlendRatioHtmlTags = (targetBean) => {
     const result = [];  
     if (targetBean['blend_ratio']) {
       const blend = targetBean['blend_ratio'];
@@ -126,7 +129,7 @@ const ViewRecipes = () => {
     return result;
   }
 
-  const makeGradeIconList = () => {
+  const makeGradeIconList = (targetBean) => {
     if (targetBean['grade']) {
       const result = []
       const rounded = Math.ceil(targetBean['grade']/10)/2;
@@ -140,7 +143,7 @@ const ViewRecipes = () => {
     }
   }
 
-  const makeRoastLevelIconList = () => {
+  const makeRoastLevelIconList = (targetBean) => {
     if (targetBean['roast_level']) {
       const result = []
       const rounded = Math.ceil(targetBean['roast_level'])/2;
@@ -155,26 +158,41 @@ const ViewRecipes = () => {
   }
 
   useEffect(() => {
-    setSingleOrigin(targetBean['single_origin']);
-    setCoffeeName(unescapeHtml(targetBean['label']));
-    setAltitude(unescapeHtml(targetBean['altitude']));
-    setHarvestDate(unescapeHtml(targetBean['harvest_period']));
-    setRoasters(makeHtmlTags('roaster'));
-    setAroma(makeHtmlTags('aroma'));
-    setOrigins(makeHtmlTags('origin'));
-    setProcess(makeHtmlTags('process'));
-    setVariety(makeHtmlTags('variety'));
-    setFarm(makeHtmlTags('farm'));
-    setRoastDate(
-      targetBean['roast_date'] ? targetBean['roast_date'].split('T')[0] : null
-    );
-    setMemo(
-      targetBean['memo'] === null ? "" : unescapeHtml(targetBean['memo'])
-    )
-    setGrade(makeGradeIconList());
-    setRoastLevel(makeRoastLevelIconList());
-    setBlendRatio(makeBlendRatioHtmlTags());
-  }, []);
+    window.scroll({ top: 0, behavior: 'smooth' });
+    if (Object.keys(attributeRangeList).length === 0) {
+      fetchAttributeRangeList(userData.sub);
+    }
+    if (Object.keys(beanList).length === 0) {
+      fetchBeanList(userData.sub);
+    }
+  },[]);
+
+  useEffect(() => {
+    if (Object.keys(beanList).length !== 0) {
+      const targetBean = beanList[id];
+      setSingleOrigin(targetBean['single_origin']);
+      setGradeText(targetBean['grade']);
+      setRoastLevelText(targetBean['roast_level'])
+      setCoffeeName(unescapeHtml(targetBean['label']));
+      setAltitude(unescapeHtml(targetBean['altitude']));
+      setHarvestDate(unescapeHtml(targetBean['harvest_period']));
+      setRoasters(makeHtmlTags(targetBean, 'roaster'));
+      setAroma(makeHtmlTags(targetBean, 'aroma'));
+      setOrigins(makeHtmlTags(targetBean, 'origin'));
+      setProcess(makeHtmlTags(targetBean, 'process'));
+      setVariety(makeHtmlTags(targetBean, 'variety'));
+      setFarm(makeHtmlTags(targetBean, 'farm'));
+      setRoastDate(
+        targetBean['roast_date'] ? targetBean['roast_date'].split('T')[0] : null
+      );
+      setMemo(
+        targetBean['memo'] === null ? "" : unescapeHtml(targetBean['memo'])
+      )
+      setGradeStarIcons(makeGradeIconList(targetBean));
+      setRoastLevelFireIcons(makeRoastLevelIconList(targetBean));
+      setBlendRatio(makeBlendRatioHtmlTags(targetBean));
+    }
+  }, [beanList]);
 
   return (
     <>
@@ -214,23 +232,23 @@ const ViewRecipes = () => {
                   : null
                   }
 
-                  { targetBean['grade'] ? 
+                  { gradeText ? 
                   <div className="coffee-detail-section">
                     <label className="text-xs font-semibold uppercase mr-3">Grade</label>
                     <div className="flex">
-                      {grade} 
-                      <span className="ml-2">({targetBean['grade']}/100)</span>
+                      {gradeStarIcons} 
+                      <span className="ml-2">({gradeText}/100)</span>
                     </div>
                   </div>
                   : null
                   }
 
-                  { targetBean['roast_level'] ? 
+                  { roastLevelText ? 
                   <div className="coffee-detail-section">
                     <label className="text-xs font-semibold uppercase mr-3">Roast Level</label>
                     <div className="flex">
-                      {roastLevel}
-                      <span className="ml-2">({targetBean['roast_level']}/10)</span>
+                      {roastLevelFireIcons}
+                      <span className="ml-2">({gradeText}/10)</span>
                     </div>
                   </div>
                   : null
