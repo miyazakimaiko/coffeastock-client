@@ -83,7 +83,7 @@ const AttributeRangeProvider = (props) => {
       const parseRes = await response.json();
       if (response.status === 422) {
         const message = parseRes.error.message ? parseRes.error.message : response.statusText;
-        console.log('error message from insertEntry(): ', message)
+        console.log('error message from insertAttribute(): ', message)
         // returns message instead of throwing toast, because when this is done during Add New Coffee Bean is in process, we don't want this toast pop up.
         return {
           "error": {
