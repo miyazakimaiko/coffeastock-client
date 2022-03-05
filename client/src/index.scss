@@ -7,9 +7,11 @@
 body {
   position: relative;
   transition: .5s;
-  letter-spacing: 0.1em;
+  font-weight: 300;
+  letter-spacing: 0.5px;
   button, input, textarea {
-    letter-spacing: 0.1em;
+    font-weight: 300;
+    letter-spacing: 0.5px;
   }
   p, span {
     overflow-wrap: anywhere;
@@ -48,7 +50,7 @@ body {
   --toastify-color-success: var(--green);
   --toastify-color-warning: var(--orange);
   --toastify-color-error: var(--red);
-  --toastify-font-family: 'Mukta';
+  --toastify-font-family: 'Prompt';
   --nav-width: 70vw;
   --nav-width-sm: 280px;
 }
