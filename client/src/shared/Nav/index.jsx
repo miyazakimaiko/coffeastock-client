@@ -73,7 +73,7 @@ const Nav = (props) => {
         </button>
       </div>
 
-      <div className="my-8 text-md font-capitals uppercase">
+      <div className="my-8 text-md font-capitals">
         <h3 className="mx-6 my-3 text-sm opacity-50">
           Main
         </h3>
@@ -94,13 +94,13 @@ const Nav = (props) => {
               + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
               onClick={pinnedNavbar ? null : showNavbar}>
               <BookOpenIcon className="h-4 w-4"></BookOpenIcon>
-              <span className="ml-4">my coffees</span>
+              <span className="ml-4">My Coffees</span>
             </NavLink>
           </li>
         </ul>
       </div>
 
-      <div className="my-8 text-md font-capitals uppercase">
+      <div className="my-8 text-md font-capitals">
         <h3 className="mx-6 my-3 text-sm opacity-50">
             Customize Range
         </h3>
@@ -166,7 +166,7 @@ const Nav = (props) => {
                     className={({ isActive }) => "flex items-center" 
                     + (isActive ? ' nav-link-active font-bold' 
                     : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')} >
-                    <span>process</span>
+                    <span>Process</span>
                   </NavLink>
                 </li>
                 <li className="h-12 ml-8 mr-6 flex items-center justify-between">
@@ -177,7 +177,7 @@ const Nav = (props) => {
                     className={({ isActive }) => "flex items-center" 
                     + (isActive ? ' nav-link-active font-bold' 
                     : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')} >
-                    <span>roaster</span>
+                    <span>Roaster</span>
                   </NavLink>
                 </li>
                 <li className="h-12 ml-8 mr-6 flex items-center justify-between">
@@ -188,7 +188,7 @@ const Nav = (props) => {
                     className={({ isActive }) => "flex items-center" 
                     + (isActive ? ' nav-link-active font-bold' 
                     : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')} >
-                    <span>aroma</span>
+                    <span>Aroma</span>
                   </NavLink>
                 </li>
               </ul>
@@ -223,7 +223,7 @@ const Nav = (props) => {
                     + (isActive ? ' nav-link-active font-bold' 
                     : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                     onClick={pinnedNavbar ? null : showNavbar}>
-                    <span>grinder</span>
+                    <span>Grinder</span>
                   </NavLink>
                 </li>
                 <li className="h-12 ml-8 mr-6 flex items-center justify-between">
@@ -234,7 +234,7 @@ const Nav = (props) => {
                     + (isActive ? ' nav-link-active font-bold' 
                     : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                     onClick={pinnedNavbar ? null : showNavbar}>
-                    <span>method</span>
+                    <span>Method</span>
                   </NavLink>
                 </li>
                 <li className="h-12 ml-8 mr-6 flex items-center justify-between">
@@ -256,7 +256,7 @@ const Nav = (props) => {
                     + (isActive ? ' nav-link-active font-bold' 
                     : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                     onClick={pinnedNavbar ? null : showNavbar}>
-                    <span>palate</span>
+                    <span>Palate</span>
                   </NavLink>
                 </li>
               </ul>

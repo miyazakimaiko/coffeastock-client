@@ -9,7 +9,7 @@ import './Modals.scss'
 
 const AddBeanModal = ({setOpenThisModal}) => {
   const { userData } = useContext(AccountContext);
-  const { attributeRangeList, insertEntry } = useContext(AttributeRangeContext);
+  const { attributeRangeList, insertAttribute } = useContext(AttributeRangeContext);
   const { beanList, insertBean } = useContext(BeansContext);
   const roasterRange = Object.values(attributeRangeList.roaster_range);
   const originRange = Object.values(attributeRangeList.origin_range);
@@ -29,7 +29,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
   const [isSingleOrigin, setIsSingleOrigin] = useState(false);
   const [memo, innerSetMemo] = useState('');
 
-  const [selectedOrigin, setSelectedOrigin] = useState([]);
+  const [selectedOrigin, setSelectedOrigin] = useState([{label: "Kaffa, Ethiopia", value: "5"}]);
   const [selectedRoaster, setSelectedRoaster] = useState([]);
   const [selectedFarm, setSelectedFarm] = useState([]);
   const [selectedProcess, setSelectedProcess] = useState([]);
@@ -37,6 +37,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
   const [selectedVariety, setSelectedVariety] = useState([]);
   const [selectedBlendBeans, innerSetSelectedBlendBeans] = useState([]);
   const [blendRatios, innerSetBlendRatio] = useState({});
+  
   const [nameWarningText, setNameWarningText] = useState("");
   const [periodWarningText, setPeriodWarningText] = useState("");
   const [altitudeWarningText, setAltitudeWarningText] = useState("");
@@ -259,7 +260,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
       entries.forEach(entry => {
         try {
           let body = { "label": entry.label, "def": "" };
-          insertEntry(userData.sub, category, body);
+          insertAttribute(userData.sub, category, body);
         } catch (error) {
           console.log('error: ', error)
         }

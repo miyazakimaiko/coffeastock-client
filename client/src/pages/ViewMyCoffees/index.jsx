@@ -60,7 +60,7 @@ const ViewMyCoffees = () => {
         innerHtml.push(        
           <div className="bg-white rounded-lg shadow-sm pb-8 mb-8">
             <div className="h-36 flex items-center justify-center pt-4">
-              <h2 className="text-xl text-center font-capitals uppercase font-bold">{unescapeHtml(range.label)}</h2>
+              <h2 className="text-xl text-center font-bold">{unescapeHtml(range.label)}</h2>
             </div>
             <div className="flex mb-4 w-full flex-wrap justify-center">{coffeeElements}</div>
           </div>
