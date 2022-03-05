@@ -1,143 +1,138 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useReducer } from 'react'
 import { toast } from 'react-toastify'
 import { PencilAltIcon, PlusIcon, XIcon } from '@heroicons/react/outline'
 import { AttributeRangeContext } from '../context/AttributeRangeContext';
 import { AccountContext } from '../context/AccountContext';
 import { unescapeHtml } from '../utils/HtmlConverter'
 
+const ACTION = {
+  SET_ID: 'setId',
+  SET_LABEL: 'setLabel',
+  SET_DEFINITION: 'setDefinition'
+}
+
+const MODE = {
+  ADD: 'add',
+  EDIT: 'edit',
+  DELETE: 'delete'
+}
+
 const ManageAttributeRanges = ({cat}) => {
   const { userData } = useContext(AccountContext);
-  const { attributeRangeList, fetchAttributeRangeList, insertEntry, editAttribute, deleteAttribute } = useContext(AttributeRangeContext);
-  const [addRangeName, innerSetAddRangeName] = useState('');
-  const [addRangeValue, setAddRangeValue] = useState('')
-  const [editRangeId, setEditRangeId] = useState('');
-  const [editRangeName, innerSetEditRangeName] = useState('');
-  const [editRangeValue, setEditRangeValue] = useState('');
-  const [entryToDelete, setEntryToDelete] = useState({})
-  const [nameWarningText, setNameWarningText] = useState('')
+  const { 
+    attributeRangeList, 
+    fetchAttributeRangeList, 
+    insertAttribute, 
+    editAttribute, 
+    deleteAttribute 
+  } = useContext(AttributeRangeContext);
+  
+  const [nameWarningText, setNameWarningText] = useState('');
+
+  const validateLabel = (label) => {
+    const banned = ['&', '<', '>', '"', "'"];
+    let includesBannedChar = false;
+    banned.forEach(char => {
+      if (label.includes(char)) includesBannedChar = true;
+    })
+    if (includesBannedChar) {
+      setNameWarningText(<span className="text-red">Special characters cannot be used in this field.</span>)
+    }     
+    else if (label.length > 60) {
+      setNameWarningText(<span className="text-red">{60 - label.length}/60</span>)
+    } 
+    else {
+      setNameWarningText(`${60 - label.length}/60`)
+    }
+  }
+
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case 'setId':
+        return { ...state, value: action.payload };
+      case 'setLabel':
+        validateLabel(action.payload);
+        return { ...state, label: action.payload };
+      case 'setDefinition':
+        return { ...state, def: action.payload };
+      default:
+        throw new Error();
+    }
+  }
+
+  const [state, dispatch] = useReducer(reducer, { value: '', label: '', def: '' });
 
   const [openAddEditModal, setOpenAddEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
-  const [rangeElements, setRangeElements] = useState([]);
-
   const [mode, setMode] = useState('');
-  const setAddMode = () => {
-    setMode('add')
-    setOpenAddEditModal(true);
-  }
-  const setEditMode = async (entry) => {
-    setMode('edit');
-    setEditRangeId(entry.id);
-    setEditRangeName(entry.label);
-    setEditRangeValue(entry.def);
-    setOpenAddEditModal(true);
-  }
-  const setDeleteMode = async (entry) => {
-    setEntryToDelete(entry);
-    await setOpenDeleteModal(true);
-    document.getElementById("labelToDelete").innerHTML = entry.label;
-  }
 
   const closeAddEditModal = () => {
     setOpenAddEditModal(false);
-    setAddRangeName('');
-    setAddRangeValue('');
-  }
-
-  const setAddRangeName = (name) => {
-    const banned = ['&', '<', '>', '"', "'"];
-    let includesBannedChar = false;
-    banned.forEach(char => {
-      if (name.includes(char)) includesBannedChar = true;
-    })
-    if (includesBannedChar) {
-      setNameWarningText(<span className="text-red">Special characters cannot be used in this field.</span>)
-    }     
-    else if (name.length > 60) {
-      setNameWarningText(<span className="text-red">{60 - name.length}/60</span>)
-    } 
-    else {
-      setNameWarningText(`${60 - name.length}/60`)
-    }
-    innerSetAddRangeName(name);
-  }
-
-  const setEditRangeName = (name) => {
-    const banned = ['&', '<', '>', '"', "'"];
-    let includesBannedChar = false;
-    banned.forEach(char => {
-      if (name.includes(char)) includesBannedChar = true;
-    })
-    if (includesBannedChar) {
-      setNameWarningText(<span className="text-red">Special characters cannot be used in this field.</span>)
-    }     
-    else if (name.length > 60) {
-      setNameWarningText(<span className="text-red">{60 - name.length}/60</span>)
-    } 
-    else {
-      setNameWarningText(`${60 - name.length}/60`)
-    }
-    innerSetEditRangeName(name);
+    dispatch({ type: ACTION.SET_LABEL, payload: '' });
+    dispatch({ type: ACTION.SET_DEFINITION, payload: '' });
   }
 
   const onAddSubmit = async (event) => {
     event.preventDefault();
-    if (addRangeName == '') {
+    if (state.label.length === 0) {
       toast.error('Name field is required.', {
         position: toast.POSITION.BOTTOM_CENTER
       });
       return;
     }
 
-    const OneLinerangeDef = addRangeValue.replace(/(\r\n|\n|\r)/gm, " ");
+    const OneLinerangeDef = state.def.replace(/(\r\n|\n|\r)/gm, " ");
     const insertBody = {
-      "label": addRangeName,
+      "label": state.label,
       "def": OneLinerangeDef
     }
-    const insertStatus = await insertEntry(userData.sub, cat, insertBody);
+    const insertStatus = await insertAttribute(userData.sub, cat, insertBody);
 
-    if (typeof insertStatus == 'object') {
+    if (typeof insertStatus === 'object') {
       toast.error(insertStatus.error.message, {
         position: toast.POSITION.BOTTOM_CENTER
       });
     }
-    else if (insertStatus == true) {
+    else if (insertStatus === true) {
       toast.success("Entry is added successfully.", {
         position: toast.POSITION.BOTTOM_CENTER
       });
       closeAddEditModal();
+      fetchAttributeRangeList(userData.sub)
     }
   }
 
   const onEditSubmit = async (event) => {
     event.preventDefault();
-    if (editRangeName == '') {
+    if (state.label === '') {
       toast.error("Name cannot be empty.", {
         position: toast.POSITION.BOTTOM_CENTER
       });
       return;
     }
-
-    const OneLineRangeValue = editRangeValue.replace(/(\r\n|\n|\r)/gm, " ");
+    const OneLineRangeDef = state.def.replace(/(\r\n|\n|\r)/gm, " ");
     const body = {
-      "label": editRangeName,
-      "def": OneLineRangeValue
+      "label": state.label,
+      "def": OneLineRangeDef
     }
-    const editSuccess = await editAttribute(userData.sub, cat, editRangeId, body);
+    const editSuccess = await editAttribute(userData.sub, cat, state.value, body);
     if (editSuccess) {
       closeAddEditModal();
+      fetchAttributeRangeList(userData.sub)
     }
   }
 
   const onDeleteSubmit = async (event) => {
     event.preventDefault();
-    const deleteSuccess = await deleteAttribute(userData.sub, cat, entryToDelete.id);
+    const deleteSuccess = await deleteAttribute(userData.sub, cat, state.value);
     if (deleteSuccess) {
       setOpenDeleteModal(false);
+      fetchAttributeRangeList(userData.sub)
     }
   } 
- 
+
+  const [rangeElements, setRangeElements] = useState([]);
+  
   const makeRangeElements = (attributeRangeList) => {
     let elements = [];
     const attributeRange = attributeRangeList[cat + "_range"];
@@ -156,20 +151,23 @@ const ManageAttributeRanges = ({cat}) => {
             <td className="td-options">
               <button
                 className="option-button"
-                onClick={() => setEditMode({
-                  'id': item['value'],
-                  'label': item['label'],
-                  'def': item['def']
-                })}>
+                onClick={() => {
+                  setMode(MODE.EDIT);
+                  dispatch({ type: ACTION.SET_ID, payload: item['value'] });
+                  dispatch({ type: ACTION.SET_LABEL, payload: item['label'] });
+                  dispatch({ type: ACTION.SET_DEFINITION, payload: item['def'] });
+                  setOpenAddEditModal(true);
+                  }}>
                 <PencilAltIcon className="icon text-green" />
               </button>
               <button
                 type="button"
                 className="option-button delete-button" 
-                onClick={() => setDeleteMode({
-                  'id': item['value'],
-                  'label': item['label']
-                })}>
+                onClick={ async () => {
+                  dispatch({ type: ACTION.SET_ID, payload: item['value'] });
+                  await setOpenDeleteModal(true);
+                  document.getElementById("labelToDelete").innerHTML = item['label'];
+                }}>
                 <XIcon className="icon text-red" />
               </button>
             </td>
@@ -180,11 +178,11 @@ const ManageAttributeRanges = ({cat}) => {
     else {
       elements.push(
         <tr>
-          <td className="text-center bg-white" colspan="3">There's no entry in this range.</td>
+          <td className="text-center bg-white" colspan="3">There's no entry for this range.</td>
         </tr>
       )
     }
-    return elements
+    setRangeElements(elements)
   }
 
   useEffect(() => {
@@ -195,7 +193,7 @@ const ManageAttributeRanges = ({cat}) => {
 
   useEffect(() => {
     if (Object.keys(attributeRangeList).length !== 0) {
-      setRangeElements(makeRangeElements(attributeRangeList));
+      makeRangeElements(attributeRangeList);
     }
   }, [attributeRangeList]);
 
@@ -209,7 +207,10 @@ const ManageAttributeRanges = ({cat}) => {
                 {cat} range
               </h3>
               <button
-                onClick={setAddMode}
+                onClick={() => {
+                  setMode(MODE.ADD)
+                  setOpenAddEditModal(true);
+                }}
                 type="button"
                 className="flex items-center text-burnt-sienna 
                 font-capitals uppercase text-md 
@@ -285,14 +286,8 @@ const ManageAttributeRanges = ({cat}) => {
                           placeholder={`${cat} name`} 
                           className="blue-outline-transition 
                           bg-creme block w-full text-base py-2 px-3 rounded-md"
-                          value={
-                            mode === 'add' ? addRangeName : 
-                            mode === 'edit' ? unescapeHtml(editRangeName) : null
-                          }
-                          onChange={
-                            mode === 'add' ? e => setAddRangeName(e.target.value) :
-                            mode === 'edit' ? e => setEditRangeName(e.target.value) : null
-                          }
+                          value={state.label}
+                          onChange={e => dispatch({ type: ACTION.SET_LABEL, payload: e.target.value })}
                         />
                         <span className="text-sm float-right mt-1">{nameWarningText}</span>
                       </div>
@@ -305,11 +300,8 @@ const ManageAttributeRanges = ({cat}) => {
                           placeholder={`${cat} details`} 
                           className="blue-outline-transition 
                           bg-creme block w-full h-32 text-base py-2 px-3 rounded-lg"
-                          value={mode === 'add' ? addRangeValue : mode === 'edit' ? unescapeHtml(editRangeValue) : null}
-                          onChange={
-                            mode === 'add' ? e => setAddRangeValue(e.target.value) :
-                            mode === 'edit' ? e => setEditRangeValue(e.target.value) : null
-                          }
+                          value={state.def}
+                          onChange={e => dispatch({ type: ACTION.SET_DEFINITION, payload: e.target.value })}
                         />
                       </div>
                     </div>
@@ -319,16 +311,14 @@ const ManageAttributeRanges = ({cat}) => {
                         font-bold uppercase px-6 py-2 text-md outline-none 
                         focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
-                        onClick={closeAddEditModal}
-                      >
+                        onClick={closeAddEditModal}>
                         Cancel
                       </button>
                       <button
                         className="bg-blue text-white opacity-80 
                         hover:opacity-100 font-bold uppercase text-md 
                         px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
-                        type="submit"
-                      >
+                        type="submit">
                         Save Changes
                       </button>
                     </div>
