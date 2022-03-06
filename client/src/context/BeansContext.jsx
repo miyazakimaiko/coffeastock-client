@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { createContext } from 'react';
 import { toast } from 'react-toastify';
 
-export const BeansContext = createContext();
+const BeansContext = createContext();
 
 const BeansProvider = (props) => {
   const [beanList, innerSetBeanList] = useState({});
@@ -69,4 +69,36 @@ const BeansProvider = (props) => {
   );
 };
 
-export default BeansProvider;
+function useBeanList() {
+  const context = useContext(BeansContext)
+  if (!context) {
+    throw new Error('useBeanList must be used within an BeansProvider')
+  }
+  return context.beanList
+}
+
+function useFetchBeanList() {
+  const context = useContext(BeansContext)
+  if (!context) {
+    throw new Error('useFetchBeanList must be used within an BeansProvider')
+  }
+  return context.fetchBeanList
+}
+
+function useSetBeanList() {
+  const context = useContext(BeansContext)
+  if (!context) {
+    throw new Error('useSetBeanList must be used within an BeansProvider')
+  }
+  return context.setBeanList
+}
+
+function useInsertBean() {
+  const context = useContext(BeansContext)
+  if (!context) {
+    throw new Error('useInsertBean must be used within an BeansProvider')
+  }
+  return context.insertBean
+}
+
+export { BeansProvider, useBeanList, useFetchBeanList, useSetBeanList, useInsertBean }

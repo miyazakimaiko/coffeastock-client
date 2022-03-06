@@ -2,8 +2,8 @@ import { BookOpenIcon, GlobeIcon, LightBulbIcon } from '@heroicons/react/outline
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import CoffeeBagLeft from '../svgs/CoffeeBagLeft'
-import UserPool from '../utils/UserPool'
+import CoffeeBagLeft from '../../assets/svgs/CoffeeBagLeft'
+import UserPool from '../../utils/UserPool'
 import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
 
 const Register = () => {

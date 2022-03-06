@@ -5,12 +5,12 @@ import { NavLink } from 'react-router-dom';
 import { MenuAlt2Icon, PlusIcon, XIcon } from '@heroicons/react/outline'
 
 import { NavStateContext } from '../../context/NavStateContext';
-import { AccountContext } from '../../context/AccountContext';
-import imgFace from '../../images/face.jpg'
-import AddBeanModal from '../Modals/AddBeanModal';
-import AddRecipeModal from '../Modals/AddRecipeModal';
-import './Header.scss'
-import Dropdown from '../Dropdown';
+import { useUserData, useSetAuthenticated, useSignout } from '../../context/AccountContext';
+import imgFace from '../../assets/images/face.jpg'
+import AddBeanModal from '../add-edit-bean-modal';
+import AddRecipeModal from '../add-edit-recipe-modal';
+import './header.scss'
+import Dropdown from '../elements/Dropdown';
 
 const Header = (props) => {
   const { 
@@ -21,12 +21,10 @@ const Header = (props) => {
     showNavbar, 
     forceUnpin 
   } = useContext(NavStateContext);
-
-  const { 
-    userData,
-    setAuthenticated, 
-    signout 
-  } = useContext(AccountContext);
+ 
+  const userData = useUserData()
+  const setAuthenticated = useSetAuthenticated()
+  const signout = useSignout()
 
   const [
     openAddBeanModal, 

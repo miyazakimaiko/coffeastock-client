@@ -1,8 +1,8 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useContext, useState } from 'react'
+import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js'
 import Pool from '../utils/UserPool'
-import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 
-export const AccountContext = createContext();
+const AccountContext = createContext()
 
 const AccountProvider = (props) => {
   const [userData, innerSetUserData] = useState({})
@@ -88,4 +88,60 @@ const AccountProvider = (props) => {
   )
 }
 
-export default AccountProvider
+function useAuthenticate() {
+  const context = useContext(AccountContext)
+  if (!context) {
+    throw new Error('useAuthenticate must be used within an AccountProvider')
+  }
+  return context.authenticate
+}
+
+function useGetSession() {
+  const context = useContext(AccountContext)
+  if (!context) {
+    throw new Error('useGetSession must be used within an AccountProvider')
+  }
+  return context.getSession
+}
+
+function useUserData() {
+  const context = useContext(AccountContext)
+  if (!context) {
+    throw new Error('useUserData must be used within an AccountProvider')
+  }
+  return context.userData
+}
+
+function useSetUserData() {
+  const context = useContext(AccountContext)
+  if (!context) {
+    throw new Error('useSetUserData must be used within an AccountProvider')
+  }
+  return context.setUserData
+}
+
+function useAuthenticated() {
+  const context = useContext(AccountContext)
+  if (!context) {
+    throw new Error('useAuthenticated must be used within an AccountProvider')
+  }
+  return context.authenticated
+}
+
+function useSetAuthenticated() {
+  const context = useContext(AccountContext)
+  if (!context) {
+    throw new Error('useSetAuthenticated must be used within an AccountProvider')
+  }
+  return context.setAuthenticated
+}
+
+function useSignout() {
+  const context = useContext(AccountContext)
+  if (!context) {
+    throw new Error('useSignout must be used within an AccountProvider')
+  }
+  return context.signout
+}
+
+export {AccountProvider, useAuthenticate, useGetSession, useUserData, useSetUserData, useAuthenticated, useSetAuthenticated, useSignout }

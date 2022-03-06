@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { PencilAltIcon, PlusIcon, XIcon } from '@heroicons/react/outline'
-import { AttributeRangeContext } from '../context/AttributeRangeContext';
-import { AccountContext } from '../context/AccountContext';
-import { unescapeHtml } from '../utils/HtmlConverter'
-import AttributeFormInput from '../components/AttributeFormInput';
+import { useAttributeRangeList, useFetchAttributeRangeList, useInsertAttribute, useEditAttribute, useDeleteAttribute } from '../../context/AttributeRangeContext';
+import { useUserData } from '../../context/AccountContext';
+import { unescapeHtml } from '../../utils/HtmlConverter'
 
 const MODE = {
   ADD: 'add',
@@ -13,46 +12,35 @@ const MODE = {
 }
 
 const ManageAttributeRanges = ({cat}) => {
-  const { userData } = useContext(AccountContext);
-  const { 
-    attributeRangeList, 
-    fetchAttributeRangeList, 
-    insertAttribute, 
-    editAttribute, 
-    deleteAttribute 
-  } = useContext(AttributeRangeContext);
-  
+  const userData = useUserData()
+  const attributeRangeList = useAttributeRangeList()
+  const fetchAttributeRangeList = useFetchAttributeRangeList()
+  const insertAttribute = useInsertAttribute()
+  const editAttribute = useEditAttribute()
+  const deleteAttribute = useDeleteAttribute()
+
   const [attribute, setAttribute] = useState({ value: '', label: '', def: '' });
   const [modal, setModal] = useState({ mode: '', isOpen: false });
   const [attributeListHtml, setAttributeListHtml] = useState([]);
 
-  const inputs = [
-    {
-      id: 1,
-      name: 'label',
-      type: 'text',
-      placeholder: 'Name',
-      autoComplete: 'off',
-      category: cat,
-      message: `Special characters (", ', \`, <, >) cannot be used in this field.`,
-      label: `${cat.charAt(0).toUpperCase() + cat.slice(1)} Name`,
-      pattern: `[^'"<>\`]*$`,
-      required: true,
-    },
-    {
-      id: 2,
-      name: 'def',
-      type: 'textarea',
-      placeholder: 'Details',
-      autoComplete: 'off',
-      category: cat,
-      message: `Line change cannot be used in this field.`,
-      label: `${cat.charAt(0).toUpperCase() + cat.slice(1)} Details`,
-    },
-  ];
+  const [nameWarningText, setNameWarningText] = useState("");
 
-  const onChange = (e) => {
-    setAttribute({...attribute, [e.target.name]: e.target.value })
+  const setName = (name) => {
+    const banned = ['&', '<', '>', '"', "'"];
+    let includesBannedChar = false;
+    banned.forEach(char => {
+      if (name.includes(char)) includesBannedChar = true;
+    })
+    if (includesBannedChar) {
+      setNameWarningText(<span className="text-red">Special characters cannot be used in this field.</span>)
+    }     
+    else if (name.length > 60) {
+      setNameWarningText(<span className="text-red">{60 - name.length}/60</span>)
+    } 
+    else {
+      setNameWarningText(`${60 - name.length}/60`)
+    }
+    setAttribute({...attribute, label: name})
   }
 
   const onAddSubmit = async (event) => {
@@ -172,8 +160,7 @@ const ManageAttributeRanges = ({cat}) => {
                 className="flex items-center text-burnt-sienna 
                 font-capitals uppercase text-md 
                 px-3 ml-4 mr-0 opacity-80 
-                hover:opacity-100 ease-linear transition-all duration-150"
-                >
+                hover:opacity-100 ease-linear transition-all duration-150">
                 <PlusIcon className="w-4 h-4 mr-1 inline" />
                 New {cat}
               </button>
@@ -227,21 +214,37 @@ const ManageAttributeRanges = ({cat}) => {
                 <form 
                   id={`${cat}AddForm`}
                   className="w-full"
-                  onSubmit={
-                    modal.mode === MODE.ADD ? onAddSubmit :
-                    modal.mode === MODE.EDIT ? onEditSubmit : null
-                  }
+                  onSubmit={ modal.mode === MODE.ADD ? onAddSubmit : modal.mode === MODE.EDIT ? onEditSubmit : null }
                 >
                   <div className="bg-white px-6 shadow-sm rounded-md">
                     <div className="mt-3 mb-6">
-                    {inputs.map((input) => (
-                      <AttributeFormInput
-                        key={input.id}
-                        {...input}
-                        value={attribute[input.name]}
-                        onChange={onChange}
-                      />
-                    ))}
+                      <div className="form-section">
+                        <label className="font-semibold mb-2">{cat} name</label>
+                        <input
+                          type="text" 
+                          name="label"
+                          autoComplete="off"
+                          placeholder={`Name`} 
+                          className="blue-outline-transition 
+                          bg-creme block w-full text-base py-2 px-3 rounded-md"
+                          value={attribute.label}
+                          onChange={e => setName(e.target.value)}
+                        />
+                        <span className="text-xs float-right mt-1">{nameWarningText}</span>
+                      </div>
+                      <div className="form-section">
+                        <label className="font-semibold">{cat} details</label>
+                        <textarea 
+                          type="text" 
+                          name="definition"
+                          autoComplete="off"
+                          placeholder={`${cat} details`} 
+                          className="blue-outline-transition 
+                          bg-creme block w-full h-32 text-base py-2 px-3 rounded-lg"
+                          value={attribute.def}
+                          onChange={e => setAttribute({...attribute, def: e.target.value})}
+                        />
+                      </div>
                     </div>
                     <div className="flex items-center justify-between pl-4 pr-4 pb-8">
                       <button

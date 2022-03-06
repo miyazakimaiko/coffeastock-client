@@ -1,5 +1,5 @@
 import React from 'react'
-import imgGrinder from '../../images/grinder.png'
+import imgGrinder from '../../assets/images/grinder.png'
 
 const TotalRecipes = () => {
   return (

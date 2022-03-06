@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { createContext } from 'react';
+import React, { useState, useContext, createContext } from 'react';
 import { toast } from 'react-toastify';
 
-export const AttributeRangeContext = createContext();
+const AttributeRangeContext = createContext();
 
 const reorderAttributes = (attributes) => {
   const orderedAttributes = Object.entries(attributes).sort(sortByName).reduce(
@@ -185,8 +184,44 @@ const AttributeRangeProvider = (props) => {
   )
 }
 
+function useAttributeRangeList() {
+  const context = useContext(AttributeRangeContext)
+  if (!context) {
+    throw new Error('useAttributeRangeList must be used within an AttributeRangeProvider')
+  }
+  return context.attributeRangeList
+}
 
+function useFetchAttributeRangeList() {
+  const context = useContext(AttributeRangeContext)
+  if (!context) {
+    throw new Error('useFetchAttributeRangeList must be used within an AttributeRangeProvider')
+  }
+  return context.fetchAttributeRangeList
+}
 
+function useInsertAttribute() {
+  const context = useContext(AttributeRangeContext)
+  if (!context) {
+    throw new Error('useInsertAttribute must be used within an AttributeRangeProvider')
+  }
+  return context.insertAttribute
+}
 
+function useDeleteAttribute () {
+  const context = useContext(AttributeRangeContext)
+  if (!context) {
+    throw new Error('deleteAttribute must be used within an AttributeRangeProvider')
+  }
+  return context.deleteAttribute
+}
 
-export default AttributeRangeProvider
+function useEditAttribute() {
+  const context = useContext(AttributeRangeContext)
+  if (!context) {
+    throw new Error('editAttribute must be used within an AttributeRangeProvider')
+  }
+  return context.editAttribute
+}
+
+export {AttributeRangeProvider, useAttributeRangeList, useFetchAttributeRangeList, useInsertAttribute, useEditAttribute, useDeleteAttribute }

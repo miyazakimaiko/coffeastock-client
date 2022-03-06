@@ -1,24 +1,18 @@
 import { LoginIcon } from '@heroicons/react/outline'
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify';
-import { AccountContext } from '../context/AccountContext';
-import { BeansContext } from '../context/BeansContext';
-import { AttributeRangeContext } from '../context/AttributeRangeContext';
+import { useAuthenticate, useGetSession, useSetUserData, useSetAuthenticated } from '../../context/AccountContext';
 
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
-  const { setUserData, userData, authenticate, getSession, setAuthenticated } = useContext(AccountContext);
-  const { fetchAttributeRangeList } = useContext(AttributeRangeContext);
-  const { fetchBeanList } = useContext(BeansContext)
-
-  useEffect(() => {
-    fetchAttributeRangeList(userData.sub);
-    fetchBeanList(userData.sub);
-  }, [userData]);
+  const setUserData = useSetUserData()
+  const authenticate = useAuthenticate()
+  const getSession = useGetSession()
+  const setAuthenticated = useSetAuthenticated()
 
 
   const onSubmit = (event) => {
@@ -39,8 +33,6 @@ const Login = () => {
             position: toast.POSITION.BOTTOM_CENTER
           })
         });
-        fetchAttributeRangeList(userData.sub);
-        fetchBeanList(userData.sub);
       })
       .catch(err => {
         toast.error(err.message, {

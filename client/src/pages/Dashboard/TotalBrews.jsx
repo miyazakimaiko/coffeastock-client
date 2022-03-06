@@ -1,5 +1,5 @@
 import React from 'react'
-import imgServer from '../../images/server.png'
+import imgServer from '../../assets/images/server.png'
 
 const TotalBrews = () => {
   return (

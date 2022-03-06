@@ -1,15 +1,17 @@
-import React, { useContext, useState, useEffect } from 'react'
-import { AttributeRangeContext } from '../../context/AttributeRangeContext';
-import { BeansContext } from '../../context/BeansContext';
+import React, { useState, useEffect } from 'react'
+import { useAttributeRangeList, useFetchAttributeRangeList } from '../../context/AttributeRangeContext';
+import { useBeanList, useFetchBeanList } from '../../context/BeansContext';
 import CoffeeSection from './CoffeeSection'
 import { unescapeHtml } from '../../utils/HtmlConverter'
-import Dropdown from '../../shared/Dropdown';
-import { AccountContext } from '../../context/AccountContext';
+import Dropdown from '../../components/elements/Dropdown';
+import { useUserData } from '../../context/AccountContext';
 
 const ViewMyCoffees = () => {
-  const { userData } = useContext(AccountContext);
-  const { attributeRangeList, fetchAttributeRangeList } = useContext(AttributeRangeContext);
-  const { beanList, fetchBeanList } = useContext(BeansContext);
+  const userData = useUserData()
+  const attributeRangeList = useAttributeRangeList();
+  const fetchAttributeRangeList = useFetchAttributeRangeList();
+  const beanList = useBeanList()
+  const fetchBeanList = useFetchBeanList()
 
   const [showAll, setShowAll] = useState(true);
   const [showBlend, setShowBlend] = useState(false);

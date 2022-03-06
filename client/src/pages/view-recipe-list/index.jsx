@@ -1,25 +1,27 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import { InformationCircleIcon, PencilAltIcon } from '@heroicons/react/outline';
 import { unescapeHtml } from '../../utils/HtmlConverter'
-import { AccountContext } from '../../context/AccountContext';
-import { AttributeRangeContext } from '../../context/AttributeRangeContext';
-import { BeansContext } from '../../context/BeansContext';
-import CoffeeBagRight from '../../svgs/CoffeeBagRight';
-import StarFullIcon from '../../svgs/StarFullIcon';
-import StarHalfIcon from '../../svgs/StarHalfIcon';
-import FireFullIcon from '../../svgs/FireFullIcon';
-import FireHalfIcon from '../../svgs/FireHalfIcon';
-import Tooltip from '../../shared/Tooltip';
+import { useUserData } from '../../context/AccountContext';
+import { useAttributeRangeList, useFetchAttributeRangeList } from '../../context/AttributeRangeContext';
+import { useBeanList, useFetchBeanList } from '../../context/BeansContext';
+import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
+import StarFullIcon from '../../assets/svgs/StarFullIcon';
+import StarHalfIcon from '../../assets/svgs/StarHalfIcon';
+import FireFullIcon from '../../assets/svgs/FireFullIcon';
+import FireHalfIcon from '../../assets/svgs/FireHalfIcon';
+import Tooltip from '../../components/elements/Tooltip';
 import RecipeSection from './RecipeSection';
 import './ViewRecipes.scss'
 
 
 const ViewRecipes = () => {
   const { id } = useParams();
-  const { userData } = useContext(AccountContext);
-  const { attributeRangeList, fetchAttributeRangeList } = useContext(AttributeRangeContext);
-  const { beanList, fetchBeanList } = useContext(BeansContext);
+  const userData = useUserData()
+  const attributeRangeList = useAttributeRangeList();
+  const fetchAttributeRangeList = useFetchAttributeRangeList();
+  const beanList = useBeanList()
+  const fetchBeanList = useFetchBeanList()
 
   const [singleOrigin, setSingleOrigin] = useState(false);
   const [coffeeName, setCoffeeName] = useState("");

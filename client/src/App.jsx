@@ -1,21 +1,19 @@
-import React, { useEffect, useContext, createRef } from 'react';
-import {BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect, createRef } from 'react';
+import {BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './index.scss'
-import Nav from './shared/Nav';
-import Header from './shared/Header';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import ViewRecipes from './pages/ViewRecipes';
-import ViewMyCoffees from './pages/ViewMyCoffees';
-import ManageAttributeRanges from './pages/AttributeRangesSetting';
-import { AccountContext } from './context/AccountContext';
+import Nav from './components/nav';
+import Header from './components/header';
+import Login from './pages/login';
+import Register from './pages/register';
+import Dashboard from './pages/dashboard';
+import ViewRecipes from './pages/view-recipe-list';
+import ViewMyCoffees from './pages/view-beans-list';
+import ManageAttributeRanges from './pages/manage-attribute-ranges';
+import { useGetSession, useSetUserData, useAuthenticated, useSetAuthenticated } from './context/AccountContext';
 import NavStateProvider from './context/NavStateContext';
-import { AttributeRangeContext } from './context/AttributeRangeContext';
-import { BeansContext } from './context/BeansContext';
-import ScrollBackButton from './shared/ScrollBackButton';
+import ScrollBackButton from './components/elements/ScrollBackButton';
 
 const App = () => {
   const mainRef = createRef();
@@ -23,19 +21,16 @@ const App = () => {
   const headerRef = createRef();
   const pushpinRef = createRef();
 
-
-  const { getSession, userData, setUserData, authenticated, setAuthenticated } = useContext(AccountContext);
-  const { attributeRangeList, fetchAttributeRangeList } = useContext(AttributeRangeContext);
-  const { fetchBeanList } = useContext(BeansContext)
+  const getSession = useGetSession()
+  const setUserData = useSetUserData()
+  const authenticated = useAuthenticated()
+  const setAuthenticated = useSetAuthenticated()
 
   useEffect(() => {
     getSession().then((session) => {
       setUserData(session);
-      fetchAttributeRangeList(userData.sub);
-      fetchBeanList(userData.sub);
       setAuthenticated(true);
     });
-    console.log("attributeRangeList useEffect in App.jsx: ", attributeRangeList)
   }, []);
 
   return <>

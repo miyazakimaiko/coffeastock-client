@@ -1,18 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import AccountProvider from './context/AccountContext'
-import AttributeRangeContext from './context/AttributeRangeContext';
-import BeansProvider from './context/BeansContext';
+import {AccountProvider} from './context/AccountContext'
+import {AttributeRangeProvider} from './context/AttributeRangeContext'
+import {BeansProvider} from './context/BeansContext'
 
 
 ReactDOM.render(
   <AccountProvider>
-    <AttributeRangeContext>
+    <AttributeRangeProvider>
       <BeansProvider>
         <App/>
       </BeansProvider>
-    </AttributeRangeContext>
+    </AttributeRangeProvider>
   </AccountProvider>
 , document.getElementById("root"))
 

@@ -1,6 +1,6 @@
-import React, { useContext } from 'react'
-import { BeansContext } from '../../context/BeansContext'
-import { AttributeRangeContext } from '../../context/AttributeRangeContext'
+import React from 'react'
+import { useBeanList } from '../../context/BeansContext'
+import { useAttributeRangeList } from '../../context/AttributeRangeContext'
 import ChartBarBeans from './ChartBarBeans'
 import ChartBarRecipes from './ChartBarRecipes'
 import TotalBeans from './TotalBeans'
@@ -9,8 +9,8 @@ import TotalRecipes from './TotalRecipes'
 import { useEffect } from 'react'
 
 const Dashboard = () => {
-  const { attributeRangeList } = useContext(AttributeRangeContext);
-  const { beanList } = useContext(BeansContext);
+  const attributeRangeList = useAttributeRangeList();
+  const beanList = useBeanList()
   console.log('attributeRangeList In Dashboard: ', attributeRangeList)
   console.log('beans In Dashboard: ', beanList)
 

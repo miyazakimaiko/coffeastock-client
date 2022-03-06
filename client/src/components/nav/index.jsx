@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, CogIcon, HomeIcon } from '@heroicons/react/outline'
-import PushPinIcon from '../../svgs/PushPinIcon'
+import PushPinIcon from '../../assets/svgs/PushPinIcon'
 import { NavStateContext } from '../../context/NavStateContext'
-import './Nav.scss'
+import './nav.scss'
 
 const Nav = (props) => {
   const { showNavbar, pinnedNavbar, setPinnedNavbar } = useContext(NavStateContext);

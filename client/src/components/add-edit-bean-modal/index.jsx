@@ -1,35 +1,40 @@
 import React, { useEffect, useCallback, useState, useContext, createRef } from 'react'
 import { MultiSelect } from "react-multi-select-component";
 import { PencilAltIcon, XIcon } from '@heroicons/react/outline'
-import { AccountContext } from '../../context/AccountContext';
-import { AttributeRangeContext } from '../../context/AttributeRangeContext';
-import { BeansContext } from '../../context/BeansContext';
+import { useUserData } from '../../context/AccountContext';
+import { useAttributeRangeList, useFetchAttributeRangeList, useInsertAttribute } from '../../context/AttributeRangeContext';
+import { useBeanList, useFetchBeanList, useInsertBean } from '../../context/BeansContext';
 import {  unescapeHtml, escapeHtml } from '../../utils/HtmlConverter'
-import './Modals.scss'
+import './modals.scss'
 
 const AddBeanModal = ({setOpenThisModal}) => {
-  const { userData } = useContext(AccountContext);
-  const { attributeRangeList, insertAttribute } = useContext(AttributeRangeContext);
-  const { beanList, insertBean } = useContext(BeansContext);
-  const roasterRange = Object.values(attributeRangeList.roaster_range);
-  const originRange = Object.values(attributeRangeList.origin_range);
-  const farmRange = Object.values(attributeRangeList.farm_range);
-  const processRange = Object.values(attributeRangeList.process_range);
-  const aromaRange = Object.values(attributeRangeList.aroma_range);
-  const varietyRange = Object.values(attributeRangeList.variety_range);
-  const beansRange = Object.values(beanList).map((
-    { coffee_bean_id: value, ...rest }) => ({ value, ...rest } ));
-  
-  const [name, innerSetName] = useState('');
-  const [grade, innerSetGrade] = useState('');
-  const [roastLevel, innerSetRoastLevel] = useState('');
-  const [roastDate, setRoastDate] = useState('');
-  const [harvestPeriod, innerSetHarvestPeriod] = useState('');
-  const [altitude, innerSetAltitude] = useState('');
-  const [isSingleOrigin, setIsSingleOrigin] = useState(false);
-  const [memo, innerSetMemo] = useState('');
+  const userData = useUserData()
+  const attributeRangeList = useAttributeRangeList() 
+  const fetchAttributeRangeList = useFetchAttributeRangeList()
+  const insertAttribute = useInsertAttribute()
+  const beanList = useBeanList()
+  const fetchBeanList = useFetchBeanList()
+  const insertBean = useInsertBean()
 
-  const [selectedOrigin, setSelectedOrigin] = useState([{label: "Kaffa, Ethiopia", value: "5"}]);
+  const [bean, setBean] = useState({
+    single_origin: false,
+    label: null,
+    grade: null,
+    roast_level: null,
+    roast_date: null,
+    harvest_period: null,
+    altitude: null,
+    memo: null,
+    blend_ratio: {},
+    origin: [],
+    farm: [],
+    variety: [],
+    process: [],
+    roaster: [],
+    aroma: []
+  })
+
+  const [selectedOrigin, setSelectedOrigin] = useState([]);
   const [selectedRoaster, setSelectedRoaster] = useState([]);
   const [selectedFarm, setSelectedFarm] = useState([]);
   const [selectedProcess, setSelectedProcess] = useState([]);
@@ -54,7 +59,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
       for (const beanId of Object.keys(blendRatios))
         if (bean.value === beanId) found = true;
       if (!found) {
-        let newBean = {};
+        const newBean = {};
         newBean[bean.value] = '0';
         setBlendRatio(newBean);
       }
@@ -66,7 +71,6 @@ const AddBeanModal = ({setOpenThisModal}) => {
       { ...blendRatios, ...newRatio }
     ));
   }
-  let blendRatioElements = makeBlendRatioElements(selectedBlendBeans, blendRatios, setBlendRatio);
 
   const setName = (name) => {
     const banned = ['&', '<', '>', '"', "'"];
@@ -78,17 +82,16 @@ const AddBeanModal = ({setOpenThisModal}) => {
       setNameWarningText(<span className="text-red">Special characters cannot be used.</span>)
     }
     else if (name.length > 60) {
-      setNameWarningText(<span className="text-red">{60 - name.length}/60</span>)
-      innerSetName(name);
+      setNameWarningText(<span className="text-red">{60 - name.length}/60</span>);
     } 
     else {
       setNameWarningText(`${60 - name.length}/60`);
-      innerSetName(name);
     }
+    setBean({...bean, label: name});  
   }
 
   const setHarvestPeriod = (period) => {
-    innerSetHarvestPeriod(period);
+    setBean({...bean, harvest_period: period})
     const encoded = escapeHtml(period);
     if (encoded.length > 60) {
       setPeriodWarningText(<span className="text-red">{60 - encoded.length}/60</span>)
@@ -103,12 +106,12 @@ const AddBeanModal = ({setOpenThisModal}) => {
       setAltitudeWarningText(<span className="text-red">{60 - encoded.length}/60</span>)
     } else {
       setAltitudeWarningText(`${60 - encoded.length}/60`)
-      innerSetAltitude(altitude);
+      setBean({...bean, altitude})
     }
   }
 
   const setGrade = (grade) => {
-    innerSetGrade(grade);
+    setBean({...bean, grade});
     if (grade < 0.0 || grade > 100.0) {
       setGradeWarningText(<span className="text-red">* Please enter a number between 0.0 and 100.0"</span>)
     } else {
@@ -117,7 +120,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
   }
 
   const setRoastLevel = (level) => {
-    innerSetRoastLevel(level);
+    setBean({...bean, roast_level: level})
     if (level < 0.0 || level > 10.0) {
       setRoastLevelWarningText(<span className="text-red">* Please enter a number between 0.0 and 10.0</span>)
     } else {
@@ -126,7 +129,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
   }
 
   const setMemo = (memo) => {
-    innerSetMemo(memo);
+    setBean({...bean, memo})
     const encoded = escapeHtml(memo);
     if (encoded.length > 400) {
       setMemoWarningText(<span className="text-red">{400 - encoded.length}/400</span>)
@@ -135,67 +138,62 @@ const AddBeanModal = ({setOpenThisModal}) => {
     }
   }
 
-  const [openBaseInfoTab, innerSetOpenBaseInfoTab] = useState(true);
-  const [openDetailsTab, innerSetOpenDetailsTab] = useState(false);
-  const [openConfirmationTab, innerSetOpenConfirmationTab] = useState(false);
+  const [tabState, setTabState] = useState({
+    baseInfoTab: true,
+    detailsTab: false,
+    confirmationTab: false,
+    canGoToConfirmation: false
+  });
+
   const baseInfoPage = createRef(null);
   const detailsPage = createRef(null);
   const confirmationPage = createRef(null);
 
+  const showPage = (pageRef) => {
+    pageRef.current.style.opacity = 1;
+    pageRef.current.style.height = "auto";
+    pageRef.current.style.overflow = "visible";
+  }
+
+  const hidePage = (pageRef) => {
+    pageRef.current.style.opacity = 0;
+    pageRef.current.style.height = 0;
+    pageRef.current.style.overflow = "hidden";
+  }
+
   // To toggle click from the Next button
   const setOpenBaseInfoTab = () => {
-    baseInfoPage.current.style.opacity = 1;
-    baseInfoPage.current.style.height = "auto";
-    baseInfoPage.current.style.overflow = "visible";
-    detailsPage.current.style.opacity = 0;
-    detailsPage.current.style.height = 0;
-    detailsPage.current.style.overflow = "hidden";
-    confirmationPage.current.style.opacity = 0;
-    confirmationPage.current.style.height = 0;
-    confirmationPage.current.style.overflow = "hidden";
-    innerSetOpenBaseInfoTab(true);
-    innerSetOpenDetailsTab(false);
-    innerSetOpenConfirmationTab(false);
+    showPage(baseInfoPage);
+    hidePage(detailsPage);
+    hidePage(confirmationPage);
+    setTabState({...tabState, baseInfoTab: true, detailsTab: false, confirmationTab: false});
  } 
 
   const setOpenDetailsTab = () => {
-    baseInfoPage.current.style.opacity = 0;
-    baseInfoPage.current.style.height = 0;
-    baseInfoPage.current.style.overflow = "hidden";
-    detailsPage.current.style.opacity = 1;
-    detailsPage.current.style.height = "auto";
-    detailsPage.current.style.overflow = "visible";
-    confirmationPage.current.style.opacity = 0;
-    confirmationPage.current.style.height = 0;
-    confirmationPage.current.style.overflow = "hidden";
-    innerSetOpenBaseInfoTab(false);
-    innerSetOpenDetailsTab(true);
-    innerSetOpenConfirmationTab(false);
+    hidePage(baseInfoPage);
+    showPage(detailsPage);
+    hidePage(confirmationPage);
+    setTabState({...tabState, baseInfoTab: false, detailsTab: true, confirmationTab: false});
   }
 
   const setOpenConfirmationTab = () => {
-    baseInfoPage.current.style.opacity = 0;
-    baseInfoPage.current.style.height = 0;
-    baseInfoPage.current.style.overflow = "hidden";
-    detailsPage.current.style.opacity = 0;
-    detailsPage.current.style.height = 0;
-    detailsPage.current.style.overflow = "hidden";
-    confirmationPage.current.style.opacity = 1;
-    confirmationPage.current.style.height = "auto";
-    confirmationPage.current.style.overflow = "visible";
-    innerSetOpenBaseInfoTab(false);
-    innerSetOpenDetailsTab(false);
-    innerSetOpenConfirmationTab(true);
+    hidePage(baseInfoPage);
+    hidePage(detailsPage);
+    showPage(confirmationPage);
+    setTabState({...tabState, baseInfoTab: false, detailsTab: false, confirmationTab: true});
   }
 
-  const [canGoToConfirmation, setCanGoToConfirmation] = useState(false);
   const checkCanGoToConfirmation = useCallback(() => {
-    if (isSingleOrigin && selectedOrigin.length > 0)
-      setCanGoToConfirmation(true);
-    else if (!isSingleOrigin && selectedBlendBeans.length > 0)
-      setCanGoToConfirmation(true);
-    else setCanGoToConfirmation(false);
-  }, [isSingleOrigin, selectedBlendBeans.length, selectedOrigin.length]);
+    if (bean.single_origin && selectedOrigin.length > 0) {
+      setTabState({...tabState, canGoToConfirmation: true});
+    }
+    else if (!bean.single_origin && selectedBlendBeans.length > 0) {
+      setTabState({...tabState, canGoToConfirmation: true});
+    }
+    else {
+      setTabState({...tabState, canGoToConfirmation: false});
+    }
+  }, [bean.single_origin, selectedBlendBeans.length, selectedOrigin.length]);
 
   const makeIdList = (selectedRange, category) => {
     const idList = [];
@@ -209,39 +207,33 @@ const AddBeanModal = ({setOpenThisModal}) => {
     return idList;
   }
 
-  const makeBeanFinalVersion = () => {
-    let bean = {
-      "label": name,
-      "single_origin": isSingleOrigin,
-      "grade": grade === "" ? null : grade,
-      "roast_level": roastLevel === "" ? null : roastLevel,
-      "memo": memo,
-      "roast_date": roastDate.length > 0 ? roastDate : null,
-      "roaster": makeIdList(selectedRoaster, "roaster"),
-      "aroma": makeIdList(selectedAroma, "aroma"),
-    }
-    if (isSingleOrigin) {
-      bean["blend_ratio"] = null;
-      bean["origin"] = makeIdList(selectedOrigin, "origin");
-      bean["farm"] = makeIdList(selectedFarm, "farm");
-      bean["variety"] = makeIdList(selectedVariety, "variety");
-      bean["process"] = makeIdList(selectedProcess, "process");
-      bean["altitude"] = altitude;
-      bean["harvest_period"] = harvestPeriod;
+  const finalizeBean = () => {
+    const roasterIdList = makeIdList(selectedRoaster, "roaster");
+    const aromaIdList = makeIdList(selectedAroma, "aroma");
+    setBean({...bean, 
+      roaster: [...roasterIdList],
+      aroma: [...aromaIdList]
+    });
+    if (bean.single_origin) {
+      const originIdList = makeIdList(selectedOrigin, "origin");
+      const farmIdList = makeIdList(selectedFarm, "farm");
+      const varietyIdList = makeIdList(selectedVariety, "variety");
+      const processIdList = makeIdList(selectedProcess, "process");
+      
+      setBean({...bean, 
+        origin: [...originIdList],
+        farm: [...farmIdList],
+        variety: [...varietyIdList],
+        process: [...processIdList],
+      });
     } else {
-      bean["blend_ratio"] = blendRatios;
-      bean["origin"] = null;
-      bean["farm"] = null;
-      bean["variety"] = null;
-      bean["process"] = null;
-      bean["altitude"] = null;
-      bean["harvest_period"] = null;
+      setBean({...bean, 
+        blend_ratio: blendRatios,
+      });
     }
-    return bean;
   }
 
   const getNewRangeList = (selectedRange) => {
-    console.log('selectedRange: ', selectedRange)
     let newRangeList = selectedRange.filter((x) => "__isNew__" in x);
     return newRangeList;
   }
@@ -268,17 +260,34 @@ const AddBeanModal = ({setOpenThisModal}) => {
     }
   }
 
-  const insertNewBean = async () => {
-    const bean = makeBeanFinalVersion();
-    const insertSuccess = await insertBean(userData.sub, bean);
-    if (insertSuccess)
-      setOpenThisModal(false);
+  const [processSubmit, setProcessSubmit] = useState(false);
+
+  const onSubmit = () => {
+    finalizeBean();
+    setProcessSubmit(true);
   }
+
+  useEffect(() => {
+    if (Object.keys(attributeRangeList).length === 0) {
+      fetchAttributeRangeList(userData.sub);
+    }
+    if (Object.keys(beanList).length === 0) {
+      fetchBeanList(userData.sub);
+    }
+  }, []);
+
+  useEffect(async () => {
+    if (bean.label !== null) {
+      const insertSuccess = await insertBean(userData.sub, bean);
+      if (insertSuccess)
+        setOpenThisModal(false);
+    }
+  }, [processSubmit])
 
   // To enable/disable Next button to go to confirmation section
   useEffect(() => {
     checkCanGoToConfirmation();
-  }, [isSingleOrigin, selectedOrigin, selectedBlendBeans, checkCanGoToConfirmation]);
+  }, [bean.single_origin, selectedOrigin, selectedBlendBeans, checkCanGoToConfirmation]);
 
 
   // To delete unselected BlendBean from the blendRatios object
@@ -329,7 +338,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                 type="button" 
                 onClick={setOpenBaseInfoTab}
                 className={
-                  (openBaseInfoTab ? "active " : "") + 
+                  (tabState.baseInfoTab ? "active " : "") + 
                   "w-full h-full py-2 text-white bg-burnt-sienna opacity-50"
                 } >
                 Base Info
@@ -342,10 +351,10 @@ const AddBeanModal = ({setOpenThisModal}) => {
               <button                
                 role="tab"
                 type="button"
-                disabled={name === ''}
+                disabled={bean.label === ''}
                 onClick={setOpenDetailsTab}
                 className={
-                  (openDetailsTab ? "active " : "") + 
+                  (tabState.detailsTab ? "active " : "") + 
                   "w-full h-full py-2 text-white bg-burnt-sienna opacity-50"
                 } >
                 Details
@@ -358,13 +367,13 @@ const AddBeanModal = ({setOpenThisModal}) => {
               <button                
                 role="tab"
                 type="button"
-                disabled={!canGoToConfirmation}
+                disabled={!tabState.canGoToConfirmation}
                 onClick={() => {
                   setOpenConfirmationTab();
                   insertNewRangeList();
                 }}
                 className={
-                  (openConfirmationTab ? "active " : "") + 
+                  (tabState.confirmationTab ? "active " : "") + 
                   "w-full h-full py-2 text-white bg-burnt-sienna opacity-50"
                 } >
                 Confirmation
@@ -388,7 +397,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       placeholder="e.g. Seasonal House Blend" 
                       className="blue-outline-transition bg-creme 
                       block w-full text-base py-2 px-3 rounded-md border-1"
-                      value={name}
+                      value={bean.label}
                       onChange={e => setName(e.target.value)}
                     />
                     <span className="text-sm float-right mt-1">{nameWarningText}</span>
@@ -403,7 +412,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       placeholder="e.g. 85.5"
                       className="blue-outline-transition bg-creme 
                       block w-full text-base py-2 px-3 rounded-md border-1"
-                      value={grade}
+                      value={bean.grade}
                       onChange={e => {
                         setGrade(e.target.value)
                       }}
@@ -420,7 +429,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       placeholder="e.g. 6.5" 
                       className="blue-outline-transition bg-creme 
                       block w-full text-base py-2 px-3 rounded-md border-1"
-                      value={roastLevel}
+                      value={bean.roast_level}
                       onChange={e => setRoastLevel(e.target.value)}
                     />
                     <span className="mt-1 text-sm float-right">{roastLevelWarningText}</span>
@@ -433,7 +442,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                         name="single_origin" 
                         id="single_origin" 
                         className="mr-2"
-                        onChange={e => { setIsSingleOrigin(e.target.checked) }}
+                        onChange={e => {setBean({...bean, single_origin: e.target.checked})}}
                       />
                       <label className="capitalize">Single Origin</label>
                     </div>
@@ -441,7 +450,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   <div className="form-section">
                     <label className="font-semibold uppercase">Roaster</label>
                     <MultiSelect
-                      options={roasterRange}
+                      options={Object.values(attributeRangeList.roaster_range)}
                       value={selectedRoaster}
                       onChange={setSelectedRoaster}
                       isCreatable={true}
@@ -456,8 +465,8 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       placeholder="e.g. 2021-12-10" 
                       className="blue-outline-transition bg-creme 
                       block w-full text-base py-2 px-3 rounded-md border-1"
-                      value={roastDate}
-                      onChange={e => setRoastDate(e.target.value)}
+                      value={bean.roast_date}
+                      onChange={e => setBean({...bean, roast_date: e.target.value})}
                     />
                   </div>
                 </div>
@@ -472,7 +481,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                 > Cancel </button>
                 <button
                   type="button"
-                  disabled={name === ''}
+                  disabled={bean.label === null || bean.label.length === 0 ? true : false}
                   className="border-2 border-blue bg-blue text-white opacity-80 hover:opacity-100 font-bold blue-button
                   uppercase text-md px-6 py-2 rounded-3xl button-transition"
                   onClick={setOpenDetailsTab}
@@ -484,14 +493,14 @@ const AddBeanModal = ({setOpenThisModal}) => {
               ref={detailsPage}
               className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300" >
 
-              <div className={`flex px-8 my-8 ${isSingleOrigin ? "hidden" : ""}`}>
+              <div className={`flex px-8 my-8 ${bean.single_origin ? "hidden" : ""}`}>
                 <div className="flex flex-col w-1/2">
                   <div className="form-section">
                     <label className="font-semibold uppercase">Blend of</label>
                     <span className="ml-2 text-sm">*Required</span>
                     <MultiSelect
                       labelledBy="Select"
-                      options={beansRange}
+                      options={Object.values(beanList).map(({ coffee_bean_id: value, ...rest }) => ({ value, ...rest } ))}
                       value={selectedBlendBeans}
                       onChange={e => setSelectedBlendBeans(e)}
                     />
@@ -499,7 +508,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   <div className="form-section my-4">
                     <label className="font-semibold uppercase divider">Blend Ratio</label>
                     <div>
-                      { blendRatioElements }
+                      { makeBlendRatioElements(selectedBlendBeans, blendRatios, setBlendRatio) }
                     </div>
                   </div>
                 </div>
@@ -509,7 +518,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                     <label className="font-semibold uppercase">Aroma</label>
                     <MultiSelect
                       labelledBy="Select"
-                      options={aromaRange}
+                      options={Object.values(attributeRangeList.aroma_range)}
                       value={selectedAroma}
                       isCreatable={true}
                       onChange={setSelectedAroma}
@@ -523,7 +532,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       placeholder="e.g. Name of the shop you bought this coffee, the price and weight etc." 
                       className=" h-40 blue-outline-transition bg-creme 
                       block w-full text-base py-2 px-3 rounded-md border-1"
-                      value={memo}
+                      value={bean.memo}
                       onChange={e => setMemo(e.target.value)}
                     />
                     <span className="text-sm float-right mt-1">{memoWarningText}</span>
@@ -531,13 +540,13 @@ const AddBeanModal = ({setOpenThisModal}) => {
                 </div>
               </div>
 
-              <div className={`flex px-8 my-8 ${isSingleOrigin ? "" : "hidden"}`}>
+              <div className={`flex px-8 my-8 ${bean.single_origin ? "" : "hidden"}`}>
                 <div className="flex flex-col w-1/2">
                   <div className="form-section">
                     <label className="font-semibold uppercase">Origin</label>
                     <span className="ml-2 text-sm">*Required</span>
                     <MultiSelect
-                      options={originRange}
+                      options={Object.values(attributeRangeList.origin_range)}
                       value={selectedOrigin}
                       onChange={setSelectedOrigin}
                       isCreatable={true}
@@ -548,7 +557,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   <div className="form-section">
                     <label className="font-semibold uppercase">Farm</label>
                     <MultiSelect
-                      options={farmRange}
+                      options={Object.values(attributeRangeList.farm_range)}
                       value={selectedFarm}
                       onChange={setSelectedFarm}
                       isCreatable={true}
@@ -559,7 +568,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   <div className="form-section">
                     <label className="font-semibold uppercase">Variety</label>
                     <MultiSelect
-                      options={varietyRange}
+                      options={Object.values(attributeRangeList.variety_range)}
                       value={selectedVariety}
                       onChange={setSelectedVariety}
                       isCreatable={true}
@@ -576,7 +585,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       placeholder="e.g. Sep 2020" 
                       className="blue-outline-transition bg-creme 
                       block w-full text-base py-2 px-3 rounded-md border-1"
-                      value={harvestPeriod}
+                      value={bean.harvest_period}
                       onChange={e => setHarvestPeriod(e.target.value)}
                     />
                     <span className="text-sm float-right mt-1">{periodWarningText}</span>
@@ -591,7 +600,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       placeholder="e.g. 4000 MASL" 
                       className="blue-outline-transition bg-creme 
                       block w-full text-base py-2 px-3 rounded-md border-1"
-                      value={altitude}
+                      value={bean.altitude}
                       onChange={e => setAltitude(e.target.value)}
                     />
                     <span className="text-sm float-right mt-1">{altitudeWarningText}</span>
@@ -602,7 +611,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   <div className="form-section">
                     <label className="font-semibold uppercase">Process</label>
                     <MultiSelect
-                      options={processRange}
+                      options={Object.values(attributeRangeList.process_range)}
                       value={selectedProcess}
                       onChange={setSelectedProcess}
                       isCreatable={true}
@@ -613,7 +622,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   <div className="form-section">
                     <label className="font-semibold uppercase">Aroma</label>
                     <MultiSelect
-                      options={aromaRange}
+                      options={Object.values(attributeRangeList.aroma_range)}
                       value={selectedAroma}
                       onChange={setSelectedAroma}
                       isCreatable={true}
@@ -629,7 +638,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       placeholder="e.g. Name of the shop you bought this coffee, the price and weight etc." 
                       className=" h-40 blue-outline-transition bg-creme 
                       block w-full text-base py-2 px-3 rounded-md border-1"
-                      value={memo}
+                      value={bean.memo}
                       onChange={e => setMemo(e.target.value)}
                     />
                     <span className="text-sm float-right mt-1">{memoWarningText}</span>
@@ -650,7 +659,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   className="border-2 border-blue bg-blue text-white opacity-80 hover:opacity-100 font-bold blue-button
                   uppercase text-md px-6 py-2 rounded-3xl button-transition"
                   type="button"
-                  disabled={!canGoToConfirmation}
+                  disabled={!tabState.canGoToConfirmation}
                   onClick={() => {
                     setOpenConfirmationTab();
                     insertNewRangeList();
@@ -680,17 +689,17 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       <div className="m-8">
                         <div className="confirm-section">
                           <label className="text-sm font-semibold uppercase mr-4">Name</label>
-                          <p>{name}</p>
+                          <p>{bean.label}</p>
                         </div>
 
                         <div className="confirm-section">
                           <label className="text-sm font-semibold uppercase mr-4">Single Origin</label>
-                          <p>{isSingleOrigin ? 'Yes' : 'No'}</p>
+                          <p>{bean.single_origin ? 'Yes' : 'No'}</p>
                         </div>
 
                         <div className="confirm-section">
                           <label className="text-sm font-semibold uppercase mr-4">Grade (0 - 100)</label>
-                          <p>{grade ? grade : 'Not Entered'}</p>
+                          <p>{bean.grade ? bean.grade : 'Not Entered'}</p>
                         </div>
 
                         <div className="confirm-section">
@@ -706,12 +715,12 @@ const AddBeanModal = ({setOpenThisModal}) => {
 
                         <div className="confirm-section">
                           <label className="text-sm font-semibold uppercase mr-4">Roast Level (0 - 10)</label>
-                          <p>{roastLevel? roastLevel : 'Not Entered'}</p>
+                          <p>{bean.roast_level? bean.roast_level : 'Not Entered'}</p>
                         </div>
 
                         <div className="confirm-section">
                           <label className="text-sm font-semibold uppercase mr-4">Roast Date</label>
-                          <p>{roastDate ? roastDate : 'Not Entered'}</p>
+                          <p>{bean.roast_date ? bean.roast_date : 'Not Entered'}</p>
                         </div>
                       </div>
                     </div>
@@ -722,7 +731,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       <h3 className="text-lg uppercase font-capitals">Details</h3>
                       <button
                         type="button"
-                        disabled={name === ''}
+                        disabled={bean.label === ''}
                         className="opacity-80 hover:opacity-100 
                         ease-linear transition-all duration-150"
                         onClick={setOpenDetailsTab} > 
@@ -730,7 +739,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       </button>
                     </div>
                     <div className="m-8">
-                      { isSingleOrigin ? 
+                      { bean.single_origin ? 
                         <>
                         <div className="confirm-section">
                           <label className="text-sm font-semibold uppercase mr-4">Origin</label>
@@ -765,12 +774,12 @@ const AddBeanModal = ({setOpenThisModal}) => {
 
                         <div className="confirm-section">
                           <label className="text-sm font-semibold uppercase mr-4">Harvest Period</label>
-                          <p>{harvestPeriod? harvestPeriod : 'Not Entered'}</p>
+                          <p>{bean.harvest_period? bean.harvest_period : 'Not Entered'}</p>
                         </div>
 
                         <div className="confirm-section">
                           <label className="text-sm font-semibold uppercase mr-4">Altitude</label>
-                          <p>{altitude? altitude : 'Not Entered'}</p>
+                          <p>{bean.altitude? bean.altitude : 'Not Entered'}</p>
                         </div>
 
                         <div className="confirm-section">
@@ -830,14 +839,14 @@ const AddBeanModal = ({setOpenThisModal}) => {
                       <p className="inline relative">
                         <button
                           type="button"
-                          disabled={name === ''}
+                          disabled={bean.label === ''}
                           className="absolute left-1 opacity-80 
                           hover:opacity-100 ease-linear transition-all duration-150"
                           onClick={setOpenDetailsTab} > 
                           <PencilAltIcon className="h-5 w-5" />
                         </button>
                       </p>
-                      <p className="inline ml-8">: {memo ? memo : 'Not Entered'}</p>
+                      <p className="inline ml-8">: {bean.memo ? bean.memo : 'Not Entered'}</p>
                     </div>
                   </div>
                 </div>
@@ -859,7 +868,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
                   hover:opacity-100 font-bold uppercase text-md 
                   px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
                   type="button"
-                  onClick={insertNewBean}
+                  onClick={onSubmit}
                 >
                   Submit
                 </button>

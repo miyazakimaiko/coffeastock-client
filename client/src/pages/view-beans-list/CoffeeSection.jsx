@@ -1,8 +1,8 @@
 import React from 'react'
-import CoffeeBag from '../../svgs/CoffeeBagRight'
+import CoffeeBag from '../../assets/svgs/CoffeeBagRight'
 import { Link } from 'react-router-dom'
-import StarHalfIcon from '../../svgs/StarHalfIcon'
-import StarFullIcon from '../../svgs/StarFullIcon'
+import StarHalfIcon from '../../assets/svgs/StarHalfIcon'
+import StarFullIcon from '../../assets/svgs/StarFullIcon'
 import { unescapeHtml } from '../../utils/HtmlConverter'
 
 const CoffeeSection = (props) => {

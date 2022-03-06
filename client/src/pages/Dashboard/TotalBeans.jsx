@@ -1,5 +1,5 @@
 import React from 'react'
-import imgBeans from '../../images/beans.png'
+import imgBeans from '../../assets/images/beans.png'
 
 const TotalBeans = () => {
   return (
