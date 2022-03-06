@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "./scss/breakpoints";
+@import "./assets/scss/breakpoints";
 
 body {
   position: relative;
@@ -197,10 +197,14 @@ body {
     padding: 5px 20px;
     text-align: left;
     white-space: nowrap;
+    &::before {
+      content: "→";
+      margin-right: 5px;
+      visibility: hidden;
+    }
     &.active {
       &::before {
-        content: "→";
-        margin-right: 5px;
+        visibility: visible;
       }
     }
   }
