@@ -104,12 +104,7 @@ const ViewMyCoffees = () => {
       setInnerHtml(makeInnerHtml());
     }
   }, 
-  [
-    beanList,
-    attributeRangeList,
-    showState,
-    groupState
-  ]);
+  [beanList, attributeRangeList, showState, groupState]);
 
   return (
     <>

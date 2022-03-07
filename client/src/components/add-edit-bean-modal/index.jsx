@@ -1,11 +1,13 @@
-import React, { useEffect, useCallback, useState, useContext, createRef } from 'react'
+import React, { useEffect, useCallback, useState, createRef } from 'react'
 import { MultiSelect } from "react-multi-select-component";
-import { PencilAltIcon, XIcon } from '@heroicons/react/outline'
+import { PencilAltIcon } from '@heroicons/react/outline'
 import { useUserData } from '../../context/AccountContext';
 import { useAttributeRangeList, useFetchAttributeRangeList, useInsertAttribute } from '../../context/AttributeRangeContext';
 import { useBeanList, useFetchBeanList, useInsertBean } from '../../context/BeansContext';
 import {  unescapeHtml, escapeHtml } from '../../utils/HtmlConverter'
 import './modals.scss'
+import AddEditBeanModalContainer from './components/AddEditBeanModalContainer';
+import StepsTab from './components/StepsTab';
 
 const AddBeanModal = ({setOpenThisModal}) => {
   const userData = useUserData()
@@ -304,582 +306,532 @@ const AddBeanModal = ({setOpenThisModal}) => {
   }, [selectedBlendBeans, blendRatios]);
 
   return (
-    <>
-    <div
-      className="justify-center flex overflow-x-hidden 
-      overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
 
-      <div 
-        className="relative h-fit w-full max-w-6xl px-2 my-16 mx-auto">
+    <AddEditBeanModalContainer
+      onCloseClick={() => setOpenThisModal(false)}
+    >
+      {/*body*/}
+      <ul className="flex">
+          <StepsTab
+            key="base-info"
+            title="Base Info"
+            tabState={tabState.baseInfoTab}
+            onClick={setOpenBaseInfoTab}
+          />
+          <StepsTab
+            key="details"
+            title="Details"
+            disabled={bean.label === '' || bean.label === null}
+            tabState={tabState.detailsTab}
+            onClick={setOpenDetailsTab}
+          />
+          <StepsTab
+            key="confirmation"
+            title="Confirmation"
+            disabled={!tabState.canGoToConfirmation}
+            tabState={tabState.confirmationTab}
+            onClick={() =>{
+              setOpenConfirmationTab();
+              insertNewRangeList();
+            }}
+          />
+      </ul>
+      
+      <form className="tab-content" >
         <div 
-          className="w-full border-0 rounded-lg shadow-lg relative 
-          flex flex-col bg-white outline-none focus:outline-none">
-
-          {/*header*/}
-          <div className="py-8">
-            <h3 className="text-lg font-light text-center font-capitals uppercase">
-              Add New Coffee Beans
-            </h3>
+          ref={baseInfoPage}
+          className="ease-linear transition-all duration-300" >
+          <div className="flex px-8 my-8">
+            <div className="flex flex-col w-1/2">
+              <div className="form-section">
+                <label className="font-semibold uppercase">Name</label>
+                <span className="ml-2 text-sm">* Required</span>
+                <input 
+                  type="text" 
+                  name="label" 
+                  autoComplete="off"
+                  placeholder="e.g. Seasonal House Blend" 
+                  className="blue-outline-transition bg-creme 
+                  block w-full text-base py-2 px-3 rounded-md border-1"
+                  value={bean.label}
+                  onChange={e => setName(e.target.value)}
+                />
+                <span className="text-sm float-right mt-1">{nameWarningText}</span>
+              </div>
+              <div className="form-section">
+                <label className="font-semibold uppercase">Grade (0.0 - 100.0)</label>
+                <input 
+                  type="number" 
+                  step="0.1"
+                  name="grade"
+                  autoComplete="off"
+                  placeholder="e.g. 85.5"
+                  className="blue-outline-transition bg-creme 
+                  block w-full text-base py-2 px-3 rounded-md border-1"
+                  value={bean.grade}
+                  onChange={e => {
+                    setGrade(e.target.value)
+                  }}
+                />
+                <span className="mt-1 text-sm float-right">{gradeWarningText}</span>
+              </div>
+              <div className="form-section">
+                <label className="font-semibold uppercase">Roast Level (0.0 - 10.0)</label>
+                <input 
+                  type="number" 
+                  step="0.1" 
+                  name="roastlevel"
+                  autoComplete="off"
+                  placeholder="e.g. 6.5" 
+                  className="blue-outline-transition bg-creme 
+                  block w-full text-base py-2 px-3 rounded-md border-1"
+                  value={bean.roast_level}
+                  onChange={e => setRoastLevel(e.target.value)}
+                />
+                <span className="mt-1 text-sm float-right">{roastLevelWarningText}</span>
+              </div>
+            </div>
+            <div className="w-1/2">
+              <div className="form-section h-1/3 flex items-end justify-start">
+                <div className="mb-2">
+                  <input type="checkbox" 
+                    name="single_origin" 
+                    id="single_origin" 
+                    className="mr-2"
+                    onChange={e => {setBean({...bean, single_origin: e.target.checked})}}
+                  />
+                  <label className="capitalize">Single Origin</label>
+                </div>
+              </div>
+              <div className="form-section">
+                <label className="font-semibold uppercase">Roaster</label>
+                <MultiSelect
+                  options={Object.values(attributeRangeList.roaster_range)}
+                  value={selectedRoaster}
+                  onChange={setSelectedRoaster}
+                  isCreatable={true}
+                  labelledBy="Select"
+                />
+              </div>
+              <div className="form-section">
+                <label className="font-semibold uppercase">Roast Date</label>
+                <input 
+                  type="date" 
+                  name="roastdate" 
+                  placeholder="e.g. 2021-12-10" 
+                  className="blue-outline-transition bg-creme 
+                  block w-full text-base py-2 px-3 rounded-md border-1"
+                  value={bean.roast_date}
+                  onChange={e => setBean({...bean, roast_date: e.target.value})}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center justify-between pl-8 pr-8 pb-8">
             <button
-              className="absolute right-4 top-4 border-0 text-black float-right"
-              onClick={() => setOpenThisModal(false)}>
-              <XIcon className="h-6 w-6"/>
-            </button>
+              className="border-2 border-red text-red opacity-80 
+              hover:opacity-100 font-bold uppercase text-md 
+              px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
+              type="button"
+              onClick={() => setOpenThisModal(false)}
+            > Cancel </button>
+            <button
+              type="button"
+              disabled={bean.label === null || bean.label.length === 0 ? true : false}
+              className="border-2 border-blue bg-blue text-white opacity-80 hover:opacity-100 font-bold blue-button
+              uppercase text-md px-6 py-2 rounded-3xl button-transition"
+              onClick={setOpenDetailsTab}
+            > Next </button>
+          </div>
+        </div>
+
+        <div 
+          ref={detailsPage}
+          className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300" >
+
+          <div className={`flex px-8 my-8 ${bean.single_origin ? "hidden" : ""}`}>
+            <div className="flex flex-col w-1/2">
+              <div className="form-section">
+                <label className="font-semibold uppercase">Blend of</label>
+                <span className="ml-2 text-sm">*Required</span>
+                <MultiSelect
+                  labelledBy="Select"
+                  options={Object.values(beanList).map(({ coffee_bean_id: value, ...rest }) => ({ value, ...rest } ))}
+                  value={selectedBlendBeans}
+                  onChange={e => setSelectedBlendBeans(e)}
+                />
+              </div>
+              <div className="form-section my-4">
+                <label className="font-semibold uppercase divider">Blend Ratio</label>
+                <div>
+                  { makeBlendRatioElements(selectedBlendBeans, blendRatios, setBlendRatio) }
+                </div>
+              </div>
+            </div>
+
+            <div className="w-1/2">
+              <div className="form-section">
+                <label className="font-semibold uppercase">Aroma</label>
+                <MultiSelect
+                  labelledBy="Select"
+                  options={Object.values(attributeRangeList.aroma_range)}
+                  value={selectedAroma}
+                  isCreatable={true}
+                  onChange={setSelectedAroma}
+                />
+              </div>
+              <div className="form-section">
+                <label className="font-semibold uppercase">Memo</label>
+                <textarea 
+                  name="memo"
+                  autoComplete="off"
+                  placeholder="e.g. Name of the shop you bought this coffee, the price and weight etc." 
+                  className=" h-40 blue-outline-transition bg-creme 
+                  block w-full text-base py-2 px-3 rounded-md border-1"
+                  value={bean.memo}
+                  onChange={e => setMemo(e.target.value)}
+                />
+                <span className="text-sm float-right mt-1">{memoWarningText}</span>
+              </div>
+            </div>
           </div>
 
-          {/*body*/}
-          <ul 
-            className="flex">
-            <li
-              className="nav-item w-1/3" 
-              key="base-info">
-              <button 
-                role="tab"
-                type="button" 
-                onClick={setOpenBaseInfoTab}
-                className={
-                  (tabState.baseInfoTab ? "active " : "") + 
-                  "w-full h-full py-2 text-white bg-burnt-sienna opacity-50"
-                } >
-                Base Info
-              </button>
-            </li>
-            <li 
-              className="nav-item w-1/3" 
-              role="presentation"
-              key="details">
-              <button                
-                role="tab"
-                type="button"
-                disabled={bean.label === ''}
-                onClick={setOpenDetailsTab}
-                className={
-                  (tabState.detailsTab ? "active " : "") + 
-                  "w-full h-full py-2 text-white bg-burnt-sienna opacity-50"
-                } >
-                Details
-              </button>
-            </li>
-            <li 
-              className="nav-item w-1/3" 
-              role="presentation"
-              key="confirmation">
-              <button                
-                role="tab"
-                type="button"
-                disabled={!tabState.canGoToConfirmation}
-                onClick={() => {
-                  setOpenConfirmationTab();
-                  insertNewRangeList();
-                }}
-                className={
-                  (tabState.confirmationTab ? "active " : "") + 
-                  "w-full h-full py-2 text-white bg-burnt-sienna opacity-50"
-                } >
-                Confirmation
-              </button>
-            </li>
-          </ul>
-          
-          <form className="tab-content" >
-            <div 
-              ref={baseInfoPage}
-              className="ease-linear transition-all duration-300" >
-              <div className="flex px-8 my-8">
-                <div className="flex flex-col w-1/2">
-                  <div className="form-section">
-                    <label className="font-semibold uppercase">Name</label>
-                    <span className="ml-2 text-sm">* Required</span>
-                    <input 
-                      type="text" 
-                      name="label" 
-                      autoComplete="off"
-                      placeholder="e.g. Seasonal House Blend" 
-                      className="blue-outline-transition bg-creme 
-                      block w-full text-base py-2 px-3 rounded-md border-1"
-                      value={bean.label}
-                      onChange={e => setName(e.target.value)}
-                    />
-                    <span className="text-sm float-right mt-1">{nameWarningText}</span>
-                  </div>
-                  <div className="form-section">
-                    <label className="font-semibold uppercase">Grade (0.0 - 100.0)</label>
-                    <input 
-                      type="number" 
-                      step="0.1"
-                      name="grade"
-                      autoComplete="off"
-                      placeholder="e.g. 85.5"
-                      className="blue-outline-transition bg-creme 
-                      block w-full text-base py-2 px-3 rounded-md border-1"
-                      value={bean.grade}
-                      onChange={e => {
-                        setGrade(e.target.value)
-                      }}
-                    />
-                    <span className="mt-1 text-sm float-right">{gradeWarningText}</span>
-                  </div>
-                  <div className="form-section">
-                    <label className="font-semibold uppercase">Roast Level (0.0 - 10.0)</label>
-                    <input 
-                      type="number" 
-                      step="0.1" 
-                      name="roastlevel"
-                      autoComplete="off"
-                      placeholder="e.g. 6.5" 
-                      className="blue-outline-transition bg-creme 
-                      block w-full text-base py-2 px-3 rounded-md border-1"
-                      value={bean.roast_level}
-                      onChange={e => setRoastLevel(e.target.value)}
-                    />
-                    <span className="mt-1 text-sm float-right">{roastLevelWarningText}</span>
-                  </div>
-                </div>
-                <div className="w-1/2">
-                  <div className="form-section h-1/3 flex items-end justify-start">
-                    <div className="mb-2">
-                      <input type="checkbox" 
-                        name="single_origin" 
-                        id="single_origin" 
-                        className="mr-2"
-                        onChange={e => {setBean({...bean, single_origin: e.target.checked})}}
-                      />
-                      <label className="capitalize">Single Origin</label>
-                    </div>
-                  </div>
-                  <div className="form-section">
-                    <label className="font-semibold uppercase">Roaster</label>
-                    <MultiSelect
-                      options={Object.values(attributeRangeList.roaster_range)}
-                      value={selectedRoaster}
-                      onChange={setSelectedRoaster}
-                      isCreatable={true}
-                      labelledBy="Select"
-                    />
-                  </div>
-                  <div className="form-section">
-                    <label className="font-semibold uppercase">Roast Date</label>
-                    <input 
-                      type="date" 
-                      name="roastdate" 
-                      placeholder="e.g. 2021-12-10" 
-                      className="blue-outline-transition bg-creme 
-                      block w-full text-base py-2 px-3 rounded-md border-1"
-                      value={bean.roast_date}
-                      onChange={e => setBean({...bean, roast_date: e.target.value})}
-                    />
-                  </div>
-                </div>
+          <div className={`flex px-8 my-8 ${bean.single_origin ? "" : "hidden"}`}>
+            <div className="flex flex-col w-1/2">
+              <div className="form-section">
+                <label className="font-semibold uppercase">Origin</label>
+                <span className="ml-2 text-sm">*Required</span>
+                <MultiSelect
+                  options={Object.values(attributeRangeList.origin_range)}
+                  value={selectedOrigin}
+                  onChange={setSelectedOrigin}
+                  isCreatable={true}
+                  labelledBy="Select"
+                />
               </div>
-              <div className="flex items-center justify-between pl-8 pr-8 pb-8">
-                <button
-                  className="border-2 border-red text-red opacity-80 
-                  hover:opacity-100 font-bold uppercase text-md 
-                  px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
-                  type="button"
-                  onClick={() => setOpenThisModal(false)}
-                > Cancel </button>
-                <button
-                  type="button"
-                  disabled={bean.label === null || bean.label.length === 0 ? true : false}
-                  className="border-2 border-blue bg-blue text-white opacity-80 hover:opacity-100 font-bold blue-button
-                  uppercase text-md px-6 py-2 rounded-3xl button-transition"
-                  onClick={setOpenDetailsTab}
-                > Next </button>
+
+              <div className="form-section">
+                <label className="font-semibold uppercase">Farm</label>
+                <MultiSelect
+                  options={Object.values(attributeRangeList.farm_range)}
+                  value={selectedFarm}
+                  onChange={setSelectedFarm}
+                  isCreatable={true}
+                  labelledBy="Select"
+                />
+              </div>
+
+              <div className="form-section">
+                <label className="font-semibold uppercase">Variety</label>
+                <MultiSelect
+                  options={Object.values(attributeRangeList.variety_range)}
+                  value={selectedVariety}
+                  onChange={setSelectedVariety}
+                  isCreatable={true}
+                  labelledBy="Select"
+                />
+              </div>
+
+              <div className="form-section">
+                <label className="font-semibold uppercase">Harvest Period</label>
+                <input 
+                  type="text" 
+                  name="harvest-period"
+                  autoComplete="off"
+                  placeholder="e.g. Sep 2020" 
+                  className="blue-outline-transition bg-creme 
+                  block w-full text-base py-2 px-3 rounded-md border-1"
+                  value={bean.harvest_period}
+                  onChange={e => setHarvestPeriod(e.target.value)}
+                />
+                <span className="text-sm float-right mt-1">{periodWarningText}</span>
+              </div>
+
+              <div className="form-section">
+                <label className="font-semibold uppercase">Altitude</label>
+                <input 
+                  type="text" 
+                  name="altitude"
+                  autoComplete="off"
+                  placeholder="e.g. 4000 MASL" 
+                  className="blue-outline-transition bg-creme 
+                  block w-full text-base py-2 px-3 rounded-md border-1"
+                  value={bean.altitude}
+                  onChange={e => setAltitude(e.target.value)}
+                />
+                <span className="text-sm float-right mt-1">{altitudeWarningText}</span>
               </div>
             </div>
 
-            <div 
-              ref={detailsPage}
-              className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300" >
-
-              <div className={`flex px-8 my-8 ${bean.single_origin ? "hidden" : ""}`}>
-                <div className="flex flex-col w-1/2">
-                  <div className="form-section">
-                    <label className="font-semibold uppercase">Blend of</label>
-                    <span className="ml-2 text-sm">*Required</span>
-                    <MultiSelect
-                      labelledBy="Select"
-                      options={Object.values(beanList).map(({ coffee_bean_id: value, ...rest }) => ({ value, ...rest } ))}
-                      value={selectedBlendBeans}
-                      onChange={e => setSelectedBlendBeans(e)}
-                    />
-                  </div>
-                  <div className="form-section my-4">
-                    <label className="font-semibold uppercase divider">Blend Ratio</label>
-                    <div>
-                      { makeBlendRatioElements(selectedBlendBeans, blendRatios, setBlendRatio) }
-                    </div>
-                  </div>
-                </div>
-
-                <div className="w-1/2">
-                  <div className="form-section">
-                    <label className="font-semibold uppercase">Aroma</label>
-                    <MultiSelect
-                      labelledBy="Select"
-                      options={Object.values(attributeRangeList.aroma_range)}
-                      value={selectedAroma}
-                      isCreatable={true}
-                      onChange={setSelectedAroma}
-                    />
-                  </div>
-                  <div className="form-section">
-                    <label className="font-semibold uppercase">Memo</label>
-                    <textarea 
-                      name="memo"
-                      autoComplete="off"
-                      placeholder="e.g. Name of the shop you bought this coffee, the price and weight etc." 
-                      className=" h-40 blue-outline-transition bg-creme 
-                      block w-full text-base py-2 px-3 rounded-md border-1"
-                      value={bean.memo}
-                      onChange={e => setMemo(e.target.value)}
-                    />
-                    <span className="text-sm float-right mt-1">{memoWarningText}</span>
-                  </div>
-                </div>
+            <div className="w-1/2">
+              <div className="form-section">
+                <label className="font-semibold uppercase">Process</label>
+                <MultiSelect
+                  options={Object.values(attributeRangeList.process_range)}
+                  value={selectedProcess}
+                  onChange={setSelectedProcess}
+                  isCreatable={true}
+                  labelledBy="Select"
+                />
               </div>
 
-              <div className={`flex px-8 my-8 ${bean.single_origin ? "" : "hidden"}`}>
-                <div className="flex flex-col w-1/2">
-                  <div className="form-section">
-                    <label className="font-semibold uppercase">Origin</label>
-                    <span className="ml-2 text-sm">*Required</span>
-                    <MultiSelect
-                      options={Object.values(attributeRangeList.origin_range)}
-                      value={selectedOrigin}
-                      onChange={setSelectedOrigin}
-                      isCreatable={true}
-                      labelledBy="Select"
-                    />
-                  </div>
-
-                  <div className="form-section">
-                    <label className="font-semibold uppercase">Farm</label>
-                    <MultiSelect
-                      options={Object.values(attributeRangeList.farm_range)}
-                      value={selectedFarm}
-                      onChange={setSelectedFarm}
-                      isCreatable={true}
-                      labelledBy="Select"
-                    />
-                  </div>
-
-                  <div className="form-section">
-                    <label className="font-semibold uppercase">Variety</label>
-                    <MultiSelect
-                      options={Object.values(attributeRangeList.variety_range)}
-                      value={selectedVariety}
-                      onChange={setSelectedVariety}
-                      isCreatable={true}
-                      labelledBy="Select"
-                    />
-                  </div>
-
-                  <div className="form-section">
-                    <label className="font-semibold uppercase">Harvest Period</label>
-                    <input 
-                      type="text" 
-                      name="harvest-period"
-                      autoComplete="off"
-                      placeholder="e.g. Sep 2020" 
-                      className="blue-outline-transition bg-creme 
-                      block w-full text-base py-2 px-3 rounded-md border-1"
-                      value={bean.harvest_period}
-                      onChange={e => setHarvestPeriod(e.target.value)}
-                    />
-                    <span className="text-sm float-right mt-1">{periodWarningText}</span>
-                  </div>
-
-                  <div className="form-section">
-                    <label className="font-semibold uppercase">Altitude</label>
-                    <input 
-                      type="text" 
-                      name="altitude"
-                      autoComplete="off"
-                      placeholder="e.g. 4000 MASL" 
-                      className="blue-outline-transition bg-creme 
-                      block w-full text-base py-2 px-3 rounded-md border-1"
-                      value={bean.altitude}
-                      onChange={e => setAltitude(e.target.value)}
-                    />
-                    <span className="text-sm float-right mt-1">{altitudeWarningText}</span>
-                  </div>
-                </div>
-
-                <div className="w-1/2">
-                  <div className="form-section">
-                    <label className="font-semibold uppercase">Process</label>
-                    <MultiSelect
-                      options={Object.values(attributeRangeList.process_range)}
-                      value={selectedProcess}
-                      onChange={setSelectedProcess}
-                      isCreatable={true}
-                      labelledBy="Select"
-                    />
-                  </div>
-
-                  <div className="form-section">
-                    <label className="font-semibold uppercase">Aroma</label>
-                    <MultiSelect
-                      options={Object.values(attributeRangeList.aroma_range)}
-                      value={selectedAroma}
-                      onChange={setSelectedAroma}
-                      isCreatable={true}
-                      labelledBy="Select"
-                    />
-                  </div>
-
-                  <div className="form-section">
-                    <label className="font-semibold uppercase">Memo</label>
-                    <textarea 
-                      name="memo" 
-                      autoComplete="off"
-                      placeholder="e.g. Name of the shop you bought this coffee, the price and weight etc." 
-                      className=" h-40 blue-outline-transition bg-creme 
-                      block w-full text-base py-2 px-3 rounded-md border-1"
-                      value={bean.memo}
-                      onChange={e => setMemo(e.target.value)}
-                    />
-                    <span className="text-sm float-right mt-1">{memoWarningText}</span>
-                  </div>
-
-                </div>
+              <div className="form-section">
+                <label className="font-semibold uppercase">Aroma</label>
+                <MultiSelect
+                  options={Object.values(attributeRangeList.aroma_range)}
+                  value={selectedAroma}
+                  onChange={setSelectedAroma}
+                  isCreatable={true}
+                  labelledBy="Select"
+                />
               </div>
 
-              <div className="flex items-center justify-between pl-8 pr-8 pb-8">
-                <button
-                  className="border-2 border-red text-red opacity-80 
-                  hover:opacity-100 font-bold uppercase text-md 
-                  px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
-                  type="button"
-                  onClick={() => setOpenThisModal(false)}
-                > Cancel </button>
-                <button
-                  className="border-2 border-blue bg-blue text-white opacity-80 hover:opacity-100 font-bold blue-button
-                  uppercase text-md px-6 py-2 rounded-3xl button-transition"
-                  type="button"
-                  disabled={!tabState.canGoToConfirmation}
-                  onClick={() => {
-                    setOpenConfirmationTab();
-                    insertNewRangeList();
-                  }}
-                > Next </button>
+              <div className="form-section">
+                <label className="font-semibold uppercase">Memo</label>
+                <textarea 
+                  name="memo" 
+                  autoComplete="off"
+                  placeholder="e.g. Name of the shop you bought this coffee, the price and weight etc." 
+                  className=" h-40 blue-outline-transition bg-creme 
+                  block w-full text-base py-2 px-3 rounded-md border-1"
+                  value={bean.memo}
+                  onChange={e => setMemo(e.target.value)}
+                />
+                <span className="text-sm float-right mt-1">{memoWarningText}</span>
               </div>
+
             </div>
+          </div>
 
-            <div 
-              ref={confirmationPage}
-              className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300" >
-                
-              <div className="px-8 my-10">
-                <div className="flex">
-                  <div className="flex flex-col w-1/2">
-                    <div>
-                      <div className="flex mx-4 mb-4">
-                        <h3 className="text-lg uppercase font-capitals">Base Info</h3>
-                        <button
-                          type="button"
-                          className="opacity-80 hover:opacity-100 
-                          ease-linear transition-all duration-150"
-                          onClick={setOpenBaseInfoTab} > 
-                          <PencilAltIcon className="h-5 w-5 ml-4" />
-                        </button>
-                      </div>
-                      <div className="m-8">
-                        <div className="confirm-section">
-                          <label className="text-sm font-semibold uppercase mr-4">Name</label>
-                          <p>{bean.label}</p>
-                        </div>
-
-                        <div className="confirm-section">
-                          <label className="text-sm font-semibold uppercase mr-4">Single Origin</label>
-                          <p>{bean.single_origin ? 'Yes' : 'No'}</p>
-                        </div>
-
-                        <div className="confirm-section">
-                          <label className="text-sm font-semibold uppercase mr-4">Grade (0 - 100)</label>
-                          <p>{bean.grade ? bean.grade : 'Not Entered'}</p>
-                        </div>
-
-                        <div className="confirm-section">
-                          <label className="text-sm font-semibold uppercase mr-4">Roaster</label>
-                          <div className="tag-section">
-                            {selectedRoaster.length <= 0 ? 
-                              <p>Not Selected</p> :
-                            selectedRoaster.map((roaster) => (
-                                <span>{roaster.label}</span>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="confirm-section">
-                          <label className="text-sm font-semibold uppercase mr-4">Roast Level (0 - 10)</label>
-                          <p>{bean.roast_level? bean.roast_level : 'Not Entered'}</p>
-                        </div>
-
-                        <div className="confirm-section">
-                          <label className="text-sm font-semibold uppercase mr-4">Roast Date</label>
-                          <p>{bean.roast_date ? bean.roast_date : 'Not Entered'}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="w-1/2">
-                    <div className="flex mx-4 mb-4">
-                      <h3 className="text-lg uppercase font-capitals">Details</h3>
-                      <button
-                        type="button"
-                        disabled={bean.label === ''}
-                        className="opacity-80 hover:opacity-100 
-                        ease-linear transition-all duration-150"
-                        onClick={setOpenDetailsTab} > 
-                        <PencilAltIcon className="h-5 w-5 ml-4" />
-                      </button>
-                    </div>
-                    <div className="m-8">
-                      { bean.single_origin ? 
-                        <>
-                        <div className="confirm-section">
-                          <label className="text-sm font-semibold uppercase mr-4">Origin</label>
-                          <div className="tag-section">
-                          {selectedOrigin.map((entry) => (
-                              <span>{entry.label}</span>
-                          ))}
-                          </div>
-                        </div>
-
-                        <div className="confirm-section">
-                          <label className="text-sm font-semibold uppercase mr-4">Farm</label>
-                          <div className="tag-section">
-                          {selectedFarm.length <= 0 ? 
-                            <p>Not Selected</p> :
-                          selectedFarm.map((entry) => (
-                              <span>{entry.label}</span>
-                          ))}
-                          </div>
-                        </div>
-
-                        <div className="confirm-section">
-                          <label className="text-sm font-semibold uppercase mr-4">Variety</label>
-                          <div className="tag-section">
-                          {selectedVariety.length <= 0 ? 
-                            <p>Not Selected</p> :
-                          selectedVariety.map((entry) => (
-                              <span>{entry.label}</span>
-                          ))}
-                          </div>
-                        </div>
-
-                        <div className="confirm-section">
-                          <label className="text-sm font-semibold uppercase mr-4">Harvest Period</label>
-                          <p>{bean.harvest_period? bean.harvest_period : 'Not Entered'}</p>
-                        </div>
-
-                        <div className="confirm-section">
-                          <label className="text-sm font-semibold uppercase mr-4">Altitude</label>
-                          <p>{bean.altitude? bean.altitude : 'Not Entered'}</p>
-                        </div>
-
-                        <div className="confirm-section">
-                          <label className="text-sm font-semibold uppercase mr-4">Process</label>
-                          <div className="tag-section">
-                          {selectedProcess.length <= 0 ? 
-                            <p>Not Selected</p> :
-                          selectedProcess.map((entry) => (
-                              <span>{entry.label}</span>
-                          ))}
-                          </div>
-                        </div>
-
-                        <div className="confirm-section">
-                          <label className="text-sm font-semibold uppercase mr-4">Aroma</label>
-                          <div className="tag-section">
-                          {selectedAroma.length <= 0 ? 
-                            <p>Not Selected</p> :
-                          selectedAroma.map((entry) => (
-                              <span>{entry.label}</span>
-                          ))}
-                          </div>
-                        </div>
-                        </>
-                        : 
-                        // Blend Beans
-                        <>
-                        <div className="confirm-section">
-                          <label className="text-sm font-semibold uppercase mr-4">Aroma</label>
-                          <div className="tag-section">
-                          {selectedAroma.length <= 0 ? 
-                            <p>Not Selected</p> :
-                          selectedAroma.map((entry) => (
-                            <span>{entry.label}</span>
-                          ))}
-                          </div>
-                        </div>
-
-                        <div className="confirm-section">
-                          <label className="text-sm font-semibold uppercase mr-4">Blend Ratio</label>
-                          <div className="tag-section">
-                          {selectedBlendBeans.map((entry) => (
-                            <span>{entry.label}: {blendRatios[entry.value]}%</span>
-                          ))}
-                          </div>
-                        </div>
-                        </>
-                      }
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <div className="mx-6 my-2">
-                    <div className="w-full">
-                      <h3 className="text-md uppercase font-capitals inline">Memo</h3>
-                      <p className="inline relative">
-                        <button
-                          type="button"
-                          disabled={bean.label === ''}
-                          className="absolute left-1 opacity-80 
-                          hover:opacity-100 ease-linear transition-all duration-150"
-                          onClick={setOpenDetailsTab} > 
-                          <PencilAltIcon className="h-5 w-5" />
-                        </button>
-                      </p>
-                      <p className="inline ml-8">: {bean.memo ? bean.memo : 'Not Entered'}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-              <div className="flex items-center justify-between px-8 py-8">
-                <button
-                  className="border-2 border-red text-red opacity-80 
-                  hover:opacity-100 font-bold uppercase text-md 
-                  px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
-                  type="button"
-                  onClick={() => setOpenThisModal(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="border-2 border-blue bg-blue text-white opacity-80 
-                  hover:opacity-100 font-bold uppercase text-md 
-                  px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
-                  type="button"
-                  onClick={onSubmit}
-                >
-                  Submit
-                </button>
-              </div>
-            </div>
-          </form>
+          <div className="flex items-center justify-between pl-8 pr-8 pb-8">
+            <button
+              className="border-2 border-red text-red opacity-80 
+              hover:opacity-100 font-bold uppercase text-md 
+              px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
+              type="button"
+              onClick={() => setOpenThisModal(false)}
+            > Cancel </button>
+            <button
+              className="border-2 border-blue bg-blue text-white opacity-80 hover:opacity-100 font-bold blue-button
+              uppercase text-md px-6 py-2 rounded-3xl button-transition"
+              type="button"
+              disabled={!tabState.canGoToConfirmation}
+              onClick={() => {
+                setOpenConfirmationTab();
+                insertNewRangeList();
+              }}
+            > Next </button>
+          </div>
         </div>
-      </div>
-    </div>
-    <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-  </>
+
+        <div 
+          ref={confirmationPage}
+          className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300" >
+            
+          <div className="px-8 my-10">
+            <div className="flex">
+              <div className="flex flex-col w-1/2">
+                <div>
+                  <div className="flex mx-4 mb-4">
+                    <h3 className="text-lg uppercase font-capitals">Base Info</h3>
+                    <button
+                      type="button"
+                      className="opacity-80 hover:opacity-100 
+                      ease-linear transition-all duration-150"
+                      onClick={setOpenBaseInfoTab} > 
+                      <PencilAltIcon className="h-5 w-5 ml-4" />
+                    </button>
+                  </div>
+                  <div className="m-8">
+                    <div className="confirm-section">
+                      <label className="text-sm font-semibold uppercase mr-4">Name</label>
+                      <p>{bean.label}</p>
+                    </div>
+
+                    <div className="confirm-section">
+                      <label className="text-sm font-semibold uppercase mr-4">Single Origin</label>
+                      <p>{bean.single_origin ? 'Yes' : 'No'}</p>
+                    </div>
+
+                    <div className="confirm-section">
+                      <label className="text-sm font-semibold uppercase mr-4">Grade (0 - 100)</label>
+                      <p>{bean.grade ? bean.grade : 'Not Entered'}</p>
+                    </div>
+
+                    <div className="confirm-section">
+                      <label className="text-sm font-semibold uppercase mr-4">Roaster</label>
+                      <div className="tag-section">
+                        {selectedRoaster.length <= 0 ? 
+                          <p>Not Selected</p> :
+                        selectedRoaster.map((roaster) => (
+                            <span>{roaster.label}</span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="confirm-section">
+                      <label className="text-sm font-semibold uppercase mr-4">Roast Level (0 - 10)</label>
+                      <p>{bean.roast_level? bean.roast_level : 'Not Entered'}</p>
+                    </div>
+
+                    <div className="confirm-section">
+                      <label className="text-sm font-semibold uppercase mr-4">Roast Date</label>
+                      <p>{bean.roast_date ? bean.roast_date : 'Not Entered'}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-1/2">
+                <div className="flex mx-4 mb-4">
+                  <h3 className="text-lg uppercase font-capitals">Details</h3>
+                  <button
+                    type="button"
+                    disabled={bean.label === ''}
+                    className="opacity-80 hover:opacity-100 
+                    ease-linear transition-all duration-150"
+                    onClick={setOpenDetailsTab} > 
+                    <PencilAltIcon className="h-5 w-5 ml-4" />
+                  </button>
+                </div>
+                <div className="m-8">
+                  { bean.single_origin ? 
+                    <>
+                    <div className="confirm-section">
+                      <label className="text-sm font-semibold uppercase mr-4">Origin</label>
+                      <div className="tag-section">
+                      {selectedOrigin.map((entry) => (
+                          <span>{entry.label}</span>
+                      ))}
+                      </div>
+                    </div>
+
+                    <div className="confirm-section">
+                      <label className="text-sm font-semibold uppercase mr-4">Farm</label>
+                      <div className="tag-section">
+                      {selectedFarm.length <= 0 ? 
+                        <p>Not Selected</p> :
+                      selectedFarm.map((entry) => (
+                          <span>{entry.label}</span>
+                      ))}
+                      </div>
+                    </div>
+
+                    <div className="confirm-section">
+                      <label className="text-sm font-semibold uppercase mr-4">Variety</label>
+                      <div className="tag-section">
+                      {selectedVariety.length <= 0 ? 
+                        <p>Not Selected</p> :
+                      selectedVariety.map((entry) => (
+                          <span>{entry.label}</span>
+                      ))}
+                      </div>
+                    </div>
+
+                    <div className="confirm-section">
+                      <label className="text-sm font-semibold uppercase mr-4">Harvest Period</label>
+                      <p>{bean.harvest_period? bean.harvest_period : 'Not Entered'}</p>
+                    </div>
+
+                    <div className="confirm-section">
+                      <label className="text-sm font-semibold uppercase mr-4">Altitude</label>
+                      <p>{bean.altitude? bean.altitude : 'Not Entered'}</p>
+                    </div>
+
+                    <div className="confirm-section">
+                      <label className="text-sm font-semibold uppercase mr-4">Process</label>
+                      <div className="tag-section">
+                      {selectedProcess.length <= 0 ? 
+                        <p>Not Selected</p> :
+                      selectedProcess.map((entry) => (
+                          <span>{entry.label}</span>
+                      ))}
+                      </div>
+                    </div>
+
+                    <div className="confirm-section">
+                      <label className="text-sm font-semibold uppercase mr-4">Aroma</label>
+                      <div className="tag-section">
+                      {selectedAroma.length <= 0 ? 
+                        <p>Not Selected</p> :
+                      selectedAroma.map((entry) => (
+                          <span>{entry.label}</span>
+                      ))}
+                      </div>
+                    </div>
+                    </>
+                    : 
+                    // Blend Beans
+                    <>
+                    <div className="confirm-section">
+                      <label className="text-sm font-semibold uppercase mr-4">Aroma</label>
+                      <div className="tag-section">
+                      {selectedAroma.length <= 0 ? 
+                        <p>Not Selected</p> :
+                      selectedAroma.map((entry) => (
+                        <span>{entry.label}</span>
+                      ))}
+                      </div>
+                    </div>
+
+                    <div className="confirm-section">
+                      <label className="text-sm font-semibold uppercase mr-4">Blend Ratio</label>
+                      <div className="tag-section">
+                      {selectedBlendBeans.map((entry) => (
+                        <span>{entry.label}: {blendRatios[entry.value]}%</span>
+                      ))}
+                      </div>
+                    </div>
+                    </>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="mx-6 my-2">
+                <div className="w-full">
+                  <h3 className="text-md uppercase font-capitals inline">Memo</h3>
+                  <p className="inline relative">
+                    <button
+                      type="button"
+                      disabled={bean.label === ''}
+                      className="absolute left-1 opacity-80 
+                      hover:opacity-100 ease-linear transition-all duration-150"
+                      onClick={setOpenDetailsTab} > 
+                      <PencilAltIcon className="h-5 w-5" />
+                    </button>
+                  </p>
+                  <p className="inline ml-8">: {bean.memo ? bean.memo : 'Not Entered'}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div className="flex items-center justify-between px-8 py-8">
+            <button
+              className="border-2 border-red text-red opacity-80 
+              hover:opacity-100 font-bold uppercase text-md 
+              px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
+              type="button"
+              onClick={() => setOpenThisModal(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className="border-2 border-blue bg-blue text-white opacity-80 
+              hover:opacity-100 font-bold uppercase text-md 
+              px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
+              type="button"
+              onClick={onSubmit}
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </form>
+    </AddEditBeanModalContainer>
   )
 }
 
