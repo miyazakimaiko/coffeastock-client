@@ -8,6 +8,12 @@ import {  unescapeHtml, escapeHtml } from '../../utils/HtmlConverter'
 import './modals.scss'
 import AddEditBeanModalContainer from './components/AddEditBeanModalContainer';
 import StepsTab from './components/StepsTab';
+import FormInput from '../elements/FormInput';
+import FormCheckbox from '../elements/FormCheckbox';
+import FormMultiSelect from '../elements/FormMultiSelect';
+import RedOutlineButton from '../elements/RedOutlineButton';
+import BlueButton from '../elements/BlueButton';
+import FormTextarea from '../elements/FormTextarea';
 
 const AddBeanModal = ({setOpenThisModal}) => {
   const userData = useUserData()
@@ -336,131 +342,102 @@ const AddBeanModal = ({setOpenThisModal}) => {
             }}
           />
       </ul>
+
       
-      <form className="tab-content" >
+      <form 
+        className="tab-content"
+      >
         <div 
-          ref={baseInfoPage}
-          className="ease-linear transition-all duration-300" >
+          ref={baseInfoPage} 
+          className="ease-linear transition-all duration-300"
+        >
           <div className="flex px-8 my-8">
             <div className="flex flex-col w-1/2">
-              <div className="form-section">
-                <label className="font-semibold uppercase">Name</label>
-                <span className="ml-2 text-sm">* Required</span>
-                <input 
-                  type="text" 
-                  name="label" 
-                  autoComplete="off"
-                  placeholder="e.g. Seasonal House Blend" 
-                  className="blue-outline-transition bg-creme 
-                  block w-full text-base py-2 px-3 rounded-md border-1"
-                  value={bean.label}
-                  onChange={e => setName(e.target.value)}
-                />
-                <span className="text-sm float-right mt-1">{nameWarningText}</span>
-              </div>
-              <div className="form-section">
-                <label className="font-semibold uppercase">Grade (0.0 - 100.0)</label>
-                <input 
-                  type="number" 
-                  step="0.1"
-                  name="grade"
-                  autoComplete="off"
-                  placeholder="e.g. 85.5"
-                  className="blue-outline-transition bg-creme 
-                  block w-full text-base py-2 px-3 rounded-md border-1"
-                  value={bean.grade}
-                  onChange={e => {
-                    setGrade(e.target.value)
-                  }}
-                />
-                <span className="mt-1 text-sm float-right">{gradeWarningText}</span>
-              </div>
-              <div className="form-section">
-                <label className="font-semibold uppercase">Roast Level (0.0 - 10.0)</label>
-                <input 
-                  type="number" 
-                  step="0.1" 
-                  name="roastlevel"
-                  autoComplete="off"
-                  placeholder="e.g. 6.5" 
-                  className="blue-outline-transition bg-creme 
-                  block w-full text-base py-2 px-3 rounded-md border-1"
-                  value={bean.roast_level}
-                  onChange={e => setRoastLevel(e.target.value)}
-                />
-                <span className="mt-1 text-sm float-right">{roastLevelWarningText}</span>
-              </div>
+              <FormInput
+                title="Name"
+                note="* Required"
+                type="text"
+                name="label" 
+                placeholder="e.g. Seasonal House Blend"
+                value={bean.label}
+                onChange={e => setName(e.target.value)}
+                warningText={nameWarningText}
+              />
+              <FormInput
+                title="Grade (0.0 - 100.0)"
+                type="number"
+                step="0.1"
+                name="grade"
+                placeholder="e.g. 85.5"
+                value={bean.grade}
+                onChange={e => setGrade(e.target.value)}
+                warningText={gradeWarningText}
+              />
+              <FormInput
+                title="Roast Level (0.0 - 10.0)"
+                type="number" 
+                step="0.1" 
+                name="roastlevel"
+                autoComplete="off"
+                placeholder="e.g. 6.5"
+                value={bean.grade}
+                onChange={e => setRoastLevel(e.target.value)}
+                warningText={roastLevelWarningText}
+              />
             </div>
+
             <div className="w-1/2">
-              <div className="form-section h-1/3 flex items-end justify-start">
-                <div className="mb-2">
-                  <input type="checkbox" 
-                    name="single_origin" 
-                    id="single_origin" 
-                    className="mr-2"
-                    onChange={e => {setBean({...bean, single_origin: e.target.checked})}}
-                  />
-                  <label className="capitalize">Single Origin</label>
-                </div>
-              </div>
-              <div className="form-section">
-                <label className="font-semibold uppercase">Roaster</label>
-                <MultiSelect
-                  options={Object.values(attributeRangeList.roaster_range)}
-                  value={selectedRoaster}
-                  onChange={setSelectedRoaster}
-                  isCreatable={true}
-                  labelledBy="Select"
-                />
-              </div>
-              <div className="form-section">
-                <label className="font-semibold uppercase">Roast Date</label>
-                <input 
-                  type="date" 
-                  name="roastdate" 
-                  placeholder="e.g. 2021-12-10" 
-                  className="blue-outline-transition bg-creme 
-                  block w-full text-base py-2 px-3 rounded-md border-1"
-                  value={bean.roast_date}
-                  onChange={e => setBean({...bean, roast_date: e.target.value})}
-                />
-              </div>
+              <FormCheckbox
+                title="Single Origin"
+                name="single_origin"
+                onChange={e => {setBean({...bean, single_origin: e.target.checked})}}
+              />
+              <FormMultiSelect 
+                title="Roaster"
+                options={Object.values(attributeRangeList.roaster_range)}
+                value={selectedRoaster}
+                onChange={setSelectedRoaster}
+                isCreatable={true}
+              />
+              <FormInput
+                title="Roast Date"
+                type="date" 
+                name="roastdate" 
+                placeholder="e.g. 2021-12-10" 
+                value={bean.roast_date}
+                onChange={e => setBean({...bean, roast_date: e.target.value})}
+              />
             </div>
           </div>
           <div className="flex items-center justify-between pl-8 pr-8 pb-8">
-            <button
-              className="border-2 border-red text-red opacity-80 
-              hover:opacity-100 font-bold uppercase text-md 
-              px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
-              type="button"
+            <RedOutlineButton
+              text="Cancel"
               onClick={() => setOpenThisModal(false)}
-            > Cancel </button>
-            <button
-              type="button"
-              disabled={bean.label === null || bean.label.length === 0 ? true : false}
-              className="border-2 border-blue bg-blue text-white opacity-80 hover:opacity-100 font-bold blue-button
-              uppercase text-md px-6 py-2 rounded-3xl button-transition"
+            />
+            <BlueButton
+              text="Next"
+              disabled={
+                bean.label === null || 
+                bean.label.length === 0 ? true : false
+              }
               onClick={setOpenDetailsTab}
-            > Next </button>
+            />
           </div>
         </div>
 
         <div 
           ref={detailsPage}
-          className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300" >
-
+          className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300"
+        >
           <div className={`flex px-8 my-8 ${bean.single_origin ? "hidden" : ""}`}>
             <div className="flex flex-col w-1/2">
-              <div className="form-section">
-                <label className="font-semibold uppercase">Blend of</label>
-                <span className="ml-2 text-sm">*Required</span>
-                <MultiSelect
-                  labelledBy="Select"
-                  options={Object.values(beanList).map(({ coffee_bean_id: value, ...rest }) => ({ value, ...rest } ))}
-                  value={selectedBlendBeans}
-                  onChange={e => setSelectedBlendBeans(e)}
-                />
-              </div>
+              <FormMultiSelect 
+                title="Blend of"
+                note="* Required"
+                options={Object.values(beanList).map(({ coffee_bean_id: value, ...rest }) => ({ value, ...rest } ))}
+                value={selectedBlendBeans}
+                onChange={e => setSelectedBlendBeans(e)}
+              />
               <div className="form-section my-4">
                 <label className="font-semibold uppercase divider">Blend Ratio</label>
                 <div>
@@ -470,157 +447,105 @@ const AddBeanModal = ({setOpenThisModal}) => {
             </div>
 
             <div className="w-1/2">
-              <div className="form-section">
-                <label className="font-semibold uppercase">Aroma</label>
-                <MultiSelect
-                  labelledBy="Select"
-                  options={Object.values(attributeRangeList.aroma_range)}
-                  value={selectedAroma}
-                  isCreatable={true}
-                  onChange={setSelectedAroma}
-                />
-              </div>
-              <div className="form-section">
-                <label className="font-semibold uppercase">Memo</label>
-                <textarea 
-                  name="memo"
-                  autoComplete="off"
-                  placeholder="e.g. Name of the shop you bought this coffee, the price and weight etc." 
-                  className=" h-40 blue-outline-transition bg-creme 
-                  block w-full text-base py-2 px-3 rounded-md border-1"
-                  value={bean.memo}
-                  onChange={e => setMemo(e.target.value)}
-                />
-                <span className="text-sm float-right mt-1">{memoWarningText}</span>
-              </div>
+              <FormMultiSelect 
+                title="Aroma"
+                options={Object.values(attributeRangeList.aroma_range)}
+                value={selectedAroma}
+                isCreatable={true}
+                onChange={setSelectedAroma}
+              />
+              <FormTextarea
+                title="Memo"
+                name="memo"
+                value={bean.memo}
+                onChange={e => setMemo(e.target.value)}
+                warningText={memoWarningText}
+              />
             </div>
           </div>
 
           <div className={`flex px-8 my-8 ${bean.single_origin ? "" : "hidden"}`}>
             <div className="flex flex-col w-1/2">
-              <div className="form-section">
-                <label className="font-semibold uppercase">Origin</label>
-                <span className="ml-2 text-sm">*Required</span>
-                <MultiSelect
-                  options={Object.values(attributeRangeList.origin_range)}
-                  value={selectedOrigin}
-                  onChange={setSelectedOrigin}
-                  isCreatable={true}
-                  labelledBy="Select"
-                />
-              </div>
-
-              <div className="form-section">
-                <label className="font-semibold uppercase">Farm</label>
-                <MultiSelect
-                  options={Object.values(attributeRangeList.farm_range)}
-                  value={selectedFarm}
-                  onChange={setSelectedFarm}
-                  isCreatable={true}
-                  labelledBy="Select"
-                />
-              </div>
-
-              <div className="form-section">
-                <label className="font-semibold uppercase">Variety</label>
-                <MultiSelect
-                  options={Object.values(attributeRangeList.variety_range)}
-                  value={selectedVariety}
-                  onChange={setSelectedVariety}
-                  isCreatable={true}
-                  labelledBy="Select"
-                />
-              </div>
-
-              <div className="form-section">
-                <label className="font-semibold uppercase">Harvest Period</label>
-                <input 
-                  type="text" 
-                  name="harvest-period"
-                  autoComplete="off"
-                  placeholder="e.g. Sep 2020" 
-                  className="blue-outline-transition bg-creme 
-                  block w-full text-base py-2 px-3 rounded-md border-1"
-                  value={bean.harvest_period}
-                  onChange={e => setHarvestPeriod(e.target.value)}
-                />
-                <span className="text-sm float-right mt-1">{periodWarningText}</span>
-              </div>
-
-              <div className="form-section">
-                <label className="font-semibold uppercase">Altitude</label>
-                <input 
-                  type="text" 
-                  name="altitude"
-                  autoComplete="off"
-                  placeholder="e.g. 4000 MASL" 
-                  className="blue-outline-transition bg-creme 
-                  block w-full text-base py-2 px-3 rounded-md border-1"
-                  value={bean.altitude}
-                  onChange={e => setAltitude(e.target.value)}
-                />
-                <span className="text-sm float-right mt-1">{altitudeWarningText}</span>
-              </div>
+              <FormMultiSelect 
+                title="Origin"
+                note="* Required"
+                options={Object.values(attributeRangeList.origin_range)}
+                value={selectedOrigin}
+                onChange={setSelectedOrigin}
+                isCreatable={true}
+              />
+              <FormMultiSelect 
+                title="Farm"
+                options={Object.values(attributeRangeList.farm_range)}
+                value={selectedFarm}
+                onChange={setSelectedFarm}
+                isCreatable={true}
+              />
+              <FormMultiSelect 
+                title="Variety"
+                options={Object.values(attributeRangeList.variety_range)}
+                value={selectedVariety}
+                onChange={setSelectedVariety}
+                isCreatable={true}
+              />
+              <FormInput
+                title="Harvest Period"
+                type="text" 
+                name="harvest-period"
+                placeholder="e.g. Sep 2020" 
+                value={bean.harvest_period}
+                onChange={e => setHarvestPeriod(e.target.value)}
+                warningText={periodWarningText}
+              />
+              <FormInput
+                title="Altitude"
+                type="text" 
+                name="altitude"
+                placeholder="e.g. 4000 MASL"
+                value={bean.altitude}
+                onChange={e => setAltitude(e.target.value)}
+                warningText={altitudeWarningText}
+              />
             </div>
 
             <div className="w-1/2">
-              <div className="form-section">
-                <label className="font-semibold uppercase">Process</label>
-                <MultiSelect
-                  options={Object.values(attributeRangeList.process_range)}
-                  value={selectedProcess}
-                  onChange={setSelectedProcess}
-                  isCreatable={true}
-                  labelledBy="Select"
-                />
-              </div>
-
-              <div className="form-section">
-                <label className="font-semibold uppercase">Aroma</label>
-                <MultiSelect
-                  options={Object.values(attributeRangeList.aroma_range)}
-                  value={selectedAroma}
-                  onChange={setSelectedAroma}
-                  isCreatable={true}
-                  labelledBy="Select"
-                />
-              </div>
-
-              <div className="form-section">
-                <label className="font-semibold uppercase">Memo</label>
-                <textarea 
-                  name="memo" 
-                  autoComplete="off"
-                  placeholder="e.g. Name of the shop you bought this coffee, the price and weight etc." 
-                  className=" h-40 blue-outline-transition bg-creme 
-                  block w-full text-base py-2 px-3 rounded-md border-1"
-                  value={bean.memo}
-                  onChange={e => setMemo(e.target.value)}
-                />
-                <span className="text-sm float-right mt-1">{memoWarningText}</span>
-              </div>
-
+              <FormMultiSelect 
+                title="Process"
+                options={Object.values(attributeRangeList.process_range)}
+                value={selectedProcess}
+                onChange={setSelectedProcess}
+                isCreatable={true}
+              />
+              <FormMultiSelect 
+                title="Aroma"
+                options={Object.values(attributeRangeList.aroma_range)}
+                value={selectedAroma}
+                onChange={setSelectedAroma}
+                isCreatable={true}
+              />
+              <FormTextarea
+                title="Memo"
+                name="memo"
+                value={bean.memo}
+                onChange={e => setMemo(e.target.value)}
+                warningText={memoWarningText}
+              />
             </div>
           </div>
 
           <div className="flex items-center justify-between pl-8 pr-8 pb-8">
-            <button
-              className="border-2 border-red text-red opacity-80 
-              hover:opacity-100 font-bold uppercase text-md 
-              px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
-              type="button"
-              onClick={() => setOpenThisModal(false)}
-            > Cancel </button>
-            <button
-              className="border-2 border-blue bg-blue text-white opacity-80 hover:opacity-100 font-bold blue-button
-              uppercase text-md px-6 py-2 rounded-3xl button-transition"
-              type="button"
+            <RedOutlineButton
+              text="Go Back"
+              onClick={setOpenBaseInfoTab}
+            />
+            <BlueButton
+              text="Next"
               disabled={!tabState.canGoToConfirmation}
               onClick={() => {
                 setOpenConfirmationTab();
                 insertNewRangeList();
               }}
-            > Next </button>
+            />
           </div>
         </div>
 
@@ -815,9 +740,9 @@ const AddBeanModal = ({setOpenThisModal}) => {
               hover:opacity-100 font-bold uppercase text-md 
               px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
               type="button"
-              onClick={() => setOpenThisModal(false)}
+              onClick={setOpenDetailsTab}
             >
-              Cancel
+              Go Back
             </button>
             <button
               className="border-2 border-blue bg-blue text-white opacity-80 
@@ -852,7 +777,7 @@ const makeBlendRatioElements = (selectedBeans, blendRatios, setBlendRatio) => {
       <label className="text-md">{bean.label}</label>
       <div className="percent-char">
         <input 
-          type="text" 
+          type="number" 
           name={bean.value}
           id={bean.value}
           autoComplete="off"

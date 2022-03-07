@@ -145,22 +145,18 @@ const ManageAttributeRanges = ({cat}) => {
   return (
     <>
       <div className="px-4 pt-8">
-        <div className="flex mb-4 w-full flex-wrap justify-center">
-          <div className="px-3 w-full">
-            <ToolBar pageTitle={`${cat} range`}>
-              <ToolBarButton 
-                title={`${cat} range`}
-                onClick={() => {
-                  setAttribute({ value: '', label: '', def: '' });
-                  setModal({ mode: MODE.ADD, isOpen: true })
-                }}
-              />
-            </ToolBar>
-            <Table>
-              {attributeListHtml}
-            </Table>
-          </div>
-        </div>
+        <ToolBar pageTitle={`${cat} range`}>
+          <ToolBarButton 
+            title={`${cat} range`}
+            onClick={() => {
+              setAttribute({ value: '', label: '', def: '' });
+              setModal({ mode: MODE.ADD, isOpen: true })
+            }}
+          />
+        </ToolBar>
+        <Table>
+          {attributeListHtml}
+        </Table>
       </div>
 
       {(modal.isOpen === true && (modal.mode === MODE.ADD || modal.mode === MODE.EDIT)) 
