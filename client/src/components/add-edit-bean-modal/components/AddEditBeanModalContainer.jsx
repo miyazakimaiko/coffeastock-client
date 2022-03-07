@@ -16,7 +16,7 @@ const AddEditBeanModalContainer = ({children, onCloseClick}) => {
 
             {/*header*/}
             <div className="py-8">
-              <h3 className="text-lg font-light text-center font-capitals uppercase">
+              <h3 className="text-lg font-light text-center ">
                 Add New Coffee Beans
               </h3>
               <button
