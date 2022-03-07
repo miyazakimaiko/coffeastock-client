@@ -14,7 +14,7 @@ const FormInput = ({
 }) => {
   return (
     <div className="form-section">
-      <label className="font-semibold">{title}</label>
+      <label className="font-medium">{title}</label>
       <span className="ml-2 text-sm">{note}</span>
       <input 
         type={type}
@@ -27,7 +27,7 @@ const FormInput = ({
         value={value}
         onChange={onChange}
       />
-      <span className="text-sm float-right mt-1">{warningText}</span>
+      <span className="text-xs float-right mt-1">{warningText}</span>
     </div>
   )
 }

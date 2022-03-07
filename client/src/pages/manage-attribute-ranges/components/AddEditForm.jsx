@@ -14,7 +14,7 @@ const AddEditForm = ({children, onCloseClick, onSubmit}) => {
           <div className="flex items-center justify-between pl-4 pr-4 pb-8">
             <button
               className="text-red-500 background-transparent 
-              font-bold uppercase px-6 py-2 text-md outline-none 
+                px-6 py-2 text-sm outline-none 
               focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
               type="button"
               onClick={onCloseClick}>
@@ -22,7 +22,7 @@ const AddEditForm = ({children, onCloseClick, onSubmit}) => {
             </button>
             <button
               className="bg-blue text-white opacity-80 
-              hover:opacity-100 font-bold uppercase text-md 
+              hover:opacity-100   text-sm 
               px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
               type="submit">
               Save Changes

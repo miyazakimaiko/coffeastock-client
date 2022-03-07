@@ -21,7 +21,7 @@ const AddEditModal = ({children, mode, category, onCloseClick}) => {
             <div 
               className="flex justify-center py-8 rounded-t 
               border-b border-burnt-sienna border-opacity-20">
-              <h3 className="text-lg font-light font-capitals uppercase">
+              <h3 className="text-lg font-light">
                 {mode === 'add' ? titleAdd : titleEdit}
               </h3>
               <button

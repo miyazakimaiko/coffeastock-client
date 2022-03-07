@@ -40,7 +40,7 @@ const CoffeeSection = (props) => {
             bg-burnt-sienna rounded-md z-10 
             transition-opacity duration-300 ease-out opacity-0 hover:opacity-80
         ">
-          <span  className=" h-full w-full flex justify-center items-center text-white font-bold text-2xl">
+          <span  className=" h-full w-full flex justify-center items-center text-white  text-2xl">
             View Recipes
           </span>
         </div>

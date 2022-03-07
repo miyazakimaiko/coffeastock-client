@@ -5,7 +5,7 @@ const Table = ({children}) => {
     <div className="mt-3 px-8 py-4 bg-white shadow-sm rounded-md max-w-5xl m-auto">
     <table className="mb-4 settings-table w-full table-fixed">
       <thead>
-        <tr className="uppercase">
+        <tr>
           <th className="text-left font-medium">Name</th>
           <th className="text-left font-medium">Details</th>
           <th className="font-medium">Options</th>

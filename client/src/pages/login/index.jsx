@@ -68,14 +68,14 @@ const Login = () => {
             </div>
             <div className="card-content pt-3">
               <div className="pb-3">
-                <label className="font-bold">Email address</label>
+                <label className="">Email address</label>
                 <input type="email" name="email" placeholder="Enter email" className="blue-outline-transition bg-creme block w-full text-base py-2 px-3 rounded-md"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                 />
               </div>
               <div className="pb-3">
-                <label className="font-bold">Password</label>
+                <label className="">Password</label>
                 <input type="password" name="password" placeholder="Password" className="blue-outline-transition bg-creme block w-full text-base py-2 px-3 rounded-md"
                   value={password}
                   onChange={e => setPassword(e.target.value)}

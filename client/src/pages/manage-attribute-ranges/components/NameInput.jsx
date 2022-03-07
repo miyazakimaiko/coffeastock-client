@@ -3,7 +3,7 @@ import React from 'react'
 const NameInput = ({category, nameValue, nameOnChange, nameWarningText}) => {
   return (
     <div className="form-section">
-      <label className="font-semibold mb-2">{category} name</label>
+      <label className="font-medium mb-2">{category} name</label>
       <input
         type="text" 
         name="label"

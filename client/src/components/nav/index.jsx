@@ -64,7 +64,7 @@ const Nav = (props) => {
       <div 
         className=" border-b border-creme 
         border-opacity-20 h-16 px-6 flex justify-between items-center">
-        <h1 className="uppercase text-lg font-capitals">Coffee Journal</h1>
+        <h1 className=" text-lg">Coffee Journal</h1>
         <button 
           type="button" 
           ref={el => { props.pushpinRef.current = el; }} 
@@ -73,8 +73,8 @@ const Nav = (props) => {
         </button>
       </div>
 
-      <div className="my-8 text-md font-capitals">
-        <h3 className="mx-6 my-3 text-sm opacity-50">
+      <div className="my-8 text-sm">
+        <h3 className="mx-6 my-3 text-xs opacity-50">
           Main
         </h3>
         <ul className="ml-10">
@@ -100,8 +100,8 @@ const Nav = (props) => {
         </ul>
       </div>
 
-      <div className="my-8 text-md font-capitals">
-        <h3 className="mx-6 my-3 text-sm opacity-50">
+      <div className="my-8 text-sm">
+        <h3 className="mx-6 my-3 text-xs opacity-50">
             Customize Range
         </h3>
         <ul className="ml-6">

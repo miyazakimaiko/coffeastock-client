@@ -3,7 +3,7 @@ import React from 'react'
 const FormTextarea = ({title, name, autoComplete = "off", value, onChange, warningText}) => {
   return (
     <div className="form-section">
-      <label className="font-semibold uppercase">{title}</label>
+      <label className="font-medium">{title}</label>
       <textarea 
         name={name}
         autoComplete={autoComplete}
@@ -13,7 +13,7 @@ const FormTextarea = ({title, name, autoComplete = "off", value, onChange, warni
         value={value}
         onChange={onChange}
       />
-      <span className="text-sm float-right mt-1">{warningText}</span>
+      <span className="text-xs float-right mt-1">{warningText}</span>
     </div>
   )
 }

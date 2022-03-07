@@ -269,7 +269,7 @@ const Register = () => {
 
       <div className="">
         <div className="text-center">
-          <h1 className="text-4xl font-bold mb-3">Coffee Journal</h1>
+          <h1 className="text-4xl  mb-3">Coffee Journal</h1>
           <h2 className="text-xl">Collect, Analyse and Improve Your Coffee Records In One Place.</h2>
         </div>
 
@@ -278,21 +278,21 @@ const Register = () => {
             <div className="pb-4">
               <div className="flex items-center mb-2">
                 <BookOpenIcon className="w-10 h-10 mr-3 text-blue" />
-                <h3 className="text-lg font-semibold">Free Account</h3>
+                <h3 className="text-lg font-medium">Free Account</h3>
               </div>
               <p>Here you can write a feature description for your dashboard, let the users know what is the value that you give them.</p>
             </div>
             <div className="pb-4">
               <div className="flex items-center mb-2">
                 <GlobeIcon className="w-10 h-10 mr-3 text-green" />
-                <h3 className="text-lg font-semibold">Access From Anywhere</h3>
+                <h3 className="text-lg font-medium">Access From Anywhere</h3>
               </div>
               <p>Here you can write a feature description for your dashboard, let the users know what is the value that you give them.</p>
             </div>
             <div className="pb-4">
               <div className="flex items-center mb-2">
                 <LightBulbIcon className="w-10 h-10 mr-3 text-yellow" />
-                <h3 className="text-lg font-semibold">Other Features</h3>
+                <h3 className="text-lg font-medium">Other Features</h3>
               </div>
               <p>Here you can write a feature description for your dashboard, let the users know what is the value that you give them.</p>
             </div>

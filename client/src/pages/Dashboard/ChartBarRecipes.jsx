@@ -33,16 +33,16 @@ export const options = {
       position: 'top',
       labels: {
         font: {
-          family: "Prompt" // Add your font here to change the font of your legend label
+          family: "system-ui" // Add your font here to change the font of your legend label
         }
       }
     },
     tooltip: {
       bodyFont: {
-        family: "Prompt" // Add your font here to change the font of your tooltip body
+        family: "system-ui" // Add your font here to change the font of your tooltip body
       },
       titleFont: {
-        family: "Prompt" // Add your font here to change the font of your tooltip title
+        family: "system-ui" // Add your font here to change the font of your tooltip title
       }
     }
   },
@@ -50,14 +50,14 @@ export const options = {
     yAxes: {
       ticks: {
         font: {
-          family: "Prompt" // Add your font here to change the font of your legend label
+          family: "system-ui" // Add your font here to change the font of your legend label
         }
       }
     },
     xAxes: {
       ticks: {
         font: {
-          family: "Prompt" // Add your font here to change the font of your legend label
+          family: "system-ui" // Add your font here to change the font of your legend label
         }
       }
     }

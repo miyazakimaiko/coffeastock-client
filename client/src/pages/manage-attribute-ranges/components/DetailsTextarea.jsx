@@ -3,7 +3,7 @@ import React from 'react'
 const DetailsTextarea = ({category, detailsValue, detailsOnChange}) => {
   return (
     <div className="form-section">
-      <label className="font-semibold">{category} details</label>
+      <label className="font-medium">{category} details</label>
       <textarea 
         type="text" 
         name="definition"

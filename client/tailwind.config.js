@@ -17,8 +17,7 @@ module.exports = {
         'red': '#EB5E28'
       },
       fontFamily: {
-        'capitals': ['Sen', ...defaultTheme.fontFamily.sans],
-        'sans': ['Prompt', ...defaultTheme.fontFamily.sans]
+        'sans': ['system-ui', ...defaultTheme.fontFamily.sans]
       },
       width: {
         '550px': '550px'

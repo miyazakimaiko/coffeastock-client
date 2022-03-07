@@ -6,7 +6,7 @@ const ToolBarButton = ({title, onClick}) => {
     <button
       onClick={onClick}
       type="button"
-      className="flex items-center text-burnt-sienna text-md 
+      className="flex items-center text-burnt-sienna text-sm 
       px-3 ml-4 mr-0 opacity-80 
       hover:opacity-100 ease-linear transition-all duration-150">
       <PlusIcon className="w-4 h-4 mr-1 inline" />

@@ -50,9 +50,19 @@ body {
   --toastify-color-success: var(--green);
   --toastify-color-warning: var(--orange);
   --toastify-color-error: var(--red);
-  --toastify-font-family: 'Prompt';
+  --toastify-font-family: 'system-ui';
   --nav-width: 70vw;
-  --nav-width-sm: 280px;
+  --nav-width-sm: 240px;
+}
+
+.rmsc { // For Multi-select-component
+  --rmsc-main: var(--blue) !important;
+  --rmsc-hover:  #e9e8e36e !important;
+  --rmsc-selected: var(--greycreme) !important;
+  --rmsc-border: var(--greycreme) !important;
+  --rmsc-bg: var(--creme) !important;
+  --rmsc-radius: 7px !important; /* Radius */
+  --rmsc-h: 40px !important; /* Height */
 }
 
 ::-webkit-scrollbar {
@@ -77,19 +87,19 @@ body {
 
 .orange-outline-transition {
   outline: transparent solid 1px;
-  transition: outline 0.2s ease;
+  transition: outline 0.1s ease;
 
   &:focus-visible {
-    outline: solid 1px var(--orange);
+    outline: solid 2px var(--orange);
   }
 }
 
 .blue-outline-transition {
   outline: #e9e8e3 solid 1px;
-  transition: outline 0.2s ease;
+  transition: outline 0.1s ease;
 
   &:focus-visible {
-    outline: solid 1px var(--blue);
+    outline: solid 2px var(--blue);
   }
 }
 
@@ -197,7 +207,7 @@ body {
     padding: 5px 20px;
     text-align: left;
     white-space: nowrap;
-    &::before {
+    &::before, &::after {
       content: "→";
       margin-right: 5px;
       visibility: hidden;
@@ -207,13 +217,6 @@ body {
         visibility: visible;
       }
     }
-  }
-  
-  .dropdown-divider {
-    height: 0;
-    margin: 0.5rem 0;
-    overflow: hidden;
-    border-top: 1px solid #e9ecef;
   }
 }
 
