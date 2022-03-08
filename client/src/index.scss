@@ -44,6 +44,7 @@ body {
   --red: #EB5E28;
   --creme: #F4F3EE;
   --greycreme: #e9e8e3;
+  --bordergrey: #D7D5CF;
   --lime: #D6E4A3;
   --yellow: #F3BB44;
   --toastify-color-info: var(--blue);
@@ -59,7 +60,7 @@ body {
   --rmsc-main: var(--blue) !important;
   --rmsc-hover:  #e9e8e36e !important;
   --rmsc-selected: var(--greycreme) !important;
-  --rmsc-border: var(--greycreme) !important;
+  --rmsc-border: var(--bordergrey) !important;
   --rmsc-bg: var(--creme) !important;
   --rmsc-radius: 7px !important; /* Radius */
   --rmsc-h: 40px !important; /* Height */
@@ -95,7 +96,7 @@ body {
 }
 
 .blue-outline-transition {
-  outline: #e9e8e3 solid 1px;
+  outline: var(--bordergrey) solid 1px;
   transition: outline 0.1s ease;
 
   &:focus-visible {
