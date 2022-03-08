@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import FormInput from '../../elements/FormInput'
 
-const AddEditRoastLevelInput = ({bean, setBean, roastLevelWarningText, setRoastLevelWarningText}) => {
+const AddEditRoastLevelInput = ({bean, setBean}) => {
+
+  const [roastLevelWarningText, setRoastLevelWarningText] = useState("");
+
   const setRoastLevel = (level) => {
     if (level < 0.0 || level > 10.0) {
       setRoastLevelWarningText(<span className="text-red">Please enter a number between 0.0 and 10.0</span>)

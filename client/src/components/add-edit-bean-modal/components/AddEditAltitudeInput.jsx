@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import FormInput from '../../elements/FormInput';
 import { escapeHtml } from '../../../utils/HtmlConverter';
 
-const AddEditAltitudeInput = ({bean, setBean, altitudeWarningText, setAltitudeWarningText}) => {
+const AddEditAltitudeInput = ({bean, setBean}) => {
+
+  const [altitudeWarningText, setAltitudeWarningText] = useState("60/60");
+
   const setAltitude = (altitude) => {
     const encoded = escapeHtml(altitude);
     if (encoded.length > 60) {

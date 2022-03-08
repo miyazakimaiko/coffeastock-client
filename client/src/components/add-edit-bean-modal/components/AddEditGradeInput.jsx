@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import FormInput from '../../elements/FormInput';
 
-const AddEditGradeInput = ({bean, setBean, gradeWarningText, setGradeWarningText}) => {
+const AddEditGradeInput = ({bean, setBean}) => {
+
+  const [gradeWarningText, setGradeWarningText] = useState("");
+
   const setGrade = (grade) => {
     setBean({...bean, grade});
     if (grade < 0.0 || grade > 100.0) {

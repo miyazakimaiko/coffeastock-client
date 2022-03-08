@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { escapeHtml } from '../../../utils/HtmlConverter';
 import FormInput from '../../elements/FormInput';
 
-const AddEditHarvestPeriodInput = ({bean, setBean, periodWarningText, setPeriodWarningText}) => {
+const AddEditHarvestPeriodInput = ({bean, setBean}) => {
+
+  const [periodWarningText, setPeriodWarningText] = useState("60/60");
+
   const setHarvestPeriod = (period) => {
     setBean({...bean, harvest_period: period})
     const encoded = escapeHtml(period);
@@ -11,7 +14,7 @@ const AddEditHarvestPeriodInput = ({bean, setBean, periodWarningText, setPeriodW
     } else {
       setPeriodWarningText(`${60 - encoded.length}/60`)
     }
-    setBean({...bean, period})
+    setBean({...bean, harvest_period: period})
   }
 
   return (

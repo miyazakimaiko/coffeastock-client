@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import FormInput from '../../elements/FormInput';
 
-const AddEditNameInput = ({bean, setBean, nameWarningText, setNameWarningText}) => {
+const AddEditNameInput = ({bean, setBean}) => {
+  const [nameWarningText, setNameWarningText] = useState("* Required");
 
   const setName = (inputValue) => {
     const banned = ['&', '<', '>', '"', "'"];

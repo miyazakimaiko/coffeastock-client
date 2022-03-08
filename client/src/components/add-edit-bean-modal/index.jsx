@@ -22,7 +22,30 @@ import AddEditHarvestPeriodInput from './components/AddEditHarvestPeriodInput';
 import AddEditAltitudeInput from './components/AddEditAltitudeInput';
 import AddEditMemoTextarea from './components/AddEditMemoTextarea';
 
-const AddBeanModal = ({setOpenThisModal}) => {
+const makeBlendRatioElements = (selectedBeans, blendRatios, setBlendRatio) => {
+  const elements = []
+  if (selectedBeans.length <= 0) {
+    elements.push(<div className="py-2"><p>Beans are not selected.</p></div>);
+  } else {
+    selectedBeans.forEach(bean => {
+      let newRatio = {};
+      elements.push(
+        <FormBlendRatioInput
+          title={bean.label}
+          name={bean.value}
+          value={blendRatios[bean.value]}
+          onChange={e => {
+            newRatio[bean.value] = e.target.value;
+            setBlendRatio(newRatio);
+          }}
+        />
+      )
+    });
+  }
+  return elements;
+}
+
+const AddEditBeanModal = ({setOpenThisModal, mode = 'add'}) => {
   const userData = useUserData()
   const attributeRangeList = useAttributeRangeList() 
   const fetchAttributeRangeList = useFetchAttributeRangeList()
@@ -57,13 +80,6 @@ const AddBeanModal = ({setOpenThisModal}) => {
   const [selectedVariety, setSelectedVariety] = useState([]);
   const [selectedBlendBeans, innerSetSelectedBlendBeans] = useState([]);
   const [blendRatios, innerSetBlendRatio] = useState({});
-  
-  const [nameWarningText, setNameWarningText] = useState("* Required");
-  const [periodWarningText, setPeriodWarningText] = useState("60/60");
-  const [altitudeWarningText, setAltitudeWarningText] = useState("60/60");
-  const [gradeWarningText, setGradeWarningText] = useState("");
-  const [roastLevelWarningText, setRoastLevelWarningText] = useState("");
-  const [memoWarningText, setMemoWarningText] = useState("400/400");
 
   const setSelectedBlendBeans = (e) => {
     innerSetSelectedBlendBeans(e);
@@ -86,10 +102,6 @@ const AddBeanModal = ({setOpenThisModal}) => {
       { ...blendRatios, ...newRatio }
     ));
   }
-
-
-
-
 
   const [tabState, setTabState] = useState({
     baseInfoTab: true,
@@ -163,10 +175,6 @@ const AddBeanModal = ({setOpenThisModal}) => {
   const finalizeBean = () => {
     const roasterIdList = makeIdList(selectedRoaster, "roaster");
     const aromaIdList = makeIdList(selectedAroma, "aroma");
-    setBean({...bean, 
-      roaster: [...roasterIdList],
-      aroma: [...aromaIdList]
-    });
     if (bean.single_origin) {
       const originIdList = makeIdList(selectedOrigin, "origin");
       const farmIdList = makeIdList(selectedFarm, "farm");
@@ -174,6 +182,8 @@ const AddBeanModal = ({setOpenThisModal}) => {
       const processIdList = makeIdList(selectedProcess, "process");
       
       setBean({...bean, 
+        roaster: [...roasterIdList],
+        aroma: [...aromaIdList],
         origin: [...originIdList],
         farm: [...farmIdList],
         variety: [...varietyIdList],
@@ -181,6 +191,8 @@ const AddBeanModal = ({setOpenThisModal}) => {
       });
     } else {
       setBean({...bean, 
+        roaster: [...roasterIdList],
+        aroma: [...aromaIdList],
         blend_ratio: blendRatios,
       });
     }
@@ -230,7 +242,7 @@ const AddBeanModal = ({setOpenThisModal}) => {
   }, []);
 
   useEffect(async () => {
-    if (bean.label !== null) {
+    if (bean.label !== null && processSubmit) {
       const insertSuccess = await insertBean(userData.sub, bean);
       if (insertSuccess)
         setOpenThisModal(false);
@@ -301,20 +313,14 @@ const AddBeanModal = ({setOpenThisModal}) => {
               <AddEditNameInput
                 bean={bean}
                 setBean={setBean}
-                nameWarningText={nameWarningText}
-                setNameWarningText={setNameWarningText}
               />
               <AddEditGradeInput
                 bean={bean}
                 setBean={setBean}
-                gradeWarningText={gradeWarningText}
-                setGradeWarningText={setGradeWarningText}
               />
               <AddEditRoastLevelInput
                 bean={bean}
-                setBean={setBean}
-                roastLevelWarningText={roastLevelWarningText}
-                setRoastLevelWarningText={setRoastLevelWarningText}              
+                setBean={setBean}             
               />
             </div>
 
@@ -398,8 +404,6 @@ const AddBeanModal = ({setOpenThisModal}) => {
               <AddEditMemoTextarea
                 bean={bean}
                 setBean={setBean}
-                memoWarningText={memoWarningText}
-                setMemoWarningText={setMemoWarningText}
               />
             </div>
           </div>
@@ -431,14 +435,10 @@ const AddBeanModal = ({setOpenThisModal}) => {
               <AddEditHarvestPeriodInput
                 bean={bean}
                 setBean={setBean}
-                periodWarningText={periodWarningText}
-                setPeriodWarningText={setPeriodWarningText}
               />
               <AddEditAltitudeInput
                 bean={bean}
                 setBean={setBean}
-                altitudeWarningText={altitudeWarningText}
-                setAltitudeWarningText={setAltitudeWarningText}
               />
             </div>
 
@@ -460,8 +460,6 @@ const AddBeanModal = ({setOpenThisModal}) => {
               <AddEditMemoTextarea
                 bean={bean}
                 setBean={setBean}
-                memoWarningText={memoWarningText}
-                setMemoWarningText={setMemoWarningText}
               />
             </div>
           </div>
@@ -620,28 +618,4 @@ const AddBeanModal = ({setOpenThisModal}) => {
   )
 }
 
-const makeBlendRatioElements = (selectedBeans, blendRatios, setBlendRatio) => {
-  const elements = []
-  if (selectedBeans.length <= 0) {
-    elements.push(<div className="py-2"><p>Beans are not selected.</p></div>);
-  }
-  else {
-    selectedBeans.forEach(bean => {
-      let newRatio = {};
-      elements.push(
-        <FormBlendRatioInput
-          title={bean.label}
-          name={bean.value}
-          value={blendRatios[bean.value]}
-          onChange={e => {
-            newRatio[bean.value] = e.target.value;
-            setBlendRatio(newRatio);
-          }}
-        />
-      )
-    });
-  }
-  return elements;
-}
-
-export default AddBeanModal
+export default AddEditBeanModal

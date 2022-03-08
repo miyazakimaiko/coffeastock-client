@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import FormTextarea from '../../elements/FormTextarea';
 import { escapeHtml } from '../../../utils/HtmlConverter';
 
-const AddEditMemoTextarea = ({bean, setBean, memoWarningText, setMemoWarningText}) => {
+const AddEditMemoTextarea = ({bean, setBean}) => {
+
+  const [memoWarningText, setMemoWarningText] = useState("400/400");
+
   const setMemo = (memo) => {
     const encoded = escapeHtml(memo);
     if (encoded.length > 400) {
