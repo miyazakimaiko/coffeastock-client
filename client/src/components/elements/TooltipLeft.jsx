@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
-const Tooltip = ({ children, category, itemId, tooltipText }) => {
+const TooltipLeft = ({ children, childrenDivId, tooltipText }) => {
   const tipRef = React.createRef(null);
-  const childrenDivId = `tooltip-${category}-${itemId}`;
   const [boxPositionLeft, setBoxPositionLeft] = useState("-215px");
 
   const handleMouseEnter = () => {
@@ -45,4 +44,4 @@ const Tooltip = ({ children, category, itemId, tooltipText }) => {
   );
 }
 
-export default Tooltip
+export default TooltipLeft
