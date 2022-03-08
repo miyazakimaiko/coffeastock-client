@@ -145,9 +145,9 @@ const ManageAttributeRanges = ({cat}) => {
   return (
     <>
       <div className="px-4 pt-8">
-        <ToolBar pageTitle={`${cat} range`}>
+        <ToolBar pageTitle={`${cat} Range`}>
           <ToolBarButton 
-            title={`${cat} range`}
+            title={`${cat}`}
             onClick={() => {
               setAttribute({ value: '', label: '', def: '' });
               setModal({ mode: MODE.ADD, isOpen: true })
