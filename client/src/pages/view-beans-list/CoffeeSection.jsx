@@ -5,9 +5,7 @@ import StarHalfIcon from '../../assets/svgs/StarHalfIcon'
 import StarFullIcon from '../../assets/svgs/StarFullIcon'
 import { unescapeHtml } from '../../utils/HtmlConverter'
 
-const CoffeeSection = (props) => {
-  const bean = props.bean;
-
+const CoffeeSection = ({bean}) => {
   const grade = [];
   if (bean['grade']) {
     const rounded = Math.ceil(bean['grade']/10)/2;
@@ -33,7 +31,9 @@ const CoffeeSection = (props) => {
   }
 
   return (
-    <div className="relative px-2 py-6 w-1/3 max-w-300px min-w-250px">
+    <div
+      className={`relative px-2 py-6 w-1/3 max-w-300px min-w-250px ${bean['coffee_bean_id']}`}
+    >
       <Link to={`/coffee/${bean['coffee_bean_id']}`}>
         <div 
           className="absolute left-3 right-3 top-3 bottom-3 

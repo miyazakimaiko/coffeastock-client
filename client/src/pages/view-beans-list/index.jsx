@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react'
+import { QuestionMarkCircleIcon } from '@heroicons/react/outline';
 import { useAttributeRangeList, useFetchAttributeRangeList } from '../../context/AttributeRangeContext';
 import { useBeanList, useFetchBeanList } from '../../context/BeansContext';
-import CoffeeSection from './CoffeeSection'
-import { unescapeHtml } from '../../utils/HtmlConverter'
 import { useUserData } from '../../context/AccountContext';
 import ToolBar from '../../components/tool-bar';
 import ToolbarDropdown from '../../components/tool-bar/ToolBarDropdown';
 import ToolbarDropdownButton from '../../components/tool-bar/ToolbarDropdownButton';
+import ToolBarSearchBar from '../../components/tool-bar/ToolBarSearchBar';
+import TooltipBottomLeft from '../../components/elements/TooltipBottomLeft';
+import CoffeeGroupSection from './CoffeeGroupSection';
+import CoffeeSection from './CoffeeSection'
 
 const SHOW = {
   ALL: 'All',
@@ -32,62 +35,49 @@ const ViewMyCoffees = () => {
 
   const [showState, setShowState] = useState(SHOW.ALL)
   const [groupState, setGroupState] = useState(GROUPBY.ROASTER)
-  const [innerHtml, setInnerHtml] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [sortedCoffeesHtmlDictionary, setSortedCoffeesHtmlDictionary] = useState({});
 
-  const makeHtmlCoffeeElement = (attribute) => {
-    const coffeeElements = []
-    if (Object.keys(beanList).length > 0) {
-      Object.values(beanList).forEach(entry => {
-        const showAll = showState === SHOW.ALL
-        const showBlend = showState === SHOW.BLEND
-        const showSingleOrigin = showState === SHOW.SINGLE_ORIGIN
-        const attrId = parseInt(attribute['value'])
-        const entryIsSingleOrigin = entry['single_origin']
-        const entryHasSelectedCategoryValue = entry[groupState] !== null && entry[groupState] !== []
+  const makeSortedCoffeesHtmlDictionary = async () => {
+    const attrRange = attributeRangeList[groupState + '_range']
+    const coffeeHtmlDictionary = await Object.keys(attrRange).reduce(
+      (o, key) => ({ ...o, [key.replace('id-', '')]: []}), {}
+    ) // e.g. {1: [], 3: [], 4: [], 7:[]}
+    coffeeHtmlDictionary['No Group'] = []
 
-        if ((showBlend || showAll) && !entryIsSingleOrigin && !entryHasSelectedCategoryValue) {
-          for (const beanId of Object.keys(entry['blend_ratio'])) {
-            if (beanList[beanId][groupState].includes(attrId)) {
-              coffeeElements.push(<CoffeeSection bean={entry} />);
-              break;
+    try {
+      Object.values(beanList).forEach(bean => {
+        const beanIsApplicableToShowState = showState === SHOW.ALL || 
+          (((showState === SHOW.SINGLE_ORIGIN) && bean['single_origin']) || 
+          ((showState === SHOW.BLEND) && !bean['single_origin']))
+        if (beanIsApplicableToShowState) {
+          let pushed = false
+          Object.keys(coffeeHtmlDictionary).forEach(attrId => {
+            if (bean[groupState].includes(parseInt(attrId))) {
+              coffeeHtmlDictionary[attrId].push(<CoffeeSection bean={bean} />)
+              pushed = true
             }
+            else if (Object.keys(bean['blend_ratio']).length !== 0) {
+              Object.keys(bean['blend_ratio']).forEach(blendBeanId => {
+                if (beanList[blendBeanId][groupState].includes(parseInt(attrId))) {
+                  coffeeHtmlDictionary[attrId].push(<CoffeeSection bean={bean} />)
+                  pushed = true
+                }
+              })
+            }
+          })
+          if (!pushed) {
+            coffeeHtmlDictionary['No Group'].push(<CoffeeSection bean={bean} />)
           }
         }
-        else if ((showBlend || showAll) && !entryIsSingleOrigin && entry[groupState].includes(attrId)) {
-          coffeeElements.push(<CoffeeSection bean={entry} />);
-        } 
-        else if (showSingleOrigin && entryIsSingleOrigin && entryHasSelectedCategoryValue && entry[groupState].includes(attrId)) {
-          coffeeElements.push(<CoffeeSection bean={entry} />);
-        } 
-        else if (showAll && entryIsSingleOrigin && entryHasSelectedCategoryValue && entry[groupState].includes(attrId)) {
-          coffeeElements.push(<CoffeeSection bean={entry} />);
-        }
-      });
-    }
-    if (coffeeElements.length === 0) {
-      coffeeElements.push(<p>No Entry</p>)
-    }
-    return coffeeElements
-  }
-
-  const makeInnerHtml = () => {
-    const innerHtml = [];
-
-    if (Object.keys(attributeRangeList[groupState + '_range']).length > 0) {
-      Object.values(attributeRangeList[groupState + '_range']).forEach(attribute => {
-        const coffeeElements = makeHtmlCoffeeElement(attribute)
-        innerHtml.push(        
-          <div className="bg-white rounded-lg shadow-sm pb-8 mb-8">
-            <div className="h-36 flex items-center justify-center pt-4">
-              <h2 className="text-xl text-center ">{unescapeHtml(attribute.label)}</h2>
-            </div>
-            <div className="flex mb-4 w-full flex-wrap justify-center">{coffeeElements}</div>
-          </div>
-        )
       })
+    } catch (error) {
+      throw new Error(error);
     }
-    return innerHtml;
+    setSortedCoffeesHtmlDictionary(coffeeHtmlDictionary)
+    console.log('coffeeHtmlDictionary: ', coffeeHtmlDictionary)
   }
+  
 
   useEffect(() => {
     window.scroll({ top: 0, behavior: 'smooth' });
@@ -101,15 +91,48 @@ const ViewMyCoffees = () => {
 
   useEffect(() => {
     if (Object.keys(beanList).length !== 0 && Object.keys(attributeRangeList).length !== 0) {
-      setInnerHtml(makeInnerHtml());
+      makeSortedCoffeesHtmlDictionary();
+      setSearchValue("")
     }
   }, 
   [beanList, attributeRangeList, showState, groupState]);
 
+  useEffect( async () => {
+    Object.values(sortedCoffeesHtmlDictionary).forEach(group => {
+      group.forEach(coffeeSection => {
+        const categoriesToSearch = ['altitude', 'harvest_period', 'label', 'roast_date']
+        let show = false
+        categoriesToSearch.forEach(category => {
+          if (coffeeSection.props.bean[category]) {
+            if (coffeeSection.props.bean[category].toLowerCase().includes(searchValue.toLowerCase())) {
+              show = true
+            }
+          }
+        })
+
+        const coffeeList = document.getElementsByClassName(coffeeSection.props.bean['coffee_bean_id'])
+        console.log('coffeeList: ', coffeeList)
+        if (coffeeList && !show) {
+          for (let coffee of coffeeList) {
+            coffee.classList.add('hidden')
+          }
+        }
+        else if (coffeeList && show) {
+          for (let coffee of coffeeList) {
+            coffee.classList.remove('hidden')
+          }
+        }
+      })
+    })
+  }, [searchValue])
+
   return (
     <>
       <div className="px-4 pt-8 w-full max-w-980px mx-auto">
-        <ToolBar pageTitle="My Coffee Beans">
+        <h3 className="my-5 text-xl text-center">
+          My Coffee Beans
+        </h3>
+        <ToolBar>
           <ToolbarDropdown title={`Show ${showState}`}>
             {Object.values(SHOW).map((state) => {
               return <ToolbarDropdownButton
@@ -121,7 +144,7 @@ const ViewMyCoffees = () => {
           </ToolbarDropdown>
 
           <ToolbarDropdown title={`group by ${groupState}`}>
-            {Object.values(GROUPBY).map((state) => {
+            { Object.values(GROUPBY).map((state) => {
               return <ToolbarDropdownButton
                 title={state}
                 active={groupState === state}
@@ -129,9 +152,42 @@ const ViewMyCoffees = () => {
               />
             })}
           </ToolbarDropdown>
+          <div className="flex">
+            <ToolBarSearchBar
+              value={searchValue}
+              onChange={setSearchValue}
+            />
+            <TooltipBottomLeft 
+              tooltipText="The search filter applies to the Name, Altitude, Harvest Period, and Roast Date."
+            >
+              <div className="flex items-center">
+                <QuestionMarkCircleIcon className="h-5 w-5 flex-shrink-0" />
+              </div>
+            </TooltipBottomLeft>
+          </div>
         </ToolBar>
         
-        {innerHtml}
+        { attributeRangeList[groupState + '_range'] 
+            ? 
+          Object.keys(sortedCoffeesHtmlDictionary).map(attrId => {
+            if (Object.keys(sortedCoffeesHtmlDictionary[attrId]).length > 0) {
+              const title = attributeRangeList[groupState + '_range']['id-' + attrId] ? 
+                attributeRangeList[groupState + '_range']['id-' + attrId]['label'] : attrId
+              return (
+                <CoffeeGroupSection title={title}>
+                  { sortedCoffeesHtmlDictionary[attrId]
+                      ?
+                    Object.values(sortedCoffeesHtmlDictionary[attrId]).map(html => html)
+                      :
+                    null
+                  }
+                </CoffeeGroupSection>
+              )
+            }
+          })
+            :
+          null
+        }
       </div>
     </>
   )

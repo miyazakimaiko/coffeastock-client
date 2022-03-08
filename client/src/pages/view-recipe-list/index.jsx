@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
-import { InformationCircleIcon, PencilAltIcon } from '@heroicons/react/outline';
+import { ChevronRightIcon, InformationCircleIcon, PencilAltIcon } from '@heroicons/react/outline';
 import { unescapeHtml } from '../../utils/HtmlConverter'
 import { useUserData } from '../../context/AccountContext';
 import { useAttributeRangeList, useFetchAttributeRangeList } from '../../context/AttributeRangeContext';
@@ -10,7 +10,7 @@ import StarFullIcon from '../../assets/svgs/StarFullIcon';
 import StarHalfIcon from '../../assets/svgs/StarHalfIcon';
 import FireFullIcon from '../../assets/svgs/FireFullIcon';
 import FireHalfIcon from '../../assets/svgs/FireHalfIcon';
-import Tooltip from '../../components/elements/Tooltip';
+import TooltipLeft from '../../components/elements/TooltipLeft';
 import RecipeSection from './RecipeSection';
 import './ViewRecipes.scss'
 
@@ -54,12 +54,12 @@ const ViewRecipes = () => {
           <div 
             className="flex justify-end"
             style={{ paddingTop: "4px", paddingBottom: "4px" }}>
-            <Tooltip category={category} itemId={id} tooltipText={text}>
+            <TooltipLeft childrenDivId={`tooltip-${category}-${id}`} tooltipText={text}>
               <div className="flex items-center" id={`tooltip-${category}-${id}`} >
                 <p className="text-right">{label}</p>
                 <InformationCircleIcon className="h-4 w-4 ml-2 flex-shrink-0" />
               </div>
-            </Tooltip>
+            </TooltipLeft>
           </div>
         );
       })
@@ -114,7 +114,7 @@ const ViewRecipes = () => {
           <div 
             className="flex justify-end"
             style={{ paddingTop: "4px", paddingBottom: "4px" }}>
-            <Tooltip category="blend" itemId={beanId} tooltipText={text}>            
+            <TooltipLeft category="blend" itemId={beanId} tooltipText={text}>            
               <div 
                 className="flex items-center" 
                 id={`tooltip-blend-${beanId}`} >
@@ -123,7 +123,7 @@ const ViewRecipes = () => {
                 </div>
                 <InformationCircleIcon className="h-4 w-4 ml-2 flex-shrink-0" />
               </div>
-            </Tooltip>
+            </TooltipLeft>
           </div>
         );
       }
@@ -201,8 +201,10 @@ const ViewRecipes = () => {
       <div className="px-4 pt-8 w-full max-w-980px mx-auto">
         <div>
           <div className="h-16 flex items-center justify-center mb-8">
-            <h3 className="mr-3 text-xl text-center ">
+            <h3 className="mr-3 text-xl text-center flex items-center">
               {singleOrigin? "Single Origin" : "Blend"}
+              <ChevronRightIcon className="h-5 w-5 mx-5"/>
+              {coffeeName}
             </h3>
           </div>
           <div className="my-4">
@@ -218,43 +220,31 @@ const ViewRecipes = () => {
               </div>
               <div className="flex flex-wrap justify-center mt-16">
                 <div className="w-1/2 my-4 px-4">
-                  { roasters.length !== 0 ? 
                   <div className="coffee-detail-section">
                     <label className="text-sm font-medium  mr-3">Roasted By</label>
-                    <div>{roasters}</div>
+                    <div>{roasters.length !== 0 ? roasters : '-'}</div>
                   </div>
-                  : null
-                  }
 
-                  { roastDate ? 
                   <div className="coffee-detail-section">
                     <label className="text-sm font-medium  mr-3">Roast Date</label>
-                    <p>{roastDate}</p>
+                    <p>{roastDate ? roastDate : '-'}</p>
                   </div>
-                  : null
-                  }
 
-                  { gradeText ? 
                   <div className="coffee-detail-section">
                     <label className="text-sm font-medium  mr-3">Grade</label>
                     <div className="flex">
                       {gradeStarIcons} 
-                      <span className="ml-2">({gradeText}/100)</span>
+                      <span className="ml-2">{gradeText ? `(${gradeText}/100)` : '-'}</span>
                     </div>
                   </div>
-                  : null
-                  }
 
-                  { roastLevelText ? 
                   <div className="coffee-detail-section">
                     <label className="text-sm font-medium  mr-3">Roast Level</label>
                     <div className="flex">
                       {roastLevelFireIcons}
-                      <span className="ml-2">({gradeText}/10)</span>
+                      <span className="ml-2">{roastLevelText ? `(${roastLevelText}/10)` : '-'}</span>
                     </div>
                   </div>
-                  : null
-                  }
                 </div>
 
                 <div className="w-1/2 my-4 px-4">
@@ -265,45 +255,30 @@ const ViewRecipes = () => {
                       <div>{origins}</div >
                     </div>
 
-                    { process.length !== 0 ? 
                     <div className="coffee-detail-section">
                       <label className="text-sm font-medium  mr-3">Process</label>
-                      <div>{process}</div>
+                      <div>{process.length !== 0 ? process : '-'}</div>
                     </div>
-                    : null
-                    }
 
-                    { variety.length !== 0 ? 
                     <div className="coffee-detail-section">
                       <label className="text-sm font-medium  mr-3">Variety</label>
-                      <div>{variety}</div>
+                      <div>{variety.length !== 0 ? variety : '-'}</div>
                     </div>
-                    : null
-                    }
 
-                    { farm.length !== 0 ? 
                     <div className="coffee-detail-section">
                       <label className="text-sm font-medium  mr-3">Farm</label>
-                      <div>{farm}</div>
+                      <div>{farm.length !== 0 ? farm : '-'}</div>
                     </div>
-                    : null
-                    }
 
-                    { altitude ?
                     <div className="coffee-detail-section">
                       <label className="text-sm font-medium  mr-3">Altitude</label>
-                      <p>{altitude}</p>
+                      <p>{altitude ? altitude : '-'}</p>
                     </div>
-                    : null
-                    }
 
-                    { harvestDate ? 
                     <div className="coffee-detail-section">
                       <label className="text-sm font-medium  mr-3">Harvest Period</label>
-                      <p>{harvestDate}</p>
+                      <p>{harvestDate ? harvestDate : '-'}</p>
                     </div>
-                    : null
-                    }
                   </>
                   :
                   <div className="coffee-detail-section">
@@ -312,13 +287,11 @@ const ViewRecipes = () => {
                   </div>
                   }
 
-                  { aroma.length !== 0 ? 
                   <div className="coffee-detail-section">
                     <label className="text-sm font-medium  mr-3">Aroma</label>
-                    <div>{aroma}</div>
+                    <div>{aroma.length !== 0 ? aroma : '-'}</div>
                   </div>
-                  : null
-                  }
+
                 </div>
               </div>
               

@@ -7,7 +7,7 @@ import { MenuAlt2Icon, PlusIcon, XIcon } from '@heroicons/react/outline'
 import { NavStateContext } from '../../context/NavStateContext';
 import { useUserData, useSetAuthenticated, useSignout } from '../../context/AccountContext';
 import imgFace from '../../assets/images/face.jpg'
-import AddBeanModal from '../add-edit-bean-modal';
+import AddEditBeanModal from '../add-edit-bean-modal';
 import AddRecipeModal from '../add-edit-recipe-modal';
 import './header.scss'
 import Dropdown from '../elements/Dropdown';
@@ -105,7 +105,7 @@ const Header = (props) => {
     </div>
     <div className="w-hull border-b border-burnt-sienna border-opacity-20 "></div>
 
-    {openAddBeanModal ?  <AddBeanModal setOpenThisModal={setOpenAddBeanModal} /> : null}
+    {openAddBeanModal ?  <AddEditBeanModal setOpenThisModal={setOpenAddBeanModal} /> : null}
     {openAddRecipeModal ?  <AddRecipeModal setOpenThisModal={setOpenAddRecipeModal} /> : null}
     
     </>
