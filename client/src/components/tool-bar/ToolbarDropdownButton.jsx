@@ -1,4 +1,5 @@
 import React from 'react'
+import { capitalize } from '../../utils/HtmlConverter'
 
 const ToolbarDropdownButton = ({title, onClick, active}) => {
   return (
@@ -6,7 +7,7 @@ const ToolbarDropdownButton = ({title, onClick, active}) => {
       type="button"
       onClick={onClick}
       className={(active ? "active " : "") + "dropdown-item"}>
-        {title.charAt(0).toUpperCase() + title.slice(1)}
+        {capitalize(title)}
     </button>
   )
 }

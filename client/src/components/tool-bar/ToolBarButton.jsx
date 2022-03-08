@@ -1,5 +1,6 @@
 import { PlusIcon } from '@heroicons/react/outline'
 import React from 'react'
+import { capitalize } from '../../utils/HtmlConverter'
 
 const ToolBarButton = ({title, onClick}) => {
   return (
@@ -10,7 +11,7 @@ const ToolBarButton = ({title, onClick}) => {
       px-3 ml-4 mr-0 opacity-80 
       hover:opacity-100 ease-linear transition-all duration-150">
       <PlusIcon className="w-4 h-4 mr-1 inline" />
-      {title.charAt(0).toUpperCase() + title.slice(1)}
+      {capitalize(title)}
     </button>
   )
 }
