@@ -40,7 +40,6 @@ const BeansProvider = (props) => {
         }
       );
       const parseRes = await response.json();
-      console.log('response: ', response)
       if (response.status !== 200) {
         toast.error(
           parseRes.error.message ? parseRes.error.message : response.statusText, {
@@ -62,8 +61,42 @@ const BeansProvider = (props) => {
     return false;
   }
 
+  const updateBean = async (userid, beanid, body) => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/v1/user/${userid}/bean/${beanid}`,
+        {
+          method: "POST",
+          headers: {
+            'Content-Type': "application/json"
+          },
+          body: JSON.stringify(body)
+        }
+      );
+      const parseRes = await response.json();
+      if (response.status !== 200) {
+        toast.error(
+          parseRes.error.message ? parseRes.error.message : response.statusText, {
+          position: toast.POSITION.BOTTOM_CENTER
+        });
+      }
+      else {
+        fetchBeanList(userid);
+        toast.success("Coffee bean is edited successfully.", {
+          position: toast.POSITION.BOTTOM_CENTER
+        });
+        return true
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: toast.POSITION.BOTTOM_CENTER
+      });
+    }
+    return false;
+  }
+
   return (
-    <BeansContext.Provider value={{beanList, fetchBeanList, setBeanList, insertBean}}>
+    <BeansContext.Provider value={{beanList, fetchBeanList, setBeanList, insertBean, updateBean}}>
     {props.children}
     </BeansContext.Provider>
   );
@@ -101,4 +134,12 @@ function useInsertBean() {
   return context.insertBean
 }
 
-export { BeansProvider, useBeanList, useFetchBeanList, useSetBeanList, useInsertBean }
+function useUpdateBean() {
+  const context = useContext(BeansContext)
+  if (!context) {
+    throw new Error('useUpdateBean must be used within an BeansProvider')
+  }
+  return context.updateBean
+}
+
+export { BeansProvider, useBeanList, useFetchBeanList, useSetBeanList, useInsertBean, useUpdateBean }
