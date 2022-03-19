@@ -1,7 +1,7 @@
 import { XIcon } from '@heroicons/react/outline'
 import React from 'react'
 
-const AddEditBeanModalContainer = ({children, onCloseClick}) => {
+const AddEditBeanModalContainer = ({children, title, onCloseClick}) => {
   return (
     <>
       <div
@@ -17,7 +17,7 @@ const AddEditBeanModalContainer = ({children, onCloseClick}) => {
             {/*header*/}
             <div className="py-8">
               <h3 className="text-lg font-light text-center ">
-                Add New Coffee Beans
+                {title}
               </h3>
               <button
                 className="absolute right-4 top-4 border-0 text-black float-right"

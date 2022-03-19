@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState, createRef } from 'react'
 import { useUserData } from '../../context/AccountContext';
 import { useAttributeRangeList, useFetchAttributeRangeList, useInsertAttribute } from '../../context/AttributeRangeContext';
-import { useBeanList, useFetchBeanList, useInsertBean } from '../../context/BeansContext';
+import { useBeanList, useFetchBeanList, useInsertBean, useUpdateBean } from '../../context/BeansContext';
 import { unescapeHtml } from '../../utils/HtmlConverter'
 import './modals.scss'
 import AddEditBeanModalContainer from './components/AddEditBeanModalContainer';
@@ -22,30 +22,8 @@ import AddEditHarvestPeriodInput from './components/AddEditHarvestPeriodInput';
 import AddEditAltitudeInput from './components/AddEditAltitudeInput';
 import AddEditMemoTextarea from './components/AddEditMemoTextarea';
 
-const makeBlendRatioElements = (selectedBeans, blendRatios, setBlendRatio) => {
-  const elements = []
-  if (selectedBeans.length <= 0) {
-    elements.push(<div className="py-2"><p>Beans are not selected.</p></div>);
-  } else {
-    selectedBeans.forEach(bean => {
-      let newRatio = {};
-      elements.push(
-        <FormBlendRatioInput
-          title={bean.label}
-          name={bean.value}
-          value={blendRatios[bean.value]}
-          onChange={e => {
-            newRatio[bean.value] = e.target.value;
-            setBlendRatio(newRatio);
-          }}
-        />
-      )
-    });
-  }
-  return elements;
-}
 
-const AddEditBeanModal = ({setOpenThisModal, mode = 'add'}) => {
+const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
   const userData = useUserData()
   const attributeRangeList = useAttributeRangeList() 
   const fetchAttributeRangeList = useFetchAttributeRangeList()
@@ -53,6 +31,7 @@ const AddEditBeanModal = ({setOpenThisModal, mode = 'add'}) => {
   const beanList = useBeanList()
   const fetchBeanList = useFetchBeanList()
   const insertBean = useInsertBean()
+  const updateBean = useUpdateBean();
 
   const [bean, setBean] = useState({
     single_origin: true,
@@ -80,6 +59,7 @@ const AddEditBeanModal = ({setOpenThisModal, mode = 'add'}) => {
   const [selectedVariety, setSelectedVariety] = useState([]);
   const [selectedBlendBeans, innerSetSelectedBlendBeans] = useState([]);
   const [blendRatios, innerSetBlendRatio] = useState({});
+  const [blendRatioHtmlDict, setBlendRatioHtmlDict] = useState({})
 
   const setSelectedBlendBeans = (e) => {
     innerSetSelectedBlendBeans(e);
@@ -87,17 +67,18 @@ const AddEditBeanModal = ({setOpenThisModal, mode = 'add'}) => {
     // it must be found and set it in the blendRatio with the value of zero
     e.forEach(bean => {
       let found = false;
-      for (const beanId of Object.keys(blendRatios))
+      for (const beanId of Object.keys(blendRatios)) {
         if (bean.value === beanId) found = true;
+      }
       if (!found) {
-        const newBean = {};
-        newBean[bean.value] = '0';
-        setBlendRatio(newBean);
+        setBlendRatio(bean.value, '0');
       }
     })
   }
   
-  const setBlendRatio = (newRatio) => {
+  const setBlendRatio = (key, value) => {
+    const newRatio = {};
+    newRatio[key] = value;
     innerSetBlendRatio(blendRatios => (
       { ...blendRatios, ...newRatio }
     ));
@@ -163,13 +144,24 @@ const AddEditBeanModal = ({setOpenThisModal, mode = 'add'}) => {
   const makeIdList = (selectedRange, category) => {
     const idList = [];
     selectedRange.forEach(range => {
-      for (const [id, entry] of Object.entries(attributeRangeList[category + '_range'])) {
+      for (const entry of Object.values(attributeRangeList[category + '_range'])) {
         if (unescapeHtml(entry['label']) === range['label']) {
           idList.push(parseInt(entry['value']));
         }
       }
     })
     return idList;
+  }
+
+  const makeSelectedRangeList = (idList, category) => {
+    const selectedRangeList = [];
+    for (const entry of Object.values(attributeRangeList[category + '_range'])) {
+      const id = parseInt(entry['value'])
+      if (idList.includes(id)) {
+        selectedRangeList.push(entry);
+      }
+    }
+    return selectedRangeList;
   }
 
   const finalizeBean = () => {
@@ -214,22 +206,24 @@ const AddEditBeanModal = ({setOpenThisModal, mode = 'add'}) => {
     }
 
     for (const [category, entries] of Object.entries(newRangeList)) {
-      entries.forEach(entry => {
-        try {
-          let body = { "label": entry.label, "def": "" };
-          insertAttribute(userData.sub, category, body);
-        } catch (error) {
-          console.log('error: ', error)
-        }
-      });
+      for await (const entry of entries) {
+        const body = { "label": entry.label, "def": "" };
+        await insertAttribute(userData.sub, category, body);
+      }
     }
   }
 
-  const [processSubmit, setProcessSubmit] = useState(false);
+  const [processAddSubmit, setProcessAddSubmit] = useState(false);
+  const [processEditSubmit, setProcessEditSubmit] = useState(false);
 
   const onSubmit = () => {
     finalizeBean();
-    setProcessSubmit(true);
+    if (mode === 'add') {
+      setProcessAddSubmit(true);
+    }
+    else if (mode === 'edit') {
+      setProcessEditSubmit(true);
+    }
   }
 
   useEffect(() => {
@@ -242,17 +236,25 @@ const AddEditBeanModal = ({setOpenThisModal, mode = 'add'}) => {
   }, []);
 
   useEffect(async () => {
-    if (bean.label !== null && processSubmit) {
+    if (processAddSubmit && bean.label !== null) {
       const insertSuccess = await insertBean(userData.sub, bean);
       if (insertSuccess)
         setOpenThisModal(false);
     }
-  }, [processSubmit])
+  }, [processAddSubmit])
+
+  useEffect(async () => {
+    if (processEditSubmit && bean.label !== null) {
+      const updateSuccess = await updateBean(userData.sub, targetBean['coffee_bean_id'], bean);
+      if (updateSuccess)
+        setOpenThisModal(false);
+    }
+  }, [processEditSubmit])
 
   // To enable/disable Next button to go to confirmation section
   useEffect(() => {
     checkCanGoToConfirmation();
-  }, [bean.single_origin, selectedOrigin, selectedBlendBeans, checkCanGoToConfirmation]);
+  }, [bean.single_origin, selectedOrigin, selectedBlendBeans]);
 
 
   // To delete unselected BlendBean from the blendRatios object
@@ -263,14 +265,72 @@ const AddEditBeanModal = ({setOpenThisModal, mode = 'add'}) => {
         selectedBlendBeans.forEach(selectedBean => {
           if (selectedBean.value === beanId) found = true;
         });
-        if (!found) delete blendRatios[beanId];
-      };
+        if (!found) {
+          delete blendRatios[beanId]
+          delete blendRatioHtmlDict[beanId]
+        }
+      }
     }
   }, [selectedBlendBeans, blendRatios]);
+
+  useEffect(() => {
+    if (mode === 'edit') {
+      setBean({...bean,
+        single_origin: targetBean['single_origin'],
+        label: targetBean['label'],
+        grade: targetBean['grade'],
+        roast_level: targetBean['roast_level'],
+        roast_date: targetBean['roast_date'] ? targetBean['roast_date'].split('T')[0] : undefined,
+        harvest_period: targetBean['harvest_period'],
+        altitude: targetBean['altitude'],
+        memo: targetBean['memo'],
+      })
+      setSelectedRoaster(makeSelectedRangeList(targetBean['roaster'], 'roaster'))
+      setSelectedOrigin(makeSelectedRangeList(targetBean['origin'], 'origin'))
+      setSelectedFarm(makeSelectedRangeList(targetBean['farm'], 'farm'))
+      setSelectedVariety(makeSelectedRangeList(targetBean['variety'], 'variety'))
+      setSelectedProcess(makeSelectedRangeList(targetBean['process'], 'process'))
+      setSelectedAroma(makeSelectedRangeList(targetBean['aroma'], 'aroma'))
+    }
+  },[])
+
+  useEffect(() => {
+    Object.keys(blendRatios).forEach(id => {
+      const html = {}
+      html[id] = <FormBlendRatioInput
+        title={beanList[id]['label']}
+        name={id}
+        value={blendRatios[id]}
+        onChange={e => {
+          setBlendRatio(id, e.target.value);
+        }}
+      />
+      setBlendRatioHtmlDict(blendRatioHtmlDict => ({...blendRatioHtmlDict, ...html}))
+    })
+  }, [blendRatios])
+
+  useEffect(() => {
+    if (mode === 'edit' && selectedBlendBeans.length === 0 && Object.keys(targetBean['blend_ratio']).length !== 0) {
+      Object.keys(targetBean['blend_ratio']).forEach(id => {
+        setBlendRatio(id, targetBean['blend_ratio'][id])
+        innerSetSelectedBlendBeans(selectedBlendBeans => [
+          ...selectedBlendBeans, 
+          { 
+            label:beanList[id]['label'],
+            value:beanList[id]['coffee_bean_id']
+          }
+        ])
+      })
+    }
+  }, [bean])
 
   return (
 
     <AddEditBeanModalContainer
+      title={
+        mode === 'add' ? 'Add New Coffee Bean Type' :
+        mode === 'edit' ? `Edit Coffee Bean ${targetBean['label']}` : null
+      }
       onCloseClick={() => setOpenThisModal(false)}
     >
       {/*body*/}
@@ -388,7 +448,7 @@ const AddEditBeanModal = ({setOpenThisModal, mode = 'add'}) => {
               <div className="form-section my-4">
                 <label className="font-medium divider">Blend Ratio</label>
                 <div>
-                  { makeBlendRatioElements(selectedBlendBeans, blendRatios, setBlendRatio) }
+                  { Object.values(blendRatioHtmlDict) }
                 </div>
               </div>
             </div>
