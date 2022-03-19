@@ -123,7 +123,7 @@ module.exports = (app) => {
         roast_level = $11, 
         roast_date = $12,
         aroma = $13,
-        memo = $14,
+        memo = $14
       WHERE user_id = $15 AND coffee_bean_id = $16 
       RETURNING *`,
       [
