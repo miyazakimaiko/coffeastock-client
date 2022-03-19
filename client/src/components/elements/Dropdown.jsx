@@ -1,7 +1,7 @@
-import { ChevronDownIcon } from '@heroicons/react/outline';
+import { ChevronDownIcon, DotsVerticalIcon } from '@heroicons/react/outline';
 import React, { createRef, useState, useEffect } from 'react'
 
-const Dropdown = ({ children, dropdownText }) => {
+const Dropdown = ({ children, type = 'chevron', dropdownText }) => {
   const wrapperRef = createRef(null);
   const tipRef = createRef(null);
   const [open, setOpen] = useState(false)
@@ -53,20 +53,21 @@ const Dropdown = ({ children, dropdownText }) => {
       className="relative flex items-center"
       onClick={toggleOpen}>
       <div
-        className="absolute shadow-md 
-        bg-white py-2 rounded flex items-center 
+        className="absolute shadow-md bg-white border border-gray-100
+        py-2 rounded flex items-center 
         ease-linear transition-all duration-200 z-50"
         style={{ top: "100%", right: -10, opacity: 0, minWidth: "150px", visibility: "hidden" }}
         ref={tipRef}>
         <div
-          className="bg-white h-3 w-3 absolute"
+          className="bg-white h-3 w-3 absolute border-t border-l border-gray-100"
           style={{ top: "-6px", right: 16, transform: "rotate(45deg)" }}
         />
         {children}
       </div>
       <div className="flex items-center cursor-pointer">
         {dropdownText}
-        <ChevronDownIcon className="h-4 w-4 ml-2"/>
+        {type === 'chevron' ? <ChevronDownIcon className="h-4 w-4 ml-2"/> :
+        type === 'dot' ? <DotsVerticalIcon className="h-6 w-6 ml-2"/> : null}
       </div>
     </div>
   );
