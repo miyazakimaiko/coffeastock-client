@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
-import { ChevronRightIcon, InformationCircleIcon, PencilAltIcon } from '@heroicons/react/outline';
+import { ChevronRightIcon, InformationCircleIcon } from '@heroicons/react/outline';
 import { unescapeHtml } from '../../utils/HtmlConverter'
 import { useUserData } from '../../context/AccountContext';
 import { useAttributeRangeList, useFetchAttributeRangeList } from '../../context/AttributeRangeContext';
@@ -13,6 +13,11 @@ import FireHalfIcon from '../../assets/svgs/FireHalfIcon';
 import TooltipLeft from '../../components/elements/TooltipLeft';
 import RecipeSection from './RecipeSection';
 import './ViewRecipes.scss'
+import CoffeeAttributeSection from './CoffeeAttributeSection';
+import ToolBar from '../../components/tool-bar';
+import AddEditBeanModal from '../../components/add-edit-bean-modal'
+import DotVeticalIconButton from '../../components/elements/DotVerticalIconButton'
+import Dropdown from '../../components/elements/Dropdown';
 
 
 const ViewRecipes = () => {
@@ -22,25 +27,22 @@ const ViewRecipes = () => {
   const fetchAttributeRangeList = useFetchAttributeRangeList();
   const beanList = useBeanList()
   const fetchBeanList = useFetchBeanList()
+  const [openEditModal, setOpenEditModal] = useState(false)
 
-  const [singleOrigin, setSingleOrigin] = useState(false);
-  const [coffeeName, setCoffeeName] = useState("");
-  const [roastDate, setRoastDate] = useState("");
-  const [altitude, setAltitude] = useState("");
-  const [harvestDate, setHarvestDate] = useState("");
-  const [memo, setMemo] = useState("");
-  const [gradeText, setGradeText] = useState("");
-  const [roastLevelText, setRoastLevelText] = useState("");
-  const [roasters, setRoasters] = useState([]);
-  const [aroma, setAroma] = useState([]);
-  const [origins, setOrigins] = useState([]);
-  const [process, setProcess] = useState([]);
-  const [variety, setVariety] = useState([]);
-  const [farm, setFarm] = useState([]);
-  const [gradeStarIcons, setGradeStarIcons] = useState([]);
-  const [roastLevelFireIcons, setRoastLevelFireIcons] = useState([]);
+  const [bean, setBean] = useState({})
   const [blendRatio, setBlendRatio] = useState([])
-
+  const [beanAttrIcons, setBeanAttrIcons] = useState({
+    gradeStarIcons: null,
+    roastLevelFireIcons: null,
+  })
+  const [beanAttrNames, setBeanAttrNames] = useState({
+    roaster: null,
+    aroma: null,
+    origin: null,
+    process: null,
+    variety: null,
+    farm: null,
+  })
 
   const makeHtmlTags = (targetBean, category) => {
     const result = [];
@@ -54,7 +56,7 @@ const ViewRecipes = () => {
           <div 
             className="flex justify-end"
             style={{ paddingTop: "4px", paddingBottom: "4px" }}>
-            <TooltipLeft childrenDivId={`tooltip-${category}-${id}`} tooltipText={text}>
+            <TooltipLeft category={category} itemId={id} tooltipText={text}>
               <div className="flex items-center" id={`tooltip-${category}-${id}`} >
                 <p className="text-right">{label}</p>
                 <InformationCircleIcon className="h-4 w-4 ml-2 flex-shrink-0" />
@@ -73,7 +75,7 @@ const ViewRecipes = () => {
       id => <span>{attributeRangeList[category + '_range']["id-" + id]['label']}</span>
     );
     if (nameListHtml.length === 0) {
-      nameListHtml = <span>No Data</span>
+      nameListHtml = <span>-</span>
     }
     return nameListHtml;
   }
@@ -94,11 +96,11 @@ const ViewRecipes = () => {
         const altitude = 
           blendBean['altitude'] === "" || 
           blendBean['altitude'] === null ? 
-          "No Data" : blendBean['altitude'];
+          "-" : blendBean['altitude'];
         const harvestPeriod = 
           blendBean['harvest_period'] === "" || 
           blendBean['harvest_period'] === null ? 
-          "No Data" : blendBean['harvest_period'];
+          "-" : blendBean['harvest_period'];
         const text = <>
           <p className="py-1 slash-end"><strong className="text-yellow">Roaster: </strong>{roasterNames}</p>
           <p className="py-1 slash-end"><strong className="text-yellow">Origin:</strong> {originNames}</p>
@@ -171,27 +173,22 @@ const ViewRecipes = () => {
 
   useEffect(() => {
     if (Object.keys(beanList).length !== 0) {
+      setBean(beanList[id])
       const targetBean = beanList[id];
-      setSingleOrigin(targetBean['single_origin']);
-      setGradeText(targetBean['grade']);
-      setRoastLevelText(targetBean['roast_level'])
-      setCoffeeName(unescapeHtml(targetBean['label']));
-      setAltitude(unescapeHtml(targetBean['altitude']));
-      setHarvestDate(unescapeHtml(targetBean['harvest_period']));
-      setRoasters(makeHtmlTags(targetBean, 'roaster'));
-      setAroma(makeHtmlTags(targetBean, 'aroma'));
-      setOrigins(makeHtmlTags(targetBean, 'origin'));
-      setProcess(makeHtmlTags(targetBean, 'process'));
-      setVariety(makeHtmlTags(targetBean, 'variety'));
-      setFarm(makeHtmlTags(targetBean, 'farm'));
-      setRoastDate(
-        targetBean['roast_date'] ? targetBean['roast_date'].split('T')[0] : null
-      );
-      setMemo(
-        targetBean['memo'] === null ? "" : unescapeHtml(targetBean['memo'])
-      )
-      setGradeStarIcons(makeGradeIconList(targetBean));
-      setRoastLevelFireIcons(makeRoastLevelIconList(targetBean));
+      setBeanAttrNames({
+        ...beanAttrNames, 
+        roaster: makeHtmlTags(targetBean, 'roaster'),
+        aroma: makeHtmlTags(targetBean, 'aroma'),
+        origin: makeHtmlTags(targetBean, 'origin'),
+        process: makeHtmlTags(targetBean, 'process'),
+        variety: makeHtmlTags(targetBean, 'variety'),
+        farm: makeHtmlTags(targetBean, 'farm')
+      })
+      setBeanAttrIcons({
+        ...beanAttrIcons,
+        gradeStarIcons: makeGradeIconList(targetBean),
+        roastLevelFireIcons: makeRoastLevelIconList(targetBean)
+      })
       setBlendRatio(makeBlendRatioHtmlTags(targetBean));
     }
   }, [beanList]);
@@ -199,120 +196,149 @@ const ViewRecipes = () => {
   return (
     <>
       <div className="px-4 pt-8 w-full max-w-980px mx-auto">
-        <div>
-          <div className="h-16 flex items-center justify-center mb-8">
-            <h3 className="mr-3 text-xl text-center flex items-center">
-              {singleOrigin? "Single Origin" : "Blend"}
-              <ChevronRightIcon className="h-5 w-5 mx-5"/>
-              {coffeeName}
-            </h3>
-          </div>
-          <div className="my-4">
-            <div className="relative bg-white py-16 px-2 rounded-lg shadow-sm">
-              <button
-                type="button"
-                className="absolute top-3 right-3 opacity-80 hover:opacity-100 
-                ease-linear transition-all duration-150"> 
-                <PencilAltIcon className="h-6 w-6" />
-              </button>
-              <div className="coffee-bag-container mx-auto mt-4">
-                <CoffeeBagRight name={coffeeName} />
-              </div>
-              <div className="flex flex-wrap justify-center mt-16">
-                <div className="w-1/2 my-4 px-4">
-                  <div className="coffee-detail-section">
-                    <label className="text-sm font-medium  mr-3">Roasted By</label>
-                    <div>{roasters.length !== 0 ? roasters : '-'}</div>
-                  </div>
-
-                  <div className="coffee-detail-section">
-                    <label className="text-sm font-medium  mr-3">Roast Date</label>
-                    <p>{roastDate ? roastDate : '-'}</p>
-                  </div>
-
-                  <div className="coffee-detail-section">
-                    <label className="text-sm font-medium  mr-3">Grade</label>
-                    <div className="flex">
-                      {gradeStarIcons} 
-                      <span className="ml-2">{gradeText ? `(${gradeText}/100)` : '-'}</span>
-                    </div>
-                  </div>
-
-                  <div className="coffee-detail-section">
-                    <label className="text-sm font-medium  mr-3">Roast Level</label>
-                    <div className="flex">
-                      {roastLevelFireIcons}
-                      <span className="ml-2">{roastLevelText ? `(${roastLevelText}/10)` : '-'}</span>
-                    </div>
-                  </div>
+        <ToolBar
+          titleHtml={<span className="flex items-center">
+            {bean['single_origin'] ? "Single Origin" : "Blend"}
+            <ChevronRightIcon className="h-5 w-5 mx-5"/>
+            {unescapeHtml(bean['label'])}
+          </span>}
+        >
+        </ToolBar>
+        <div className="my-4">
+          <div className="relative bg-white p-2 py-12 rounded-lg shadow-sm">
+            <div className="absolute top-5 right-4">
+              <Dropdown dropdownText="" type="dot">
+                <div className="dropdown-content" >
+                  <button type="button" className="dropdown-item" onClick={() => setOpenEditModal(true)}>Edit</button>
+                  <button type="button" className="dropdown-item" onClick={() => setOpenEditModal(true)}>Delete</button>
                 </div>
-
-                <div className="w-1/2 my-4 px-4">
-                  { singleOrigin ? 
-                  <>
-                    <div className="coffee-detail-section">
-                      <label className="text-sm font-medium  mr-6">Origin</label>
-                      <div>{origins}</div >
-                    </div>
-
-                    <div className="coffee-detail-section">
-                      <label className="text-sm font-medium  mr-3">Process</label>
-                      <div>{process.length !== 0 ? process : '-'}</div>
-                    </div>
-
-                    <div className="coffee-detail-section">
-                      <label className="text-sm font-medium  mr-3">Variety</label>
-                      <div>{variety.length !== 0 ? variety : '-'}</div>
-                    </div>
-
-                    <div className="coffee-detail-section">
-                      <label className="text-sm font-medium  mr-3">Farm</label>
-                      <div>{farm.length !== 0 ? farm : '-'}</div>
-                    </div>
-
-                    <div className="coffee-detail-section">
-                      <label className="text-sm font-medium  mr-3">Altitude</label>
-                      <p>{altitude ? altitude : '-'}</p>
-                    </div>
-
-                    <div className="coffee-detail-section">
-                      <label className="text-sm font-medium  mr-3">Harvest Period</label>
-                      <p>{harvestDate ? harvestDate : '-'}</p>
-                    </div>
-                  </>
-                  :
-                  <div className="coffee-detail-section">
-                    <label className="text-sm font-medium  mr-3">Blend Ratio</label>
-                    <div>{blendRatio}</div>
-                  </div>
-                  }
-
-                  <div className="coffee-detail-section">
-                    <label className="text-sm font-medium  mr-3">Aroma</label>
-                    <div>{aroma.length !== 0 ? aroma : '-'}</div>
-                  </div>
-
-                </div>
-              </div>
-              
-              { memo.length !== 0 ? 
-              <div className="px-6 pt-4">
-                <label className="text-sm font-medium  mr-3">Memo: </label>
-                <div className="inline-block">{memo}</div>
-              </div>
-              : null
-              }
+              </Dropdown>
             </div>
-          </div>
-          <div className="flex mb-4 w-full flex-wrap justify-center">
-            <RecipeSection recipeId="1" />
-            <RecipeSection recipeId="2" />
-            <RecipeSection recipeId="3" />
-            <RecipeSection recipeId="4" />
-            <RecipeSection recipeId="5" />
+            <div className="coffee-bag-container mx-auto mt-14">
+              <CoffeeBagRight name={bean['label']} />
+            </div>
+            <div className="flex flex-wrap justify-center mt-16">
+              <div className="w-1/2 my-4 px-4">
+                <CoffeeAttributeSection
+                  title="Roasted By"
+                  contentType="array"
+                  content={beanAttrNames.roaster}
+                />
+                <CoffeeAttributeSection
+                  title="Roast Date"
+                  contentType="date"
+                  content={bean['roast_date']}
+                />
+                <CoffeeAttributeSection
+                  title="Grade"
+                  contentType="html"
+                  content={
+                    <div className="flex">
+                      {beanAttrIcons.gradeStarIcons} 
+                      <span className="ml-2">
+                        {bean['grade'] !== null && 
+                        bean['grade'] !== undefined && 
+                        bean['grade'] !== "" ? `(${bean['grade']}/100)` : '-'}
+                      </span>
+                    </div>
+                  }
+                />
+                <CoffeeAttributeSection
+                  title="Roast Level"
+                  contentType="html"
+                  content={
+                    <div className="flex">
+                      {beanAttrIcons.roastLevelFireIcons}
+                      <span className="ml-2">
+                        {bean['roast_level'] !== null && 
+                        bean['roast_level'] !== undefined && 
+                        bean['roast_level'] !== "" ? `(${bean['roast_level']}/10)` : '-'}
+                      </span>
+                    </div>
+                  }
+                />
+              </div>
+
+              <div className="w-1/2 my-4 px-4">
+                { bean['single_origin'] 
+                    ? 
+                  <>
+                    <CoffeeAttributeSection
+                      title="Origin"
+                      contentType="array"
+                      content={beanAttrNames.origin}
+                    />
+                    <CoffeeAttributeSection
+                      title="Process"
+                      contentType="array"
+                      content={beanAttrNames.process}
+                    />
+                    <CoffeeAttributeSection
+                      title="Variety"
+                      contentType="array"
+                      content={beanAttrNames.variety}
+                    />
+                    <CoffeeAttributeSection
+                      title="Farm"
+                      contentType="array"
+                      content={beanAttrNames.farm}
+                    />
+                    <CoffeeAttributeSection
+                      title="Altitude"
+                      contentType="string"
+                      content={bean['altitude']}
+                    />
+                    <CoffeeAttributeSection
+                      title="Harvest Period"
+                      contentType="string"
+                      content={bean['harvest_period']}
+                    />
+                  </>
+                    :
+                  <CoffeeAttributeSection
+                    title="Blend Ratio"
+                    contentType="array"
+                    content={blendRatio}
+                  />
+                }
+                <CoffeeAttributeSection
+                  title="Aroma"
+                  contentType="array"
+                  content={beanAttrNames.aroma}
+                />
+              </div>
+            </div>
+            
+            { bean['memo'] !== null && bean['memo'] !== ""
+                ? 
+              <div className="px-6 pt-4">
+                <label className="text-sm font-medium mr-3">Memo: </label>
+                <div className="inline-block">{unescapeHtml(bean['memo'])}</div>
+              </div>
+                : 
+              null
+            }
           </div>
         </div>
+        <div className="flex mb-4 w-full flex-wrap justify-center">
+          <RecipeSection recipeId="1" />
+          <RecipeSection recipeId="2" />
+          <RecipeSection recipeId="3" />
+          <RecipeSection recipeId="4" />
+          <RecipeSection recipeId="5" />
+        </div>
       </div>
+
+      {openEditModal
+          ?  
+        <AddEditBeanModal 
+          mode="edit"
+          targetBean={bean}
+          setOpenThisModal={setOpenEditModal} 
+        /> 
+          : 
+        null
+      }
     </>
   )
 }
