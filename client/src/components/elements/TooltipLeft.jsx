@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
-const TooltipLeft = ({ children, childrenDivId, tooltipText }) => {
+const TooltipLeft = ({ children, category, itemId, tooltipText }) => {
+  const childrenDivId = `tooltip-${category}-${itemId}`;
   const tipRef = React.createRef(null);
   const [boxPositionLeft, setBoxPositionLeft] = useState("-215px");
 
