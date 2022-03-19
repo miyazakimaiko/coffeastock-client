@@ -4,7 +4,7 @@ const InputConfirmSection = ({title, content}) => {
   return (
     <div className="confirm-section">
     <label className="text-sm mr-4">{title}</label>
-    <p className="font-medium">{content !== null && content.length > 0 ? content : '-'}</p>
+    <p className="font-medium">{content !== null && content !== undefined && content.toString().length > 0 ? content : '-'}</p>
   </div>
   )
 }
