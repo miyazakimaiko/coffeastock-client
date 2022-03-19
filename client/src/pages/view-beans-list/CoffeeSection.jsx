@@ -46,7 +46,7 @@ const CoffeeSection = ({bean}) => {
         </div>
         <div className="h-full p-4 bg-white rounded-md">
           <div className="m-auto mb-4 w-full max-w-10">
-            <CoffeeBag name={unescapeHtml(bean['label'])} />
+            <CoffeeBag name={bean['label']} />
           </div>
           <div className="text-center">
             <span className="flex justify-center py-2">
