@@ -1,7 +1,8 @@
 import React from 'react'
+import { unescapeHtml } from '../../utils/HtmlConverter'
 
 const CoffeeBagRight = ({name}) => {
-
+  const unescapedName = unescapeHtml(name)
   return (
     <div className="relative coffee-bag">
       <svg className="m-auto" width="100%" height="100%" viewBox="0 0 174 231" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -21,9 +22,9 @@ const CoffeeBagRight = ({name}) => {
             left-16 right-4 transform -skew-y-6 -skew-x-2 font-semibold">
             <p xmlns="http://www.w3.org/1999/xhtml" 
               className="h-full w-full flex items-center justify-center text-center">
-                {name.length < 40
-                  ? `${name}`
-                  : `${name.substring(0, 32)}...`
+                {unescapedName.length < 40
+                  ? `${unescapedName}`
+                  : `${unescapedName.substring(0, 32)}...`
                 }
             </p>
           </div>
