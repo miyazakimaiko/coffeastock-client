@@ -12,6 +12,11 @@ import AddRecipeModal from '../add-edit-recipe-modal';
 import './header.scss'
 import Dropdown from '../elements/Dropdown';
 
+const MODE = {
+  BEAN: 'bean',
+  RECIPE: 'recipe'
+}
+
 const Header = (props) => {
   const { 
     openNav, 
@@ -26,21 +31,7 @@ const Header = (props) => {
   const setAuthenticated = useSetAuthenticated()
   const signout = useSignout()
 
-  const [
-    openAddBeanModal, 
-    innerSetOpenAddBeanModal
-  ] = useState(false);
-
-  const setOpenAddBeanModal = boolean => 
-    innerSetOpenAddBeanModal(boolean);
-
-  const [
-    openAddRecipeModal, 
-    innerSetOpenAddRecipeModal
-  ] = useState(false)
-
-  const setOpenAddRecipeModal = boolean => 
-    innerSetOpenAddRecipeModal(boolean);
+  const [modal, setModal] = useState({mode: '', isOpen: false})
 
   const logout = () => {
     forceUnpin();
@@ -66,31 +57,28 @@ const Header = (props) => {
           {openNav ? <XIcon className="h-8 w-8 opacity-80 hover:opacity-100 ease-linear transition-all duration-150" /> 
           : <MenuAlt2Icon className="h-8 w-8 opacity-80 hover:opacity-100 ease-linear transition-all duration-150"/>}
         </div>
+        <div className="button-section">
+          <button type="button"
+            onClick={() => setModal({mode: 'bean', isOpen: true})}
+            className="flex items-center text-burnt-sienna  px-3 py-2 ml-4 mr-0 
+            opacity-80 hover:opacity-100 ease-linear transition-all duration-150">
+            <PlusIcon className="h-4 w-4 mr-2" />
+            Coffee Bean
+          </button>
 
-        <button type="button"
-          onClick={() => innerSetOpenAddBeanModal(true)}
-          className="flex items-center text-burnt-sienna 
-          text-sm px-3 py-2 ml-4 mr-0 
-          opacity-80 hover:opacity-100 ease-linear transition-all duration-150">
-          <PlusIcon className="h-4 w-4 mr-2" />
-          Coffee Bean
-        </button>
-
-        <button type="button"
-          onClick={() => innerSetOpenAddRecipeModal(true)}
-          className="flex items-center text-burnt-sienna 
-          text-sm px-3 py-2 ml-4 mr-0 
-          opacity-80 hover:opacity-100 ease-linear transition-all duration-150">
-          <PlusIcon className="h-4 w-4 mr-2" />
-          Recipe
-        </button>
+          <button type="button"
+            onClick={() => setModal({mode: 'recipe', isOpen: true})}
+            className="flex items-center text-burnt-sienna 
+             px-3 py-2 ml-4 mr-0 
+            opacity-80 hover:opacity-100 ease-linear transition-all duration-150">
+            <PlusIcon className="h-4 w-4 mr-2" />
+            Recipe
+          </button>
+        </div>
       </div>
 
       <div>
         <div className="flex items-center">
-          <div className="h-9 w-9 flex-shrink-0">
-            <img src={imgFace} className="h-full w-full rounded-3xl"/>
-          </div>
           <div className="mx-3">
             <Dropdown dropdownText={userData.nickname}>
               <div className="dropdown-content" >
@@ -100,13 +88,16 @@ const Header = (props) => {
               </div>
             </Dropdown>
           </div>
+          <div className="h-9 w-9 flex-shrink-0">
+            <img src={imgFace} className="h-full w-full rounded-3xl"/>
+          </div>
         </div>
       </div>
     </div>
     <div className="w-hull border-b border-burnt-sienna border-opacity-20 "></div>
 
-    {openAddBeanModal ?  <AddEditBeanModal setOpenThisModal={setOpenAddBeanModal} /> : null}
-    {openAddRecipeModal ?  <AddRecipeModal setOpenThisModal={setOpenAddRecipeModal} /> : null}
+    {modal.mode === MODE.BEAN && modal.isOpen ?  <AddEditBeanModal setModal={setModal} /> : null}
+    {modal.mode === MODE.RECIPE && modal.isOpen ?  <AddRecipeModal setOpenThisModal={setModal} /> : null}
     
     </>
     )
