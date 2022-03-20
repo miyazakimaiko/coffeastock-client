@@ -158,9 +158,7 @@ module.exports = (app) => {
       const results = await db.query(`
       DELETE FROM beans WHERE user_id = $1 AND coffee_bean_id = $2`,
       [req.params.userid, req.params.beanid]);
-
-      res.status(200).json(results.body);
-
+      res.status(200).json(results.rows);
     } catch (error) {
       next(error);
     }
