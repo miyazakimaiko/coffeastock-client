@@ -40,9 +40,12 @@ const ViewMyCoffees = () => {
 
   const makeSortedCoffeesHtmlDictionary = async () => {
     const attrRange = attributeRangeList[groupState + '_range']
-    const coffeeHtmlDictionary = await Object.keys(attrRange).reduce(
-      (o, key) => ({ ...o, [key.replace('id-', '')]: []}), {}
-    ) // e.g. {1: [], 3: [], 4: [], 7:[]}
+    let coffeeHtmlDictionary = {}
+    if (attrRange !== null && attrRange !== undefined) {
+      coffeeHtmlDictionary = await Object.keys(attrRange).reduce(
+        (o, key) => ({ ...o, [key.replace('id-', '')]: []}), {}
+      ) // e.g. {1: [], 3: [], 4: [], 7:[]}
+    }
     coffeeHtmlDictionary['No Group'] = []
 
     try {
@@ -75,7 +78,6 @@ const ViewMyCoffees = () => {
       throw new Error(error);
     }
     setSortedCoffeesHtmlDictionary(coffeeHtmlDictionary)
-    console.log('coffeeHtmlDictionary: ', coffeeHtmlDictionary)
   }
   
 
@@ -90,10 +92,10 @@ const ViewMyCoffees = () => {
   },[])
 
   useEffect(() => {
-    if (Object.keys(beanList).length !== 0 && Object.keys(attributeRangeList).length !== 0) {
+    try {
       makeSortedCoffeesHtmlDictionary();
       setSearchValue("")
-    }
+    } catch {}
   }, 
   [beanList, attributeRangeList, showState, groupState]);
 
@@ -111,7 +113,7 @@ const ViewMyCoffees = () => {
         })
 
         const coffeeList = document.getElementsByClassName(coffeeSection.props.bean['coffee_bean_id'])
-        console.log('coffeeList: ', coffeeList)
+        
         if (coffeeList && !show) {
           for (let coffee of coffeeList) {
             coffee.classList.add('hidden')
