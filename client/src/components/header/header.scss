@@ -1,3 +1,5 @@
+@import "../../assets/scss/breakpoints";
+
 .header {
   width: 100%;
   position: fixed;
@@ -10,5 +12,12 @@
 }
 .header-border {
   position: relative;
+}
+
+.button-section {
+  display: none;
+  @include sm() {
+    display: flex;
+  }
 }
 
