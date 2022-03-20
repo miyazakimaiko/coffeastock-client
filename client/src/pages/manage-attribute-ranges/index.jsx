@@ -10,7 +10,7 @@ import AddEditModal from './components/AddEditModal';
 import AddEditForm from './components/AddEditForm';
 import NameInput from './components/NameInput';
 import DetailsTextarea from './components/DetailsTextarea';
-import DeleteModal from './components/DeleteModal';
+import DeleteModal from '../../components/delete-modal'
 
 const MODE = {
   ADD: 'add',
@@ -144,10 +144,10 @@ const ManageAttributeRanges = ({cat}) => {
 
   return (
     <>
-      <div className="px-4 pt-8">
+      <div className="px-2 md:px-4 pt-8">
         <ToolBar pageTitle={`${cat} Range`}>
           <ToolBarButton 
-            title={`${cat}`}
+            title={`New ${cat}`}
             onClick={() => {
               setAttribute({ value: '', label: '', def: '' });
               setModal({ mode: MODE.ADD, isOpen: true })
