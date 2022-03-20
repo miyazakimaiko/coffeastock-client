@@ -306,29 +306,29 @@ const Register = () => {
               <div className="bg-white p-6">
                 <div className="card-content">
                   <div className="pb-4">
-                    <input type="text" placeholder="Nickname" name="nickname" className="orange-outline-transition bg-creme block w-full text-base py-2 px-3 rounded-md"
+                    <input type="text" placeholder="Nickname" name="nickname" className="orange-outline-transition bg-creme block w-full py-2 px-3 rounded-md"
                       value={nickname}
                       onChange={e => setNickname(e.target.value)}
                     />
                   </div>
                   <div className="pb-4">
-                    <input type="email" placeholder="Email" name="email" className="orange-outline-transition transition-all bg-creme block w-full text-base py-2 px-3 rounded-md"
+                    <input type="email" placeholder="Email" name="email" className="orange-outline-transition transition-all bg-creme block w-full py-2 px-3 rounded-md"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
                     />
                   </div>
                   <div className="pb-4">
-                    <input type="password" placeholder="Password" name="password" className="orange-outline-transition transition-all bg-creme block w-full text-base py-2 px-3 rounded-md"
+                    <input type="password" placeholder="Password" name="password" className="orange-outline-transition transition-all bg-creme block w-full py-2 px-3 rounded-md"
                       value={password}
                       onChange={e => setPassword(e.target.value)}
                     />
                   </div>
                   <div className="pb-4">
-                    <input type="password" placeholder="Password Confirmation" className="orange-outline-transition transition-all bg-creme block w-full text-base py-2 px-3 rounded-md" />
+                    <input type="password" placeholder="Password Confirmation" className="orange-outline-transition transition-all bg-creme block w-full py-2 px-3 rounded-md" />
                   </div>
                 </div>
                 <div className="text-center">
-                  <button type="submit" className="bg-orange button-transition shadow-sm rounded-3xl pl-6 pr-8 py-2 my-2 mx-auto text-white text-base flex">
+                  <button type="submit" className="bg-orange button-transition shadow-sm rounded-3xl pl-6 pr-8 py-2 my-2 mx-auto text-white flex">
                     <span className="ml-1">Create Free Account</span>
                   </button>
                 </div>

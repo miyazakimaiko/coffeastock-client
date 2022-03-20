@@ -3,7 +3,7 @@ import { capitalize } from '../../utils/HtmlConverter'
 
 const ToolBar = ({children, pageTitle = null, titleHtml = null}) => {
   return (
-    <div className="h-16 flex items-center justify-center mb-8">
+    <div className="sm:flex items-center justify-center mb-8">
       {pageTitle || titleHtml
         ?      
         <h3 className="mr-3 text-xl text-center">

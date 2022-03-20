@@ -69,14 +69,14 @@ const Login = () => {
             <div className="card-content pt-3">
               <div className="pb-3">
                 <label className="">Email address</label>
-                <input type="email" name="email" placeholder="Enter email" className="blue-outline-transition bg-creme block w-full text-base py-2 px-3 rounded-md"
+                <input type="email" name="email" placeholder="Enter email" className="blue-outline-transition bg-creme block w-full py-2 px-3 rounded-md"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                 />
               </div>
               <div className="pb-3">
                 <label className="">Password</label>
-                <input type="password" name="password" placeholder="Password" className="blue-outline-transition bg-creme block w-full text-base py-2 px-3 rounded-md"
+                <input type="password" name="password" placeholder="Password" className="blue-outline-transition bg-creme block w-full py-2 px-3 rounded-md"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                 />
@@ -85,7 +85,7 @@ const Login = () => {
             <div className="text-center">
               <button 
                 type="submit"
-                className="shadow-sm rounded-3xl pl-6 pr-8 py-2 my-2 mx-auto bg-blue button-transition text-white text-base flex"
+                className="shadow-sm rounded-3xl pl-6 pr-8 py-2 my-2 mx-auto bg-blue button-transition text-white flex"
               >
                 <LoginIcon className="h-5 w-5 my-auto" />
                 <span className="ml-1">Login</span>

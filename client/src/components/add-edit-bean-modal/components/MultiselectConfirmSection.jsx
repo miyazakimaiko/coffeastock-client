@@ -3,7 +3,7 @@ import React from 'react'
 const MultiselectConfirmSection = ({title, content}) => {
   return (
     <div className="confirm-section">
-      <label className="text-sm mr-4">{title}</label>
+      <label className=" mr-4">{title}</label>
       <div className="tag-section font-medium">
         {content.length <= 0 ? 
           <p>-</p> :

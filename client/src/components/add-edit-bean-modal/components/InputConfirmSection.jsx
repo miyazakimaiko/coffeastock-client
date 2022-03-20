@@ -3,7 +3,7 @@ import React from 'react'
 const InputConfirmSection = ({title, content}) => {
   return (
     <div className="confirm-section">
-    <label className="text-sm mr-4">{title}</label>
+    <label className=" mr-4">{title}</label>
     <p className="font-medium">{content !== null && content !== undefined && content.toString().length > 0 ? content : '-'}</p>
   </div>
   )

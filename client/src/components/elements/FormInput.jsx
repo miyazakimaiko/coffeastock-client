@@ -15,7 +15,7 @@ const FormInput = ({
   return (
     <div className="form-section">
       <label className="font-medium">{title}</label>
-      <span className="ml-2 text-sm">{note}</span>
+      <span className="ml-2 ">{note}</span>
       <input 
         type={type}
         step={step}
@@ -23,7 +23,7 @@ const FormInput = ({
         autoComplete={autoComplete}
         placeholder={placeholder}
         className="blue-outline-transition bg-creme 
-        block w-full text-base py-2 px-3 rounded-md border-1"
+        block w-full py-2 px-3 rounded-md border-1"
         value={value}
         onChange={onChange}
       />

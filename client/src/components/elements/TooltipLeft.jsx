@@ -36,7 +36,7 @@ const TooltipLeft = ({ children, category, itemId, tooltipText }) => {
               className="bg-black h-3 w-3 absolute"
               style={{ right: "-6px", top: "22px", transform: "rotate(45deg)" }}
             />
-            <div className="text-sm">
+            <div>
               {tooltipText}
             </div>
           </div>
