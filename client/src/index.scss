@@ -87,20 +87,22 @@ body {
 }
 
 .orange-outline-transition {
-  outline: transparent solid 1px;
-  transition: outline 0.1s ease;
+  outline: none;
+  box-shadow: 0 0 0 1pt var(--bordergrey);
+  transition: box-shadow 0.1s ease;
 
   &:focus-visible {
-    outline: solid 2px var(--orange);
+    box-shadow: 0 0 0 2pt var(--orange);
   }
 }
 
 .blue-outline-transition {
-  outline: var(--bordergrey) solid 1px;
-  transition: outline 0.1s ease;
+  outline: none;
+  box-shadow: 0 0 0 1pt var(--bordergrey);
+  transition: box-shadow 0.1s ease;
 
   &:focus-visible {
-    outline: solid 2px var(--blue);
+    box-shadow: 0 0 0 2pt var(--blue);
   }
 }
 
@@ -150,7 +152,6 @@ body {
         padding: 15px 8px;
       }
       .td-options {
-        display: flex;
         width: fit-content;
         margin: 0 0 0 auto;
         .option-button {
@@ -189,6 +190,7 @@ body {
     }
   }
   .percent-char {
+    text-align: end;
     input {
       text-align: right;
     }
@@ -208,10 +210,14 @@ body {
     padding: 5px 20px;
     text-align: left;
     white-space: nowrap;
+    transition: background-color 0.3s ease;
     &::before, &::after {
       content: "→";
       margin-right: 5px;
       visibility: hidden;
+    }
+    &:hover {
+      background-color: var(--greycreme);
     }
     &.active {
       &::before {
