@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState, createRef } from 'react'
 import { useUserData } from '../../context/AccountContext';
-import { useAttributeRangeList, useFetchAttributeRangeList, useInsertAttribute } from '../../context/AttributeRangeContext';
-import { useBeanList, useFetchBeanList, useInsertBean, useUpdateBean } from '../../context/BeansContext';
+import { useAttributeRangeList, useInsertAttribute } from '../../context/AttributeRangeContext';
+import { useBeanList, useInsertBean, useUpdateBean } from '../../context/BeansContext';
 import { unescapeHtml } from '../../utils/HtmlConverter'
 import './modals.scss'
 import AddEditBeanModalContainer from './components/AddEditBeanModalContainer';
@@ -23,13 +23,11 @@ import AddEditAltitudeInput from './components/AddEditAltitudeInput';
 import AddEditMemoTextarea from './components/AddEditMemoTextarea';
 
 
-const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
+const AddEditBeanModal = ({setModal, targetBean, mode = 'add'}) => {
   const userData = useUserData()
   const attributeRangeList = useAttributeRangeList() 
-  const fetchAttributeRangeList = useFetchAttributeRangeList()
   const insertAttribute = useInsertAttribute()
   const beanList = useBeanList()
-  const fetchBeanList = useFetchBeanList()
   const insertBean = useInsertBean()
   const updateBean = useUpdateBean();
 
@@ -226,20 +224,11 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
     }
   }
 
-  useEffect(() => {
-    if (Object.keys(attributeRangeList).length === 0) {
-      fetchAttributeRangeList(userData.sub);
-    }
-    if (Object.keys(beanList).length === 0) {
-      fetchBeanList(userData.sub);
-    }
-  }, []);
-
   useEffect(async () => {
     if (processAddSubmit && bean.label !== null) {
       const insertSuccess = await insertBean(userData.sub, bean);
       if (insertSuccess)
-        setOpenThisModal(false);
+        setModal({mode: '', isOpen: false});
     }
   }, [processAddSubmit])
 
@@ -247,7 +236,7 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
     if (processEditSubmit && bean.label !== null) {
       const updateSuccess = await updateBean(userData.sub, targetBean['coffee_bean_id'], bean);
       if (updateSuccess)
-        setOpenThisModal(false);
+        setModal({mode: '', isOpen: false});
     }
   }, [processEditSubmit])
 
@@ -331,7 +320,7 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
         mode === 'add' ? 'Add New Coffee Bean Type' :
         mode === 'edit' ? `Edit Coffee Bean ${targetBean['label']}` : null
       }
-      onCloseClick={() => setOpenThisModal(false)}
+      onCloseClick={() => setModal({mode: '', isOpen: false})}
     >
       {/*body*/}
       <ul className="flex">
@@ -368,8 +357,8 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
           ref={baseInfoPage} 
           className="ease-linear transition-all duration-300"
         >
-          <div className="flex px-8 my-8">
-            <div className="flex flex-col w-1/2">
+          <div className="md:flex md:px-8 my-8">
+            <div className="flex flex-col md:w-1/2">
               <AddEditNameInput
                 bean={bean}
                 setBean={setBean}
@@ -384,21 +373,21 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
               />
             </div>
 
-            <div className="w-1/2">
-            <div className="form-section h-1/3 flex items-end justify-start">
-              <FormRadio
-                title="Single Origin"
-                name="single_origin"
-                checked={bean.single_origin ? true : false}
-                onChange={e => {setBean({...bean, single_origin: true})}}
-              />
-              <FormRadio
-                title="Blend"
-                name="single_origin"
-                checked={bean.single_origin ? false : true}
-                onChange={e => {setBean({...bean, single_origin: false})}}
-              />
-            </div>
+            <div className="md:w-1/2">
+              <div className="form-section h-1/3 flex items-end justify-start">
+                <FormRadio
+                  title="Single Origin"
+                  name="single_origin"
+                  checked={bean.single_origin ? true : false}
+                  onChange={e => {setBean({...bean, single_origin: true})}}
+                />
+                <FormRadio
+                  title="Blend"
+                  name="single_origin"
+                  checked={bean.single_origin ? false : true}
+                  onChange={e => {setBean({...bean, single_origin: false})}}
+                />
+              </div>
               <FormMultiSelect 
                 title="Roaster"
                 options={Object.values(attributeRangeList.roaster_range)}
@@ -416,10 +405,10 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
               />
             </div>
           </div>
-          <div className="flex items-center justify-between pl-8 pr-8 pb-8">
+          <div className="flex items-center justify-between px-2 md:px-8 pb-8">
             <RedOutlineButton
               text="Cancel"
-              onClick={() => setOpenThisModal(false)}
+              onClick={() => setModal({mode: '', isOpen: false})}
             />
             <BlueButton
               text="Next"
@@ -436,8 +425,8 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
           ref={detailsPage}
           className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300"
         >
-          <div className={`flex px-8 my-8 ${bean.single_origin ? "hidden" : ""}`}>
-            <div className="flex flex-col w-1/2">
+          <div className={`md:px-8 my-8 ${bean.single_origin ? "hidden" : "block md:flex"}`}>
+            <div className="flex flex-col md:w-1/2">
               <FormMultiSelect 
                 title="Blend of"
                 required={true}
@@ -453,7 +442,7 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
               </div>
             </div>
 
-            <div className="w-1/2">
+            <div className="md:w-1/2">
               <FormMultiSelect 
                 title="Aroma"
                 options={Object.values(attributeRangeList.aroma_range)}
@@ -468,8 +457,8 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
             </div>
           </div>
 
-          <div className={`flex px-8 my-8 ${bean.single_origin ? "" : "hidden"}`}>
-            <div className="flex flex-col w-1/2">
+          <div className={`md:px-8 my-8 ${bean.single_origin ? "block md:flex" : "hidden"}`}>
+            <div className="flex flex-col md:w-1/2">
               <FormMultiSelect 
                 title="Origin"
                 required={true}
@@ -502,7 +491,7 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
               />
             </div>
 
-            <div className="w-1/2">
+            <div className="md:w-1/2">
               <FormMultiSelect 
                 title="Process"
                 options={Object.values(attributeRangeList.process_range)}
@@ -524,7 +513,7 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between pl-8 pr-8 pb-8">
+          <div className="flex items-center justify-between px-2 md:px-8 pb-8">
             <RedOutlineButton
               text="Go Back"
               onClick={setOpenBaseInfoTab}
@@ -545,9 +534,9 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
           className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300"
         >
             
-          <div className="px-8 my-10">
-            <div className="flex">
-              <div className="flex flex-col w-1/2">
+          <div className="md:px-8 my-10">
+            <div className="md:flex">
+              <div className="flex flex-col w-full md:w-1/2">
                 <div>
                   <div className="flex mx-4 mb-4">
                     <h3 className="text-lg">Base Info</h3>
@@ -556,7 +545,7 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
                       onClick={setOpenBaseInfoTab}
                     />
                   </div>
-                  <div className="m-8">
+                  <div className="mb-8 md:m-8">
                     <InputConfirmSection
                       title="Name"
                       content={bean.label}
@@ -585,7 +574,7 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
                 </div>
               </div>
 
-              <div className="w-1/2">
+              <div className="md:w-1/2">
                 <div className="flex mx-4 mb-4">
                   <h3 className="text-lg">Details</h3>
                   <PencilAltIconButton
@@ -593,7 +582,7 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
                     onClick={setOpenDetailsTab}
                   />
                 </div>
-                <div className="m-8">
+                <div className="mb-8 md:m-8">
                   { bean.single_origin ? 
                     <>
                       <MultiselectConfirmSection
@@ -633,7 +622,7 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
                         content={selectedAroma}
                       />
                     <div className="confirm-section">
-                      <label className="text-sm mr-4">Blend Ratio</label>
+                      <label className=" mr-4">Blend Ratio</label>
                       <div className="tag-section font-medium">
                       {selectedBlendBeans.map((entry) => (
                         <span className="text-xs">{entry.label}: {blendRatios[entry.value]}%</span>
@@ -647,9 +636,9 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
             </div>
 
             <div>
-              <div className="mx-6 my-2">
+              <div className="mx-4 md:mx-6 my-2">
                 <div className="w-full flex items-center">
-                  <h3 className="text-sm inline">Memo</h3>
+                  <h3 className="inline">Memo</h3>
                   <PencilAltIconButton
                     width="5"
                     onClick={setOpenDetailsTab}
@@ -661,7 +650,7 @@ const AddEditBeanModal = ({setOpenThisModal, targetBean, mode = 'add'}) => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between px-8 py-8">
+          <div className="flex items-center justify-between px-2 md:px-8 py-8">
             <RedOutlineButton
               text="Go Back"
               onClick={setOpenDetailsTab}
