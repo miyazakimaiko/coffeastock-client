@@ -50,13 +50,13 @@ const Dropdown = ({ children, type = 'chevron', dropdownText }) => {
   return (
     <div
       ref={wrapperRef}
-      className="relative flex items-center"
+      className="relative flex items-center justify-end"
       onClick={toggleOpen}>
       <div
         className="absolute shadow-md bg-white border border-gray-100
         py-2 rounded flex items-center 
         ease-linear transition-all duration-200 z-50"
-        style={{ top: "100%", right: -10, opacity: 0, minWidth: "150px", visibility: "hidden" }}
+        style={{ top: "15px", right: -10, opacity: 0, minWidth: "150px", visibility: "hidden" }}
         ref={tipRef}>
         <div
           className="bg-white h-3 w-3 absolute border-t border-l border-gray-100"
@@ -64,7 +64,7 @@ const Dropdown = ({ children, type = 'chevron', dropdownText }) => {
         />
         {children}
       </div>
-      <div className="flex items-center cursor-pointer">
+      <div className="flex items-center cursor-pointer my-2">
         {dropdownText}
         {type === 'chevron' ? <ChevronDownIcon className="h-4 w-4 ml-2"/> :
         type === 'dot' ? <DotsVerticalIcon className="h-6 w-6 ml-2"/> : null}
