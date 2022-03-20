@@ -4,11 +4,19 @@ import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, CogIcon, HomeIcon } from 
 import PushPinIcon from '../../assets/svgs/PushPinIcon'
 import { NavStateContext } from '../../context/NavStateContext'
 import './nav.scss'
+import AddEditBeanModal from '../add-edit-bean-modal'
+import AddRecipeModal from '../add-edit-recipe-modal'
+
+const MODE = {
+  BEAN: 'bean',
+  RECIPE: 'recipe'
+}
 
 const Nav = (props) => {
   const { showNavbar, pinnedNavbar, setPinnedNavbar } = useContext(NavStateContext);
   const [openBeansAccordion, innerSetOpenBeansAccordion] = useState(false);
   const [openRecipesAccordion, innerSetOpenRecipesAccordion] = useState(false);
+  const [modal, setModal] = useState({mode: '', isOpen: false})
 
   const [beansOpacity, setBeansOpacity] = useState(0);
   const [recipesOpacity, setRecipesOpacity] = useState(0);
@@ -56,216 +64,244 @@ const Nav = (props) => {
   }, [openRecipesAccordion]);
 
   return (
-  <div>
-    <nav
-      ref={el => { props.navRef.current = el; }}
-      className="l-nav fixed top-0 bottom-0 overflow-auto
-        bg-burnt-sienna border-r text-white">
-      <div 
-        className=" border-b border-creme 
-        border-opacity-20 h-16 px-6 flex justify-between items-center">
-        <h1 className=" text-lg">Coffee Journal</h1>
-        <button 
-          type="button" 
-          ref={el => { props.pushpinRef.current = el; }} 
-          className="h-4 w-4 pushpin hidden lg:block" onClick={setPinnedNavbar}>
-          <PushPinIcon />
-        </button>
-      </div>
+  <>
+    <div>
+      <nav
+        ref={el => { props.navRef.current = el; }}
+        className="l-nav fixed top-0 bottom-0 overflow-auto
+          bg-burnt-sienna border-r text-white">
+        <div 
+          className=" border-b border-creme 
+          border-opacity-20 h-16 px-6 flex justify-between items-center">
+          <h1 className=" text-lg">Coffee Journal</h1>
+          <button 
+            type="button" 
+            ref={el => { props.pushpinRef.current = el; }} 
+            className="h-4 w-4 pushpin hidden lg:block" onClick={setPinnedNavbar}>
+            <PushPinIcon />
+          </button>
+        </div>
 
-      <div className="my-8 text-sm">
-        <h3 className="mx-6 my-3 text-xs opacity-50">
-          Main
-        </h3>
-        <ul className="ml-10">
-          <li className="h-12 flex items-center justify-between">
-            <NavLink to="/"
-              className={({ isActive }) => "flex items-center" 
+        <div className="my-8 ">
+          <h3 className="mx-6 my-3 text-xs opacity-50">
+            Main
+          </h3>
+          <ul className="ml-10">
+            <li className="h-12 flex items-center justify-between">
+              <NavLink to="/"
+                className={({ isActive }) => "flex items-center" 
+                  + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                  onClick={pinnedNavbar ? null : showNavbar}>
+                <HomeIcon className="h-4 w-4"></HomeIcon>
+                <span className="ml-4">Dashboard</span>
+              </NavLink>
+            </li>
+
+            <li className="h-12 flex items-center justify-between">
+              <NavLink exact="true" to="coffees"
+                className={({ isActive }) => "flex items-center" 
                 + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                 onClick={pinnedNavbar ? null : showNavbar}>
-              <HomeIcon className="h-4 w-4"></HomeIcon>
-              <span className="ml-4">Dashboard</span>
-            </NavLink>
-          </li>
+                <BookOpenIcon className="h-4 w-4"></BookOpenIcon>
+                <span className="ml-4">My Coffees</span>
+              </NavLink>
+            </li>
+          </ul>
+        </div>
 
-          <li className="h-12 flex items-center justify-between">
-            <NavLink exact="true" to="coffees"
-              className={({ isActive }) => "flex items-center" 
-              + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
-              onClick={pinnedNavbar ? null : showNavbar}>
-              <BookOpenIcon className="h-4 w-4"></BookOpenIcon>
-              <span className="ml-4">My Coffees</span>
-            </NavLink>
-          </li>
-        </ul>
-      </div>
+        <div className="my-8 ">
+          <h3 className="mx-6 my-3 text-xs opacity-50">
+            Create
+          </h3>
+          <ul className="ml-10">
+            <li className="h-12 flex items-center justify-between">
+              <button type="button"
+                onClick={() => setModal({mode: MODE.BEAN, isOpen: true})}
+                className="transition-opacity duration-300 ease-out opacity-70 hover:opacity-100">
+                New Coffee Bean
+              </button>
+            </li>
 
-      <div className="my-8 text-sm">
-        <h3 className="mx-6 my-3 text-xs opacity-50">
-            Customize Range
-        </h3>
-        <ul className="ml-6">
-          <li className="mr-6">
-            <div 
-              className="h-12 flex items-center 
-              justify-between transition-opacity duration-300 
-              ease-out opacity-70 hover:opacity-100 cursor-pointer"
-              onClick={() => toggleOpenBeansAccordion()}>
-              <div className="flex items-center">
-                <CogIcon className="h-4 w-4"></CogIcon>
-                <span className="ml-4">For Coffee Beans</span>
+            <li className="h-12 flex items-center justify-between">
+            <button type="button"
+                onClick={() => setModal({mode: MODE.RECIPE, isOpen: true})}
+                className="transition-opacity duration-300 ease-out opacity-70 hover:opacity-100">
+                New Recipe
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div className="my-8 ">
+          <h3 className="mx-6 my-3 text-xs opacity-50">
+              Customize Attributes
+          </h3>
+          <ul className="ml-6">
+            <li className="mr-6">
+              <div 
+                className="h-12 flex items-center 
+                justify-between transition-opacity duration-300 
+                ease-out opacity-70 hover:opacity-100 cursor-pointer"
+                onClick={() => toggleOpenBeansAccordion()}>
+                <div className="flex items-center">
+                  <CogIcon className="h-4 w-4"></CogIcon>
+                  <span className="ml-4">For Coffee Beans</span>
+                </div>
+                { openBeansAccordion === true ? 
+                  <ChevronUpIcon className="h-4 w-4"></ChevronUpIcon>
+                : <ChevronDownIcon className="h-4 w-4"></ChevronDownIcon>
+                }
               </div>
-              { openBeansAccordion === true ? 
-                <ChevronUpIcon className="h-4 w-4"></ChevronUpIcon>
-              : <ChevronDownIcon className="h-4 w-4"></ChevronDownIcon>
-              }
-            </div>
 
-            <div className="overflow-hidden">
-              <ul 
-                style={{ marginTop: beansMarginTop, opacity: beansOpacity }}
-                className="ease-in-out transition-all duration-500">
-                <li className="h-12 ml-8 mr-6 flex items-center justify-between">
-                  <NavLink 
-                    exact="true" 
-                    to="settings/origin"
-                    onClick={pinnedNavbar ? null : showNavbar}
-                    className={({ isActive }) => "flex items-center" 
-                    + (isActive ? ' nav-link-active font-bold' 
-                    : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')} >
-                    <span>Origin</span>
-                  </NavLink>
-                </li>
-                <li className="h-12 ml-8 mr-6 flex items-center justify-between">
-                  <NavLink 
-                    exact="true" 
-                    to="settings/farm"
-                    onClick={pinnedNavbar ? null : showNavbar}
-                    className={({ isActive }) => "flex items-center" 
-                    + (isActive ? ' nav-link-active font-bold' 
-                    : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')} >
-                    <span>Farm</span>
-                  </NavLink>
-                </li>
-                <li className="h-12 ml-8 mr-6 flex items-center justify-between">
-                  <NavLink 
-                    exact="true" 
-                    to="settings/variety"
-                    onClick={pinnedNavbar ? null : showNavbar}
-                    className={({ isActive }) => "flex items-center" 
-                    + (isActive ? ' nav-link-active font-bold' 
-                    : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')} >
-                    <span>Variety</span>
-                  </NavLink>
-                </li>
-                <li className="h-12 ml-8 mr-6 flex items-center justify-between">
-                  <NavLink 
-                    exact="true" 
-                    to="settings/process"
-                    onClick={pinnedNavbar ? null : showNavbar}
-                    className={({ isActive }) => "flex items-center" 
-                    + (isActive ? ' nav-link-active font-bold' 
-                    : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')} >
-                    <span>Process</span>
-                  </NavLink>
-                </li>
-                <li className="h-12 ml-8 mr-6 flex items-center justify-between">
-                  <NavLink 
-                    exact="true" 
-                    to="settings/roaster"
-                    onClick={pinnedNavbar ? null : showNavbar}
-                    className={({ isActive }) => "flex items-center" 
-                    + (isActive ? ' nav-link-active font-bold' 
-                    : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')} >
-                    <span>Roaster</span>
-                  </NavLink>
-                </li>
-                <li className="h-12 ml-8 mr-6 flex items-center justify-between">
-                  <NavLink 
-                    exact="true" 
-                    to="settings/aroma"
-                    onClick={pinnedNavbar ? null : showNavbar}
-                    className={({ isActive }) => "flex items-center" 
-                    + (isActive ? ' nav-link-active font-bold' 
-                    : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')} >
-                    <span>Aroma</span>
-                  </NavLink>
-                </li>
-              </ul>
-            </div>
-          </li>
-
-          <li className="mr-6">
-            <div 
-              className="h-12 flex items-center 
-              justify-between transition-opacity duration-300 
-              ease-out opacity-70 hover:opacity-100 cursor-pointer"
-              onClick={() => toggleOpenRecipesAccordion()} >
-              <div className="flex items-center">
-                <CogIcon className="h-4 w-4"></CogIcon>
-                <span className="ml-4">For Recipes</span>
+              <div className="overflow-hidden">
+                <ul 
+                  style={{ marginTop: beansMarginTop, opacity: beansOpacity }}
+                  className="ease-in-out transition-all duration-500">
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                    <NavLink 
+                      exact="true" 
+                      to="settings/origin"
+                      onClick={pinnedNavbar ? null : showNavbar}
+                      className={({ isActive }) => "flex items-center" 
+                      + (isActive ? ' nav-link-active font-bold' 
+                      : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')} >
+                      <span>Origin</span>
+                    </NavLink>
+                  </li>
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                    <NavLink 
+                      exact="true" 
+                      to="settings/farm"
+                      onClick={pinnedNavbar ? null : showNavbar}
+                      className={({ isActive }) => "flex items-center" 
+                      + (isActive ? ' nav-link-active font-bold' 
+                      : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')} >
+                      <span>Farm</span>
+                    </NavLink>
+                  </li>
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                    <NavLink 
+                      exact="true" 
+                      to="settings/variety"
+                      onClick={pinnedNavbar ? null : showNavbar}
+                      className={({ isActive }) => "flex items-center" 
+                      + (isActive ? ' nav-link-active font-bold' 
+                      : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')} >
+                      <span>Variety</span>
+                    </NavLink>
+                  </li>
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                    <NavLink 
+                      exact="true" 
+                      to="settings/process"
+                      onClick={pinnedNavbar ? null : showNavbar}
+                      className={({ isActive }) => "flex items-center" 
+                      + (isActive ? ' nav-link-active font-bold' 
+                      : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')} >
+                      <span>Process</span>
+                    </NavLink>
+                  </li>
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                    <NavLink 
+                      exact="true" 
+                      to="settings/roaster"
+                      onClick={pinnedNavbar ? null : showNavbar}
+                      className={({ isActive }) => "flex items-center" 
+                      + (isActive ? ' nav-link-active font-bold' 
+                      : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')} >
+                      <span>Roaster</span>
+                    </NavLink>
+                  </li>
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                    <NavLink 
+                      exact="true" 
+                      to="settings/aroma"
+                      onClick={pinnedNavbar ? null : showNavbar}
+                      className={({ isActive }) => "flex items-center" 
+                      + (isActive ? ' nav-link-active font-bold' 
+                      : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')} >
+                      <span>Aroma</span>
+                    </NavLink>
+                  </li>
+                </ul>
               </div>
-              { openRecipesAccordion === true ? (
-                <ChevronUpIcon className="h-4 w-4"></ChevronUpIcon>
-              ) :
-                <ChevronDownIcon className="h-4 w-4"></ChevronDownIcon>
-              }
-            </div>
-            <div className="overflow-hidden">
-              <ul 
-                style={{ marginTop: recipesMarginTop, opacity: recipesOpacity }}
-                className="ease-in-out transition-all duration-500">
-                <li className="h-12 ml-8 mr-6 flex items-center justify-between">
-                  <NavLink 
-                    exact="true" 
-                    to="settings/grinder"
-                    className={({ isActive }) => "flex items-center" 
-                    + (isActive ? ' nav-link-active font-bold' 
-                    : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
-                    onClick={pinnedNavbar ? null : showNavbar}>
-                    <span>Grinder</span>
-                  </NavLink>
-                </li>
-                <li className="h-12 ml-8 mr-6 flex items-center justify-between">
-                  <NavLink 
-                    exact="true" 
-                    to="settings/method"
-                    className={({ isActive }) => "flex items-center" 
-                    + (isActive ? ' nav-link-active font-bold' 
-                    : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
-                    onClick={pinnedNavbar ? null : showNavbar}>
-                    <span>Method</span>
-                  </NavLink>
-                </li>
-                <li className="h-12 ml-8 mr-6 flex items-center justify-between">
-                  <NavLink 
-                    exact="true" 
-                    to="settings/water"
-                    className={({ isActive }) => "flex items-center" 
-                    + (isActive ? ' nav-link-active font-bold' 
-                    : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
-                    onClick={pinnedNavbar ? null : showNavbar}>
-                    <span>water</span>
-                  </NavLink>
-                </li>
-                <li className="h-12 ml-8 mr-6 flex items-center justify-between">
-                  <NavLink 
-                    exact="true" 
-                    to="settings/palate"
-                    className={({ isActive }) => "flex items-center" 
-                    + (isActive ? ' nav-link-active font-bold' 
-                    : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
-                    onClick={pinnedNavbar ? null : showNavbar}>
-                    <span>Palate</span>
-                  </NavLink>
-                </li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </nav>
-  </div>
+            </li>
+
+            <li className="mr-6">
+              <div 
+                className="h-12 flex items-center 
+                justify-between transition-opacity duration-300 
+                ease-out opacity-70 hover:opacity-100 cursor-pointer"
+                onClick={() => toggleOpenRecipesAccordion()} >
+                <div className="flex items-center">
+                  <CogIcon className="h-4 w-4"></CogIcon>
+                  <span className="ml-4">For Recipes</span>
+                </div>
+                { openRecipesAccordion === true ? (
+                  <ChevronUpIcon className="h-4 w-4"></ChevronUpIcon>
+                ) :
+                  <ChevronDownIcon className="h-4 w-4"></ChevronDownIcon>
+                }
+              </div>
+              <div className="overflow-hidden">
+                <ul 
+                  style={{ marginTop: recipesMarginTop, opacity: recipesOpacity }}
+                  className="ease-in-out transition-all duration-500">
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                    <NavLink 
+                      exact="true" 
+                      to="settings/grinder"
+                      className={({ isActive }) => "flex items-center" 
+                      + (isActive ? ' nav-link-active font-bold' 
+                      : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                      onClick={pinnedNavbar ? null : showNavbar}>
+                      <span>Grinder</span>
+                    </NavLink>
+                  </li>
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                    <NavLink 
+                      exact="true" 
+                      to="settings/method"
+                      className={({ isActive }) => "flex items-center" 
+                      + (isActive ? ' nav-link-active font-bold' 
+                      : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                      onClick={pinnedNavbar ? null : showNavbar}>
+                      <span>Method</span>
+                    </NavLink>
+                  </li>
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                    <NavLink 
+                      exact="true" 
+                      to="settings/water"
+                      className={({ isActive }) => "flex items-center" 
+                      + (isActive ? ' nav-link-active font-bold' 
+                      : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                      onClick={pinnedNavbar ? null : showNavbar}>
+                      <span>water</span>
+                    </NavLink>
+                  </li>
+                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                    <NavLink 
+                      exact="true" 
+                      to="settings/palate"
+                      className={({ isActive }) => "flex items-center" 
+                      + (isActive ? ' nav-link-active font-bold' 
+                      : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                      onClick={pinnedNavbar ? null : showNavbar}>
+                      <span>Palate</span>
+                    </NavLink>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    {modal.mode === MODE.BEAN && modal.isOpen ?  <AddEditBeanModal setModal={setModal} /> : null}
+    {modal.mode === MODE.RECIPE && modal.isOpen ?  <AddRecipeModal setOpenThisModal={setModal} /> : null}
+  </>
   )
 }
 
