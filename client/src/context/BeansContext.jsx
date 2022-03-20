@@ -95,8 +95,54 @@ const BeansProvider = (props) => {
     return false;
   }
 
+  const deleteBean = async (userid, beanid) => {
+    let inUse = false
+    try {
+      Object.values(beanList).forEach(b => {
+        if (!b['single_origin']) {
+          Object.keys(b['blend_ratio']).forEach(id => {
+            if (id === beanid) {
+              toast.error('This bean cannot be deleted since it is a part of a blend bean', {
+                position: toast.POSITION.BOTTOM_CENTER
+              });
+              inUse = true
+            }
+          })
+        }
+      })
+    } catch {}
+
+    if (!inUse) {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/v1/user/${userid}/bean/${beanid}`,
+          { method: "DELETE" }
+        );
+        const parseRes = await response.json();
+        if (response.status !== 200) {
+          toast.error(
+            parseRes.error.message ? parseRes.error.message : response.statusText, {
+            position: toast.POSITION.BOTTOM_CENTER
+          });
+        }
+        else {
+          fetchBeanList(userid);
+          toast.success("Coffee bean is deleted successfully.", {
+            position: toast.POSITION.BOTTOM_CENTER
+          });
+          return true
+        }
+      } catch (error) {
+        toast.error(error.message, {
+          position: toast.POSITION.BOTTOM_CENTER
+        });
+      }
+    }
+    return false;
+  }
+
   return (
-    <BeansContext.Provider value={{beanList, fetchBeanList, setBeanList, insertBean, updateBean}}>
+    <BeansContext.Provider value={{beanList, fetchBeanList, setBeanList, insertBean, updateBean, deleteBean}}>
     {props.children}
     </BeansContext.Provider>
   );
@@ -142,4 +188,12 @@ function useUpdateBean() {
   return context.updateBean
 }
 
-export { BeansProvider, useBeanList, useFetchBeanList, useSetBeanList, useInsertBean, useUpdateBean }
+function useDeleteBean() {
+  const context = useContext(BeansContext)
+  if (!context) {
+    throw new Error('useDeleteBean must be used within an BeansProvider')
+  }
+  return context.deleteBean
+}
+
+export { BeansProvider, useBeanList, useFetchBeanList, useSetBeanList, useInsertBean, useUpdateBean, useDeleteBean }
