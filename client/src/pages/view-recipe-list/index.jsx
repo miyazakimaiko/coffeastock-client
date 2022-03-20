@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronRightIcon, InformationCircleIcon } from '@heroicons/react/outline';
 import { unescapeHtml } from '../../utils/HtmlConverter'
 import { useUserData } from '../../context/AccountContext';
 import { useAttributeRangeList, useFetchAttributeRangeList } from '../../context/AttributeRangeContext';
-import { useBeanList, useFetchBeanList } from '../../context/BeansContext';
+import { useBeanList, useDeleteBean, useFetchBeanList } from '../../context/BeansContext';
 import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
 import StarFullIcon from '../../assets/svgs/StarFullIcon';
 import StarHalfIcon from '../../assets/svgs/StarHalfIcon';
@@ -16,18 +16,20 @@ import './ViewRecipes.scss'
 import CoffeeAttributeSection from './CoffeeAttributeSection';
 import ToolBar from '../../components/tool-bar';
 import AddEditBeanModal from '../../components/add-edit-bean-modal'
-import DotVeticalIconButton from '../../components/elements/DotVerticalIconButton'
 import Dropdown from '../../components/elements/Dropdown';
+import DeleteModal from '../../components/delete-modal';
 
 
 const ViewRecipes = () => {
   const { id } = useParams();
+  const navigate = useNavigate()
   const userData = useUserData()
   const attributeRangeList = useAttributeRangeList();
   const fetchAttributeRangeList = useFetchAttributeRangeList();
   const beanList = useBeanList()
   const fetchBeanList = useFetchBeanList()
-  const [openEditModal, setOpenEditModal] = useState(false)
+  const deleteBean = useDeleteBean()
+  const [modal, setModal] = useState({mode: '', isOpen: false})
 
   const [bean, setBean] = useState({})
   const [blendRatio, setBlendRatio] = useState([])
@@ -161,6 +163,14 @@ const ViewRecipes = () => {
     }
   }
 
+  const onDeleteSubmit = async () => {
+    const deleteSuccess = await deleteBean(userData.sub, bean.coffee_bean_id);
+    if (deleteSuccess) {
+      setModal({mode: '', isOpen: false})
+      navigate('/coffees', {replace: true})
+    }
+  }
+
   useEffect(() => {
     window.scroll({ top: 0, behavior: 'smooth' });
     if (Object.keys(attributeRangeList).length === 0) {
@@ -209,8 +219,8 @@ const ViewRecipes = () => {
             <div className="absolute top-5 right-4">
               <Dropdown dropdownText="" type="dot">
                 <div className="dropdown-content" >
-                  <button type="button" className="dropdown-item" onClick={() => setOpenEditModal(true)}>Edit</button>
-                  <button type="button" className="dropdown-item" onClick={() => setOpenEditModal(true)}>Delete</button>
+                  <button type="button" className="dropdown-item" onClick={() => setModal({mode: 'edit', isOpen: true})}>Edit</button>
+                  <button type="button" className="dropdown-item" onClick={() => setModal({mode: 'delete', isOpen: true})}>Delete</button>
                 </div>
               </Dropdown>
             </div>
@@ -218,7 +228,7 @@ const ViewRecipes = () => {
               <CoffeeBagRight name={bean['label']} />
             </div>
             <div className="flex flex-wrap justify-center mt-16">
-              <div className="w-1/2 my-4 px-4">
+              <div className="w-full md:w-1/2 my-4 md:px-4">
                 <CoffeeAttributeSection
                   title="Roasted By"
                   contentType="array"
@@ -259,7 +269,7 @@ const ViewRecipes = () => {
                 />
               </div>
 
-              <div className="w-1/2 my-4 px-4">
+              <div className="w-full md:w-1/2 my-4 md:px-4">
                 { bean['single_origin'] 
                     ? 
                   <>
@@ -312,7 +322,7 @@ const ViewRecipes = () => {
             { bean['memo'] !== null && bean['memo'] !== ""
                 ? 
               <div className="px-6 pt-4">
-                <label className="text-sm font-medium mr-3">Memo: </label>
+                <label className=" font-medium mr-3">Memo: </label>
                 <div className="inline-block">{unescapeHtml(bean['memo'])}</div>
               </div>
                 : 
@@ -329,14 +339,24 @@ const ViewRecipes = () => {
         </div>
       </div>
 
-      {openEditModal
+      {modal.mode === 'edit' && modal.isOpen === true
           ?  
         <AddEditBeanModal 
           mode="edit"
           targetBean={bean}
-          setOpenThisModal={setOpenEditModal} 
+          setModal={setModal} 
         /> 
           : 
+        null
+      }
+      {modal.mode === 'delete' && modal.isOpen === true
+        ? 
+        <DeleteModal 
+          label={bean['label']}
+          onCloseClick={() => setModal({ mode: '', isOpen: false })}
+          onDeleteSubmit={onDeleteSubmit}
+        />
+        : 
         null
       }
     </>
