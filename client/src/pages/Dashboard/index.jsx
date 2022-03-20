@@ -1,21 +1,32 @@
 import React from 'react'
-import { useBeanList } from '../../context/BeansContext'
-import { useAttributeRangeList } from '../../context/AttributeRangeContext'
+import { useBeanList, useFetchBeanList } from '../../context/BeansContext'
+import { useAttributeRangeList, useFetchAttributeRangeList } from '../../context/AttributeRangeContext'
 import ChartBarBeans from './ChartBarBeans'
 import ChartBarRecipes from './ChartBarRecipes'
 import TotalBeans from './TotalBeans'
 import TotalBrews from './TotalBrews'
 import TotalRecipes from './TotalRecipes'
 import { useEffect } from 'react'
+import { useUserData } from '../../context/AccountContext'
 
 const Dashboard = () => {
+  const userData = useUserData()
+  const fetchAttributeRangeList = useFetchAttributeRangeList();
   const attributeRangeList = useAttributeRangeList();
+  const fetchBeanList = useFetchBeanList()
   const beanList = useBeanList()
-  console.log('attributeRangeList In Dashboard: ', attributeRangeList)
-  console.log('beans In Dashboard: ', beanList)
 
   useEffect(() => {
     window.scroll({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
+    if (Object.keys(attributeRangeList).length === 0) {
+      fetchAttributeRangeList(userData.sub);
+    }
+    if (Object.keys(beanList).length === 0) {
+      fetchBeanList(userData.sub);
+    }
   }, []);
   
   return (
