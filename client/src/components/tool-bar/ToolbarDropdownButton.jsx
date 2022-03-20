@@ -6,7 +6,7 @@ const ToolbarDropdownButton = ({title, onClick, active}) => {
     <button 
       type="button"
       onClick={onClick}
-      className={(active ? "active " : "") + "dropdown-item"}>
+      className={(active ? "active " : "") + "dropdown-item my-2"}>
         {capitalize(title)}
     </button>
   )

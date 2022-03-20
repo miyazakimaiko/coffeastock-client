@@ -3,7 +3,6 @@ import CoffeeBag from '../../assets/svgs/CoffeeBagRight'
 import { Link } from 'react-router-dom'
 import StarHalfIcon from '../../assets/svgs/StarHalfIcon'
 import StarFullIcon from '../../assets/svgs/StarFullIcon'
-import { unescapeHtml } from '../../utils/HtmlConverter'
 
 const CoffeeSection = ({bean}) => {
   const grade = [];
@@ -32,7 +31,8 @@ const CoffeeSection = ({bean}) => {
 
   return (
     <div
-      className={`relative px-2 py-6 w-1/3 max-w-300px min-w-250px ${bean['coffee_bean_id']}`}
+      className={`relative px-1 py-6 w-1/2 ${bean['coffee_bean_id']}`}
+      style={{minWidth: '110px', maxWidth: '220px'}}
     >
       <Link to={`/coffee/${bean['coffee_bean_id']}`}>
         <div 
@@ -40,7 +40,7 @@ const CoffeeSection = ({bean}) => {
             bg-burnt-sienna rounded-md z-10 
             transition-opacity duration-300 ease-out opacity-0 hover:opacity-80
         ">
-          <span  className=" h-full w-full flex justify-center items-center text-white  text-2xl">
+          <span  className=" h-full w-full flex justify-center items-center text-white">
             View Recipes
           </span>
         </div>
