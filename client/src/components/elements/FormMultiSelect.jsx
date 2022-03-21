@@ -1,25 +1,31 @@
 import React from 'react'
-import { MultiSelect } from 'react-multi-select-component'
+import CreatableSelect from 'react-select/creatable';
+import Select from 'react-select';
 
 const FormMultiSelect = ({title, required = false, options, value, onChange, isCreatable = false}) => {
-  const valueRenderer = (selected) => {
-    if (!selected.length) {
-      return "Select or Create...";
-    }
-  }
+
   return (
     <div className="form-section">
       <label className="font-medium">{title}</label>
-      <MultiSelect
-        options={options}
-        value={value}
-        onChange={onChange}
-        isCreatable={isCreatable}
-        labelledBy="Select"
-        valueRenderer={isCreatable ? valueRenderer : null}
-      />
+      {isCreatable ? 
+        <CreatableSelect
+          isMulti
+          options={options}
+          defaultValue={value}
+          value={value}
+          onChange={onChange}
+        />
+        :
+        <Select
+          isMulti
+          options={options}
+          defaultValue={value}
+          value={value}
+          onChange={onChange}
+        />
+      }
       <span className="text-xs float-right mt-1">
-        {required && value.length === 0 ? "* Required" : ""}
+        {required && value === null ? "* Required" : ""}
       </span>
     </div>
   )
