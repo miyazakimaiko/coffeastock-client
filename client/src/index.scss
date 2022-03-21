@@ -38,7 +38,7 @@ body {
 
 :root {
   --burnt-sienna: #66615B;
-  --blue: #68B3C7;
+  --blue: #0075FF;
   --orange: #FF8F5D;
   --green: #79C29A;
   --red: #EB5E28;
@@ -98,11 +98,11 @@ body {
 
 .blue-outline-transition {
   outline: none;
-  box-shadow: 0 0 0 1pt var(--bordergrey);
+  box-shadow: 0 0 0 1px var(--bordergrey);
   transition: box-shadow 0.1s ease;
 
   &:focus-visible {
-    box-shadow: 0 0 0 2pt var(--blue);
+    box-shadow: 0 0 0 2px var(--blue);
   }
 }
 

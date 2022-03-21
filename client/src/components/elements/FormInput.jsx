@@ -22,8 +22,8 @@ const FormInput = ({
         name={name}
         autoComplete={autoComplete}
         placeholder={placeholder}
-        className="blue-outline-transition bg-creme 
-        block w-full py-2 px-3 rounded-md border-1"
+        className="blue-outline-transition
+        block w-full py-2 px-3 rounded border-1"
         value={value}
         onChange={onChange}
       />

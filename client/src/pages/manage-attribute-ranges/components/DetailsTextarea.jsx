@@ -11,7 +11,7 @@ const DetailsTextarea = ({category, detailsValue, detailsOnChange}) => {
         autoComplete="off"
         placeholder="Details" 
         className="blue-outline-transition 
-        bg-creme block w-full h-32 py-2 px-3 rounded-lg"
+        block w-full h-32 py-2 px-3 rounded"
         value={detailsValue}
         onChange={detailsOnChange}
       />

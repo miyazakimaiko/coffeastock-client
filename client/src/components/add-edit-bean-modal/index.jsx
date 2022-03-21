@@ -128,26 +128,29 @@ const AddEditBeanModal = ({setModal, targetBean, mode = 'add'}) => {
   }
 
   const checkCanGoToConfirmation = useCallback(() => {
-    if (bean.single_origin && selectedOrigin.length > 0) {
+    if (bean.single_origin && selectedOrigin !== null) {
       setTabState({...tabState, canGoToConfirmation: true});
     }
-    else if (!bean.single_origin && selectedBlendBeans.length > 0) {
+    else if (!bean.single_origin && selectedBlendBeans !== null) {
       setTabState({...tabState, canGoToConfirmation: true});
     }
     else {
       setTabState({...tabState, canGoToConfirmation: false});
     }
-  }, [bean.single_origin, selectedBlendBeans.length, selectedOrigin.length]);
+  }, [bean.single_origin, selectedBlendBeans, selectedOrigin]);
+
 
   const makeIdList = (selectedRange, category) => {
     const idList = [];
-    selectedRange.forEach(range => {
-      for (const entry of Object.values(attributeRangeList[category + '_range'])) {
-        if (unescapeHtml(entry['label']) === range['label']) {
-          idList.push(parseInt(entry['value']));
+    try {      
+      selectedRange.forEach(range => {
+        for (const entry of Object.values(attributeRangeList[category + '_range'])) {
+          if (unescapeHtml(entry['label']) === range['label']) {
+            idList.push(parseInt(entry['value']));
+          }
         }
-      }
-    })
+      })
+    } catch { }
     return idList;
   }
 
@@ -189,8 +192,11 @@ const AddEditBeanModal = ({setModal, targetBean, mode = 'add'}) => {
   }
 
   const getNewRangeList = (selectedRange) => {
-    let newRangeList = selectedRange.filter((x) => "__isNew__" in x);
-    return newRangeList;
+    try {      
+      let newRangeList = selectedRange.filter((x) => "__isNew__" in x);
+      return newRangeList;
+    } catch {}
+    return []
   }
 
   const insertNewRangeList = async () => {
@@ -624,9 +630,9 @@ const AddEditBeanModal = ({setModal, targetBean, mode = 'add'}) => {
                     <div className="confirm-section">
                       <label className=" mr-4">Blend Ratio</label>
                       <div className="tag-section font-medium">
-                      {selectedBlendBeans.map((entry) => (
+                      {selectedBlendBeans !== null ? selectedBlendBeans.map((entry) => (
                         <span className="text-xs">{entry.label}: {blendRatios[entry.value]}%</span>
-                      ))}
+                      )): null}
                       </div>
                     </div>
                     </>

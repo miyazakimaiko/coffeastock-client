@@ -11,7 +11,7 @@ const NameInput = ({category, nameValue, nameOnChange, nameWarningText}) => {
         autoComplete="off"
         placeholder={`Name`} 
         className="blue-outline-transition 
-        bg-creme block w-full py-2 px-3 rounded-md"
+        block w-full py-2 px-3 rounded"
         value={nameValue}
         onChange={nameOnChange}
       />
