@@ -2,14 +2,14 @@ import React from 'react'
 import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
 
-const FormMultiSelect = ({title, required = false, options, value, onChange, isCreatable = false}) => {
+const FormMultiSelect = ({title, required = false, options, value, onChange, isCreatable = false, isMulti = true}) => {
 
   return (
     <div className="form-section">
       <label className="font-medium">{title}</label>
       {isCreatable ? 
         <CreatableSelect
-          isMulti
+          isMulti={isMulti}
           options={options}
           defaultValue={value}
           value={value}
@@ -17,7 +17,7 @@ const FormMultiSelect = ({title, required = false, options, value, onChange, isC
         />
         :
         <Select
-          isMulti
+          isMulti={isMulti}
           options={options}
           defaultValue={value}
           value={value}
