@@ -1,9 +1,6 @@
 import React, { useState } from 'react'
-import FormInput from '../../elements/FormInput'
 
 const AddEditPalateRangeInput = ({title, parateId, palateRate, setPalateRate}) => {
-  console.log('parateId: ', parateId)
-  console.log('parateRate[parateId]: ', palateRate[parateId])
   const [rangeWarningText, setRangeWarningText] = useState("");
 
   const setPalateLevel = (level) => {
