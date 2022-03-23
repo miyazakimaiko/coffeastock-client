@@ -1,5 +1,25 @@
 require("dotenv").config();
 const db = require("../db");
+const { body, validationResult } = require('express-validator');
+
+let validator = [
+  body('brew_date', 'Invalid Brew Date').isDate().optional({ checkFalsy: true }),
+  body('grind_size', 'Invalid Grind Size').isFloat({ min: 0 }).optional({ checkFalsy: true }),
+  body('grounds_weight', 'Invalid Grounds Weight').isFloat({ min: 0 }).optional({ checkFalsy: true }),
+  body('water_weight', 'Invalid Water Weight').isFloat({ min: 0 }).optional({ checkFalsy: true }),
+  body('water_temp', 'Invalid Water Temperature').isFloat({ min: 0 }).optional({ checkFalsy: true }),
+  body('yield_weight', 'Invalid Yield Weight').isFloat({ min: 0 }).optional({ checkFalsy: true }),
+  body('tds', 'Invalid TDS').isFloat({ min: 0 }).optional({ checkFalsy: true }),
+  body('palate_rates', 'Invalid Palate Rates').isObject().optional({ checkFalsy: true }),
+  body('memo', 'Invalid Memo').escape().isLength({ max: 400 }).optional({ checkFalsy: true }),
+  body('extraction_time').custom(value => {
+    let valid = String(value).match(/^([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/);
+    if (!valid) {
+      throw new Error('Invalid Extraction Time')
+    }
+    return true
+  })
+]
 
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
@@ -8,25 +28,31 @@ module.exports = (app) => {
   app.get(endpoint + "/bean/:productid/recipes", async (req, res, next) => {
     try {
       const results = await db.query(`
-      SELECT * FROM recipes WHERE product_id = $1`, 
+      SELECT * FROM recipes WHERE coffee_bean_id = $1`, 
       [req.params.productid]);
 
-      res.status(200).json({
-        status: "success",
-        results: results.rows.length,
-        data: results.rows,
-      });
+      res.status(200).json(results.rows);
     } catch (error) {
       next(error)
     }
   });
 
   // Create a recipe of beans
-  app.post(endpoint + "/bean/:productid/recipe", async (req, res, next) => {
+  app.post(endpoint + "/bean/:coffee_bean_id/recipe", 
+  validator,
+  async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ 
+        error: {
+          message: errors.array()[0]['msg']
+        }
+      });
+    }
     try {
       const results = await db.query(`
       INSERT INTO recipes (
-        product_id, 
+        coffee_bean_id, 
         brew_date, 
         method, 
         grinder, 
@@ -39,12 +65,12 @@ module.exports = (app) => {
         extraction_time, 
         tds, 
         palate_rates, 
-        comment
+        memo
       )
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
       RETURNING *`,
       [
-        req.params.productid,
+        req.params.coffee_bean_id,
         req.body.brew_date,
         req.body.method, 
         req.body.grinder, 
@@ -57,21 +83,27 @@ module.exports = (app) => {
         req.body.extraction_time, 
         req.body.tds, 
         req.body.palate_rates, 
-        req.body.comment
+        req.body.memo
       ]);
 
-      res.status(200).json({
-        status: "success",
-        results: results.rows.length,
-        data: results.rows,
-      }); 
+      res.status(200).json(results.rows); 
     } catch (error) {
       next(error);
     }
   }); 
   
   // update a recipe of beans
-  app.post(endpoint + "/bean/:productid/recipe/:recipeid", async (req, res, next) => {
+  app.post(endpoint + "/bean/:productid/recipe/:recipeid",
+  validator,
+  async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ 
+        error: {
+          message: errors.array()[0]['msg']
+        }
+      });
+    }
     try {
       const results = await db.query(`
       UPDATE recipes 
@@ -108,11 +140,7 @@ module.exports = (app) => {
         req.params.recipeid
       ]);
 
-      res.status(200).json({
-        status: "success",
-        results: results.rows.length,
-        body: results.rows
-      });
+      res.status(200).json(results.rows);
 
     } catch (error) {
       next(error);
@@ -126,10 +154,7 @@ module.exports = (app) => {
       DELETE FROM recipes WHERE product_id = $1 AND recipe_id = $2`,
       [req.params.productid, req.params.recipeid]);
 
-      res.status(200).json({
-        status: "success",
-        body: results.body
-      });
+      res.status(200).json(results.rows);
 
     } catch (error) {
       next(error);

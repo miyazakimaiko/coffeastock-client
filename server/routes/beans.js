@@ -3,8 +3,8 @@ const db = require("../db");
 const { body, validationResult } = require('express-validator');
 
 let validator = [
-  body('label', 'Invalid Name').escape().isLength({ max: 60 }).optional({ nullable: false }),
-  body('single_origin', 'Invalid Single Origin').isBoolean().optional({ nullable: false }),
+  body('label', 'Invalid Name').not().isEmpty().escape().isLength({ max: 60 }),
+  body('single_origin', 'Invalid Single Origin').not().isEmpty().isBoolean(),
   body('blend_ratio', 'Invalid Blend Ratio').isObject().optional({ checkFalsy: true }),
   body('roast_level', 'Invalid Roast Level').isFloat({ min: 0, max: 10 }).optional({ checkFalsy: true }),
   body('grade', 'Invalid Grade').isFloat({ min: 0, max: 100 }).optional({ checkFalsy: true }),

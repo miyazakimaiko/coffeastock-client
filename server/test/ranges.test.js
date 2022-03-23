@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 
 describe('Custom RangeList API', () => {
   const endpoint = process.env.API_ENDPOINT;
-  const existingUserId = 'dbc49e6c-d79e-4741-9fc4-90a26f8924f7'
+  const existingUserId = 'd14607a6-aabd-4f06-9956-83b4fc229053'
   const wrongUserId = 'aaaaaaaaaaaaaaaaaaaaaaa';
   const existingRangeId = 1;
   const wrongRangeId = 30;
