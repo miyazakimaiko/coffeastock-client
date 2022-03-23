@@ -1,7 +1,7 @@
 import { XIcon } from '@heroicons/react/outline'
 import React from 'react'
 
-const AddEditBeanModalContainer = ({children, title, onCloseClick}) => {
+const AddEditRecipeModalContainer = ({children, title, onCloseClick}) => {
   return (
     <>
       <div
@@ -35,4 +35,4 @@ const AddEditBeanModalContainer = ({children, title, onCloseClick}) => {
   )
 }
 
-export default AddEditBeanModalContainer
+export default AddEditRecipeModalContainer
