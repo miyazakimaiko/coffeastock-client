@@ -5,13 +5,13 @@ const AddEditGrindSizeInput = ({recipe, setRecipe}) => {
 
   const [sizeWarningText, setSizeWarningText] = useState("");
 
-  const setGrindSize = (grade) => {
-    setRecipe({...recipe, grade});
-    if (grade < 0.0) {
+  const setGrindSize = (size) => {
+    if (size < 0.0) {
       setSizeWarningText(<span className="text-red">Please enter a positive number</span>)
     } else {
       setSizeWarningText("")
     }
+    setRecipe({...recipe, grind_size: size});
   }
 
   return (
