@@ -4,7 +4,7 @@ import { useAttributeRangeList, useInsertAttribute } from '../../context/Attribu
 import { useRecipeList, useInsertRecipe, useUpdateRecipe } from '../../context/RecipeContext';
 import { unescapeHtml } from '../../utils/HtmlConverter'
 import './modals.scss'
-import AddEditBeanModalContainer from './components/AddEditBeanModalContainer';
+import AddEditRecipeModalContainer from './components/AddEditRecipeModalContainer';
 import StepsTab from './components/StepsTab';
 import FormInput from '../elements/FormInput';
 import FormMultiSelect from '../elements/FormMultiSelect';
@@ -19,8 +19,10 @@ import AddEditWaterTempInput from './components/AddEditWaterTempInput';
 import AddEditYieldWeightInput from './components/AddEditYieldWeightInput';
 import AddEditExtractTimeInput from './components/AddEditExtractTimeInput';
 import AddEditTdsInput from './components/AddEditTdsInput';
-import AddEditPalateRangeInput from './components/AddEditPalateInput';
+import AddEditPalateRangeInput from './components/AddEditPalateRangeInput';
 import AddEditMemoTextarea from './components/AddEditMemoTextarea';
+import InputConfirmSection from './components/InputConfirmSection';
+import MultiselectConfirmSection from './components/MultiselectConfirmSection';
 
 const MODE = {
   ADD: 'add',
@@ -59,6 +61,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
   const [selectedWater, setSelectedWater] = useState(null)
   const [palateRate, innerSetPalateRate] = useState({})
   const [palateRateHtmlDict, setPalateRateHtmlDict] = useState({})
+  const [palateRateConfirmationHtmlDict, setPalateRateConfirmationHtmlDict] = useState({})
   
   const setPalateRate = (key, value) => {
     const newRate = {};
@@ -68,18 +71,15 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
     ));
   }
 
-  console.log('palateRate: ', palateRate)
-
   const [tabState, setTabState] = useState({
-    baseInfoTab: true,
-    detailsTab: false,
+    coffeeBeansTab: true,
+    waterYieldTab: false,
     palatesTab: false,
     confirmationTab: false,
-    canGoToConfirmation: false
   });
 
-  const baseInfoPage = createRef(null);
-  const detailsPage = createRef(null);
+  const coffeeBeansPage = createRef(null);
+  const waterYieldPage = createRef(null);
   const palatesPage = createRef(null);
   const confirmationPage = createRef(null);
 
@@ -96,86 +96,97 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
   }
 
   // To toggle click from the Next button
-  const setOpenBaseInfoTab = () => {
-    showPage(baseInfoPage);
-    hidePage(detailsPage);
+  const setOpenCoffeeBeansTab = () => {
+    showPage(coffeeBeansPage);
+    hidePage(waterYieldPage);
     hidePage(palatesPage);
     hidePage(confirmationPage);
-    setTabState({...tabState, baseInfoTab: true, detailsTab: false, palatesTab: false, confirmationTab: false});
+    setTabState({...tabState, coffeeBeansTab: true, waterYieldTab: false, palatesTab: false, confirmationTab: false});
  } 
 
-  const setOpenDetailsTab = () => {
-    hidePage(baseInfoPage);
-    showPage(detailsPage);
+  const setOpenWaterYieldTab = () => {
+    hidePage(coffeeBeansPage);
+    showPage(waterYieldPage);
     hidePage(palatesPage);
     hidePage(confirmationPage);
-    setTabState({...tabState, baseInfoTab: false, detailsTab: true, palatesTab: false, confirmationTab: false});
+    setTabState({...tabState, coffeeBeansTab: false, waterYieldTab: true, palatesTab: false, confirmationTab: false});
   }
 
   const setOpenPalatesTab = () => {
-    hidePage(baseInfoPage);
-    hidePage(detailsPage);
+    hidePage(coffeeBeansPage);
+    hidePage(waterYieldPage);
     showPage(palatesPage);    
     hidePage(confirmationPage);
-    setTabState({...tabState, baseInfoTab: false, detailsTab: false, palatesTab: true, confirmationTab: false});
+    setTabState({...tabState, coffeeBeansTab: false, waterYieldTab: false, palatesTab: true, confirmationTab: false});
   }
 
   const setOpenConfirmationTab = () => {
-    hidePage(baseInfoPage);
-    hidePage(detailsPage);
+    hidePage(coffeeBeansPage);
+    hidePage(waterYieldPage);
     hidePage(palatesPage);
     showPage(confirmationPage);
-    setTabState({...tabState, baseInfoTab: false, detailsTab: false, palatesTab: false, confirmationTab: true});
+    setTabState({...tabState, coffeeBeansTab: false, waterYieldTab: false, palatesTab: false, confirmationTab: true});
   }
 
-  const checkCanGoToConfirmation = useCallback(() => {
-    if (recipe.coffee_bean_id && recipe.method) {
-      setTabState({...tabState, canGoToConfirmation: true});
-    }
-    else {
-      setTabState({...tabState, canGoToConfirmation: false});
-    }
-  }, [recipe.method, recipe.coffee_bean_id])
-
-  const convertToId = (selectedRange, category) => {
+  const convertAttrToId = (selectedRange, category) => {
+    let id = null
     try {      
-      for (const entry of Object.values(attributeRangeList[category + '_range'])) {
+      Object.values(attributeRangeList[category + '_range']).forEach(entry => {
         if (unescapeHtml(entry['label']) === selectedRange['label']) {
-          return entry['value']
+          id = entry['value']
         }
-      }
+      })
     } catch { }
-    return
+    return id
+  }
+
+  const convertBeanToId = (selectedBean) => {
+    let id = null
+    try {
+      Object.keys(beanList).forEach(beanId => {
+        if (selectedBean['value'] === beanId) {
+          id = beanId
+        }
+      })
+    } catch {}
+    return id
   }
 
   const finalizeRecipe = () => {
-    const methodId = convertToId(selectedMethod, 'method')
-    const grinderId = convertToId(selectedGrinder, 'grinder')
-    const waterId = convertToId(selectedWater, 'water')
+    const beanId = convertBeanToId(selectedBean)
+    const methodId = convertAttrToId(selectedMethod, 'method')
+    const grinderId = convertAttrToId(selectedGrinder, 'grinder')
+    const waterId = convertAttrToId(selectedWater, 'water')
     setRecipe({...recipe, 
+      bean_id: beanId,
       method: methodId,
       grinder: grinderId,
-      water: waterId,
+      water_type: waterId,
+      palate_rates: palateRate
     });
   }
 
-  const getNewRangeList = (selectedRange) => {
-    let newRangeList = selectedRange.filter((x) => "__isNew__" in x);
-    return newRangeList;
+  const getNewRange = (selectedRange) => {
+    try {    
+      if ("__isNew__" in selectedRange) {
+        return selectedRange
+      }
+    } catch {}
+    return
   }
 
   const insertNewRangeList = async () => {
-    let newRangeList = {
-      'method': getNewRangeList(selectedMethod),
-      'grinder': getNewRangeList(selectedGrinder),
-      'water': getNewRangeList(selectedWater)
+    let newRangeObj = {
+      'method': getNewRange(selectedMethod),
+      'grinder': getNewRange(selectedGrinder),
+      'water': getNewRange(selectedWater)
     }
-    for (const [category, entries] of Object.entries(newRangeList)) {
-      for await (const entry of entries) {
-        const body = { "label": entry.label, "def": "" };
+    try {      
+      for await (const [category, entries] of Object.entries(newRangeObj)) {
+        const body = { "label": entries.label, "def": "" };
         await insertAttribute(userData.sub, category, body);
       }
-    }
+    } catch { }
   }
 
   const [processAddSubmit, setProcessAddSubmit] = useState(false);
@@ -196,34 +207,37 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
       let elem = {}
       elem[id] = <AddEditPalateRangeInput
         title={attributeRangeList['palate_range'][id]['label']}
-        parateId={id}
+        parateId={attributeRangeList['palate_range'][id]['value']}
         palateRate={palateRate}
         setPalateRate={setPalateRate}
       />
       setPalateRateHtmlDict(palateRateHtmlDict => ({...palateRateHtmlDict, ...elem}))
+      let confirmElem = {}
+      confirmElem[id] = <InputConfirmSection
+      title={attributeRangeList['palate_range'][id]['label']}
+      content={palateRate[attributeRangeList['palate_range'][id]['value']]}
+      />
+      setPalateRateConfirmationHtmlDict(palateRateConfirmationHtmlDict => ({...palateRateConfirmationHtmlDict, ...confirmElem}))
     })
   },[palateRate])
 
+
   useEffect(async () => {
-    if (processAddSubmit && recipe.method !== null) {
-      const insertSuccess = await insertRecipe(userData.sub, recipe);
+    console.log('recipe: ', recipe)
+    if (processAddSubmit && recipe.bean_id !== null) {
+      const insertSuccess = await insertRecipe(recipe.bean_id, recipe);
       if (insertSuccess)
         setModal({mode: '', isOpen: false});
     }
   }, [processAddSubmit])
 
   useEffect(async () => {
-    if (processEditSubmit && recipe.method !== null) {
+    if (processEditSubmit && recipe.bean_id !== null) {
       const updateSuccess = await updateRecipe(userData.sub, targetRecipe['recipe_id'], recipe);
       if (updateSuccess)
         setModal({mode: '', isOpen: false});
     }
   }, [processEditSubmit])
-
-  // To enable/disable Next button to go to confirmation section
-  useEffect(() => {
-    checkCanGoToConfirmation();
-  }, [recipe.method, recipe.coffee_bean_id]);
 
   useEffect(() => {
     if (mode === 'edit') {
@@ -251,7 +265,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
 
   return (
 
-    <AddEditBeanModalContainer
+    <AddEditRecipeModalContainer
       title={
         mode === 'add' ? 'Add New Recipe' :
         mode === 'edit' ? `Edit recipe ${targetRecipe['recipe_id']}` : null
@@ -261,29 +275,29 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
       {/*body*/}
       <ul className="flex">
           <StepsTab
-            key="base-info"
-            title="1. Base Info"
-            tabState={tabState.baseInfoTab}
-            onClick={setOpenBaseInfoTab}
+            key="coffee-beans"
+            title="1. Coffee Beans"
+            tabState={tabState.coffeeBeansTab}
+            onClick={setOpenCoffeeBeansTab}
           />
           <StepsTab
-            key="details"
-            title="2. Details"
-            disabled={selectedBean === '' || selectedBean === null}
-            tabState={tabState.detailsTab}
-            onClick={setOpenDetailsTab}
+            key="water-yield"
+            title="2. Water and Yield"
+            disabled={selectedBean === null || selectedBean.length === 0}
+            tabState={tabState.waterYieldTab}
+            onClick={setOpenWaterYieldTab}
           />
           <StepsTab
             key="palates"
-            title="3. Palates"
-            disabled={selectedBean === '' || selectedBean === null}
+            title="3. Palates and Memo"
+            disabled={selectedBean === null || selectedBean.length === 0}
             tabState={tabState.palatesTab}
             onClick={setOpenPalatesTab}
           />
           <StepsTab
             key="confirmation"
             title="4. Confirmation"
-            disabled={!tabState.canGoToConfirmation}
+            disabled={selectedBean === null || selectedBean.length === 0}
             tabState={tabState.confirmationTab}
             onClick={() =>{
               setOpenConfirmationTab();
@@ -296,7 +310,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
         className="tab-content"
       >
         <div 
-          ref={baseInfoPage} 
+          ref={coffeeBeansPage} 
           className="ease-linear transition-all duration-300"
         >
           <div className="md:flex md:px-8 my-8">
@@ -307,6 +321,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
                 value={selectedBean}
                 onChange={setSelectedBean}
                 isCreatable={false}
+                isMulti={false}
               />
               <FormInput
                 title="Brewing Date"
@@ -321,6 +336,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
                 value={selectedMethod}
                 onChange={setSelectedMethod}
                 isCreatable={true}
+                isMulti={false}
               />
             </div>
 
@@ -331,6 +347,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
                 value={selectedGrinder}
                 onChange={setSelectedGrinder}
                 isCreatable={true}
+                isMulti={false}
               />
               <AddEditGrindSizeInput
                 recipe={recipe}
@@ -349,17 +366,14 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
             />
             <BlueButton
               text="Next"
-              disabled={
-                selectedBean === null || 
-                selectedBean === '' ? true : false
-              }
-              onClick={setOpenDetailsTab}
+              disabled={selectedBean === null || selectedBean.length === 0}
+              onClick={setOpenWaterYieldTab}
             />
           </div>
         </div>
 
         <div 
-          ref={detailsPage}
+          ref={waterYieldPage}
           className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300"
         >
           <div className="md:px-8 my-8 block md:flex">
@@ -370,6 +384,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
                 value={selectedWater}
                 onChange={setSelectedWater}
                 isCreatable={true}
+                isMulti={false}
               />
               <AddEditWaterWeightInput
                 recipe={recipe}
@@ -400,11 +415,11 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
           <div className="flex items-center justify-between px-2 md:px-8 pb-8">
             <RedOutlineButton
               text="Go Back"
-              onClick={setOpenBaseInfoTab}
+              onClick={setOpenCoffeeBeansTab}
             />
             <BlueButton
               text="Next"
-              disabled={!tabState.canGoToConfirmation}
+              disabled={selectedBean === null || selectedBean.length === 0}
               onClick={() => {
                 setOpenConfirmationTab();
                 insertNewRangeList();
@@ -431,11 +446,11 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
           <div className="flex items-center justify-between px-2 md:px-8 pb-8">
             <RedOutlineButton
               text="Go Back"
-              onClick={setOpenBaseInfoTab}
+              onClick={setOpenCoffeeBeansTab}
             />
             <BlueButton
               text="Next"
-              disabled={!tabState.canGoToConfirmation}
+              disabled={selectedBean === null || selectedBean.length === 0}
               onClick={() => {
                 setOpenConfirmationTab();
                 insertNewRangeList();
@@ -451,56 +466,90 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
             
           <div className="md:px-8 my-10">
             <div className="md:flex">
-              <div className="flex flex-col w-full md:w-1/2">
+              <div className="flex flex-col w-full md:w-1/3">
                 <div>
                   <div className="flex mx-4 mb-4">
-                    <h3 className="text-lg">Base Info</h3>
+                    <h3 className="text-lg">Coffee Beans</h3>
                     <PencilAltIconButton
                       width="5"
-                      onClick={setOpenBaseInfoTab}
+                      onClick={setOpenCoffeeBeansTab}
                     />
                   </div>
                   <div className="mb-8 md:m-8">
-                    {/* <InputConfirmSection
-                      title="Name"
-                      content={recipe.label}
+                    <InputConfirmSection
+                      title="Coffee Bean"
+                      content={selectedBean ? selectedBean.label : null}
                     />
                     <InputConfirmSection
-                      title="Single Origin"
-                      content={recipe.single_origin ? 'Yes' : 'No'}
-                    />
-                    <InputConfirmSection
-                      title="Grade (0 - 100)"
-                      content={recipe.grade}
+                      title="Brewing Date"
+                      content={recipe.brew_date}
                     />
                     <MultiselectConfirmSection
-                      title="Roaster"
-                      content={selectedRoaster}
+                      title="Brewing Method"
+                      content={selectedMethod}
+                    />
+                    <MultiselectConfirmSection
+                      title="Grinder"
+                      content={selectedGrinder}
                     />
                     <InputConfirmSection
-                      title="Roast Level (0 - 10)"
-                      content={recipe.roast_level}
+                      title="Grind Size"
+                      content={recipe.grind_size}
                     />
                     <InputConfirmSection
-                      title="Roast Date"
-                      content={recipe.roast_date}
-                    /> */}
+                      title="Grounds Weight"
+                      content={recipe.grounds_weight}
+                    />
                   </div>
                 </div>
               </div>
 
-              <div className="md:w-1/2">
+              <div className="md:w-1/3">
                 <div className="flex mx-4 mb-4">
-                  <h3 className="text-lg">Details</h3>
+                  <h3 className="text-lg">Water and Yield</h3>
                   <PencilAltIconButton
                     width="5"
-                    onClick={setOpenDetailsTab}
+                    onClick={setOpenWaterYieldTab}
                   />
                 </div>
                 <div className="mb-8 md:m-8">
-                  <>
+                  <MultiselectConfirmSection
+                    title="Water"
+                    content={selectedWater}
+                  />
+                  <InputConfirmSection
+                    title="Water Weight"
+                    content={recipe.water_weight}
+                  />
+                  <InputConfirmSection
+                    title="Water Temperature"
+                    content={recipe.water_temp}
+                  />
+                  <InputConfirmSection
+                    title="Yield Weight"
+                    content={recipe.yield_weight}
+                  />
+                  <InputConfirmSection
+                    title="Extraction Time"
+                    content={recipe.extraction_time}
+                  />
+                  <InputConfirmSection
+                    title="TDS"
+                    content={recipe.tds}
+                  />
+                </div>
+              </div>
 
-                  </>
+              <div className="md:w-1/3">
+                <div className="flex mx-4 mb-4">
+                  <h3 className="text-lg">Palates</h3>
+                  <PencilAltIconButton
+                    width="5"
+                    onClick={setOpenPalatesTab}
+                  />
+                </div>
+                <div className="mb-8 md:m-8">
+                  {Object.values(palateRateConfirmationHtmlDict)}
                 </div>
               </div>
             </div>
@@ -511,7 +560,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
                   <h3 className="inline">Memo</h3>
                   <PencilAltIconButton
                     width="5"
-                    onClick={setOpenDetailsTab}
+                    onClick={setOpenPalatesTab}
                   />
                   :
                   <p className="inline ml-8">{recipe.memo ? recipe.memo : 'Not Entered'}</p>
@@ -523,17 +572,17 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
           <div className="flex items-center justify-between px-2 md:px-8 py-8">
             <RedOutlineButton
               text="Go Back"
-              onClick={setOpenDetailsTab}
+              onClick={setOpenWaterYieldTab}
             />
             <BlueButton
               text="Submit"
-              disabled={!tabState.canGoToConfirmation}
+              disabled={selectedBean === null || selectedBean.length === 0}
               onClick={onSubmit}
             />
           </div>
         </div>
       </form>
-    </AddEditBeanModalContainer>
+    </AddEditRecipeModalContainer>
   )
 }
 
