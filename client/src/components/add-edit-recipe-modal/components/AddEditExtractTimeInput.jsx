@@ -19,7 +19,7 @@ const AddEditRxtractTimeInput = ({recipe, setRecipe}) => {
       title="Extraction Time"
       type="time" 
       name="extracttime"
-      autoComplete="off"
+      step="1"
       value={recipe.extraction_time}
       onChange={e => setTime(e.target.value)}
       warningText={timeWarningText}
