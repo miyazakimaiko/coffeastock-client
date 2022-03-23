@@ -7,10 +7,10 @@ const RecipeContext = createContext();
 const RecipeProvider = (props) => {
   const [recipeList, innerSetRecipeList] = useState({});
 
-  const fetchRecipeList = async (userid) => {
+  const fetchRecipeList = async (beanid) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/api/v1/user/${userid}/recipes`,
+        `http://localhost:4000/api/v1/bean/${beanid}/recipes`,
         { method: "GET" }
       );
       const parseRes = await response.json();  
@@ -27,10 +27,10 @@ const RecipeProvider = (props) => {
     innerSetRecipeList(recipeObj);
   }
 
-  const insertRecipe = async (userid, body) => {
+  const insertRecipe = async (beanid, body) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/api/v1/user/${userid}/recipe`,
+        `http://localhost:4000/api/v1/bean/${beanid}/recipe`,
         {
           method: "POST",
           headers: {
@@ -47,7 +47,7 @@ const RecipeProvider = (props) => {
         });
       }
       else {
-        fetchRecipeList(userid);
+        fetchRecipeList(beanid);
         toast.success("New recipe is added successfully.", {
           position: toast.POSITION.BOTTOM_CENTER
         });
@@ -61,10 +61,10 @@ const RecipeProvider = (props) => {
     return false;
   }
 
-  const updateRecipe = async (userid, recipeid, body) => {
+  const updateRecipe = async (beanid, recipeid, body) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/api/v1/user/${userid}/recipe/${recipeid}`,
+        `http://localhost:4000/api/v1/bean/${beanid}/recipe/${recipeid}`,
         {
           method: "POST",
           headers: {
@@ -81,7 +81,7 @@ const RecipeProvider = (props) => {
         });
       }
       else {
-        fetchRecipeList(userid);
+        fetchRecipeList(beanid);
         toast.success("Recipe is edited successfully.", {
           position: toast.POSITION.BOTTOM_CENTER
         });
@@ -98,7 +98,7 @@ const RecipeProvider = (props) => {
   const deleteRecipe = async (userid, recipeid) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/api/v1/user/${userid}/bean/${recipeid}`,
+        `http://localhost:4000/api/v1/bean/${recipeid}`,
         { method: "DELETE" }
       );
       const parseRes = await response.json();
