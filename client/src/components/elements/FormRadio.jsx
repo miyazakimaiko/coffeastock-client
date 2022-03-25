@@ -1,6 +1,6 @@
 import React from 'react'
 
-const FormRadio = ({title, name, checked, onChange}) => {
+const FormRadio = ({title, name, checked, disabled = false, onChange}) => {
   return (
     
       <div className="mb-2 ml-4">
@@ -8,6 +8,7 @@ const FormRadio = ({title, name, checked, onChange}) => {
           type="radio" 
           name={name}
           checked={checked}
+          disabled={disabled}
           className="mr-2"
           onChange={onChange}
         />
