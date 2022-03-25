@@ -265,16 +265,28 @@ module.exports = (app) => {
     
       try {
         const selectResult = await db.query(query, [req.params.userid]);
+        const entries = selectResult.rows;
 
-        const beans = selectResult.rows;
-        if (beans.length > 0) {
-          beans.forEach(bean => {
-            if (bean[req.params.rangename] !== null) {
-              if (bean[req.params.rangename].length > 0) {
-                bean[req.params.rangename].forEach(entryId => {
+        if (entries.length > 0) {
+          entries.forEach(entry => {
+            if (entry[req.params.rangename] !== null && entry[req.params.rangename] !== undefined) {
+              if (req.params.rangename === 'palate' && Object.keys(entry[req.params.rangename]).length > 0) {
+                Object.keys(entry[req.params.rangename]).forEach(palateId => {
+                  if (parseInt(palateId) === parseInt(req.params.id)) { 
+                    inUse = true;
+                  }
+                })
+              }
+              else if (['grinder', 'method', 'water'].includes(req.params.rangename)) {
+                if (parseInt(entry[req.params.rangename]) === parseInt(req.params.id)) { 
+                  inUse = true;
+                }
+              }
+              else if (entry[req.params.rangename].length > 0) {
+                entry[req.params.rangename].forEach(entryId => {
                   if (parseInt(entryId) === parseInt(req.params.id)) { 
                     inUse = true;
-                  };
+                  }
                 })
               }
             }
