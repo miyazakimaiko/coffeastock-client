@@ -4,7 +4,7 @@ import { useAttributeRangeList, useInsertAttribute } from '../../context/Attribu
 import { useBeanList, useInsertBean, useUpdateBean } from '../../context/BeansContext';
 import { unescapeHtml } from '../../utils/HtmlConverter'
 import './modals.scss'
-import AddEditBeanModalContainer from './components/AddEditBeanModalContainer';
+import ModalWrapperContainer from '../elements/ModalWrapperContainer';
 import StepsTab from './components/StepsTab';
 import FormInput from '../elements/FormInput';
 import FormRadio from '../elements/FormRadio';
@@ -30,6 +30,8 @@ const AddEditBeanModal = ({setModal, targetBean, mode = 'add'}) => {
   const beanList = useBeanList()
   const insertBean = useInsertBean()
   const updateBean = useUpdateBean();
+
+  console.log('beanList: ', Object.keys(beanList).length === 0)
 
   const [bean, setBean] = useState({
     single_origin: true,
@@ -321,7 +323,7 @@ const AddEditBeanModal = ({setModal, targetBean, mode = 'add'}) => {
 
   return (
 
-    <AddEditBeanModalContainer
+    <ModalWrapperContainer
       title={
         mode === 'add' ? 'Add New Coffee Bean Type' :
         mode === 'edit' ? `Edit Coffee Bean ${targetBean['label']}` : null
@@ -380,19 +382,28 @@ const AddEditBeanModal = ({setModal, targetBean, mode = 'add'}) => {
             </div>
 
             <div className="md:w-1/2">
-              <div className="form-section h-1/3 flex items-end justify-start">
-                <FormRadio
-                  title="Single Origin"
-                  name="single_origin"
-                  checked={bean.single_origin ? true : false}
-                  onChange={e => {setBean({...bean, single_origin: true})}}
-                />
-                <FormRadio
-                  title="Blend"
-                  name="single_origin"
-                  checked={bean.single_origin ? false : true}
-                  onChange={e => {setBean({...bean, single_origin: false})}}
-                />
+              <div className="form-section h-1/3 flex flex-col justify-center">
+                {Object.keys(beanList).length === 0 
+                    ? 
+                  <span className="text-xs block mb-4">* There must be at least one single origin beans entry to add new blend beans.</span>
+                    :
+                  null
+                }
+                <div className="flex">
+                  <FormRadio
+                    title="Single Origin"
+                    name="single_origin"
+                    checked={bean.single_origin ? true : false}
+                    onChange={e => {setBean({...bean, single_origin: true})}}
+                  />
+                  <FormRadio
+                    title="Blend"
+                    name="single_origin"
+                    checked={bean.single_origin ? false : true}
+                    disabled={Object.keys(beanList).length === 0}
+                    onChange={e => {setBean({...bean, single_origin: false})}}
+                  />
+                </div>
               </div>
               <FormMultiSelect 
                 title="Roaster"
@@ -669,7 +680,7 @@ const AddEditBeanModal = ({setModal, targetBean, mode = 'add'}) => {
           </div>
         </div>
       </form>
-    </AddEditBeanModalContainer>
+    </ModalWrapperContainer>
   )
 }
 
