@@ -7,10 +7,10 @@ const RecipeContext = createContext();
 const RecipeProvider = (props) => {
   const [recipeList, innerSetRecipeList] = useState({});
 
-  const fetchRecipeList = async (beanid) => {
+  const fetchRecipeList = async (userid, beanid) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/api/v1/bean/${beanid}/recipes`,
+        `http://localhost:4000/api/v1/user/${userid}/bean/${beanid}/recipes`,
         { method: "GET" }
       );
       const parseRes = await response.json();  
@@ -27,10 +27,10 @@ const RecipeProvider = (props) => {
     innerSetRecipeList(recipeObj);
   }
 
-  const insertRecipe = async (beanid, body) => {
+  const insertRecipe = async (userid, beanid, body) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/api/v1/bean/${beanid}/recipe`,
+        `http://localhost:4000/api/v1/user/${userid}/bean/${beanid}/recipe`,
         {
           method: "POST",
           headers: {
@@ -61,10 +61,10 @@ const RecipeProvider = (props) => {
     return false;
   }
 
-  const updateRecipe = async (beanid, recipeid, body) => {
+  const updateRecipe = async (userid, beanid, recipeid, body) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/api/v1/bean/${beanid}/recipe/${recipeid}`,
+        `http://localhost:4000/api/v1/user/${userid}/bean/${beanid}/recipe/${recipeid}`,
         {
           method: "POST",
           headers: {
@@ -95,10 +95,10 @@ const RecipeProvider = (props) => {
     return false;
   }
 
-  const deleteRecipe = async (userid, recipeid) => {
+  const deleteRecipe = async (userid, beanid, recipeid) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/api/v1/bean/${recipeid}`,
+        `http://localhost:4000/api/v1/user/${userid}/bean/${beanid}/recipe/${recipeid}`,
         { method: "DELETE" }
       );
       const parseRes = await response.json();
