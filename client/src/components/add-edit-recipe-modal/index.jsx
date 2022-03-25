@@ -1,10 +1,10 @@
-import React, { useEffect, useCallback, useState, createRef } from 'react'
+import React, { useEffect, useState, createRef } from 'react'
 import { useUserData } from '../../context/AccountContext';
 import { useAttributeRangeList, useInsertAttribute } from '../../context/AttributeRangeContext';
 import { useRecipeList, useInsertRecipe, useUpdateRecipe } from '../../context/RecipeContext';
 import { unescapeHtml } from '../../utils/HtmlConverter'
 import './modals.scss'
-import AddEditRecipeModalContainer from './components/AddEditRecipeModalContainer';
+import ModalWrapperContainer from '../elements/ModalWrapperContainer';
 import StepsTab from './components/StepsTab';
 import FormInput from '../elements/FormInput';
 import FormMultiSelect from '../elements/FormMultiSelect';
@@ -23,6 +23,7 @@ import AddEditPalateRangeInput from './components/AddEditPalateRangeInput';
 import AddEditMemoTextarea from './components/AddEditMemoTextarea';
 import InputConfirmSection from './components/InputConfirmSection';
 import MultiselectConfirmSection from './components/MultiselectConfirmSection';
+import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
 
 const MODE = {
   ADD: 'add',
@@ -265,324 +266,336 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
 
   return (
 
-    <AddEditRecipeModalContainer
+    <ModalWrapperContainer
+      onCloseClick={() => setModal({mode: '', isOpen: false})}
       title={
         mode === 'add' ? 'Add New Recipe' :
         mode === 'edit' ? `Edit recipe ${targetRecipe['recipe_id']}` : null
       }
-      onCloseClick={() => setModal({mode: '', isOpen: false})}
     >
-      {/*body*/}
-      <ul className="flex">
-          <StepsTab
-            key="coffee-beans"
-            title="1. Coffee Beans"
-            tabState={tabState.coffeeBeansTab}
-            onClick={setOpenCoffeeBeansTab}
-          />
-          <StepsTab
-            key="water-yield"
-            title="2. Water and Yield"
-            disabled={selectedBean === null || selectedBean.length === 0}
-            tabState={tabState.waterYieldTab}
-            onClick={setOpenWaterYieldTab}
-          />
-          <StepsTab
-            key="palates"
-            title="3. Palates and Memo"
-            disabled={selectedBean === null || selectedBean.length === 0}
-            tabState={tabState.palatesTab}
-            onClick={setOpenPalatesTab}
-          />
-          <StepsTab
-            key="confirmation"
-            title="4. Confirmation"
-            disabled={selectedBean === null || selectedBean.length === 0}
-            tabState={tabState.confirmationTab}
-            onClick={() =>{
-              setOpenConfirmationTab();
-              insertNewRangeList();
-            }}
-          />
-      </ul>
-
-      <form 
-        className="tab-content"
-      >
-        <div 
-          ref={coffeeBeansPage} 
-          className="ease-linear transition-all duration-300"
-        >
-          <div className="md:flex md:px-8 my-8">
-            <div className="flex flex-col md:w-1/2">
-              <FormMultiSelect 
-                title="Coffee Bean"
-                options={Object.values(beanList).map(({ coffee_bean_id: value, ...rest }) => ({ value, ...rest } ))}
-                value={selectedBean}
-                onChange={setSelectedBean}
-                isCreatable={false}
-                isMulti={false}
-              />
-              <FormInput
-                title="Brewing Date"
-                type="date" 
-                name="brewingdate" 
-                value={recipe.brew_date}
-                onChange={e => setRecipe({...recipe, brew_date: e.target.value})}
-              />
-              <FormMultiSelect 
-                title="Brewing Method"
-                options={Object.values(attributeRangeList.method_range)}
-                value={selectedMethod}
-                onChange={setSelectedMethod}
-                isCreatable={true}
-                isMulti={false}
-              />
-            </div>
-
-            <div className="md:w-1/2">
-              <FormMultiSelect 
-                title="Grinder"
-                options={Object.values(attributeRangeList.grinder_range)}
-                value={selectedGrinder}
-                onChange={setSelectedGrinder}
-                isCreatable={true}
-                isMulti={false}
-              />
-              <AddEditGrindSizeInput
-                recipe={recipe}
-                setRecipe={setRecipe}
-              />
-              <AddEditGroundsWeightInput
-                recipe={recipe}
-                setRecipe={setRecipe}              
-              />
-            </div>
+      {Object.keys(beanList).length === 0
+        ? 
+        <div className="flex flex-col items-center">
+          <div className="w-40 my-20">
+            <CoffeeBagRight name="No Coffee Beans Available"/>
           </div>
-          <div className="flex items-center justify-between px-2 md:px-8 pb-8">
-            <RedOutlineButton
-              text="Cancel"
-              onClick={() => setModal({mode: '', isOpen: false})}
+          <p className="mb-16">There must be at least one coffee bean entry to create a new recipe. Please add coffee beans first.</p>
+        </div>
+        :
+        <>
+          {/*body*/}
+          <ul className="flex">
+            <StepsTab
+              key="coffee-beans"
+              title="1. Coffee Beans"
+              tabState={tabState.coffeeBeansTab}
+              onClick={setOpenCoffeeBeansTab}
             />
-            <BlueButton
-              text="Next"
+            <StepsTab
+              key="water-yield"
+              title="2. Water and Yield"
               disabled={selectedBean === null || selectedBean.length === 0}
+              tabState={tabState.waterYieldTab}
               onClick={setOpenWaterYieldTab}
             />
-          </div>
-        </div>
-
-        <div 
-          ref={waterYieldPage}
-          className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300"
-        >
-          <div className="md:px-8 my-8 block md:flex">
-            <div className="flex flex-col md:w-1/2">
-              <FormMultiSelect 
-                title="Water"
-                options={Object.values(attributeRangeList.water_range)}
-                value={selectedWater}
-                onChange={setSelectedWater}
-                isCreatable={true}
-                isMulti={false}
-              />
-              <AddEditWaterWeightInput
-                recipe={recipe}
-                setRecipe={setRecipe}              
-              />
-              <AddEditWaterTempInput
-                recipe={recipe}
-                setRecipe={setRecipe}              
-              />
-            </div>
-
-            <div className="md:w-1/2">
-              <AddEditYieldWeightInput
-                recipe={recipe}
-                setRecipe={setRecipe}
-              />
-              <AddEditExtractTimeInput
-                recipe={recipe}
-                setRecipe={setRecipe}
-              />
-              <AddEditTdsInput
-                recipe={recipe}
-                setRecipe={setRecipe}
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between px-2 md:px-8 pb-8">
-            <RedOutlineButton
-              text="Go Back"
-              onClick={setOpenCoffeeBeansTab}
-            />
-            <BlueButton
-              text="Next"
+            <StepsTab
+              key="palates"
+              title="3. Palates and Memo"
               disabled={selectedBean === null || selectedBean.length === 0}
-              onClick={() => {
+              tabState={tabState.palatesTab}
+              onClick={setOpenPalatesTab}
+            />
+            <StepsTab
+              key="confirmation"
+              title="4. Confirmation"
+              disabled={selectedBean === null || selectedBean.length === 0}
+              tabState={tabState.confirmationTab}
+              onClick={() =>{
                 setOpenConfirmationTab();
                 insertNewRangeList();
               }}
             />
-          </div>
-        </div>
+          </ul>
 
-        <div 
-          ref={palatesPage}
-          className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300"
-        >
-          <div className="md:px-8 my-8 flex flex-wrap">
-            {Object.values(palateRateHtmlDict)}
-          </div>
-
-          <div className="md:px-8 mb-8">          
-            <AddEditMemoTextarea
-              recipe={recipe}
-              setRecipe={setRecipe}
-            />
-          </div>
-
-          <div className="flex items-center justify-between px-2 md:px-8 pb-8">
-            <RedOutlineButton
-              text="Go Back"
-              onClick={setOpenCoffeeBeansTab}
-            />
-            <BlueButton
-              text="Next"
-              disabled={selectedBean === null || selectedBean.length === 0}
-              onClick={() => {
-                setOpenConfirmationTab();
-                insertNewRangeList();
-              }}
-            />
-          </div>
-        </div>
-
-        <div 
-          ref={confirmationPage}
-          className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300"
-        >
-            
-          <div className="md:px-8 my-10">
-            <div className="md:flex">
-              <div className="flex flex-col w-full md:w-1/3">
-                <div>
-                  <div className="flex mx-4 mb-4">
-                    <h3 className="text-lg">Coffee Beans</h3>
-                    <PencilAltIconButton
-                      width="5"
-                      onClick={setOpenCoffeeBeansTab}
-                    />
-                  </div>
-                  <div className="mb-8 md:m-8">
-                    <InputConfirmSection
-                      title="Coffee Bean"
-                      content={selectedBean ? selectedBean.label : null}
-                    />
-                    <InputConfirmSection
-                      title="Brewing Date"
-                      content={recipe.brew_date}
-                    />
-                    <MultiselectConfirmSection
-                      title="Brewing Method"
-                      content={selectedMethod}
-                    />
-                    <MultiselectConfirmSection
-                      title="Grinder"
-                      content={selectedGrinder}
-                    />
-                    <InputConfirmSection
-                      title="Grind Size"
-                      content={recipe.grind_size}
-                    />
-                    <InputConfirmSection
-                      title="Grounds Weight"
-                      content={recipe.grounds_weight}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="md:w-1/3">
-                <div className="flex mx-4 mb-4">
-                  <h3 className="text-lg">Water and Yield</h3>
-                  <PencilAltIconButton
-                    width="5"
-                    onClick={setOpenWaterYieldTab}
+          <form 
+            className="tab-content"
+          >
+            <div 
+              ref={coffeeBeansPage} 
+              className="ease-linear transition-all duration-300"
+            >
+              <div className="md:flex md:px-8 my-8">
+                <div className="flex flex-col md:w-1/2">
+                  <FormMultiSelect 
+                    title="Coffee Bean"
+                    options={Object.values(beanList).map(({ coffee_bean_id: value, ...rest }) => ({ value, ...rest } ))}
+                    value={selectedBean}
+                    onChange={setSelectedBean}
+                    isCreatable={false}
+                    isMulti={false}
+                  />
+                  <FormInput
+                    title="Brewing Date"
+                    type="date" 
+                    name="brewingdate" 
+                    value={recipe.brew_date}
+                    onChange={e => setRecipe({...recipe, brew_date: e.target.value})}
+                  />
+                  <FormMultiSelect 
+                    title="Brewing Method"
+                    options={Object.values(attributeRangeList.method_range)}
+                    value={selectedMethod}
+                    onChange={setSelectedMethod}
+                    isCreatable={true}
+                    isMulti={false}
                   />
                 </div>
-                <div className="mb-8 md:m-8">
-                  <MultiselectConfirmSection
+
+                <div className="md:w-1/2">
+                  <FormMultiSelect 
+                    title="Grinder"
+                    options={Object.values(attributeRangeList.grinder_range)}
+                    value={selectedGrinder}
+                    onChange={setSelectedGrinder}
+                    isCreatable={true}
+                    isMulti={false}
+                  />
+                  <AddEditGrindSizeInput
+                    recipe={recipe}
+                    setRecipe={setRecipe}
+                  />
+                  <AddEditGroundsWeightInput
+                    recipe={recipe}
+                    setRecipe={setRecipe}              
+                  />
+                </div>
+              </div>
+              <div className="flex items-center justify-between px-2 md:px-8 pb-8">
+                <RedOutlineButton
+                  text="Cancel"
+                  onClick={() => setModal({mode: '', isOpen: false})}
+                />
+                <BlueButton
+                  text="Next"
+                  disabled={selectedBean === null || selectedBean.length === 0}
+                  onClick={setOpenWaterYieldTab}
+                />
+              </div>
+            </div>
+
+            <div 
+              ref={waterYieldPage}
+              className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300"
+            >
+              <div className="md:px-8 my-8 block md:flex">
+                <div className="flex flex-col md:w-1/2">
+                  <FormMultiSelect 
                     title="Water"
-                    content={selectedWater}
+                    options={Object.values(attributeRangeList.water_range)}
+                    value={selectedWater}
+                    onChange={setSelectedWater}
+                    isCreatable={true}
+                    isMulti={false}
                   />
-                  <InputConfirmSection
-                    title="Water Weight"
-                    content={recipe.water_weight}
+                  <AddEditWaterWeightInput
+                    recipe={recipe}
+                    setRecipe={setRecipe}              
                   />
-                  <InputConfirmSection
-                    title="Water Temperature"
-                    content={recipe.water_temp}
+                  <AddEditWaterTempInput
+                    recipe={recipe}
+                    setRecipe={setRecipe}              
                   />
-                  <InputConfirmSection
-                    title="Yield Weight"
-                    content={recipe.yield_weight}
+                </div>
+
+                <div className="md:w-1/2">
+                  <AddEditYieldWeightInput
+                    recipe={recipe}
+                    setRecipe={setRecipe}
                   />
-                  <InputConfirmSection
-                    title="Extraction Time"
-                    content={recipe.extraction_time}
+                  <AddEditExtractTimeInput
+                    recipe={recipe}
+                    setRecipe={setRecipe}
                   />
-                  <InputConfirmSection
-                    title="TDS"
-                    content={recipe.tds}
+                  <AddEditTdsInput
+                    recipe={recipe}
+                    setRecipe={setRecipe}
                   />
                 </div>
               </div>
 
-              <div className="md:w-1/3">
-                <div className="flex mx-4 mb-4">
-                  <h3 className="text-lg">Palates</h3>
-                  <PencilAltIconButton
-                    width="5"
-                    onClick={setOpenPalatesTab}
-                  />
-                </div>
-                <div className="mb-8 md:m-8">
-                  {Object.values(palateRateConfirmationHtmlDict)}
-                </div>
+              <div className="flex items-center justify-between px-2 md:px-8 pb-8">
+                <RedOutlineButton
+                  text="Go Back"
+                  onClick={setOpenCoffeeBeansTab}
+                />
+                <BlueButton
+                  text="Next"
+                  disabled={selectedBean === null || selectedBean.length === 0}
+                  onClick={() => {
+                    setOpenConfirmationTab();
+                    insertNewRangeList();
+                  }}
+                />
+              </div>
+            </div>
+
+            <div 
+              ref={palatesPage}
+              className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300"
+            >
+              <div className="md:px-8 my-8 flex flex-wrap">
+                {Object.values(palateRateHtmlDict)}
+              </div>
+
+              <div className="md:px-8 mb-8">          
+                <AddEditMemoTextarea
+                  recipe={recipe}
+                  setRecipe={setRecipe}
+                />
+              </div>
+
+              <div className="flex items-center justify-between px-2 md:px-8 pb-8">
+                <RedOutlineButton
+                  text="Go Back"
+                  onClick={setOpenCoffeeBeansTab}
+                />
+                <BlueButton
+                  text="Next"
+                  disabled={selectedBean === null || selectedBean.length === 0}
+                  onClick={() => {
+                    setOpenConfirmationTab();
+                    insertNewRangeList();
+                  }}
+                />
               </div>
             </div>
 
-            <div>
-              <div className="mx-4 md:mx-6 my-2">
-                <div className="w-full flex items-center">
-                  <h3 className="inline">Memo</h3>
-                  <PencilAltIconButton
-                    width="5"
-                    onClick={setOpenPalatesTab}
-                  />
-                  :
-                  <p className="inline ml-8">{recipe.memo ? recipe.memo : 'Not Entered'}</p>
+            <div 
+              ref={confirmationPage}
+              className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300"
+            >
+                
+              <div className="md:px-8 my-10">
+                <div className="md:flex">
+                  <div className="flex flex-col w-full md:w-1/3">
+                    <div>
+                      <div className="flex mx-4 mb-4">
+                        <h3 className="text-lg">Coffee Beans</h3>
+                        <PencilAltIconButton
+                          width="5"
+                          onClick={setOpenCoffeeBeansTab}
+                        />
+                      </div>
+                      <div className="mb-8 md:m-8">
+                        <InputConfirmSection
+                          title="Coffee Bean"
+                          content={selectedBean ? selectedBean.label : null}
+                        />
+                        <InputConfirmSection
+                          title="Brewing Date"
+                          content={recipe.brew_date}
+                        />
+                        <MultiselectConfirmSection
+                          title="Brewing Method"
+                          content={selectedMethod}
+                        />
+                        <MultiselectConfirmSection
+                          title="Grinder"
+                          content={selectedGrinder}
+                        />
+                        <InputConfirmSection
+                          title="Grind Size"
+                          content={recipe.grind_size}
+                        />
+                        <InputConfirmSection
+                          title="Grounds Weight"
+                          content={recipe.grounds_weight}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="md:w-1/3">
+                    <div className="flex mx-4 mb-4">
+                      <h3 className="text-lg">Water and Yield</h3>
+                      <PencilAltIconButton
+                        width="5"
+                        onClick={setOpenWaterYieldTab}
+                      />
+                    </div>
+                    <div className="mb-8 md:m-8">
+                      <MultiselectConfirmSection
+                        title="Water"
+                        content={selectedWater}
+                      />
+                      <InputConfirmSection
+                        title="Water Weight"
+                        content={recipe.water_weight}
+                      />
+                      <InputConfirmSection
+                        title="Water Temperature"
+                        content={recipe.water_temp}
+                      />
+                      <InputConfirmSection
+                        title="Yield Weight"
+                        content={recipe.yield_weight}
+                      />
+                      <InputConfirmSection
+                        title="Extraction Time"
+                        content={recipe.extraction_time}
+                      />
+                      <InputConfirmSection
+                        title="TDS"
+                        content={recipe.tds}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="md:w-1/3">
+                    <div className="flex mx-4 mb-4">
+                      <h3 className="text-lg">Palates</h3>
+                      <PencilAltIconButton
+                        width="5"
+                        onClick={setOpenPalatesTab}
+                      />
+                    </div>
+                    <div className="mb-8 md:m-8">
+                      {Object.values(palateRateConfirmationHtmlDict)}
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="mx-4 md:mx-6 my-2">
+                    <div className="w-full flex items-center">
+                      <h3 className="inline">Memo</h3>
+                      <PencilAltIconButton
+                        width="5"
+                        onClick={setOpenPalatesTab}
+                      />
+                      :
+                      <p className="inline ml-8">{recipe.memo ? recipe.memo : 'Not Entered'}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <div className="flex items-center justify-between px-2 md:px-8 py-8">
-            <RedOutlineButton
-              text="Go Back"
-              onClick={setOpenWaterYieldTab}
-            />
-            <BlueButton
-              text="Submit"
-              disabled={selectedBean === null || selectedBean.length === 0}
-              onClick={onSubmit}
-            />
-          </div>
-        </div>
-      </form>
-    </AddEditRecipeModalContainer>
+              <div className="flex items-center justify-between px-2 md:px-8 py-8">
+                <RedOutlineButton
+                  text="Go Back"
+                  onClick={setOpenWaterYieldTab}
+                />
+                <BlueButton
+                  text="Submit"
+                  disabled={selectedBean === null || selectedBean.length === 0}
+                  onClick={onSubmit}
+                />
+              </div>
+            </div>
+          </form>
+        </>
+      }
+    </ModalWrapperContainer>
   )
 }
 
