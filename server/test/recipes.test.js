@@ -42,12 +42,12 @@ describe('Recipes API', () => {
         "grind_size": "10",
         "grounds_weight": "18.5",
         "water_weight": "200",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "91",
         "yield_weight": "180",
         "extraction_time": "23:59:59",
         "tds": "9.1",
-        "palate_rates": {
+        "palate": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -72,12 +72,12 @@ describe('Recipes API', () => {
         "grind_size": "10",
         "grounds_weight": "18.5",
         "water_weight": "200",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "91",
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate_rates": {
+        "palate": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -102,12 +102,12 @@ describe('Recipes API', () => {
         "grind_size": "10",
         "grounds_weight": "18.5",
         "water_weight": "200",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "91",
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate_rates": {
+        "palate": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -133,12 +133,12 @@ describe('Recipes API', () => {
         "grind_size": "test",
         "grounds_weight": "18.5",
         "water_weight": "200",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "91",
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate_rates": {
+        "palate": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -164,12 +164,12 @@ describe('Recipes API', () => {
         "grind_size": "-1",
         "grounds_weight": "18.5",
         "water_weight": "200",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "91",
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate_rates": {
+        "palate": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -195,12 +195,12 @@ describe('Recipes API', () => {
         "grind_size": "10",
         "grounds_weight": "test",
         "water_weight": "200",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "91",
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate_rates": {
+        "palate": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -226,12 +226,12 @@ describe('Recipes API', () => {
         "grind_size": "10",
         "grounds_weight": "-10",
         "water_weight": "200",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "91",
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate_rates": {
+        "palate": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -257,12 +257,12 @@ describe('Recipes API', () => {
         "grind_size": "10",
         "grounds_weight": "18",
         "water_weight": "test",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "91",
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate_rates": {
+        "palate": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -288,12 +288,12 @@ describe('Recipes API', () => {
         "grind_size": "10",
         "grounds_weight": "18",
         "water_weight": "-1.1",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "91",
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate_rates": {
+        "palate": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -319,12 +319,12 @@ describe('Recipes API', () => {
         "grind_size": "10",
         "grounds_weight": "18",
         "water_weight": "200.2",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "test",
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate_rates": {
+        "palate": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -350,12 +350,12 @@ describe('Recipes API', () => {
         "grind_size": "10",
         "grounds_weight": "18",
         "water_weight": "200.2",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "-1",
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate_rates": {
+        "palate": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -381,12 +381,12 @@ describe('Recipes API', () => {
         "grind_size": "10",
         "grounds_weight": "18",
         "water_weight": "200.2",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "90",
         "yield_weight": "test",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate_rates": {
+        "palate": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -412,12 +412,12 @@ describe('Recipes API', () => {
         "grind_size": "10",
         "grounds_weight": "18",
         "water_weight": "200.2",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "90",
         "yield_weight": "-10",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate_rates": {
+        "palate": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -443,12 +443,12 @@ describe('Recipes API', () => {
         "grind_size": "10",
         "grounds_weight": "18",
         "water_weight": "200.2",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "90",
         "yield_weight": "180.1",
         "extraction_time": "00:03:58",
         "tds": "test",
-        "palate_rates": {
+        "palate": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -474,12 +474,12 @@ describe('Recipes API', () => {
         "grind_size": "10",
         "grounds_weight": "18",
         "water_weight": "200.2",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "90",
         "yield_weight": "180.1",
         "extraction_time": "00:03:58",
         "tds": "-1",
-        "palate_rates": {
+        "palate": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -505,12 +505,12 @@ describe('Recipes API', () => {
         "grind_size": "10",
         "grounds_weight": "18",
         "water_weight": "200.2",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "90",
         "yield_weight": "180.1",
         "extraction_time": "24:00:00",
         "tds": "9",
-        "palate_rates": {
+        "palate": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -526,7 +526,7 @@ describe('Recipes API', () => {
       })
     });
 
-    it("should return error if palate_rates is not an object", (done) => {
+    it("should return error if palate is not an object", (done) => {
       chai.request(app)
       .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
@@ -536,12 +536,12 @@ describe('Recipes API', () => {
         "grind_size": "10",
         "grounds_weight": "18",
         "water_weight": "200.2",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "90",
         "yield_weight": "180.1",
         "extraction_time": "00:03:58",
         "tds": "9",
-        "palate_rates": [{
+        "palate": [{
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -557,7 +557,7 @@ describe('Recipes API', () => {
       })
     });
 
-    it("should return error if palate_rates is longer than 400 characters", (done) => {
+    it("should return error if palate is longer than 400 characters", (done) => {
       chai.request(app)
       .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
@@ -567,12 +567,12 @@ describe('Recipes API', () => {
         "grind_size": "10",
         "grounds_weight": "18",
         "water_weight": "200.2",
-        "water_type": "2",
+        "water": "2",
         "water_temp": "90",
         "yield_weight": "180.1",
         "extraction_time": "00:03:58",
         "tds": "9",
-        "palate_rates": {
+        "palate": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",

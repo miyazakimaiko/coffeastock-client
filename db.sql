@@ -293,6 +293,7 @@ VALUES (
 
 CREATE TABLE RECIPES (
     recipe_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id varchar(255) NOT NULL,
     coffee_bean_id uuid NOT NULL,
     brew_date date,
     method INT,
@@ -300,19 +301,22 @@ CREATE TABLE RECIPES (
     grind_size float,
     grounds_weight float,
     water_weight float,
-    water_type INT,
+    water INT,
     water_temp float,
     yield_weight float,
     extraction_time interval,
     tds float,
-    palate_rates jsonb,
+    palate jsonb,
     memo text,
+    FOREIGN KEY (user_id)
+        REFERENCES USERS (user_id),
     FOREIGN KEY (coffee_bean_id)
         REFERENCES BEANS (coffee_bean_id)
 );
 
 
 INSERT INTO RECIPES (
+  user_id,
   coffee_bean_id,
   brew_date,
   method,
@@ -320,15 +324,16 @@ INSERT INTO RECIPES (
   grind_size,
   grounds_weight,
   water_weight,
-  water_type,
+  water,
   water_temp,
   yield_weight,
   extraction_time,
   tds,
-  palate_rates,
+  palate,
   memo
 )
 VALUES (
+  '',
   'da1f2bd8-c7de-4e82-a0c2-a319274025e7',
   '2021-10-22',
   1,

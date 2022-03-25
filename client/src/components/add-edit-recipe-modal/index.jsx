@@ -47,12 +47,12 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
     grind_size: null,
     grounds_weight: null,
     water_weight: null,
-    water_type: null,
+    water: null,
     water_temp: null,
     yield_weight: null,
     extraction_time: null,
     tds: null,
-    palate_rates: {},
+    palate: {},
     memo: null,
   })
 
@@ -162,8 +162,8 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
       bean_id: beanId,
       method: methodId,
       grinder: grinderId,
-      water_type: waterId,
-      palate_rates: palateRate
+      water: waterId,
+      palate: palateRate
     });
   }
 
@@ -226,7 +226,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
   useEffect(async () => {
     console.log('recipe: ', recipe)
     if (processAddSubmit && recipe.bean_id !== null) {
-      const insertSuccess = await insertRecipe(recipe.bean_id, recipe);
+      const insertSuccess = await insertRecipe(userData.sub, recipe.bean_id, recipe);
       if (insertSuccess)
         setModal({mode: '', isOpen: false});
     }

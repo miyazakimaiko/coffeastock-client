@@ -10,7 +10,7 @@ let validator = [
   body('water_temp', 'Invalid Water Temperature').isFloat({ min: 0 }).optional({ checkFalsy: true }),
   body('yield_weight', 'Invalid Yield Weight').isFloat({ min: 0 }).optional({ checkFalsy: true }),
   body('tds', 'Invalid TDS').isFloat({ min: 0 }).optional({ checkFalsy: true }),
-  body('palate_rates', 'Invalid Palate Rates').isObject().optional({ checkFalsy: true }),
+  body('palate', 'Invalid Palate Rates').isObject().optional({ checkFalsy: true }),
   body('memo', 'Invalid Memo').escape().isLength({ max: 400 }).optional({ checkFalsy: true }),
   body('extraction_time').custom(value => {
     let valid = String(value).match(/^([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/);
@@ -25,11 +25,11 @@ module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
 
   // Get all recipes of a bean
-  app.get(endpoint + "/bean/:productid/recipes", async (req, res, next) => {
+  app.get(endpoint + "/user/:userid/bean/:productid/recipes", async (req, res, next) => {
     try {
       const results = await db.query(`
-      SELECT * FROM recipes WHERE coffee_bean_id = $1`, 
-      [req.params.productid]);
+      SELECT * FROM recipes WHERE user_id = $1 AND coffee_bean_id = $2`, 
+      [req.params.userid, req.params.productid]);
 
       res.status(200).json(results.rows);
     } catch (error) {
@@ -38,7 +38,7 @@ module.exports = (app) => {
   });
 
   // Create a recipe of beans
-  app.post(endpoint + "/bean/:coffee_bean_id/recipe", 
+  app.post(endpoint + "/user/:userid/bean/:beanid/recipe", 
   validator,
   async (req, res, next) => {
     const errors = validationResult(req);
@@ -52,6 +52,7 @@ module.exports = (app) => {
     try {
       const results = await db.query(`
       INSERT INTO recipes (
+        user_id,
         coffee_bean_id, 
         brew_date, 
         method, 
@@ -59,30 +60,31 @@ module.exports = (app) => {
         grind_size, 
         grounds_weight, 
         water_weight, 
-        water_type, 
+        water, 
         water_temp, 
         yield_weight,
         extraction_time, 
         tds, 
-        palate_rates, 
+        palate, 
         memo
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
       RETURNING *`,
       [
-        req.params.coffee_bean_id,
+        req.params.userid,
+        req.params.beanid,
         req.body.brew_date,
         req.body.method, 
         req.body.grinder, 
         req.body.grind_size, 
         req.body.grounds_weight, 
         req.body.water_weight, 
-        req.body.water_type, 
+        req.body.water, 
         req.body.water_temp, 
         req.body.yield_weight,
         req.body.extraction_time, 
         req.body.tds, 
-        req.body.palate_rates, 
+        req.body.palate, 
         req.body.memo
       ]);
 
@@ -93,7 +95,7 @@ module.exports = (app) => {
   }); 
   
   // update a recipe of beans
-  app.post(endpoint + "/bean/:productid/recipe/:recipeid",
+  app.post(endpoint + "/user/:userid/bean/:beanid/recipe/:recipeid",
   validator,
   async (req, res, next) => {
     const errors = validationResult(req);
@@ -114,14 +116,14 @@ module.exports = (app) => {
       grind_size = $4, 
       grounds_weight = $5, 
       water_weight = $6, 
-      water_type = $7, 
+      water = $7, 
       water_temp = $8, 
       yield_weight = $9,
       extraction_time = $10, 
       tds = $11, 
-      palate_rates = $12, 
+      palate = $12, 
       comment = $13
-      WHERE product_id = $14 AND recipe_id = $15 RETURNING *`,
+      WHERE user_id = $14 AND coffee_bean_id = $15 AND recipe_id = $16 RETURNING *`,
       [
         req.body.brew_date,
         req.body.method,
@@ -129,14 +131,15 @@ module.exports = (app) => {
         req.body.grind_size,
         req.body.grounds_weight,
         req.body.water_weight,
-        req.body.water_type,
+        req.body.water,
         req.body.water_temp,
         req.body.yield_weight,
         req.body.extraction_time,
         req.body.tds,
-        req.body.palate_rates,
+        req.body.palate,
         req.body.comment,
-        req.params.productid,
+        req.params.userid,
+        req.params.beanid,
         req.params.recipeid
       ]);
 
@@ -148,11 +151,11 @@ module.exports = (app) => {
   });
 
   // delete a recipe
-  app.delete(endpoint + "/bean/:productid/recipe/:recipeid", async (req, res, next) => {
+  app.delete(endpoint + "/user/:userid/bean/:beanid/recipe/:recipeid", async (req, res, next) => {
     try {
       const results = await db.query(`
-      DELETE FROM recipes WHERE product_id = $1 AND recipe_id = $2`,
-      [req.params.productid, req.params.recipeid]);
+      DELETE FROM recipes WHERE user_id = $1 AND coffee_bean_id = $2 AND recipe_id = $3`,
+      [req.params.userid, req.params.beanid, req.params.recipeid]);
 
       res.status(200).json(results.rows);
 
