@@ -1,5 +1,5 @@
 import React from 'react'
-import { unescapeHtml } from '../../utils/HtmlConverter'
+import { unescapeHtml } from '../../../utils/HtmlConverter'
 
 const CoffeeAttributeSection = ({contentType, content, title}) => {
   const makeInnerHtml = () => {
