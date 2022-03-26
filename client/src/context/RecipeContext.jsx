@@ -7,15 +7,27 @@ const RecipeContext = createContext();
 const RecipeProvider = (props) => {
   const [recipeList, innerSetRecipeList] = useState({});
 
-  const fetchRecipeList = async (userid, beanid) => {
-    try {
-      const response = await fetch(
-        `http://localhost:4000/api/v1/user/${userid}/bean/${beanid}/recipes`,
-        { method: "GET" }
-      );
-      const parseRes = await response.json();  
-      setRecipeList(parseRes);
-    } catch (error) {}
+  const fetchRecipeList = async (userid, beanid = null) => {
+    if (beanid) {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/v1/user/${userid}/bean/${beanid}/recipes`,
+          { method: "GET" }
+        );
+        const parseRes = await response.json();  
+        setRecipeList(parseRes);
+      } catch (error) {}
+    } else {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/v1/user/${userid}/recipes`,
+          { method: "GET" }
+        );
+        const parseRes = await response.json();  
+        setRecipeList(parseRes);
+      }
+      catch (error) {}
+    }
     return recipeList;
   };
 
@@ -47,7 +59,7 @@ const RecipeProvider = (props) => {
         });
       }
       else {
-        fetchRecipeList(beanid);
+        fetchRecipeList(userid);
         toast.success("New recipe is added successfully.", {
           position: toast.POSITION.BOTTOM_CENTER
         });
@@ -81,7 +93,7 @@ const RecipeProvider = (props) => {
         });
       }
       else {
-        fetchRecipeList(beanid);
+        fetchRecipeList(userid);
         toast.success("Recipe is edited successfully.", {
           position: toast.POSITION.BOTTOM_CENTER
         });
