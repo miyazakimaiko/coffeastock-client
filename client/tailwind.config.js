@@ -8,6 +8,7 @@ module.exports = {
       colors: {
         'burnt-sienna': '#66615B',
         'creme': '#F4F3EE',
+        'lightgrey': '#E6E6E6',
         'greycreme': '#e9e8e3',
         'green': '#79C29A',
         'blue': '#68B3C7',
