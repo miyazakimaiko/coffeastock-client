@@ -19,23 +19,32 @@ ChartJS.register(
   Legend
 );
 
-export const data = {
-  labels: ['Aroma', 'Floral', 'Berryfruit', 'Citrusfruit', 'Stonefruit', 'Chocolate', 'Caramel', 'Bitter', 'Smoky', 'Spicy', 'Savory', 'Body', 'Linger', 'Clean'],
-  datasets: [
-    {
-      label: '# of Votes',
-      data: [7, 9, 5, 5, 7, 10, 6, 9, 3, 6, 7, 9, 4, 5],
-      backgroundColor: 'rgba(255, 99, 132, 0.2)',
-      borderColor: 'rgba(255, 99, 132, 1)',
-      borderWidth: 1,
-    },
-  ],
+
+const ChartRadarTaste = ({ className, labels, rates }) => {
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        label: 'Palate Rate',
+        data: rates,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    scale: {
+      min: 0,
+      max: 10,
+  },
 };
 
-const ChartRadarTaste = () => {
+  console.log('data: ', data)
   return (
-    <div className="">
-      <Radar data={data} />
+    <div className={className}>
+      <Radar data={data} options={options} />
     </div>
   )
 }

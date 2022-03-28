@@ -1,15 +1,13 @@
-import { QuestionMarkCircleIcon } from '@heroicons/react/outline'
 import React, { useState, useEffect } from 'react'
+import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import TooltipBottomLeft from '../../../components/elements/TooltipBottomLeft'
 import ToolBar from '../../../components/tool-bar'
 import ToolbarDropdown from '../../../components/tool-bar/ToolBarDropdown'
 import ToolbarDropdownButton from '../../../components/tool-bar/ToolbarDropdownButton'
 import ToolBarSearchBar from '../../../components/tool-bar/ToolBarSearchBar'
-import { useRecipeList } from '../../../context/RecipeContext'
 import RecipeSection from './RecipeSection'
 
-const RecipeGroupSection = () => {
-  const recipeList = useRecipeList()
+const RecipeGroupSection = ({recipeList}) => {
   const [recipeListHtml, setRecipeListHtml] = useState([])
 
   const [searchValue, setSearchValue] = useState('')
@@ -17,10 +15,12 @@ const RecipeGroupSection = () => {
   let groupState = 'test'
 
   useEffect(() => {
-    const html = Object.values(recipeList).map(recipe => {
-      return <RecipeSection recipe={recipe}/>
-    })
-    setRecipeListHtml(html)
+    if(Object.keys(recipeList).length > 0) {
+      const html = Object.values(recipeList).map(recipe => {
+        return <RecipeSection recipe={recipe}/>
+      })
+      setRecipeListHtml(html)
+    }
   }, [])
 
   return (
@@ -58,7 +58,7 @@ const RecipeGroupSection = () => {
               tooltipText="The search filter applies to the Name, Altitude, Harvest Period, and Roast Date."
             >
               <div className="flex items-center">
-                <QuestionMarkCircleIcon className="h-5 w-5 flex-shrink-0" />
+                <AiOutlineQuestionCircle className="h-5 w-5 flex-shrink-0" />
               </div>
             </TooltipBottomLeft>
           </div>
