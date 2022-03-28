@@ -1,6 +1,7 @@
 import React from 'react'
 import { useBeanList, useFetchBeanList } from '../../context/BeansContext'
 import { useAttributeRangeList, useFetchAttributeRangeList } from '../../context/AttributeRangeContext'
+import { useFetchRecipeList } from '../../context/RecipeContext'
 import ChartBarBeans from './ChartBarBeans'
 import ChartBarRecipes from './ChartBarRecipes'
 import TotalBeans from './TotalBeans'
@@ -15,6 +16,7 @@ const Dashboard = () => {
   const attributeRangeList = useAttributeRangeList();
   const fetchBeanList = useFetchBeanList()
   const beanList = useBeanList()
+  const fetchRecipeList = useFetchRecipeList()
 
   useEffect(() => {
     window.scroll({ top: 0, behavior: 'smooth' });
@@ -25,7 +27,8 @@ const Dashboard = () => {
       fetchAttributeRangeList(userData.sub);
     }
     if (Object.keys(beanList).length === 0) {
-      fetchBeanList(userData.sub);
+      fetchBeanList(userData.sub)
+      fetchRecipeList(userData.sub)
     }
   }, []);
   
