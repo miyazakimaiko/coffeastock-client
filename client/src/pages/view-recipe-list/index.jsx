@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronRightIcon, InformationCircleIcon } from '@heroicons/react/outline';
+import { HiOutlineChevronRight } from 'react-icons/hi'
+import { FaInfoCircle } from 'react-icons/fa'
+import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
+import { generateStarIconList, generateFireIconList } from '../../utils/GenerateIconList';
 import { unescapeHtml } from '../../utils/HtmlConverter'
 import { useUserData } from '../../context/AccountContext';
 import { useAttributeRangeList, useFetchAttributeRangeList } from '../../context/AttributeRangeContext';
 import { useBeanList, useDeleteBean, useFetchBeanList } from '../../context/BeansContext';
-import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
-import StarFullIcon from '../../assets/svgs/StarFullIcon';
-import StarHalfIcon from '../../assets/svgs/StarHalfIcon';
-import FireFullIcon from '../../assets/svgs/FireFullIcon';
-import FireHalfIcon from '../../assets/svgs/FireHalfIcon';
+import { useRecipeList, useFetchRecipeList } from '../../context/RecipeContext';
 import TooltipLeft from '../../components/elements/TooltipLeft';
-import RecipeSection from './RecipeSection';
-import './ViewRecipes.scss'
-import CoffeeAttributeSection from './CoffeeAttributeSection';
+import CoffeeAttributeSection from './components/CoffeeAttributeSection';
 import ToolBar from '../../components/tool-bar';
 import AddEditBeanModal from '../../components/add-edit-bean-modal'
 import Dropdown from '../../components/elements/Dropdown';
 import DeleteModal from '../../components/delete-modal';
+import RecipeGroupSection from './components/RecipeGroupSection';
+import './ViewRecipes.scss'
 
 
 const ViewRecipes = () => {
@@ -29,6 +28,8 @@ const ViewRecipes = () => {
   const beanList = useBeanList()
   const fetchBeanList = useFetchBeanList()
   const deleteBean = useDeleteBean()
+  const recipeList = useRecipeList()
+  const fetchRecipeList = useFetchRecipeList()
   const [modal, setModal] = useState({mode: '', isOpen: false})
 
   const [bean, setBean] = useState({})
@@ -45,6 +46,7 @@ const ViewRecipes = () => {
     variety: null,
     farm: null,
   })
+  const [recipeGroupSection, setRecipeGroupSection] = useState(null)
 
   const makeHtmlTags = (targetBean, category) => {
     const result = [];
@@ -61,7 +63,7 @@ const ViewRecipes = () => {
             <TooltipLeft category={category} itemId={id} tooltipText={text}>
               <div className="flex items-center" id={`tooltip-${category}-${id}`} >
                 <p className="text-right">{label}</p>
-                <InformationCircleIcon className="h-4 w-4 ml-2 flex-shrink-0" />
+                <FaInfoCircle className="h-4 w-4 ml-2 flex-shrink-0" />
               </div>
             </TooltipLeft>
           </div>
@@ -125,7 +127,7 @@ const ViewRecipes = () => {
                 <div className="text-right">
                   {`${unescapeHtml(beanList[beanId]['label'])}: ${ratio}%`}
                 </div>
-                <InformationCircleIcon className="h-4 w-4 ml-2 flex-shrink-0" />
+                <FaInfoCircle className="h-4 w-4 ml-2 flex-shrink-0" />
               </div>
             </TooltipLeft>
           </div>
@@ -133,34 +135,6 @@ const ViewRecipes = () => {
       }
     }
     return result;
-  }
-
-  const makeGradeIconList = (targetBean) => {
-    if (targetBean['grade']) {
-      const result = []
-      const rounded = Math.ceil(targetBean['grade']/10)/2;
-      for (let i = 1; i <= rounded; i ++) {
-        result.push(<StarFullIcon/>)
-      }
-      if (rounded % 1 !== 0) {
-        result.push(<StarHalfIcon />)
-      }
-      return result;
-    }
-  }
-
-  const makeRoastLevelIconList = (targetBean) => {
-    if (targetBean['roast_level']) {
-      const result = []
-      const rounded = Math.ceil(targetBean['roast_level'])/2;
-      for (let i = 1; i <= rounded; i ++) {
-        result.push(<FireFullIcon/>)
-      }
-      if (rounded % 1 !== 0) {
-        result.push(<FireHalfIcon />)
-      }
-      return result;
-    }
   }
 
   const onDeleteSubmit = async () => {
@@ -179,6 +153,9 @@ const ViewRecipes = () => {
     if (Object.keys(beanList).length === 0) {
       fetchBeanList(userData.sub);
     }
+    if (Object.keys(recipeList).length === 0) {
+      fetchRecipeList(userData.sub);
+    }
   },[]);
 
   useEffect(() => {
@@ -196,12 +173,24 @@ const ViewRecipes = () => {
       })
       setBeanAttrIcons({
         ...beanAttrIcons,
-        gradeStarIcons: makeGradeIconList(targetBean),
-        roastLevelFireIcons: makeRoastLevelIconList(targetBean)
+        gradeStarIcons: targetBean['grade'] ? generateStarIconList(targetBean['grade']): null,
+        roastLevelFireIcons: targetBean['roast_level'] ? generateFireIconList(targetBean['roast_level']) : null
       })
       setBlendRatio(makeBlendRatioHtmlTags(targetBean));
     }
   }, [beanList]);
+
+  useEffect(() => {
+    if (Object.keys(recipeList).length !== 0) {
+      const list = Object.values(recipeList)
+      .filter(recipe => recipe['coffee_bean_id'] === id)
+      .map(recipe => recipe)
+      if (list.length > 0) {
+        setRecipeGroupSection(<RecipeGroupSection recipeList={list}/>)}
+      } else {
+        setRecipeGroupSection(<p className="text-center">No Recipe Has Been Added.</p>)
+      }
+  }, [recipeList])
 
   return (
     <>
@@ -209,7 +198,7 @@ const ViewRecipes = () => {
         <ToolBar
           titleHtml={<span className="flex items-center">
             {bean['single_origin'] ? "Single Origin" : "Blend"}
-            <ChevronRightIcon className="h-5 w-5 mx-5"/>
+            <HiOutlineChevronRight className="h-5 w-5 mx-5"/>
             {unescapeHtml(bean['label'])}
           </span>}
         >
@@ -330,13 +319,7 @@ const ViewRecipes = () => {
             }
           </div>
         </div>
-        <div className="flex mb-4 w-full flex-wrap justify-center">
-          <RecipeSection recipeId="1" />
-          <RecipeSection recipeId="2" />
-          <RecipeSection recipeId="3" />
-          <RecipeSection recipeId="4" />
-          <RecipeSection recipeId="5" />
-        </div>
+        {recipeGroupSection}
       </div>
 
       {modal.mode === 'edit' && modal.isOpen === true

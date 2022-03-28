@@ -1,4 +1,5 @@
-import { ChevronDownIcon, DotsVerticalIcon } from '@heroicons/react/outline';
+import { HiOutlineChevronDown } from 'react-icons/hi'
+import { BsThreeDotsVertical } from 'react-icons/bs'
 import React, { createRef, useState, useEffect } from 'react'
 
 const Dropdown = ({ children, type = 'chevron', dropdownText }) => {
@@ -66,8 +67,8 @@ const Dropdown = ({ children, type = 'chevron', dropdownText }) => {
       </div>
       <div className="flex items-center cursor-pointer my-2">
         {dropdownText}
-        {type === 'chevron' ? <ChevronDownIcon className="h-4 w-4 ml-2"/> :
-        type === 'dot' ? <DotsVerticalIcon className="h-6 w-6 ml-2"/> : null}
+        {type === 'chevron' ? <HiOutlineChevronDown className="h-4 w-4 ml-2"/> :
+        type === 'dot' ? <BsThreeDotsVertical className="h-5 w-5 ml-2"/> : null}
       </div>
     </div>
   );

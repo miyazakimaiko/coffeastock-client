@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { QuestionMarkCircleIcon } from '@heroicons/react/outline';
+import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { useAttributeRangeList, useFetchAttributeRangeList } from '../../context/AttributeRangeContext';
 import { useBeanList, useFetchBeanList } from '../../context/BeansContext';
 import { useUserData } from '../../context/AccountContext';
@@ -163,7 +163,7 @@ const ViewMyCoffees = () => {
               tooltipText="The search filter applies to the Name, Altitude, Harvest Period, and Roast Date."
             >
               <div className="flex items-center">
-                <QuestionMarkCircleIcon className="h-5 w-5 flex-shrink-0" />
+                <AiOutlineQuestionCircle className="h-5 w-5 flex-shrink-0" />
               </div>
             </TooltipBottomLeft>
           </div>

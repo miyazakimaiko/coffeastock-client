@@ -1,4 +1,4 @@
-import { SearchIcon } from '@heroicons/react/outline'
+import { BiSearch } from'react-icons/bi'
 import React from 'react'
 
 const ToolBarSearchBar = ({value, onChange, placeholder = 'Search...', maxWidth = 'auto' }) => {
@@ -12,7 +12,7 @@ const ToolBarSearchBar = ({value, onChange, placeholder = 'Search...', maxWidth 
         onChange={e => onChange(e.target.value)}
         className="w-full pl-10 pr-4 py-2 rounded-sm bg-creme blue-outline-transition"
       />
-      <SearchIcon className="h-5 w-5 absolute left-3" style={{ top: '10px' }}/>
+      <BiSearch className="h-5 w-5 absolute left-3" style={{ top: '10px' }}/>
     </div>
   )
 }
