@@ -296,6 +296,7 @@ CREATE TABLE RECIPES (
     user_id varchar(255) NOT NULL,
     coffee_bean_id uuid NOT NULL,
     brew_date date,
+    total_rate float,
     method INT,
     grinder INT,
     grind_size float,

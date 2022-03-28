@@ -77,12 +77,13 @@ module.exports = (app) => {
         water, 
         water_temp, 
         yield_weight,
-        extraction_time, 
+        extraction_time,
         tds, 
+        total_rate,
         palate, 
         memo
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
       RETURNING *`,
       [
         req.params.userid,
@@ -96,8 +97,9 @@ module.exports = (app) => {
         req.body.water, 
         req.body.water_temp, 
         req.body.yield_weight,
-        req.body.extraction_time, 
+        req.body.extraction_time,
         req.body.tds, 
+        req.body.total_rate,
         req.body.palate, 
         req.body.memo
       ]);
@@ -133,11 +135,12 @@ module.exports = (app) => {
       water = $7, 
       water_temp = $8, 
       yield_weight = $9,
-      extraction_time = $10, 
+      extraction_time = $10,
       tds = $11, 
-      palate = $12, 
-      comment = $13
-      WHERE user_id = $14 AND coffee_bean_id = $15 AND recipe_id = $16 RETURNING *`,
+      total_rate = $12,
+      palate = $13, 
+      comment = $14
+      WHERE user_id = $15 AND coffee_bean_id = $16 AND recipe_id = $17 RETURNING *`,
       [
         req.body.brew_date,
         req.body.method,
@@ -150,6 +153,7 @@ module.exports = (app) => {
         req.body.yield_weight,
         req.body.extraction_time,
         req.body.tds,
+        req.body.total_rate,
         req.body.palate,
         req.body.comment,
         req.params.userid,
