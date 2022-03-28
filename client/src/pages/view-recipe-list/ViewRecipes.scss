@@ -8,6 +8,11 @@
   justify-content: space-between;
   padding: 0.5rem 1rem;
   border-bottom: 1px dashed lightgray;
+
+  label {
+    font-weight: 500;
+    margin-right: 0.75rem
+  }
 }
 
 .coffee-details-table tr:not(:last-child) {

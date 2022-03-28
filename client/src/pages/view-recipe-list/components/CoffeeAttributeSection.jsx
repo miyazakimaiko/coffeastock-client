@@ -19,7 +19,7 @@ const CoffeeAttributeSection = ({contentType, content, title}) => {
   }
   return (
     <div className="coffee-detail-section">
-      <label className="font-medium mr-3">{title}</label>
+      <label>{title}</label>
       <div>{makeInnerHtml()}</div>
     </div>
   )
