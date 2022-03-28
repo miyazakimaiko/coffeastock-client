@@ -19,6 +19,7 @@ import AddEditWaterTempInput from './components/AddEditWaterTempInput';
 import AddEditYieldWeightInput from './components/AddEditYieldWeightInput';
 import AddEditExtractTimeInput from './components/AddEditExtractTimeInput';
 import AddEditTdsInput from './components/AddEditTdsInput';
+import AddEditTotalRateInput from './components/AddEditTotalRateInput'
 import AddEditPalateRangeInput from './components/AddEditPalateRangeInput';
 import AddEditMemoTextarea from './components/AddEditMemoTextarea';
 import InputConfirmSection from './components/InputConfirmSection';
@@ -52,6 +53,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
     yield_weight: null,
     extraction_time: null,
     tds: null,
+    total_rate: null,
     palate: {},
     memo: null,
   })
@@ -420,6 +422,10 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
                     recipe={recipe}
                     setRecipe={setRecipe}
                   />
+                  <AddEditTotalRateInput
+                    recipe={recipe}
+                    setRecipe={setRecipe}
+                  />
                 </div>
               </div>
 
@@ -547,6 +553,10 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
                       <InputConfirmSection
                         title="TDS"
                         content={recipe.tds}
+                      />
+                      <InputConfirmSection
+                        title="Total Rate"
+                        content={recipe.total_rate}
                       />
                     </div>
                   </div>
