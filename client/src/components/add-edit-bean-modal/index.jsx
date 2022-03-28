@@ -640,9 +640,9 @@ const AddEditBeanModal = ({setModal, targetBean, mode = 'add'}) => {
                       />
                     <div className="confirm-section">
                       <label className=" mr-4">Blend Ratio</label>
-                      <div className="tag-section font-medium">
+                      <div className="font-medium">
                       {selectedBlendBeans !== null ? selectedBlendBeans.map((entry) => (
-                        <span className="text-xs">{entry.label}: {blendRatios[entry.value]}%</span>
+                        <span className="basic-chip">{entry.label}: {blendRatios[entry.value]}%</span>
                       )): null}
                       </div>
                     </div>

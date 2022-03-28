@@ -4,7 +4,7 @@ const MultiselectConfirmSection = ({title, content}) => {
   return (
     <div className="confirm-section">
       <label className=" mr-4">{title}</label>
-      <div className="tag-section font-medium">
+      <div className="font-medium">
         {content === null 
             ? 
           <p>-</p>
@@ -12,10 +12,10 @@ const MultiselectConfirmSection = ({title, content}) => {
           Array.isArray(content)
             ?
           content.map((c) => (
-            <span className="text-xs">{c.label}</span>
+            <span className="basic-chip">{c.label}</span>
           ))
             :
-          <span className="text-xs">{content.label}</span>
+          <span className="basic-chip">{content.label}</span>
         }
       </div>
     </div>
