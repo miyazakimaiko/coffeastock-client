@@ -299,8 +299,8 @@ const Nav = (props) => {
       </nav>
     </div>
 
-    {modal.mode === MODE.BEAN && modal.isOpen ?  <AddEditBeanModal setModal={setModal} /> : null}
-    {modal.mode === MODE.RECIPE && modal.isOpen ?  <AddEditRecipeModal setModal={setModal} /> : null}
+    {modal.mode === MODE.BEAN && modal.isOpen ?  <AddEditBeanModal setModal={setModal} mode="add" /> : null}
+    {modal.mode === MODE.RECIPE && modal.isOpen ?  <AddEditRecipeModal setModal={setModal} mode="add" /> : null}
   </>
   )
 }
