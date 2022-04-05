@@ -31,7 +31,7 @@ const MODE = {
   EDIT: 'edit'
 }
 
-const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
+const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) => {
   const userData = useUserData()
   const beanList = useBeanList()
   const attributeRangeList = useAttributeRangeList() 
@@ -145,13 +145,11 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
 
   const convertBeanToId = (selectedBean) => {
     let id = null
-    try {
-      Object.keys(beanList).forEach(beanId => {
-        if (selectedBean['value'] === beanId) {
-          id = beanId
-        }
-      })
-    } catch {}
+    Object.keys(beanList).forEach(beanId => {
+      if (selectedBean['value'] === beanId) {
+        id = beanId
+      }
+    })
     return id
   }
 
@@ -170,11 +168,9 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
   }
 
   const getNewRange = (selectedRange) => {
-    try {    
-      if ("__isNew__" in selectedRange) {
-        return selectedRange
-      }
-    } catch {}
+    if (selectedRange !== null && selectedRange !== undefined && "__isNew__" in selectedRange) {
+      return selectedRange
+    }
     return
   }
 
@@ -184,12 +180,12 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
       'grinder': getNewRange(selectedGrinder),
       'water': getNewRange(selectedWater)
     }
-    try {      
-      for await (const [category, entries] of Object.entries(newRangeObj)) {
-        const body = { "label": entries.label, "def": "" };
+    for await (const category of Object.keys(newRangeObj)) {
+      if (newRangeObj[category]) {
+        const body = { "label": newRangeObj[category].label, "def": "" };
         await insertAttribute(userData.sub, category, body);
       }
-    } catch { }
+    }
   }
 
   const [processAddSubmit, setProcessAddSubmit] = useState(false);
@@ -216,17 +212,48 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
       />
       setPalateRateHtmlDict(palateRateHtmlDict => ({...palateRateHtmlDict, ...elem}))
       let confirmElem = {}
-      confirmElem[id] = <InputConfirmSection
-      title={attributeRangeList['palate_range'][id]['label']}
-      content={palateRate[attributeRangeList['palate_range'][id]['value']]}
-      />
-      setPalateRateConfirmationHtmlDict(palateRateConfirmationHtmlDict => ({...palateRateConfirmationHtmlDict, ...confirmElem}))
+      confirmElem[id] = (
+        <InputConfirmSection
+          title={attributeRangeList['palate_range'][id]['label']}
+          content={palateRate[attributeRangeList['palate_range'][id]['value']]}
+        />
+      )
+      setPalateRateConfirmationHtmlDict(
+        palateRateConfirmationHtmlDict => ({...palateRateConfirmationHtmlDict, ...confirmElem})
+      )
     })
   },[palateRate])
 
+  const formatExtractionTimeInputValue = (extraction_time) => {
+    const units = ['hours', 'minutes', 'seconds']
+    let result = '';
+    if (extraction_time) {
+      units.forEach(unit => {
+        let time = '00'
+        if (extraction_time[unit] !== undefined) {
+          time = extraction_time[unit].toString()
+          if (time.length === 1) {
+            time = `0${time}`
+          }
+        }
+        if (unit !== 'hours') {
+          result = result.concat(':', time)
+        }
+        else result = result.concat(time)
+      })
+    }
+    return result.length === 0 ? null : result
+  }
+
+  const formatSelectedRange = (category) =>{
+    let selectedRange = null
+    if (targetRecipe[category]) {
+      selectedRange = attributeRangeList[category + '_range']['id-' + targetRecipe[category]]
+    }
+    return selectedRange
+  }
 
   useEffect(async () => {
-    console.log('recipe: ', recipe)
     if (processAddSubmit && recipe.bean_id !== null) {
       const insertSuccess = await insertRecipe(userData.sub, recipe.bean_id, recipe);
       if (insertSuccess)
@@ -236,7 +263,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
 
   useEffect(async () => {
     if (processEditSubmit && recipe.bean_id !== null) {
-      const updateSuccess = await updateRecipe(userData.sub, targetRecipe['recipe_id'], recipe);
+      const updateSuccess = await updateRecipe(userData.sub, recipe.bean_id, targetRecipe['recipe_id'], recipe);
       if (updateSuccess)
         setModal({mode: '', isOpen: false});
     }
@@ -251,17 +278,22 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
         water_weight: targetRecipe['water_weight'],
         water_temp: targetRecipe['water_temp'],
         yield_weight: targetRecipe['yield_weight'],
-        extraction_time: targetRecipe['extraction_time'],
+        extraction_time: formatExtractionTimeInputValue(targetRecipe['extraction_time']),
+        total_rate: targetRecipe['total_rate'],
         tds: targetRecipe['tds'],
         memo: targetRecipe['memo'],
       })
+      setSelectedBean(beanList[targetRecipe['bean_id']])
+      setSelectedMethod(formatSelectedRange('method'))
+      setSelectedGrinder(formatSelectedRange('grinder'))
+      setSelectedWater(formatSelectedRange('water'))
     }
   },[])
 
   useEffect(() => {
-    if (mode === 'edit' && Object.keys(targetRecipe['palate_rate']).length !== 0) {
-      Object.keys(targetRecipe['palate_rate']).forEach(id => {
-        setPalateRate(id, targetRecipe['palate_rate'][id])
+    if (mode === 'edit' && Object.keys(targetRecipe['palate']).length !== 0) {
+      Object.keys(targetRecipe['palate']).forEach(id => {
+        setPalateRate(id, targetRecipe['palate'][id])
       })
     }
   }, [recipe])
@@ -272,7 +304,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
       onCloseClick={() => setModal({mode: '', isOpen: false})}
       title={
         mode === 'add' ? 'Add New Recipe' :
-        mode === 'edit' ? `Edit recipe ${targetRecipe['recipe_id']}` : null
+        mode === 'edit' ? `Edit recipe for ${beanList[targetRecipe['bean_id']]['label']}` : null
       }
     >
       {Object.keys(beanList).length === 0
@@ -330,7 +362,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
                 <div className="flex flex-col md:w-1/2">
                   <FormMultiSelect 
                     title="Coffee Bean"
-                    options={Object.values(beanList).map(({ coffee_bean_id: value, ...rest }) => ({ value, ...rest } ))}
+                    options={Object.values(beanList)}
                     value={selectedBean}
                     onChange={setSelectedBean}
                     isCreatable={false}
@@ -438,7 +470,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe, mode = MODE.ADD}) => {
                   text="Next"
                   disabled={selectedBean === null || selectedBean.length === 0}
                   onClick={() => {
-                    setOpenConfirmationTab();
+                    setOpenPalatesTab();
                     insertNewRangeList();
                   }}
                 />
