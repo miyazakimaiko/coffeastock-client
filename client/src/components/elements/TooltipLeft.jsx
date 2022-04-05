@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
-const TooltipLeft = ({ children, category, itemId, tooltipText }) => {
-  const childrenDivId = `tooltip-${category}-${itemId}`;
+const TooltipLeft = ({ children, tooltipText }) => {
   const tipRef = React.createRef(null);
-  const [boxPositionLeft, setBoxPositionLeft] = useState("-215px");
 
   const handleMouseEnter = () => {
     tipRef.current.style.opacity = "0.8";
@@ -14,13 +12,6 @@ const TooltipLeft = ({ children, category, itemId, tooltipText }) => {
       tipRef.current.style.visibility = "hidden";
   }
 
-  useEffect(() => {
-    const childrenWidth = document.getElementById(childrenDivId).offsetWidth;
-    if (childrenWidth > 225) {
-      setBoxPositionLeft("-60px")
-    }
-  }, []);
-
   return (
       <div
         className="flex items-center cursor-pointer"
@@ -29,12 +20,12 @@ const TooltipLeft = ({ children, category, itemId, tooltipText }) => {
         <div className="relative">
           {children}
           <div
-            className="absolute bg-black text-white flex w-auto opacity-0 p-4 rounded-md items-center transition-all duration-300 z-50"
-            style={{ left: boxPositionLeft, top: "-19px", width: "200px", visibility: "hidden" }}
+            className="absolute bg-black text-white flex opacity-0 p-4 w-max max-w-sm rounded-md items-center transition-all duration-300 z-50"
+            style={{ right: '-20px', bottom: "30px", visibility: "hidden" }}
             ref={tipRef}>
             <div
               className="bg-black h-3 w-3 absolute"
-              style={{ right: "-6px", top: "22px", transform: "rotate(45deg)" }}
+              style={{ right: "23px", bottom: "-5px", transform: "rotate(45deg)" }}
             />
             <div>
               {tooltipText}
