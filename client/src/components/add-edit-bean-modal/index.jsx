@@ -23,15 +23,13 @@ import AddEditAltitudeInput from './components/AddEditAltitudeInput';
 import AddEditMemoTextarea from './components/AddEditMemoTextarea';
 
 
-const AddEditBeanModal = ({setModal, targetBean, mode = 'add'}) => {
+const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   const userData = useUserData()
   const attributeRangeList = useAttributeRangeList() 
   const insertAttribute = useInsertAttribute()
   const beanList = useBeanList()
   const insertBean = useInsertBean()
   const updateBean = useUpdateBean();
-
-  console.log('beanList: ', Object.keys(beanList).length === 0)
 
   const [bean, setBean] = useState({
     single_origin: true,
@@ -194,11 +192,11 @@ const AddEditBeanModal = ({setModal, targetBean, mode = 'add'}) => {
   }
 
   const getNewRangeList = (selectedRange) => {
-    try {      
-      let newRangeList = selectedRange.filter((x) => "__isNew__" in x);
-      return newRangeList;
-    } catch {}
-    return []
+    let newRangeList = [];
+    if (selectedRange.length > 0) {
+      newRangeList = selectedRange.filter((x) => "__isNew__" in x);
+    }
+    return newRangeList;
   }
 
   const insertNewRangeList = async () => {
@@ -242,7 +240,7 @@ const AddEditBeanModal = ({setModal, targetBean, mode = 'add'}) => {
 
   useEffect(async () => {
     if (processEditSubmit && bean.label !== null) {
-      const updateSuccess = await updateBean(userData.sub, targetBean['coffee_bean_id'], bean);
+      const updateSuccess = await updateBean(userData.sub, targetBean['bean_id'], bean);
       if (updateSuccess)
         setModal({mode: '', isOpen: false});
     }
@@ -252,7 +250,6 @@ const AddEditBeanModal = ({setModal, targetBean, mode = 'add'}) => {
   useEffect(() => {
     checkCanGoToConfirmation();
   }, [bean.single_origin, selectedOrigin, selectedBlendBeans]);
-
 
   // To delete unselected BlendBean from the blendRatios object
   useEffect(() => {
@@ -314,7 +311,7 @@ const AddEditBeanModal = ({setModal, targetBean, mode = 'add'}) => {
           ...selectedBlendBeans, 
           { 
             label:beanList[id]['label'],
-            value:beanList[id]['coffee_bean_id']
+            value:beanList[id]['bean_id']
           }
         ])
       })
@@ -447,7 +444,7 @@ const AddEditBeanModal = ({setModal, targetBean, mode = 'add'}) => {
               <FormMultiSelect 
                 title="Blend of"
                 required={true}
-                options={Object.values(beanList).map(({ coffee_bean_id: value, ...rest }) => ({ value, ...rest } ))}
+                options={Object.values(beanList).map(({ bean_id: value, ...rest }) => ({ value, ...rest } ))}
                 value={selectedBlendBeans}
                 onChange={e => setSelectedBlendBeans(e)}
               />

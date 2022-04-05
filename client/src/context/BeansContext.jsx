@@ -22,7 +22,8 @@ const BeansProvider = (props) => {
   const setBeanList = (beans) => {
     const beansObj = {};
     beans.forEach(element => {
-      beansObj[element['coffee_bean_id']] = element;
+      beansObj[element['bean_id']] = element;
+      beansObj[element['bean_id']]['value'] = element['bean_id']
     });
     innerSetBeanList(beansObj);
   }

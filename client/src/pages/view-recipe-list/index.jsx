@@ -138,7 +138,7 @@ const ViewRecipes = () => {
   }
 
   const onDeleteSubmit = async () => {
-    const deleteSuccess = await deleteBean(userData.sub, bean.coffee_bean_id);
+    const deleteSuccess = await deleteBean(userData.sub, bean.bean_id);
     if (deleteSuccess) {
       setModal({mode: '', isOpen: false})
       navigate('/coffees', {replace: true})
@@ -181,15 +181,17 @@ const ViewRecipes = () => {
   }, [beanList]);
 
   useEffect(() => {
-    if (Object.keys(recipeList).length !== 0) {
+    if (Object.keys(recipeList).length > 0) {
       const list = Object.values(recipeList)
-      .filter(recipe => recipe['coffee_bean_id'] === id)
+      .filter(recipe => recipe['bean_id'] === id)
       .map(recipe => recipe)
       if (list.length > 0) {
-        setRecipeGroupSection(<RecipeGroupSection recipeList={list}/>)}
+        console.log('list: ', list)
+        setRecipeGroupSection(<RecipeGroupSection recipeList={list}/>)
       } else {
-        setRecipeGroupSection(<p className="text-center">No Recipe Has Been Added.</p>)
+        setRecipeGroupSection(<p className="text-center mb-8">No recipe has been added for this coffee beans.</p>)
       }
+    }
   }, [recipeList])
 
   return (

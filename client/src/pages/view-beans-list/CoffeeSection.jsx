@@ -31,10 +31,10 @@ const CoffeeSection = ({bean}) => {
 
   return (
     <div
-      className={`relative px-1 py-6 w-1/2 ${bean['coffee_bean_id']}`}
+      className={`relative px-1 py-6 w-1/2 ${bean['bean_id']}`}
       style={{minWidth: '110px', maxWidth: '220px'}}
     >
-      <Link to={`/coffee/${bean['coffee_bean_id']}`}>
+      <Link to={`/coffee/${bean['bean_id']}`}>
         <div 
           className="absolute left-3 right-3 top-3 bottom-3 
             bg-burnt-sienna rounded-md z-10 

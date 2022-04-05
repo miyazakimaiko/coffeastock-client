@@ -12,7 +12,7 @@ describe('Recipes API', () => {
   const wrongCoffeeBeanId = 'testtesttesttesttest';
 
   describe(`GET ${endpoint}/bean/:productid/recipes`, () => {
-    it("should GET the recipes with correct coffee_bean_id", (done) => {
+    it("should GET the recipes with correct bean_id", (done) => {
       chai.request(app)
       .get(`${endpoint}/bean/${existingCoffeeBeanId}/recipes`)
       .end((err, response) => {
@@ -21,7 +21,7 @@ describe('Recipes API', () => {
         done();
       })
     })
-    it("should NOT GET the recipes with wrong coffee_bean_id", (done) => {
+    it("should NOT GET the recipes with wrong bean_id", (done) => {
       chai.request(app)
       .get(`${endpoint}/bean/${wrongCoffeeBeanId}/recipes`)
       .end((err, response) => {
@@ -31,7 +31,7 @@ describe('Recipes API', () => {
     })
   })
 
-  describe(`POST ${endpoint}/bean/:coffee_bean_id/recipe`, () => {
+  describe(`POST ${endpoint}/bean/:bean_id/recipe`, () => {
     it("should return success if all fields are valid", (done) => {
       chai.request(app)
       .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)

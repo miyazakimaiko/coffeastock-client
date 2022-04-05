@@ -92,14 +92,12 @@ const ViewMyCoffees = () => {
   },[])
 
   useEffect(() => {
-    try {
-      makeSortedCoffeesHtmlDictionary();
-      setSearchValue("")
-    } catch {}
+    makeSortedCoffeesHtmlDictionary();
+    setSearchValue("")
   }, 
   [beanList, attributeRangeList, showState, groupState]);
 
-  useEffect( async () => {
+  useEffect(async () => {
     Object.values(sortedCoffeesHtmlDictionary).forEach(group => {
       group.forEach(coffeeSection => {
         const categoriesToSearch = ['altitude', 'harvest_period', 'label', 'roast_date']
@@ -112,7 +110,7 @@ const ViewMyCoffees = () => {
           }
         })
 
-        const coffeeList = document.getElementsByClassName(coffeeSection.props.bean['coffee_bean_id'])
+        const coffeeList = document.getElementsByClassName(coffeeSection.props.bean['bean_id'])
         
         if (coffeeList && !show) {
           for (let coffee of coffeeList) {

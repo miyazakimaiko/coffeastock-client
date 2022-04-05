@@ -42,7 +42,7 @@ module.exports = (app) => {
   app.get(endpoint + "/user/:userid/bean/:productid/recipes", async (req, res, next) => {
     try {
       const results = await db.query(`
-      SELECT * FROM recipes WHERE user_id = $1 AND coffee_bean_id = $2`, 
+      SELECT * FROM recipes WHERE user_id = $1 AND bean_id = $2`, 
       [req.params.userid, req.params.productid]);
 
       res.status(200).json(results.rows);
@@ -67,7 +67,7 @@ module.exports = (app) => {
       const results = await db.query(`
       INSERT INTO recipes (
         user_id,
-        coffee_bean_id, 
+        bean_id, 
         brew_date, 
         method, 
         grinder, 
@@ -139,8 +139,8 @@ module.exports = (app) => {
       tds = $11, 
       total_rate = $12,
       palate = $13, 
-      comment = $14
-      WHERE user_id = $15 AND coffee_bean_id = $16 AND recipe_id = $17 RETURNING *`,
+      memo = $14
+      WHERE user_id = $15 AND bean_id = $16 AND recipe_id = $17 RETURNING *`,
       [
         req.body.brew_date,
         req.body.method,
@@ -155,7 +155,7 @@ module.exports = (app) => {
         req.body.tds,
         req.body.total_rate,
         req.body.palate,
-        req.body.comment,
+        req.body.memo,
         req.params.userid,
         req.params.beanid,
         req.params.recipeid
@@ -172,7 +172,7 @@ module.exports = (app) => {
   app.delete(endpoint + "/user/:userid/bean/:beanid/recipe/:recipeid", async (req, res, next) => {
     try {
       const results = await db.query(`
-      DELETE FROM recipes WHERE user_id = $1 AND coffee_bean_id = $2 AND recipe_id = $3`,
+      DELETE FROM recipes WHERE user_id = $1 AND bean_id = $2 AND recipe_id = $3`,
       [req.params.userid, req.params.beanid, req.params.recipeid]);
 
       res.status(200).json(results.rows);

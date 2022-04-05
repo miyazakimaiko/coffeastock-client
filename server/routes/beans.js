@@ -124,7 +124,7 @@ module.exports = (app) => {
         roast_date = $12,
         aroma = $13,
         memo = $14
-      WHERE user_id = $15 AND coffee_bean_id = $16 
+      WHERE user_id = $15 AND bean_id = $16 
       RETURNING *`,
       [
         req.body.label,
@@ -156,7 +156,7 @@ module.exports = (app) => {
   app.delete(endpoint + "/user/:userid/bean/:beanid", async (req, res, next) => {
     try {
       const results = await db.query(`
-      DELETE FROM beans WHERE user_id = $1 AND coffee_bean_id = $2`,
+      DELETE FROM beans WHERE user_id = $1 AND bean_id = $2`,
       [req.params.userid, req.params.beanid]);
       res.status(200).json(results.rows);
     } catch (error) {
