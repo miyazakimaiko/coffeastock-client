@@ -5,13 +5,16 @@ const AddEditWaterTempInput = ({recipe, setRecipe}) => {
 
   const [tempWarningText, setTempWarningText] = useState("");
 
-  const setWeight = (weight) => {
-    if (weight < 0.0) {
+  const setTemp = (temp) => {
+    if (temp < 0.0) {
       setTempWarningText(<span className="text-red">Please enter a positive number</span>)
     } else {
       setTempWarningText("")
     }
-    setRecipe({...recipe, water_temp: weight})
+    if (temp.length === 0) {
+      temp = null
+    }
+    setRecipe({...recipe, water_temp: temp})
   }
 
   return (
@@ -23,7 +26,7 @@ const AddEditWaterTempInput = ({recipe, setRecipe}) => {
       autoComplete="off"
       placeholder="e.g. 90.5"
       value={recipe.water_temp}
-      onChange={e => setWeight(e.target.value)}
+      onChange={e => setTemp(e.target.value)}
       warningText={tempWarningText}
     />
   )

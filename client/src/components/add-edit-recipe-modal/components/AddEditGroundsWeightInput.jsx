@@ -11,6 +11,9 @@ const AddEditGroundsWeightInput = ({recipe, setRecipe}) => {
     } else {
       setWeightWarningText("")
     }
+    if (weight.length === 0) {
+      weight = null
+    }
     setRecipe({...recipe, grounds_weight: weight})
   }
 

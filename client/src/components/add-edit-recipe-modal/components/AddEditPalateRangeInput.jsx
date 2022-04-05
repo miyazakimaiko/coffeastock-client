@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const AddEditPalateRangeInput = ({title, parateId, palateRate, setPalateRate}) => {
   const [rangeWarningText, setRangeWarningText] = useState("");
@@ -12,6 +12,13 @@ const AddEditPalateRangeInput = ({title, parateId, palateRate, setPalateRate}) =
     setPalateRate(parateId, level)
   }
 
+  useEffect(() => {
+    console.log('palateRate[parateId]: ', palateRate[parateId])
+    if (palateRate[parateId] === undefined) {
+      setPalateLevel(5)
+    }
+  }, [])
+
   return (
 
     <>
@@ -20,7 +27,7 @@ const AddEditPalateRangeInput = ({title, parateId, palateRate, setPalateRate}) =
         <input 
           type="range"
           min="0" max="10"
-          step="0.5"
+          step="0.1"
           name={title}
           className="block w-full py-2 mx-auto"
           value={palateRate[parateId]}

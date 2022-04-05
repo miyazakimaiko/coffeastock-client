@@ -11,6 +11,9 @@ const AddEditYieldWeightInput = ({recipe, setRecipe}) => {
     } else {
       setWeightWarningText("")
     }
+    if (weight.length === 0) {
+      weight = null
+    }
     setRecipe({...recipe, yield_weight: weight})
   }
 

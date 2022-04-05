@@ -6,12 +6,15 @@ const AddEditTotalRateInput = ({recipe, setRecipe}) => {
   const [rateWarningText, setRateWarningText] = useState("");
 
   const setRate = (rate) => {
-    setRecipe({...recipe, total_rate: rate});
     if (rate < 0.0 || rate > 100.0) {
       setRateWarningText(<span className="text-red">Please enter a number between 0.0 and 100.0</span>)
     } else {
       setRateWarningText("")
     }
+    if (rate.length === 0) {
+      rate = null
+    }
+    setRecipe({...recipe, total_rate: rate});
   }
 
   return (

@@ -13,6 +13,9 @@ const AddEditMemoTextarea = ({bean, setBean}) => {
     } else {
       setMemoWarningText(`${400 - encoded.length}/400`)
     }
+    if (memo.length === 0) {
+      memo = null
+    }
     setBean({...bean, memo})
   }
   return (

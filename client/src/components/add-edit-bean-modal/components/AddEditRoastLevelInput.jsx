@@ -11,6 +11,9 @@ const AddEditRoastLevelInput = ({bean, setBean}) => {
     } else {
       setRoastLevelWarningText("")
     }
+    if (level.length === 0) {
+      level = null
+    }
     setBean({...bean, roast_level: level})
   }
 

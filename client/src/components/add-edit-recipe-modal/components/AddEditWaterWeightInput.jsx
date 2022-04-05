@@ -11,6 +11,9 @@ const AddEditWaterWeightInput = ({recipe, setRecipe}) => {
     } else {
       setWeightWarningText("")
     }
+    if (weight.length === 0) {
+      weight = null
+    }
     setRecipe({...recipe, water_weight: weight})
   }
 

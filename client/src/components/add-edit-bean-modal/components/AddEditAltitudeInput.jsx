@@ -13,6 +13,9 @@ const AddEditAltitudeInput = ({bean, setBean}) => {
     } else {
       setAltitudeWarningText(`${60 - encoded.length}/60`)
     }
+    if (altitude.length === 0) {
+      altitude = null
+    }
     setBean({...bean, altitude})
   }
 

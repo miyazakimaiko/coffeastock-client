@@ -13,6 +13,9 @@ const AddEditMemoTextarea = ({recipe, setRecipe}) => {
     } else {
       setMemoWarningText(`${400 - encoded.length}/400`)
     }
+    if (memo.length === 0) {
+      memo = null
+    }
     setRecipe({...recipe, memo})
   }
   return (

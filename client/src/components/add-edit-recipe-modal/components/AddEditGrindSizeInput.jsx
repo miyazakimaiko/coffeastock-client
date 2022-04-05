@@ -11,6 +11,9 @@ const AddEditGrindSizeInput = ({recipe, setRecipe}) => {
     } else {
       setSizeWarningText("")
     }
+    if (size.length === 0) {
+      size = null
+    }
     setRecipe({...recipe, grind_size: size});
   }
 

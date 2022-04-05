@@ -14,6 +14,9 @@ const AddEditHarvestPeriodInput = ({bean, setBean}) => {
     } else {
       setPeriodWarningText(`${60 - encoded.length}/60`)
     }
+    if (period.length === 0) {
+      period = null
+    }
     setBean({...bean, harvest_period: period})
   }
 

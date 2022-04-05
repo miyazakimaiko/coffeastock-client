@@ -11,6 +11,9 @@ const AddEditRxtractTimeInput = ({recipe, setRecipe}) => {
     } else {
       setTimeWarningText("")
     }
+    if (time.length === 0) {
+      time = null
+    }
     setRecipe({...recipe, extraction_time: time})
   }
 
@@ -21,7 +24,7 @@ const AddEditRxtractTimeInput = ({recipe, setRecipe}) => {
       name="extracttime"
       step="1"
       value={recipe.extraction_time}
-      onChange={e => setTime(e.target.value)}
+      onChange={e => {setTime(e.target.value)}}
       warningText={timeWarningText}
     />
   )

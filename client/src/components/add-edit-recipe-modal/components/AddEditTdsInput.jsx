@@ -11,7 +11,10 @@ const AddEditTdsInput = ({recipe, setRecipe}) => {
     } else {
       setTdsWarningText("")
     }
-    setRecipe({...recipe, tds: tds})
+    if (tds.length === 0) {
+      tds = null
+    }
+    setRecipe({...recipe, tds})
   }
 
   return (
