@@ -8,7 +8,7 @@ import Header from './components/header';
 import Login from './pages/login';
 import Register from './pages/register';
 import Dashboard from './pages/dashboard';
-import ViewRecipes from './pages/view-recipe-list';
+import ViewBeanAndRecipes from './pages/view-bean-and-recipes';
 import ViewMyCoffees from './pages/view-beans-list';
 import ManageAttributeRanges from './pages/manage-attribute-ranges';
 import { useGetSession, useSetUserData, useAuthenticated, useSetAuthenticated } from './context/AccountContext';
@@ -44,7 +44,7 @@ const App = () => {
             { authenticated ? 
               <Routes>
                 <Route exact path="/coffees" element={<ViewMyCoffees />} />
-                <Route exact path="/coffee/:id" element={<ViewRecipes />} />
+                <Route exact path="/coffee/:id" element={<ViewBeanAndRecipes />} />
 
                 <Route exact path="/settings/aroma" element={<ManageAttributeRanges parentCat={'Coffee Beans'} cat={'aroma'}/>} />
                 <Route exact path="/settings/farm" element={<ManageAttributeRanges parentCat={'Coffee Beans'} cat={'farm'}/>} />
