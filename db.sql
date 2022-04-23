@@ -175,7 +175,7 @@ VALUES (
 );
 
 CREATE TABLE BEANS (
-    coffee_bean_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    bean_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id varchar(255) NOT NULL,
     label varchar(60) NOT NULL,
     single_origin boolean NOT NULL,
@@ -294,7 +294,7 @@ VALUES (
 CREATE TABLE RECIPES (
     recipe_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id varchar(255) NOT NULL,
-    coffee_bean_id uuid NOT NULL,
+    bean_id uuid NOT NULL,
     brew_date date,
     total_rate float,
     method INT,
@@ -311,14 +311,14 @@ CREATE TABLE RECIPES (
     memo text,
     FOREIGN KEY (user_id)
         REFERENCES USERS (user_id),
-    FOREIGN KEY (coffee_bean_id)
-        REFERENCES BEANS (coffee_bean_id)
+    FOREIGN KEY (bean_id)
+        REFERENCES BEANS (bean_id)
 );
 
 
 INSERT INTO RECIPES (
   user_id,
-  coffee_bean_id,
+  bean_id,
   brew_date,
   method,
   grinder,
