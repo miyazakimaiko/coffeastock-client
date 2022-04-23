@@ -1,21 +1,24 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
 import App from './App'
 import {AccountProvider} from './context/AccountContext'
 import {AttributeRangeProvider} from './context/AttributeRangeContext'
-import {BeansProvider} from './context/BeansContext'
 import { RecipeProvider } from './context/RecipeContext'
 
+const queryClient = new QueryClient();
 
 ReactDOM.render(
-  <AccountProvider>
-    <AttributeRangeProvider>
-      <BeansProvider>
+  <QueryClientProvider client={queryClient}>
+    <AccountProvider>
+      <AttributeRangeProvider>
         <RecipeProvider>
           <App/>
+          <ReactQueryDevtools/>
         </RecipeProvider>
-      </BeansProvider>
-    </AttributeRangeProvider>
-  </AccountProvider>
+      </AttributeRangeProvider>
+    </AccountProvider>
+  </QueryClientProvider>
 , document.getElementById("root"))
 

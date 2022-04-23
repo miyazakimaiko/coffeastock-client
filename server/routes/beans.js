@@ -6,6 +6,12 @@ let validator = [
   body('label', 'Invalid Name').not().isEmpty().escape().isLength({ max: 60 }),
   body('single_origin', 'Invalid Single Origin').not().isEmpty().isBoolean(),
   body('blend_ratio', 'Invalid Blend Ratio').isObject().optional({ checkFalsy: true }),
+  body('origin', 'Invalid Origin').isObject({ strict: false }).optional({ checkFalsy: true }),
+  body('farm', 'Invalid Farm').isObject({ strict: false }).optional({ checkFalsy: true }),
+  body('variety', 'Invalid Variety').isObject({ strict: false }).optional({ checkFalsy: true }),
+  body('process', 'Invalid Process').isObject({ strict: false }).optional({ checkFalsy: true }),
+  body('roaster', 'Invalid Roaster').isObject({ strict: false }).optional({ checkFalsy: true }),
+  body('aroma', 'Invalid Aroma').isObject({ strict: false }).optional({ checkFalsy: true }),
   body('roast_level', 'Invalid Roast Level').isFloat({ min: 0, max: 10 }).optional({ checkFalsy: true }),
   body('grade', 'Invalid Grade').isFloat({ min: 0, max: 100 }).optional({ checkFalsy: true }),
   body('roast_date', 'Invalid Roast Date').isDate().optional({ checkFalsy: true }),
@@ -25,6 +31,20 @@ module.exports = (app) => {
       SELECT * FROM beans WHERE user_id = $1`, 
       [req.params.userid]);
       res.status(200).json(results.rows);
+      
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  // Get a bean of a user
+  app.get(endpoint + "/user/:userid/bean/:beanid", 
+  async (req, res, next) => {
+    try {
+      const results = await db.query(`
+      SELECT * FROM beans WHERE user_id = $1 AND bean_id = $2`, 
+      [req.params.userid, req.params.beanid]);
+      res.status(200).json(results.rows[0]);
       
     } catch (error) {
       next(error);

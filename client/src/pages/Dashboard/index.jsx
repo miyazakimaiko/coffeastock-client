@@ -1,7 +1,4 @@
 import React from 'react'
-import { useBeanList, useFetchBeanList } from '../../context/BeansContext'
-import { useAttributeRangeList, useFetchAttributeRangeList } from '../../context/AttributeRangeContext'
-import { useFetchRecipeList } from '../../context/RecipeContext'
 import ChartBarBeans from './ChartBarBeans'
 import ChartBarRecipes from './ChartBarRecipes'
 import TotalBeans from './TotalBeans'
@@ -12,24 +9,9 @@ import { useUserData } from '../../context/AccountContext'
 
 const Dashboard = () => {
   const userData = useUserData()
-  const fetchAttributeRangeList = useFetchAttributeRangeList();
-  const attributeRangeList = useAttributeRangeList();
-  const fetchBeanList = useFetchBeanList()
-  const beanList = useBeanList()
-  const fetchRecipeList = useFetchRecipeList()
 
   useEffect(() => {
     window.scroll({ top: 0, behavior: 'smooth' });
-  }, []);
-
-  useEffect(() => {
-    if (Object.keys(attributeRangeList).length === 0) {
-      fetchAttributeRangeList(userData.sub);
-    }
-    if (Object.keys(beanList).length === 0) {
-      fetchBeanList(userData.sub)
-      fetchRecipeList(userData.sub)
-    }
   }, []);
   
   return (

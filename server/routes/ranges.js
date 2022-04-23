@@ -1,6 +1,7 @@
 require("dotenv").config();
-const { body, validationResult } = require('express-validator');
 const db = require("../db");
+const { body, validationResult } = require('express-validator');
+const { reorderAttributeRangeList } = require("../helper/reorderRangeList");
 const { 
   getGetRangeBaseQuery, 
   getPostRangeBaseQuery,
@@ -10,6 +11,7 @@ const {
   getDeleteRangeBaseQuery,
   getFindEntryByIdBaseQuery
 } = require("../utils/query-generator");
+const { reorderRange } = require("../helper/reorderRange");
 
 const validator = [
   body('label', 'Invalid Name').not().contains('<')
@@ -93,7 +95,10 @@ module.exports = (app) => {
           }
         });
       }
-      res.status(200).json(results.rows[0]);
+      const parseRes = await results.rows[0];
+      const orderedRangeList = reorderAttributeRangeList(parseRes)
+      console.log('orderedRangeList: ', orderedRangeList)
+      res.status(200).json(orderedRangeList);
 
     } catch (error) {
       next(error);
@@ -105,7 +110,9 @@ module.exports = (app) => {
     const baseQuery = getGetRangeBaseQuery(req.params.rangename)
     try {
       const results = await db.query(baseQuery, [req.params.userid]);
-      res.status(200).json(results.rows[0]['range']);
+      const range = results.rows[0]['range']
+      const orderedRange = reorderRange(range)
+      res.status(200).json(orderedRange);
     } catch (error) { next(error); }
   });
 
@@ -240,7 +247,9 @@ module.exports = (app) => {
         }`
         const bqInsertRange = getInsertRangeBaseQuery(req.params.rangename)
         const result = await db.query(bqInsertRange,[newData, req.params.userid]);
-        res.status(200).json(result.rows[0][req.params.rangename + '_range']['range']);
+        const range = result.rows[0][req.params.rangename + '_range']['range']
+        const reorderedRange = reorderRange(range)
+        res.status(200).json(reorderedRange);
       }
     } catch (error) {
       next(error);

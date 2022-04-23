@@ -11,6 +11,9 @@ let validator = [
   body('yield_weight', 'Invalid Yield Weight').isFloat({ min: 0 }).optional({ checkFalsy: true }),
   body('tds', 'Invalid TDS').isFloat({ min: 0 }).optional({ checkFalsy: true }),
   body('palate', 'Invalid Palate Rates').isObject().optional({ checkFalsy: true }),
+  body('method', 'Invalid Method').isInt({ min: 1 }),
+  body('grinder', 'Invalid Grinder').isInt({ min: 1 }).optional({ checkFalsy: true }),
+  body('water', 'Invalid Water').isInt({ min: 1 }).optional({ checkFalsy: true }),
   body('memo', 'Invalid Memo').escape().isLength({ max: 400 }).optional({ checkFalsy: true }),
   body('extraction_time').custom(value => {
     let valid = String(value).match(/^([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/);

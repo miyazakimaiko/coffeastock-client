@@ -1,6 +1,6 @@
 import React, { useEffect, useState, createRef } from 'react'
 import { useUserData } from '../../context/AccountContext';
-import { useAttributeRangeList, useInsertAttribute } from '../../context/AttributeRangeContext';
+import { useInsertAttribute } from '../../context/AttributeRangeContext';
 import { useRecipeList, useInsertRecipe, useUpdateRecipe } from '../../context/RecipeContext';
 import { unescapeHtml } from '../../utils/HtmlConverter'
 import './modals.scss'
@@ -13,7 +13,6 @@ import BlueButton from '../elements/BlueButton';
 import PencilAltIconButton from '../elements/PencilAltIconButton';
 import AddEditGrindSizeInput from './components/AddEditGrindSizeInput';
 import AddEditGroundsWeightInput from './components/AddEditGroundsWeightInput';
-import { useBeanList } from '../../context/BeansContext';
 import AddEditWaterWeightInput from './components/AddEditWaterWeightInput';
 import AddEditWaterTempInput from './components/AddEditWaterTempInput';
 import AddEditYieldWeightInput from './components/AddEditYieldWeightInput';
@@ -25,6 +24,8 @@ import AddEditMemoTextarea from './components/AddEditMemoTextarea';
 import InputConfirmSection from './components/InputConfirmSection';
 import MultiselectConfirmSection from './components/MultiselectConfirmSection';
 import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
+import useBeans from '../../hooks/useBeans';
+import useRanges from '../../hooks/useRanges';
 
 const MODE = {
   ADD: 'add',
@@ -33,8 +34,8 @@ const MODE = {
 
 const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) => {
   const userData = useUserData()
-  const beanList = useBeanList()
-  const attributeRangeList = useAttributeRangeList() 
+  const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub)
+  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub)
   const insertAttribute = useInsertAttribute()
   const recipeList = useRecipeList()
   const insertRecipe = useInsertRecipe()
@@ -104,7 +105,12 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     hidePage(waterYieldPage);
     hidePage(palatesPage);
     hidePage(confirmationPage);
-    setTabState({...tabState, coffeeBeansTab: true, waterYieldTab: false, palatesTab: false, confirmationTab: false});
+    setTabState({...tabState, 
+      coffeeBeansTab: true, 
+      waterYieldTab: false, 
+      palatesTab: false, 
+      confirmationTab: false
+    });
  } 
 
   const setOpenWaterYieldTab = () => {
@@ -112,7 +118,12 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     showPage(waterYieldPage);
     hidePage(palatesPage);
     hidePage(confirmationPage);
-    setTabState({...tabState, coffeeBeansTab: false, waterYieldTab: true, palatesTab: false, confirmationTab: false});
+    setTabState({...tabState, 
+      coffeeBeansTab: false, 
+      waterYieldTab: true, 
+      palatesTab: false, 
+      confirmationTab: false
+    });
   }
 
   const setOpenPalatesTab = () => {
@@ -120,7 +131,12 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     hidePage(waterYieldPage);
     showPage(palatesPage);    
     hidePage(confirmationPage);
-    setTabState({...tabState, coffeeBeansTab: false, waterYieldTab: false, palatesTab: true, confirmationTab: false});
+    setTabState({...tabState, 
+      coffeeBeansTab: false, 
+      waterYieldTab: false, 
+      palatesTab: true, 
+      confirmationTab: false
+    });
   }
 
   const setOpenConfirmationTab = () => {
@@ -128,13 +144,18 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     hidePage(waterYieldPage);
     hidePage(palatesPage);
     showPage(confirmationPage);
-    setTabState({...tabState, coffeeBeansTab: false, waterYieldTab: false, palatesTab: false, confirmationTab: true});
+    setTabState({...tabState, 
+      coffeeBeansTab: false, 
+      waterYieldTab: false, 
+      palatesTab: false, 
+      confirmationTab: true
+    });
   }
 
   const convertAttrToId = (selectedRange, category) => {
     let id = null
     try {      
-      Object.values(attributeRangeList[category + '_range']).forEach(entry => {
+      Object.values(rangeList[category + '_range']).forEach(entry => {
         if (unescapeHtml(entry['label']) === selectedRange['label']) {
           id = entry['value']
         }
@@ -201,12 +222,20 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     }
   }
 
+  const canGoToConfirmation = () => {
+    if (selectedBean === null || selectedBean.length === 0 ||
+      selectedMethod === null || selectedMethod.length === 0) {
+        return false
+    } 
+    return true
+  }
+
   useEffect(() => {
-    Object.keys(attributeRangeList['palate_range']).forEach(id => {
+    Object.keys(rangeList['palate_range']).forEach(id => {
       let elem = {}
       elem[id] = <AddEditPalateRangeInput
-        title={attributeRangeList['palate_range'][id]['label']}
-        parateId={attributeRangeList['palate_range'][id]['value']}
+        title={rangeList['palate_range'][id]['label']}
+        parateId={rangeList['palate_range'][id]['value']}
         palateRate={palateRate}
         setPalateRate={setPalateRate}
       />
@@ -214,8 +243,8 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
       let confirmElem = {}
       confirmElem[id] = (
         <InputConfirmSection
-          title={attributeRangeList['palate_range'][id]['label']}
-          content={palateRate[attributeRangeList['palate_range'][id]['value']]}
+          title={rangeList['palate_range'][id]['label']}
+          content={palateRate[rangeList['palate_range'][id]['value']]}
         />
       )
       setPalateRateConfirmationHtmlDict(
@@ -248,7 +277,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
   const formatSelectedRange = (category) =>{
     let selectedRange = null
     if (targetRecipe[category]) {
-      selectedRange = attributeRangeList[category + '_range']['id-' + targetRecipe[category]]
+      selectedRange = rangeList[category + '_range']['id-' + targetRecipe[category]]
     }
     return selectedRange
   }
@@ -298,8 +327,11 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     }
   }, [recipe])
 
-  return (
+  if (beanListIsLoading || rangeListIsLoading) {
+    return
+  }
 
+  return (
     <ModalWrapperContainer
       onCloseClick={() => setModal({mode: '', isOpen: false})}
       title={
@@ -328,21 +360,21 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
             <StepsTab
               key="water-yield"
               title="2. Water and Yield"
-              disabled={selectedBean === null || selectedBean.length === 0}
+              disabled={!canGoToConfirmation()}
               tabState={tabState.waterYieldTab}
               onClick={setOpenWaterYieldTab}
             />
             <StepsTab
               key="palates"
               title="3. Palates and Memo"
-              disabled={selectedBean === null || selectedBean.length === 0}
+              disabled={!canGoToConfirmation()}
               tabState={tabState.palatesTab}
               onClick={setOpenPalatesTab}
             />
             <StepsTab
               key="confirmation"
               title="4. Confirmation"
-              disabled={selectedBean === null || selectedBean.length === 0}
+              disabled={!canGoToConfirmation()}
               tabState={tabState.confirmationTab}
               onClick={() =>{
                 setOpenConfirmationTab();
@@ -365,6 +397,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                     options={Object.values(beanList)}
                     value={selectedBean}
                     onChange={setSelectedBean}
+                    required={true}
                     isCreatable={false}
                     isMulti={false}
                   />
@@ -377,9 +410,10 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                   />
                   <FormMultiSelect 
                     title="Brewing Method"
-                    options={Object.values(attributeRangeList.method_range)}
+                    options={Object.values(rangeList.method_range)}
                     value={selectedMethod}
                     onChange={setSelectedMethod}
+                    required={true}
                     isCreatable={true}
                     isMulti={false}
                   />
@@ -388,7 +422,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                 <div className="md:w-1/2">
                   <FormMultiSelect 
                     title="Grinder"
-                    options={Object.values(attributeRangeList.grinder_range)}
+                    options={Object.values(rangeList.grinder_range)}
                     value={selectedGrinder}
                     onChange={setSelectedGrinder}
                     isCreatable={true}
@@ -411,7 +445,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                 />
                 <BlueButton
                   text="Next"
-                  disabled={selectedBean === null || selectedBean.length === 0}
+                  disabled={!canGoToConfirmation()}
                   onClick={setOpenWaterYieldTab}
                 />
               </div>
@@ -425,7 +459,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                 <div className="flex flex-col md:w-1/2">
                   <FormMultiSelect 
                     title="Water"
-                    options={Object.values(attributeRangeList.water_range)}
+                    options={Object.values(rangeList.water_range)}
                     value={selectedWater}
                     onChange={setSelectedWater}
                     isCreatable={true}

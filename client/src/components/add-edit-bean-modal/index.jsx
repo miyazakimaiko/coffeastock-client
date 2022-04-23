@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback, useState, createRef } from 'react'
 import { useUserData } from '../../context/AccountContext';
-import { useAttributeRangeList, useInsertAttribute } from '../../context/AttributeRangeContext';
-import { useBeanList, useInsertBean, useUpdateBean } from '../../context/BeansContext';
+import { useInsertAttribute } from '../../context/AttributeRangeContext';
 import { unescapeHtml } from '../../utils/HtmlConverter'
 import './modals.scss'
 import ModalWrapperContainer from '../elements/ModalWrapperContainer';
@@ -21,17 +20,22 @@ import AddEditRoastLevelInput from './components/AddEditRoastLevelInput';
 import AddEditHarvestPeriodInput from './components/AddEditHarvestPeriodInput';
 import AddEditAltitudeInput from './components/AddEditAltitudeInput';
 import AddEditMemoTextarea from './components/AddEditMemoTextarea';
+import useAddBean from '../../hooks/useAddBean';
+import useEditBean from '../../hooks/useEditBean';
+import useBeans from '../../hooks/useBeans';
+import useRanges from '../../hooks/useRanges';
 
 
 const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   const userData = useUserData()
-  const attributeRangeList = useAttributeRangeList() 
   const insertAttribute = useInsertAttribute()
-  const beanList = useBeanList()
-  const insertBean = useInsertBean()
-  const updateBean = useUpdateBean();
+  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub)
+  const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub)
+  const addBean = useAddBean(userData.sub)
+  const editBean = useEditBean(userData.sub)
 
   const [bean, setBean] = useState({
+    bean_id: null,
     single_origin: true,
     label: null,
     grade: null,
@@ -144,7 +148,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     const idList = [];
     try {      
       selectedRange.forEach(range => {
-        for (const entry of Object.values(attributeRangeList[category + '_range'])) {
+        for (const entry of Object.values(rangeList[category + '_range'])) {
           if (unescapeHtml(entry['label']) === range['label']) {
             idList.push(parseInt(entry['value']));
           }
@@ -156,7 +160,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
 
   const makeSelectedRangeList = (idList, category) => {
     const selectedRangeList = [];
-    for (const entry of Object.values(attributeRangeList[category + '_range'])) {
+    for (const entry of Object.values(rangeList[category + '_range'])) {
       const id = parseInt(entry['value'])
       if (idList.includes(id)) {
         selectedRangeList.push(entry);
@@ -230,21 +234,29 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     }
   }
 
-  useEffect(async () => {
+  useEffect(() => {
     if (processAddSubmit && bean.label !== null) {
-      const insertSuccess = await insertBean(userData.sub, bean);
-      if (insertSuccess)
-        setModal({mode: '', isOpen: false});
+      addBean.mutate(bean)
     }
   }, [processAddSubmit])
+  
+  useEffect(() => {
+    if (addBean.isSuccess) {
+      setModal({mode: '', isOpen: false})
+    }
+  }, [addBean.isSuccess])
 
-  useEffect(async () => {
+  useEffect(() => {
     if (processEditSubmit && bean.label !== null) {
-      const updateSuccess = await updateBean(userData.sub, targetBean['bean_id'], bean);
-      if (updateSuccess)
-        setModal({mode: '', isOpen: false});
+      editBean.mutate(bean)
     }
   }, [processEditSubmit])
+
+  useEffect(() => {
+    if (editBean.isSuccess) {
+      setModal({mode: '', isOpen: false})
+    }
+  }, [editBean.isSuccess])
 
   // To enable/disable Next button to go to confirmation section
   useEffect(() => {
@@ -269,15 +281,8 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
 
   useEffect(() => {
     if (mode === 'edit') {
-      setBean({...bean,
-        single_origin: targetBean['single_origin'],
-        label: targetBean['label'],
-        grade: targetBean['grade'],
-        roast_level: targetBean['roast_level'],
+      setBean({...bean, ...targetBean,
         roast_date: targetBean['roast_date'] ? targetBean['roast_date'].split('T')[0] : undefined,
-        harvest_period: targetBean['harvest_period'],
-        altitude: targetBean['altitude'],
-        memo: targetBean['memo'],
       })
       setSelectedRoaster(makeSelectedRangeList(targetBean['roaster'], 'roaster'))
       setSelectedOrigin(makeSelectedRangeList(targetBean['origin'], 'origin'))
@@ -292,7 +297,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     Object.keys(blendRatios).forEach(id => {
       const html = {}
       html[id] = <FormBlendRatioInput
-        title={beanList[id]['label']}
+        title={beanList.find(d => d.bean_id == id)['label']}
         name={id}
         value={blendRatios[id]}
         onChange={e => {
@@ -310,13 +315,17 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
         innerSetSelectedBlendBeans(selectedBlendBeans => [
           ...selectedBlendBeans, 
           { 
-            label:beanList[id]['label'],
-            value:beanList[id]['bean_id']
+            label:beanList.find(d => d.bean_id == id)['label'],
+            value:beanList.find(d => d.bean_id == id)['bean_id']
           }
         ])
       })
     }
   }, [bean])
+
+  if (rangeListIsLoading || beanListIsLoading) {
+    return 'loading...'
+  }
 
   return (
 
@@ -404,7 +413,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
               </div>
               <FormMultiSelect 
                 title="Roaster"
-                options={Object.values(attributeRangeList.roaster_range)}
+                options={Object.values(rangeList.roaster_range)}
                 value={selectedRoaster}
                 onChange={setSelectedRoaster}
                 isCreatable={true}
@@ -459,7 +468,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
             <div className="md:w-1/2">
               <FormMultiSelect 
                 title="Aroma"
-                options={Object.values(attributeRangeList.aroma_range)}
+                options={Object.values(rangeList.aroma_range)}
                 value={selectedAroma}
                 isCreatable={true}
                 onChange={setSelectedAroma}
@@ -476,21 +485,21 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
               <FormMultiSelect 
                 title="Origin"
                 required={true}
-                options={Object.values(attributeRangeList.origin_range)}
+                options={Object.values(rangeList.origin_range)}
                 value={selectedOrigin}
                 onChange={setSelectedOrigin}
                 isCreatable={true}
               />
               <FormMultiSelect 
                 title="Farm"
-                options={Object.values(attributeRangeList.farm_range)}
+                options={Object.values(rangeList.farm_range)}
                 value={selectedFarm}
                 onChange={setSelectedFarm}
                 isCreatable={true}
               />
               <FormMultiSelect 
                 title="Variety"
-                options={Object.values(attributeRangeList.variety_range)}
+                options={Object.values(rangeList.variety_range)}
                 value={selectedVariety}
                 onChange={setSelectedVariety}
                 isCreatable={true}
@@ -508,14 +517,14 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
             <div className="md:w-1/2">
               <FormMultiSelect 
                 title="Process"
-                options={Object.values(attributeRangeList.process_range)}
+                options={Object.values(rangeList.process_range)}
                 value={selectedProcess}
                 onChange={setSelectedProcess}
                 isCreatable={true}
               />
               <FormMultiSelect 
                 title="Aroma"
-                options={Object.values(attributeRangeList.aroma_range)}
+                options={Object.values(rangeList.aroma_range)}
                 value={selectedAroma}
                 onChange={setSelectedAroma}
                 isCreatable={true}

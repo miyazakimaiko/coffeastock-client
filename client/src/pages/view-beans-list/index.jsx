@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
-import { useAttributeRangeList, useFetchAttributeRangeList } from '../../context/AttributeRangeContext';
-import { useBeanList, useFetchBeanList } from '../../context/BeansContext';
 import { useUserData } from '../../context/AccountContext';
 import ToolBar from '../../components/tool-bar';
 import ToolbarDropdown from '../../components/tool-bar/ToolBarDropdown';
@@ -10,6 +8,8 @@ import ToolBarSearchBar from '../../components/tool-bar/ToolBarSearchBar';
 import TooltipBottomLeft from '../../components/elements/TooltipBottomLeft';
 import CoffeeGroupSection from './CoffeeGroupSection';
 import CoffeeSection from './CoffeeSection'
+import useBeans from '../../hooks/useBeans';
+import useRanges from '../../hooks/useRanges';
 
 const SHOW = {
   ALL: 'All',
@@ -26,12 +26,10 @@ const GROUPBY = {
   AROMA: 'aroma',
 }
 
-const ViewMyCoffees = () => {
+const ViewBeansList = () => {
   const userData = useUserData()
-  const attributeRangeList = useAttributeRangeList();
-  const fetchAttributeRangeList = useFetchAttributeRangeList();
-  const beanList = useBeanList()
-  const fetchBeanList = useFetchBeanList()
+  const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub)
+  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub)
 
   const [showState, setShowState] = useState(SHOW.ALL)
   const [groupState, setGroupState] = useState(GROUPBY.ROASTER)
@@ -39,63 +37,55 @@ const ViewMyCoffees = () => {
   const [sortedCoffeesHtmlDictionary, setSortedCoffeesHtmlDictionary] = useState({});
 
   const makeSortedCoffeesHtmlDictionary = async () => {
-    const attrRange = attributeRangeList[groupState + '_range']
+    const attrRange = rangeList[groupState + '_range']
     let coffeeHtmlDictionary = {}
     if (attrRange !== null && attrRange !== undefined) {
       coffeeHtmlDictionary = await Object.keys(attrRange).reduce(
-        (o, key) => ({ ...o, [key.replace('id-', '')]: []}), {}
+        (o, key) => ({ ...o, [key.replace('id-', '')]: [] }), {}
       ) // e.g. {1: [], 3: [], 4: [], 7:[]}
     }
     coffeeHtmlDictionary['No Group'] = []
 
-    try {
-      Object.values(beanList).forEach(bean => {
-        const beanIsApplicableToShowState = showState === SHOW.ALL || 
-          (((showState === SHOW.SINGLE_ORIGIN) && bean['single_origin']) || 
+    beanList.map(bean => {
+      const beanIsApplicableToShowState = showState === SHOW.ALL ||
+        (((showState === SHOW.SINGLE_ORIGIN) && bean['single_origin']) ||
           ((showState === SHOW.BLEND) && !bean['single_origin']))
-        if (beanIsApplicableToShowState) {
-          let pushed = false
-          Object.keys(coffeeHtmlDictionary).forEach(attrId => {
-            if (bean[groupState].includes(parseInt(attrId))) {
-              coffeeHtmlDictionary[attrId].push(<CoffeeSection bean={bean} />)
-              pushed = true
-            }
-            else if (Object.keys(bean['blend_ratio']).length !== 0) {
-              Object.keys(bean['blend_ratio']).forEach(blendBeanId => {
-                if (beanList[blendBeanId][groupState].includes(parseInt(attrId))) {
-                  coffeeHtmlDictionary[attrId].push(<CoffeeSection bean={bean} />)
-                  pushed = true
-                }
-              })
-            }
-          })
-          if (!pushed) {
-            coffeeHtmlDictionary['No Group'].push(<CoffeeSection bean={bean} />)
+
+      if (beanIsApplicableToShowState) {
+        let pushed = false
+        Object.keys(coffeeHtmlDictionary).forEach(attrId => {
+          if (bean[groupState].includes(parseInt(attrId))) {
+            coffeeHtmlDictionary[attrId].push(<CoffeeSection bean={bean} />)
+            pushed = true
           }
+          else if (Object.keys(bean['blend_ratio']).length !== 0) {
+            Object.keys(bean['blend_ratio']).forEach(blendBeanId => {
+              if (beanList?.find(d => d.bean_id == blendBeanId)[groupState].includes(parseInt(attrId))) {
+                coffeeHtmlDictionary[attrId].push(<CoffeeSection bean={bean} />)
+                pushed = true
+              }
+            })
+          }
+        })
+        if (!pushed) {
+          coffeeHtmlDictionary['No Group'].push(<CoffeeSection bean={bean} />)
         }
-      })
-    } catch (error) {
-      throw new Error(error);
-    }
+      }
+    })
     setSortedCoffeesHtmlDictionary(coffeeHtmlDictionary)
   }
-  
+
 
   useEffect(() => {
     window.scroll({ top: 0, behavior: 'smooth' });
-    if (Object.keys(attributeRangeList).length === 0) {
-      fetchAttributeRangeList(userData.sub);
-    }
-    if (Object.keys(beanList).length === 0) {
-      fetchBeanList(userData.sub);
-    }
-  },[])
+  }, [])
 
   useEffect(() => {
-    makeSortedCoffeesHtmlDictionary();
-    setSearchValue("")
-  }, 
-  [beanList, attributeRangeList, showState, groupState]);
+    if (!beanListIsLoading && !rangeListIsLoading) {
+      makeSortedCoffeesHtmlDictionary();
+      setSearchValue("")
+    }
+  },[beanListIsLoading, rangeListIsLoading, beanList, rangeList, showState, groupState]);
 
   useEffect(async () => {
     Object.values(sortedCoffeesHtmlDictionary).forEach(group => {
@@ -111,7 +101,7 @@ const ViewMyCoffees = () => {
         })
 
         const coffeeList = document.getElementsByClassName(coffeeSection.props.bean['bean_id'])
-        
+
         if (coffeeList && !show) {
           for (let coffee of coffeeList) {
             coffee.classList.add('hidden')
@@ -126,6 +116,10 @@ const ViewMyCoffees = () => {
     })
   }, [searchValue])
 
+  if (beanListIsLoading || rangeListIsLoading) {
+    return 'loading...'
+  } 
+  
   return (
     <>
       <div className="px-4 pt-8 w-full max-w-980px mx-auto">
@@ -138,17 +132,17 @@ const ViewMyCoffees = () => {
               return <ToolbarDropdownButton
                 title={state}
                 active={showState === state}
-                onClick={() => {setShowState(state)}}
+                onClick={() => { setShowState(state) }}
               />
             })}
           </ToolbarDropdown>
 
           <ToolbarDropdown title={`group by ${groupState}`}>
-            { Object.values(GROUPBY).map((state) => {
+            {Object.values(GROUPBY).map((state) => {
               return <ToolbarDropdownButton
                 title={state}
                 active={groupState === state}
-                onClick={() => {setGroupState(state)}}
+                onClick={() => { setGroupState(state) }}
               />
             })}
           </ToolbarDropdown>
@@ -157,7 +151,7 @@ const ViewMyCoffees = () => {
               value={searchValue}
               onChange={setSearchValue}
             />
-            <TooltipBottomLeft 
+            <TooltipBottomLeft
               tooltipText="The search filter applies to the Name, Altitude, Harvest Period, and Roast Date."
             >
               <div className="flex items-center">
@@ -166,26 +160,26 @@ const ViewMyCoffees = () => {
             </TooltipBottomLeft>
           </div>
         </ToolBar>
-        
-        { attributeRangeList[groupState + '_range'] 
-            ? 
+
+        {rangeList[groupState + '_range']
+          ?
           Object.keys(sortedCoffeesHtmlDictionary).map(attrId => {
             if (Object.keys(sortedCoffeesHtmlDictionary[attrId]).length > 0) {
-              const title = attributeRangeList[groupState + '_range']['id-' + attrId] ? 
-                attributeRangeList[groupState + '_range']['id-' + attrId]['label'] : attrId
+              const title = rangeList[groupState + '_range']['id-' + attrId] ?
+                rangeList[groupState + '_range']['id-' + attrId]['label'] : attrId
               return (
                 <CoffeeGroupSection title={title}>
-                  { sortedCoffeesHtmlDictionary[attrId]
-                      ?
+                  {sortedCoffeesHtmlDictionary[attrId]
+                    ?
                     Object.values(sortedCoffeesHtmlDictionary[attrId]).map(html => html)
-                      :
+                    :
                     null
                   }
                 </CoffeeGroupSection>
               )
             }
           })
-            :
+          :
           null
         }
       </div>
@@ -193,4 +187,4 @@ const ViewMyCoffees = () => {
   )
 }
 
-export default ViewMyCoffees
+export default ViewBeansList

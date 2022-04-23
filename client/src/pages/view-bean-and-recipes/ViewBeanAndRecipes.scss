@@ -1,0 +1,36 @@
+.coffee-bag-container {
+  width: 200px;
+}
+
+.coffee-detail-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px dashed lightgray;
+
+  label {
+    font-weight: 500;
+    margin-right: 0.75rem
+  }
+}
+
+.coffee-details-table tr:not(:last-child) {
+  border-bottom: solid 1px #CCC5B9;
+}
+
+.coffee-details-table th {
+  padding: 1rem 1rem 1rem 2rem;
+}
+
+.coffee-details-table td {
+  padding: 1rem 2rem 1rem 1rem;
+}
+
+.slash-end {
+  span {
+    &:not(:last-child):after {
+      content: " / ";
+    }
+  }
+}

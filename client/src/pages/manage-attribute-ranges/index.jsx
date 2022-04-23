@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
-import { useAttributeRangeList, useFetchAttributeRangeList, useInsertAttribute, useEditAttribute, useDeleteAttribute } from '../../context/AttributeRangeContext';
+import { useFetchAttributeRangeList, useInsertAttribute, useEditAttribute, useDeleteAttribute } from '../../context/AttributeRangeContext';
 import { useUserData } from '../../context/AccountContext';
 import ToolBar from '../../components/tool-bar';
 import ToolBarButton from '../../components/tool-bar/ToolBarButton';
@@ -11,6 +11,9 @@ import AddEditForm from './components/AddEditForm';
 import NameInput from './components/NameInput';
 import DetailsTextarea from './components/DetailsTextarea';
 import DeleteModal from '../../components/delete-modal'
+import useRange from '../../hooks/useRange';
+import useRanges from '../../hooks/useRanges';
+import useEditRange from '../../hooks/useEditRange';
 
 const MODE = {
   ADD: 'add',
@@ -20,11 +23,13 @@ const MODE = {
 
 const ManageAttributeRanges = ({cat}) => {
   const userData = useUserData()
-  const attributeRangeList = useAttributeRangeList()
+  const { data: range , isLoading: rangeIsLoading } = useRange(userData.sub, cat)
+  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub)
   const fetchAttributeRangeList = useFetchAttributeRangeList()
   const insertAttribute = useInsertAttribute()
   const editAttribute = useEditAttribute()
   const deleteAttribute = useDeleteAttribute()
+  const editRange = useEditRange(userData.sub, cat)
 
   const [attribute, setAttribute] = useState({ value: '', label: '', def: '' });
   const [modal, setModal] = useState({ mode: '', isOpen: false });
@@ -77,7 +82,7 @@ const ManageAttributeRanges = ({cat}) => {
     }
   }
 
-  const onEditSubmit = async (event) => {
+  const onEditSubmit = (event) => {
     event.preventDefault();
     if (attribute.label.length === 0) {
       toast.error("Name cannot be empty.", {
@@ -85,17 +90,14 @@ const ManageAttributeRanges = ({cat}) => {
       });
       return;
     }
-    const editSuccess = await editAttribute(
-      userData.sub, 
-      cat, 
-      attribute.value, 
-      { "label": attribute.label, "def": attribute.def.replace(/(\r\n|\n|\r)/gm, " ") }
-    );
-    if (editSuccess) {
-      setModal({ mode: '', isOpen: false })
-      fetchAttributeRangeList(userData.sub)
-    }
+    editRange.mutate(attribute)
   }
+
+  useEffect(() => {
+    if (editRange.isSuccess) {
+      setModal({ mode: '', isOpen: false })
+    }
+  }, [editRange.isSuccess])
 
   const onDeleteSubmit = async (event) => {
     event.preventDefault();
@@ -107,41 +109,35 @@ const ManageAttributeRanges = ({cat}) => {
   } 
 
   useEffect(() => {
-    if (Object.keys(attributeRangeList).length === 0) {
-      fetchAttributeRangeList(userData.sub);
+    if (!rangeIsLoading && Object.keys(range).length !== 0) {
+      let elements = [];
+      Object.keys(range).forEach(key => {
+        const item = range[key];
+        elements.push(
+          <Row 
+            category={cat}
+            value={item['value']}
+            label={item['label']}
+            def={item['def']}
+            onEditClick={() => {
+              setAttribute({ value: item['value'], label: item['label'], def: item['def'] });
+              setModal({ mode: MODE.EDIT, isOpen: true })
+            }}
+            onDeleteClick={() => {
+              setAttribute({...attribute, value: item['value'], label: item['label'] })
+              setModal({ mode: MODE.DELETE, isOpen: true })
+            }}
+          />
+        )
+      });
+      setAttributeListHtml(elements);
     }
-  }, []);
+    else setAttributeListHtml( [<tr><td className="text-center bg-white" colspan="3">There's no entry for this range.</td></tr>] );
+  }, [range, cat]);
 
-  useEffect(() => {
-    if (Object.keys(attributeRangeList).length !== 0) {
-      const attributeRange = attributeRangeList[cat + "_range"];
-      if (Object.keys(attributeRange).length > 0) {
-        let elements = [];
-        Object.keys(attributeRange).forEach(key => {
-          const item = attributeRange[key];
-          elements.push(
-            <Row 
-              category={cat}
-              value={item['value']}
-              label={item['label']}
-              def={item['def']}
-              onEditClick={() => {
-                setAttribute({ value: item['value'], label: item['label'], def: item['def'] });
-                setModal({ mode: MODE.EDIT, isOpen: true })
-              }}
-              onDeleteClick={() => {
-                setAttribute({...attribute, value: item['value'], label: item['label'] })
-                setModal({ mode: MODE.DELETE, isOpen: true })
-              }}
-            />
-          )
-        });
-        setAttributeListHtml(elements);
-      }
-      else setAttributeListHtml( [<tr><td className="text-center bg-white" colspan="3">There's no entry for this range.</td></tr>] );
-    }
-  }, [attributeRangeList, cat]);
-
+  if (rangeIsLoading) {
+    return 'loading...'
+  }
   return (
     <>
       <div className="px-2 md:px-4 pt-8">
