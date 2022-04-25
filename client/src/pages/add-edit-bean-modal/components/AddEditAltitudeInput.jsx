@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import FormInput from '../../elements/FormInput';
+import FormInput from '../../../components/elements/FormInput';
 import { escapeHtml } from '../../../utils/HtmlConverter';
 
 const AddEditAltitudeInput = ({bean, setBean}) => {

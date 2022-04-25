@@ -3,16 +3,16 @@ import { useUserData } from '../../context/AccountContext';
 import { useInsertAttribute } from '../../context/AttributeRangeContext';
 import { unescapeHtml } from '../../utils/HtmlConverter'
 import './modals.scss'
-import ModalWrapperContainer from '../elements/ModalWrapperContainer';
+import ModalWrapperContainer from '../../components/elements/ModalWrapperContainer';
 import StepsTab from './components/StepsTab';
-import FormInput from '../elements/FormInput';
-import FormRadio from '../elements/FormRadio';
-import FormMultiSelect from '../elements/FormMultiSelect';
-import RedOutlineButton from '../elements/RedOutlineButton';
-import BlueButton from '../elements/BlueButton';
+import FormInput from '../../components/elements/FormInput';
+import FormRadio from '../../components/elements/FormRadio';
+import FormMultiSelect from '../../components/elements/FormMultiSelect';
+import RedOutlineButton from '../../components/elements/RedOutlineButton';
+import BlueButton from '../../components/elements/BlueButton';
 import InputConfirmSection from './components/InputConfirmSection';
 import MultiselectConfirmSection from './components/MultiselectConfirmSection';
-import PencilAltIconButton from '../elements/PencilAltIconButton';
+import PencilAltIconButton from '../../components/elements/PencilAltIconButton';
 import FormBlendRatioInput from './components/FormBlendRatioInput';
 import AddEditNameInput from './components/AddEditNameInput';
 import AddEditGradeInput from './components/AddEditGradeInput';
@@ -309,7 +309,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   }, [blendRatios])
 
   useEffect(() => {
-    if (mode === 'edit' && selectedBlendBeans.length === 0 && Object.keys(targetBean['blend_ratio']).length !== 0) {
+    if (mode === 'edit' && selectedBlendBeans.length === 0 && targetBean['blend_ratio']) {
       Object.keys(targetBean['blend_ratio']).forEach(id => {
         setBlendRatio(id, targetBean['blend_ratio'][id])
         innerSetSelectedBlendBeans(selectedBlendBeans => [
@@ -679,8 +679,8 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
               onClick={setOpenDetailsTab}
             />
             <BlueButton
-              text="Submit"
-              disabled={!tabState.canGoToConfirmation}
+              text={editBean.isLoading || addBean.isLoading ? 'Submitting...' : 'Submit'}
+              disabled={!tabState.canGoToConfirmation || editBean.isLoading || addBean.isLoading}
               onClick={onSubmit}
             />
           </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { escapeHtml } from '../../../utils/HtmlConverter';
-import FormInput from '../../elements/FormInput';
+import FormInput from '../../../components/elements/FormInput';
 
 const AddEditHarvestPeriodInput = ({bean, setBean}) => {
 
