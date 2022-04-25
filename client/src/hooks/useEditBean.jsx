@@ -9,8 +9,8 @@ export default function useEditBean(userid) {
     (bean) => api.editBean(userid, bean),
     {
       enabled: Boolean(userid),
-      onSuccess: (bean, variables) => {
-        queryClient.invalidateQueries(['beans', { bean_id :variables.bean_id }], bean)
+      onSuccess: async (variables) => {
+        await queryClient.refetchQueries(['beans', variables.bean_id])
         myToast('success', 'Coffee bean is edited successfully.')
       },
       onError: error => {

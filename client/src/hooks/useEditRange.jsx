@@ -6,17 +6,18 @@ export default function useEditRange(userid, rangeName) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (range) => api.editRange(userid, rangeName, range.value, range),
+    (range) => {
+      return api.editRange(userid, rangeName, range.value, range)
+    },
     {
       enabled: Boolean(userid),
-      onSuccess: (range, variables) => {
-        console.log('range: ', range)
-        queryClient.invalidateQueries(['ranges'], range)
-        myToast('success', `${variables.label} is edited successfully.`)
+      onSuccess: async () => {
+        await queryClient.refetchQueries(['ranges', `${rangeName}_range`])
+        myToast('success', `Entry is edited successfully.`)
       },
       onError: error => {
-        myToast('error', error.message ? error.message : 'An unknown error has ocurred.')
-      }
+        myToast('error', error.message ?? 'An unknown error has ocurred.')
+      },
     }
   )
 }

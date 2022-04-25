@@ -9,8 +9,8 @@ export default function useAddBean(userid) {
     (bean) => api.addBean(userid, bean),
     {
       enabled: Boolean(userid),
-      onSuccess: () => {
-        queryClient.invalidateQueries('beans')
+      onSuccess: async () => {
+        await queryClient.refetchQueries('beans')
         myToast('success', 'Coffee bean is added successfully.')
       },
       onError: error => {
