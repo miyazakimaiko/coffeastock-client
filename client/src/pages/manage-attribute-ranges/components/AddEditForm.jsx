@@ -1,6 +1,6 @@
 import React from 'react'
 
-const AddEditForm = ({children, onCloseClick, onSubmit}) => {
+const AddEditForm = ({children, onCloseClick, isLoading, onSubmit}) => {
   return (
     <div className="content">
       <form
@@ -21,11 +21,11 @@ const AddEditForm = ({children, onCloseClick, onSubmit}) => {
               Cancel
             </button>
             <button
-              className="bg-blue text-white opacity-80 
-              hover:opacity-100    
+              className="bg-blue text-white opacity-80 hover:opacity-100    
               px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
+              disabled={isLoading}
               type="submit">
-              Save
+                {isLoading ? 'Saving...' : 'Save'}
             </button>
           </div>
         </div>

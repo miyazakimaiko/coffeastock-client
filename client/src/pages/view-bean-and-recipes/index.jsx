@@ -10,15 +10,15 @@ import { useRecipeList, useFetchRecipeList } from '../../context/RecipeContext';
 import TooltipLeft from '../../components/elements/TooltipLeft';
 import CoffeeAttributeSection from './components/CoffeeAttributeSection';
 import ToolBar from '../../components/tool-bar';
-import AddEditBeanModal from '../../components/add-edit-bean-modal'
 import Dropdown from '../../components/elements/Dropdown';
-import DeleteModal from '../../components/delete-modal';
+import DeleteModal from '../delete-modal';
 import RecipeGroupSection from './components/RecipeGroupSection';
 import './ViewBeanAndRecipes.scss'
 import useBeans from '../../hooks/useBeans';
 import useBean from '../../hooks/useBean';
 import useDeleteBean from '../../hooks/useDeleteBean';
 import useRanges from '../../hooks/useRanges';
+import AddEditBeanModal from '../add-edit-bean-modal'
 
 
 const ViewBeanAndRecipes = () => {
@@ -53,10 +53,11 @@ const ViewBeanAndRecipes = () => {
   const makeHtmlTags = (targetBean, category) => {
     const result = [];
     if (targetBean[category]) {
+      const ranges = rangeList[`${category}_range`];
       targetBean[category].forEach(id => {
-        const range = rangeList[category + '_range'];
-        const label = unescapeHtml(range['id-' + id]['label']);
-        const info = unescapeHtml(range['id-' + id]['def']);
+        const range = ranges[`id-${id}`]
+        const label = unescapeHtml(range ? range['label'] : 'error');
+        const info = unescapeHtml(range ? range['def'] : 'error');
         const text = `${info === "" ? "No Info" : info}`
         result.push(
           <div 
@@ -77,8 +78,11 @@ const ViewBeanAndRecipes = () => {
 
   const makeNameListHtml = (category, targetBean) => {
     const ids = targetBean[category] ? targetBean[category] : [];
-    let nameListHtml = ids.map(
-      id => <span>{rangeList[category + '_range']["id-" + id]['label']}</span>
+    const ranges = rangeList[`${category}_range`]
+    let nameListHtml = ids.map(id => {
+      const range = ranges[`id-${id}`]
+      return <span>{range ? range['label'] : 'error'}</span>
+    }
     );
     if (nameListHtml.length === 0) {
       nameListHtml = <span>-</span>

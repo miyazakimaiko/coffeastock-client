@@ -4,13 +4,13 @@ import { useInsertAttribute } from '../../context/AttributeRangeContext';
 import { useRecipeList, useInsertRecipe, useUpdateRecipe } from '../../context/RecipeContext';
 import { unescapeHtml } from '../../utils/HtmlConverter'
 import './modals.scss'
-import ModalWrapperContainer from '../elements/ModalWrapperContainer';
+import ModalWrapperContainer from '../../components/elements/ModalWrapperContainer';
+import FormInput from '../../components/elements/FormInput';
+import FormMultiSelect from '../../components/elements/FormMultiSelect';
+import RedOutlineButton from '../../components/elements/RedOutlineButton';
+import BlueButton from '../../components/elements/BlueButton';
+import PencilAltIconButton from '../../components/elements/PencilAltIconButton';
 import StepsTab from './components/StepsTab';
-import FormInput from '../elements/FormInput';
-import FormMultiSelect from '../elements/FormMultiSelect';
-import RedOutlineButton from '../elements/RedOutlineButton';
-import BlueButton from '../elements/BlueButton';
-import PencilAltIconButton from '../elements/PencilAltIconButton';
 import AddEditGrindSizeInput from './components/AddEditGrindSizeInput';
 import AddEditGroundsWeightInput from './components/AddEditGroundsWeightInput';
 import AddEditWaterWeightInput from './components/AddEditWaterWeightInput';

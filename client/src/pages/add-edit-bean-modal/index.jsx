@@ -4,12 +4,12 @@ import { useInsertAttribute } from '../../context/AttributeRangeContext';
 import { unescapeHtml } from '../../utils/HtmlConverter'
 import './modals.scss'
 import ModalWrapperContainer from '../../components/elements/ModalWrapperContainer';
-import StepsTab from './components/StepsTab';
 import FormInput from '../../components/elements/FormInput';
 import FormRadio from '../../components/elements/FormRadio';
 import FormMultiSelect from '../../components/elements/FormMultiSelect';
 import RedOutlineButton from '../../components/elements/RedOutlineButton';
 import BlueButton from '../../components/elements/BlueButton';
+import StepsTab from './components/StepsTab';
 import InputConfirmSection from './components/InputConfirmSection';
 import MultiselectConfirmSection from './components/MultiselectConfirmSection';
 import PencilAltIconButton from '../../components/elements/PencilAltIconButton';

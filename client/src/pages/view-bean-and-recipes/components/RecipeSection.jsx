@@ -6,7 +6,7 @@ import { HiOutlineChevronDown, HiOutlineChevronUp } from 'react-icons/hi'
 import ChartRadarTaste from './ChartRadarTaste'
 import { generateStarIconList } from '../../../utils/GenerateIconList'
 import Dropdown from '../../../components/elements/Dropdown'
-import AddEditRecipeModal from '../../../components/add-edit-recipe-modal'
+import AddEditRecipeModal from '../../add-edit-recipe-modal'
 import useRanges from '../../../hooks/useRanges'
 import { useUserData } from '../../../context/AccountContext'
 

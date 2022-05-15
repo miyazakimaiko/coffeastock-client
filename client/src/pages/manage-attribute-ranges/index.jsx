@@ -10,10 +10,12 @@ import AddEditModal from './components/AddEditModal';
 import AddEditForm from './components/AddEditForm';
 import NameInput from './components/NameInput';
 import DetailsTextarea from './components/DetailsTextarea';
-import DeleteModal from '../../components/delete-modal'
+import DeleteModal from '../../pages/delete-modal'
 import useRange from '../../hooks/useRange';
-import useRanges from '../../hooks/useRanges';
 import useEditRange from '../../hooks/useEditRange';
+import myToast from '../../utils/myToast';
+import useAddRange from '../../hooks/useAddRange';
+import useDeleteRange from '../../hooks/useDeleteRange';
 
 const MODE = {
   ADD: 'add',
@@ -24,12 +26,9 @@ const MODE = {
 const ManageAttributeRanges = ({cat}) => {
   const userData = useUserData()
   const { data: range , isLoading: rangeIsLoading } = useRange(userData.sub, cat)
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub)
-  const fetchAttributeRangeList = useFetchAttributeRangeList()
-  const insertAttribute = useInsertAttribute()
-  const editAttribute = useEditAttribute()
-  const deleteAttribute = useDeleteAttribute()
   const editRange = useEditRange(userData.sub, cat)
+  const addRange = useAddRange(userData.sub, cat)
+  const deleteRange = useDeleteRange(userData.sub, cat)
 
   const [attribute, setAttribute] = useState({ value: '', label: '', def: '' });
   const [modal, setModal] = useState({ mode: '', isOpen: false });
@@ -63,53 +62,37 @@ const ManageAttributeRanges = ({cat}) => {
       });
       return;
     }
-    const insertStatus = await insertAttribute(
-      userData.sub,
-      cat, 
-      { "label": attribute.label, "def": attribute.def.replace(/(\r\n|\n|\r)/gm, " ") }
-    );
-    if (typeof insertStatus === 'object') {
-      toast.error(insertStatus.error.message, {
-        position: toast.POSITION.BOTTOM_CENTER
-      });
+    const body = { 
+      "label": attribute.label, 
+      "def": attribute.def.replace(/(\r\n|\n|\r)/gm, " "),
+      "countInUse": 0
     }
-    else if (insertStatus === true) {
-      toast.success("Entry is added successfully.", {
-        position: toast.POSITION.BOTTOM_CENTER
-      });
-      setModal({ mode: '', isOpen: false })
-      fetchAttributeRangeList(userData.sub);
-    }
+    addRange.mutate(body)
   }
 
   const onEditSubmit = (event) => {
     event.preventDefault();
     if (attribute.label.length === 0) {
-      toast.error("Name cannot be empty.", {
-        position: toast.POSITION.BOTTOM_CENTER
-      });
+      myToast('error', 'Name cannot be empty.')
       return;
     }
-    editRange.mutate(attribute)
+    const decodedAttribute = {...attribute, "def": attribute.def.replace(/(\r\n|\n|\r)/gm, " ")}
+    editRange.mutate(decodedAttribute)
   }
-
-  useEffect(() => {
-    if (editRange.isSuccess) {
-      setModal({ mode: '', isOpen: false })
-    }
-  }, [editRange.isSuccess])
 
   const onDeleteSubmit = async (event) => {
     event.preventDefault();
-    const deleteSuccess = await deleteAttribute(userData.sub, cat, attribute.value);
-    if (deleteSuccess) {
-      setModal({ mode: '', isOpen: false })
-      fetchAttributeRangeList(userData.sub)
-    }
-  } 
+    deleteRange.mutate(attribute.value)
+  }
 
   useEffect(() => {
-    if (!rangeIsLoading && Object.keys(range).length !== 0) {
+    if (editRange.isSuccess || addRange.isSuccess || deleteRange.isSuccess) {
+      setModal({ mode: '', isOpen: false })
+    }
+  }, [editRange.isSuccess, addRange.isSuccess, deleteRange.isSuccess])
+
+  useEffect(() => {
+    if (!rangeIsLoading && range) {
       let elements = [];
       Object.keys(range).forEach(key => {
         const item = range[key];
@@ -163,6 +146,7 @@ const ManageAttributeRanges = ({cat}) => {
         onCloseClick={() => setModal({ mode: '', isOpen: false })}>
           <AddEditForm
             category={cat}
+            isLoading={editRange.isLoading}
             onCloseClick={() => setModal({ mode: '', isOpen: false })}
             onSubmit={modal.mode === MODE.ADD ? onAddSubmit : modal.mode === MODE.EDIT ? onEditSubmit : null}
           >
