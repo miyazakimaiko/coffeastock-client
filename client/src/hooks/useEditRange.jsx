@@ -6,8 +6,8 @@ export default function useEditRange(userid, rangeName) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (range) => {
-      return api.editRange(userid, rangeName, range.value, range)
+    (body) => {
+      return api.editRange(userid, rangeName, body.value, body)
     },
     {
       enabled: Boolean(userid),
