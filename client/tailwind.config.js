@@ -17,9 +17,6 @@ module.exports = {
         'yellow': '#F3BB44',
         'red': '#EB5E28'
       },
-      fontFamily: {
-        'sans': ['system-ui', ...defaultTheme.fontFamily.sans]
-      },
       width: {
         '550px': '550px'
       },
