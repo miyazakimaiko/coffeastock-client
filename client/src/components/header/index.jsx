@@ -7,8 +7,8 @@ import { MenuAlt2Icon, PlusIcon, XIcon } from '@heroicons/react/outline'
 import { NavStateContext } from '../../context/NavStateContext';
 import { useUserData, useSetAuthenticated, useSignout } from '../../context/AccountContext';
 import imgFace from '../../assets/images/face.jpg'
-import AddEditBeanModal from '../add-edit-bean-modal';
-import AddRecipeModal from '../add-edit-recipe-modal';
+import AddEditBeanModal from '../../pages/add-edit-bean-modal';
+import AddRecipeModal from '../../pages/add-edit-recipe-modal';
 import './header.scss'
 import Dropdown from '../elements/Dropdown';
 

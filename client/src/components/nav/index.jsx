@@ -4,8 +4,8 @@ import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, CogIcon, HomeIcon } from 
 import PushPinIcon from '../../assets/svgs/PushPinIcon'
 import { NavStateContext } from '../../context/NavStateContext'
 import './nav.scss'
-import AddEditBeanModal from '../add-edit-bean-modal'
-import AddEditRecipeModal from '../add-edit-recipe-modal'
+import AddEditBeanModal from '../../pages/add-edit-bean-modal'
+import AddEditRecipeModal from '../../pages/add-edit-recipe-modal'
 
 const MODE = {
   BEAN: 'bean',
