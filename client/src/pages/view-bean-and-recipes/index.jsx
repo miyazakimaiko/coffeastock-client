@@ -144,7 +144,7 @@ const ViewBeanAndRecipes = () => {
   }
 
   const onDeleteSubmit = async () => {
-    deleteBean.mutate(targetBean.bean_id)
+    deleteBean.mutate(targetBean)
     setModal({mode: '', isOpen: false})
   }
   
@@ -162,8 +162,7 @@ const ViewBeanAndRecipes = () => {
   },[]);
   
   useEffect(() => {
-    if (!targetBeanIsLoading) {
-      console.log('targetBean', targetBean)
+    if (!rangeListIsLoading && !targetBeanIsLoading) {
       setBeanAttrNames({
         ...beanAttrNames, 
         roaster: makeHtmlTags(targetBean, 'roaster'),

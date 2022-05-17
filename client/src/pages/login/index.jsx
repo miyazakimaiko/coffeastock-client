@@ -1,7 +1,7 @@
 import { LoginIcon } from '@heroicons/react/outline'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { toast } from 'react-toastify';
+import { Link, useNavigate } from 'react-router-dom'
+import toastOnBottomCenter from '../../utils/customToast';
 import { useAuthenticate, useGetSession, useSetUserData, useSetAuthenticated } from '../../context/AccountContext';
 
 
@@ -13,31 +13,26 @@ const Login = () => {
   const authenticate = useAuthenticate()
   const getSession = useGetSession()
   const setAuthenticated = useSetAuthenticated()
+  const navigate = useNavigate()
 
 
   const onSubmit = (event) => {
     event.preventDefault();
 
     if (email.length === 0 && password.length === 0) {
-      toast.error('Please enter Email Address and Password.', {
-        position: toast.POSITION.BOTTOM_CENTER
-      });
+      toastOnBottomCenter('error', 'Please enter Email Address and Password.')
     }
     else {
-      authenticate(email, password)
-      .then(data => {
+      authenticate(email, password).then(data => {
         getSession().then((session) => {
           setUserData(session);
           setAuthenticated(true);
-          toast.success("LOGGED IN!", {
-            position: toast.POSITION.BOTTOM_CENTER
-          })
+          navigate('/', {replace: true})
+          toastOnBottomCenter('success', 'Logged in successfully.')
         });
       })
       .catch(err => {
-        toast.error(err.message, {
-          position: toast.POSITION.BOTTOM_CENTER
-        });
+        toastOnBottomCenter('error', err.message)
       })
     }
   };

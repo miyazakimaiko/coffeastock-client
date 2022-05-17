@@ -1,6 +1,5 @@
 import React, { useEffect, useCallback, useState, createRef } from 'react'
 import { useUserData } from '../../context/AccountContext';
-import { useInsertAttribute } from '../../context/AttributeRangeContext';
 import { unescapeHtml } from '../../utils/HtmlConverter'
 import './modals.scss'
 import ModalWrapperContainer from '../../components/elements/ModalWrapperContainer';
@@ -24,15 +23,16 @@ import useAddBean from '../../hooks/useAddBean';
 import useEditBean from '../../hooks/useEditBean';
 import useBeans from '../../hooks/useBeans';
 import useRanges from '../../hooks/useRanges';
+import useAddRange from '../../hooks/useAddRange';
 
 
 const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   const userData = useUserData()
-  const insertAttribute = useInsertAttribute()
   const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub)
   const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub)
   const addBean = useAddBean(userData.sub)
   const editBean = useEditBean(userData.sub)
+  const addRange = useAddRange(userData.sub)
 
   const [bean, setBean] = useState({
     bean_id: null,
@@ -213,10 +213,10 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
       'variety': getNewRangeList(selectedVariety)
     }
 
-    for (const [category, entries] of Object.entries(newRangeList)) {
+    for (const [rangeName, entries] of Object.entries(newRangeList)) {
       for await (const entry of entries) {
-        const body = { "label": entry.label, "def": "" };
-        await insertAttribute(userData.sub, category, body);
+        const body = { "label": entry.label, "def": "" }
+        await addRange.mutate({ rangeName,body })
       }
     }
   }
@@ -248,6 +248,21 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
 
   useEffect(() => {
     if (processEditSubmit && bean.label !== null) {
+      if (bean.single_origin) {
+        bean.blend_ratio = {}
+        bean.blend_bean_id_1 = null;
+        bean.blend_bean_id_2 = null;
+        bean.blend_bean_id_3 = null;
+        bean.blend_bean_id_4 = null;
+        bean.blend_bean_id_5 = null;
+      }
+      else {
+        bean.origin = [];
+        bean.farm = [];
+        bean.variety = [];
+        bean.process = [];
+        bean.variety = [];
+      }
       editBean.mutate(bean)
     }
   }, [processEditSubmit])
@@ -300,9 +315,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
         title={beanList.find(d => d.bean_id == id)['label']}
         name={id}
         value={blendRatios[id]}
-        onChange={e => {
-          setBlendRatio(id, e.target.value);
-        }}
+        onChange={e => setBlendRatio(id, e.target.value)}
       />
       setBlendRatioHtmlDict(blendRatioHtmlDict => ({...blendRatioHtmlDict, ...html}))
     })
@@ -453,7 +466,9 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
               <FormMultiSelect 
                 title="Blend of"
                 required={true}
-                options={Object.values(beanList).map(({ bean_id: value, ...rest }) => ({ value, ...rest } ))}
+                options={Object.values(beanList).map(
+                  ({ bean_id: value, ...rest }) => ({ value, isDisabled: bean.bean_id === value, ...rest })
+                )}
                 value={selectedBlendBeans}
                 onChange={e => setSelectedBlendBeans(e)}
               />

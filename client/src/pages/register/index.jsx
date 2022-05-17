@@ -1,15 +1,17 @@
 import { BookOpenIcon, GlobeIcon, LightBulbIcon } from '@heroicons/react/outline'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import CoffeeBagLeft from '../../assets/svgs/CoffeeBagLeft'
 import UserPool from '../../utils/UserPool'
 import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
+import toastOnBottomCenter from '../../utils/customToast'
 
 const Register = () => {
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate()
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -23,20 +25,15 @@ const Register = () => {
 
     UserPool.signUp(email, password, attributes, null, (err, data) => {
       if (err) {
-        toast.error(err.message, {
-          position: toast.POSITION.BOTTOM_CENTER
-        });
+        toastOnBottomCenter('error', err.message)
       } else {
         try {
           const userId = data.userSub;
           setDefaultAttributeRange(userId);
-          toast.success("Registered successfully!", {
-            position: toast.POSITION.BOTTOM_CENTER
-          });
+          navigate('/login', {replace: true})
+          toastOnBottomCenter('success', 'Registered successfully!')
         } catch (error) {
-          toast.error(error.message, {
-            position: toast.POSITION.BOTTOM_CENTER
-          });
+          toastOnBottomCenter('error', error.message)
         }
       }
     });
@@ -44,7 +41,7 @@ const Register = () => {
 
   const setDefaultAttributeRange = async (userid) => {
     try {
-      const response = await fetch(
+      await fetch(
         `http://localhost:4000/api/v1/user/${userid}`,
         {
           method: "POST",
@@ -53,188 +50,222 @@ const Register = () => {
           },
           body: JSON.stringify({
             "origin_range": {
-              "next_id": 6,
-              "range": {
+              "nextId": 6,
+              "items": {
                 "3" : {
                   "label": "Yirgacheffe, Ethiopia",
-                  "def": "Location details here..."
+                  "def": "Location details here...",
+                  "inUse": 0
                 },
                 "2": {
                   "label": "Sidamo, Ethiopia",
-                  "def": "Location details here..."
+                  "def": "Location details here...",
+                  "inUse": 0
                 },
                 "5": {
                   "label": "Kaffa, Ethiopia",
-                  "def": "Location details here..."
+                  "def": "Location details here...",
+                  "inUse": 0
                 },
                 "4": {
                   "label": "Ruiri, Kenya",
-                  "def": "Location details here..."
+                  "def": "Location details here...",
+                  "inUse": 0
                 },
                 "1": {
                   "label": "Thika, Kenya",
-                  "def": "Location details here..."
+                  "def": "Location details here...",
+                  "inUse": 0
                 }
               }
             },
             "farm_range": {
-              "next_id": 4,
-              "range": {
+              "nextId": 4,
+              "items": {
                 "3" : {
                   "label": "Farm 1",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 },
                 "2": {
                   "label": "Farm 2",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 },
                 "1": {
                   "label": "Farm 3",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 }
               }
             },
             "variety_range": {
-              "next_id": 4,
-              "range": {
+              "nextId": 4,
+              "items": {
                 "1" : {
                   "label": "Typica",
-                  "def": "Details what typica is..."
+                  "def": "Details what typica is...",
+                  "inUse": 0
                 },
                 "3": {
                   "label": "Caturra",
-                  "def": "Details what caturra is..."
+                  "def": "Details what caturra is...",
+                  "inUse": 0
                 },
                 "2": {
                   "label": "Burbon",
-                  "def": "Details what Burbon is..."
+                  "def": "Details what Burbon is...",
+                  "inUse": 0
                 }
               }
             },
             "process_range": {
-              "next_id": 4,
-              "range": {
+              "nextId": 4,
+              "items": {
                 "1" : {
                   "label": "Washed",
-                  "def": "Details what washed is..."
+                  "def": "Details what washed is...",
+                  "inUse": 0
                 },
                 "2": {
                   "label": "Semi-Washed",
-                  "def": "Details what semi-washed is..."
+                  "def": "Details what semi-washed is...",
+                  "inUse": 0
                 },
                 "3": {
                   "label": "Natural",
-                  "def": "Details what natural is..."
+                  "def": "Details what natural is...",
+                  "inUse": 0
                 }
               }
             },
             "roaster_range": {
-              "next_id": 4,
-              "range": {
+              "nextId": 4,
+              "items": {
                 "3" : {
                   "label": "Coffeeangel",
-                  "def": "Definition of Coffeeangel..."
+                  "def": "Definition of Coffeeangel...",
+                  "inUse": 0
                 },
                 "1": {
                   "label": "Coffee Collective",
-                  "def": "Coffee Collective definition..."
+                  "def": "Coffee Collective definition...",
+                  "inUse": 0
                 },
                 "2": {
                   "label": "Koppi",
-                  "def": "Koppi details..."
+                  "def": "Koppi details...",
+                  "inUse": 0
                 }
               }
             },
             "method_range": {
-              "next_id": 4,
-                "range": {
+              "nextId": 4,
+                "items": {
                 "1" : {
                   "label": "French Press",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 },
                 "3": {
                   "label": "Espresso",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 },
                 "2": {
                   "label": "Mocha Pot",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 }
               }
             },
             "water_range": {
-              "next_id": 3,
-              "range": {
+              "nextId": 3,
+              "items": {
                 "2" : {
                   "label": "Water 1",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 },
                 "1": {
                   "label": "Water 2",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 }
               }
             },
             "grinder_range": {
-              "next_id": 4,
-              "range": {
+              "nextId": 4,
+              "items": {
                 "2" : {
                   "label": "Hario Mini Handmill",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 },
                 "3": {
                   "label": "EKS",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 },
                 "1": {
                   "label": "Sage espresso grinder",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 }
               }
             },
             "palate_range": {
-              "next_id": 7,
-              "range": {
+              "nextId": 7,
+              "items": {
                 "5" : {
                   "label": "sweet",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 },
                 "2": {
                   "label": "aclabelic",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 },
                 "4": {
                   "label": "cherries",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 },
                 "1" : {
                   "label": "stonefruit",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 },
                 "6": {
                   "label": "citrus fruit",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 },
                 "3": {
                   "label": "chocolate",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 }
               }
             },
             "aroma_range": {
-              "next_id": 5,
-              "range": {
+              "nextId": 5,
+              "items": {
                 "4" : {
                   "label": "Walnut",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 },
                 "2": {
                   "label": "Peach",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 },
                 "1": {
                   "label": "Pineapple",
-                  "def": "details..."
+                  "def": "details...",
+                  "inUse": 0
                 },
                 "3" : {
                   "label": "Green apple",
@@ -247,9 +278,7 @@ const Register = () => {
       );
 
     } catch (error) {
-      toast.error(error.message, {
-        position: toast.POSITION.BOTTOM_CENTER
-      });
+      toastOnBottomCenter('error', error.message)
     }
   }
 

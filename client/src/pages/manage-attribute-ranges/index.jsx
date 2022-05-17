@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { toast } from 'react-toastify'
-import { useFetchAttributeRangeList, useInsertAttribute, useEditAttribute, useDeleteAttribute } from '../../context/AttributeRangeContext';
 import { useUserData } from '../../context/AccountContext';
 import ToolBar from '../../components/tool-bar';
 import ToolBarButton from '../../components/tool-bar/ToolBarButton';
@@ -13,7 +11,7 @@ import DetailsTextarea from './components/DetailsTextarea';
 import DeleteModal from '../../pages/delete-modal'
 import useRange from '../../hooks/useRange';
 import useEditRange from '../../hooks/useEditRange';
-import myToast from '../../utils/myToast';
+import toastOnBottomCenter from '../../utils/customToast';
 import useAddRange from '../../hooks/useAddRange';
 import useDeleteRange from '../../hooks/useDeleteRange';
 
@@ -26,11 +24,11 @@ const MODE = {
 const ManageAttributeRanges = ({cat}) => {
   const userData = useUserData()
   const { data: range , isLoading: rangeIsLoading } = useRange(userData.sub, cat)
-  const editRange = useEditRange(userData.sub, cat)
-  const addRange = useAddRange(userData.sub, cat)
-  const deleteRange = useDeleteRange(userData.sub, cat)
+  const editRange = useEditRange(userData.sub)
+  const addRange = useAddRange(userData.sub)
+  const deleteRange = useDeleteRange(userData.sub)
 
-  const [attribute, setAttribute] = useState({ value: '', label: '', def: '' });
+  const [rangeItem, setRangeItem] = useState({ value: '', label: '', def: '' });
   const [modal, setModal] = useState({ mode: '', isOpen: false });
   const [attributeListHtml, setAttributeListHtml] = useState([]);
 
@@ -51,38 +49,48 @@ const ManageAttributeRanges = ({cat}) => {
     else {
       setNameWarningText(`${60 - name.length}/60`)
     }
-    setAttribute({...attribute, label: name})
+    setRangeItem({...rangeItem, label: name})
   }
 
   const onAddSubmit = async (event) => {
     event.preventDefault();
-    if (attribute.label.length === 0) {
-      toast.error('Name field is required.', {
-        position: toast.POSITION.BOTTOM_CENTER
-      });
+    if (rangeItem.label.length === 0) {
+      toastOnBottomCenter('error', 'Name field is required.')
       return;
     }
     const body = { 
-      "label": attribute.label, 
-      "def": attribute.def.replace(/(\r\n|\n|\r)/gm, " "),
-      "countInUse": 0
+      "label": rangeItem.label, 
+      "def": rangeItem.def.replace(/(\r\n|\n|\r)/gm, " "),
     }
-    addRange.mutate(body)
+    addRange.mutate({
+      rangeName: cat,
+      body: body
+    })
   }
 
   const onEditSubmit = (event) => {
     event.preventDefault();
-    if (attribute.label.length === 0) {
-      myToast('error', 'Name cannot be empty.')
-      return;
+    if (rangeItem.label.length === 0) {
+      toastOnBottomCenter('error', 'Name cannot be empty.')
+      return
     }
-    const decodedAttribute = {...attribute, "def": attribute.def.replace(/(\r\n|\n|\r)/gm, " ")}
-    editRange.mutate(decodedAttribute)
+    const decodedRangeItem = {
+      ...rangeItem, 
+      "def": rangeItem.def.replace(/(\r\n|\n|\r)/gm, " ")
+    }
+    editRange.mutate({
+      rangeName: cat, 
+      body: decodedRangeItem
+    })
   }
 
   const onDeleteSubmit = async (event) => {
     event.preventDefault();
-    deleteRange.mutate(attribute.value)
+    deleteRange.mutate({
+      rangeName: cat, 
+      body: rangeItem
+    })
+    setModal({ mode: '', isOpen: false })
   }
 
   useEffect(() => {
@@ -103,11 +111,11 @@ const ManageAttributeRanges = ({cat}) => {
             label={item['label']}
             def={item['def']}
             onEditClick={() => {
-              setAttribute({ value: item['value'], label: item['label'], def: item['def'] });
+              setRangeItem({...rangeItem, ...item});
               setModal({ mode: MODE.EDIT, isOpen: true })
             }}
             onDeleteClick={() => {
-              setAttribute({...attribute, value: item['value'], label: item['label'] })
+              setRangeItem({...rangeItem, ...item})
               setModal({ mode: MODE.DELETE, isOpen: true })
             }}
           />
@@ -115,7 +123,7 @@ const ManageAttributeRanges = ({cat}) => {
       });
       setAttributeListHtml(elements);
     }
-    else setAttributeListHtml( [<tr><td className="text-center bg-white" colspan="3">There's no entry for this range.</td></tr>] );
+    else setAttributeListHtml( [<tr><td className="text-center bg-white" colSpan="3">There's no entry for this range.</td></tr>] );
   }, [range, cat]);
 
   if (rangeIsLoading) {
@@ -128,7 +136,7 @@ const ManageAttributeRanges = ({cat}) => {
           <ToolBarButton 
             title={`New ${cat}`}
             onClick={() => {
-              setAttribute({ value: '', label: '', def: '' });
+              setRangeItem({ value: '', label: '', def: '' });
               setModal({ mode: MODE.ADD, isOpen: true })
             }}
           />
@@ -152,14 +160,14 @@ const ManageAttributeRanges = ({cat}) => {
           >
             <NameInput 
               category={cat}
-              nameValue={attribute.label}
+              nameValue={rangeItem.label}
               nameOnChange={e => setName(e.target.value)}
               nameWarningText={nameWarningText}
             />
             <DetailsTextarea 
               category={cat}
-              detailsValue={attribute.def}
-              detailsOnChange={e => setAttribute({...attribute, def: e.target.value})}
+              detailsValue={rangeItem.def}
+              detailsOnChange={e => setRangeItem({...rangeItem, def: e.target.value})}
             />
           </AddEditForm>
       </AddEditModal>
@@ -168,7 +176,7 @@ const ManageAttributeRanges = ({cat}) => {
       {modal.isOpen === true && modal.mode === MODE.DELETE
         ?
       <DeleteModal 
-        label={attribute.label}
+        label={rangeItem.label}
         onCloseClick={() => setModal({ mode: '', isOpen: false })}
         onDeleteSubmit={onDeleteSubmit}
       />
