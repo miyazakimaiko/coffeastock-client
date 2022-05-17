@@ -29,147 +29,179 @@ VALUES (
   '{
     "1" : {
       "label": "Yirgacheffe, Ethiopia",
-      "def": "Location details here..."
+      "def": "Location details here...",
+      "inUse": 0,
     },
     "2": {
       "label": "Sidamo, Ethiopia",
-      "def": "Location details here..."
+      "def": "Location details here...",
+      "inUse": 0,
     },
     "3": {
       "label": "Kaffa, Ethiopia",
-      "def": "Location details here..."
+      "def": "Location details here...",
+      "inUse": 0,
     },
     "4": {
       "label": "Ruiri, Kenya",
-      "def": "Location details here..."
+      "def": "Location details here...",
+      "inUse": 0,
     },
     "5": {
       "label": "Thika, Kenya",
-      "def": "Location details here..."
+      "def": "Location details here...",
+      "inUse": 0,
     }
   }',
   '{
     "1" : {
       "label": "Typica",
-      "def": "Details what typica is..."
+      "def": "Details what typica is...",
+      "inUse": 0,
     },
     "2": {
       "label": "Caturra",
-      "def": "Details what caturra is..."
+      "def": "Details what caturra is...",
+      "inUse": 0,
     },
     "3": {
       "label": "Burbon",
-      "def": "Details what Burbon is..."
+      "def": "Details what Burbon is...",
+      "inUse": 0,
     } 
   }', 
   '{
     "1" : {
       "label": "Washed",
-      "def": "Details what washed is..."
+      "def": "Details what washed is...",
+      "inUse": 0,
     },
     "2": {
       "label": "Semi-Washed",
-      "def": "Details what semi-washed is..."
+      "def": "Details what semi-washed is...",
+      "inUse": 0,
     },
     "3": {
       "label": "Natural",
-      "def": "Details what natural is..."
+      "def": "Details what natural is...",
+      "inUse": 0,
     }
   }', 
   '{
     "1" : {
       "label": "Coffeeangel",
-      "def": "Definition of Coffeeangel..."
+      "def": "Definition of Coffeeangel...",
+      "inUse": 0,
     },
     "2": {
       "label": "Coffee Collective",
-      "def": "Coffee Collective definition..."
+      "def": "Coffee Collective definition...",
+      "inUse": 0,
     },
     "3": {
       "label": "Koppi",
-      "def": "Koppi details..."
+      "def": "Koppi details...",
+      "inUse": 0,
     }
   }',
   '{
     "1" : {
       "label": "French Press",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     },
     "2": {
       "label": "Espresso",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     },
     "3": {
       "label": "Mocha Pot",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     }
   }',
   '{
     "1" : {
       "label": "Water 1",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     },
     "2": {
       "label": "Water 2",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     }
   }',
   '{
     "1" : {
       "label": "Hario Mini Handmill",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     },
     "2": {
       "label": "EKS",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     },
     "3": {
       "label": "Sage espresso grinder",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     }
   }',
   '{
     "1" : {
       "label": "sweet",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     },
     "2": {
       "label": "acidic",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     },
     "3": {
       "label": "cherries",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     },
     "4" : {
       "label": "stonefruit",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     },
     "5": {
       "label": "citrus fruit",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     },
     "6": {
       "label": "chocolate",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     }
   }',
   '{
     "1" : {
       "label": "Walnut",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     },
     "2": {
       "label": "Peach",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     },
     "3": {
       "label": "Pineapple",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     },
     "4" : {
       "label": "Green apple",
-      "def": "details..."
+      "def": "details...",
+      "inUse": 0,
     }
   }'
 );
@@ -180,20 +212,29 @@ CREATE TABLE BEANS (
     label varchar(60) NOT NULL,
     single_origin boolean NOT NULL,
     blend_ratio jsonb,
+    blend_bean_id_1 uuid,
+    blend_bean_id_2 uuid,
+    blend_bean_id_3 uuid,
+    blend_bean_id_4 uuid,
+    blend_bean_id_5 uuid,    
     origin INT [],
     farm INT [],
     variety INT [],
     process INT [],
     altitude varchar(60),
-    grade float,
+    grade NUMERIC(4, 1),
     harvest_period varchar(60),
     roaster INT [],
-    roast_level float,
+    roast_level NUMERIC(3, 1),
     roast_date date,
     aroma INT [],
     memo varchar(400),
-    FOREIGN KEY (user_id)
-        REFERENCES USERS (user_id)
+    FOREIGN KEY (user_id) REFERENCES USERS (user_id),
+    FOREIGN KEY (blend_bean_id_1) REFERENCES BEANS (bean_id),
+    FOREIGN KEY (blend_bean_id_2) REFERENCES BEANS (bean_id),
+    FOREIGN KEY (blend_bean_id_3) REFERENCES BEANS (bean_id),
+    FOREIGN KEY (blend_bean_id_4) REFERENCES BEANS (bean_id),
+    FOREIGN KEY (blend_bean_id_5) REFERENCES BEANS (bean_id)
 );
 
 INSERT INTO BEANS (
@@ -296,17 +337,17 @@ CREATE TABLE RECIPES (
     user_id varchar(255) NOT NULL,
     bean_id uuid NOT NULL,
     brew_date date,
-    total_rate float,
+    total_rate NUMERIC(4, 1),
     method INT,
     grinder INT,
-    grind_size float,
-    grounds_weight float,
-    water_weight float,
+    grind_size NUMERIC(7, 1),
+    grounds_weight NUMERIC(7, 1),
+    water_weight NUMERIC(7, 1),
     water INT,
-    water_temp float,
-    yield_weight float,
+    water_temp NUMERIC(7, 1),
+    yield_weight NUMERIC(7, 1),
     extraction_time interval,
-    tds float,
+    tds NUMERIC(4, 2),
     palate jsonb,
     memo text,
     FOREIGN KEY (user_id)
@@ -354,3 +395,7 @@ VALUES (
 -- Run
 -- create extension if not exists "uuid-ossp"; 
 -- on psql console inside the db to enable uuid
+
+DROP TABLE RECIPES;
+DROP TABLE BEANS;
+DROP TABLE USERS;
