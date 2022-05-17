@@ -6,15 +6,17 @@ const AddEditGradeInput = ({bean, setBean}) => {
   const [gradeWarningText, setGradeWarningText] = useState("");
 
   const setGrade = (grade) => {
-    if (grade < 0.0 || grade > 100.0) {
+    const gradeWithinRange = grade >= 0.0 && grade <= 100.0
+    if (!gradeWithinRange) {
       setGradeWarningText(<span className="text-red">Please enter a number between 0.0 and 100.0</span>)
-    } else {
+    }
+    else {
+      if (grade.length === 0) {
+        grade = null
+      }
+      setBean({...bean, grade});
       setGradeWarningText("")
     }
-    if (grade.length === 0) {
-      grade = null
-    }
-    setBean({...bean, grade});
   }
 
   return (
@@ -25,6 +27,7 @@ const AddEditGradeInput = ({bean, setBean}) => {
       name="grade"
       placeholder="e.g. 85.5"
       value={bean.grade}
+      onKeyDown={(e) =>["e", "E", "+", "-"].includes(e.key) && e.preventDefault()}
       onChange={e => setGrade(e.target.value)}
       warningText={gradeWarningText}
     />

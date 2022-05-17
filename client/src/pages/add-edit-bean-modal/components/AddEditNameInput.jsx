@@ -10,18 +10,22 @@ const AddEditNameInput = ({bean, setBean}) => {
     banned.forEach(char => {
       if (inputValue.includes(char)) includesBannedChar = true;
     })
-    if (inputValue.length === 0) {
-      setNameWarningText(<span className="text-red">* Required</span>);
-    } else if (includesBannedChar) {
+    if (!includesBannedChar) {
+      setBean({...bean, label: inputValue});  
+
+      if (inputValue.length === 0) {
+        setNameWarningText(<span className="text-red">* Required</span>);
+      } 
+      else if (inputValue.length > 60) {
+        setNameWarningText(<span className="text-red">{60 - inputValue.length}/60</span>);
+      } 
+      else {
+        setNameWarningText(`${60 - inputValue.length}/60`);
+      }
+    }
+    else {
       setNameWarningText(<span className="text-red">Special characters cannot be used.</span>)
     }
-    else if (inputValue.length > 60) {
-      setNameWarningText(<span className="text-red">{60 - inputValue.length}/60</span>);
-    } 
-    else {
-      setNameWarningText(`${60 - inputValue.length}/60`);
-    }
-    setBean({...bean, label: inputValue});  
   }
 
   return (
