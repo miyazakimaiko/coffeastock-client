@@ -8,7 +8,8 @@ const FormInput = ({
   name, 
   autoComplete = "off", 
   placeholder, 
-  value, 
+  value,
+  onKeyDown = null,
   onChange, 
   warningText
 }) => {
@@ -25,6 +26,7 @@ const FormInput = ({
         className="blue-outline-transition
         block w-full py-2 px-3 rounded border-1"
         value={value}
+        onKeyDown={onKeyDown}
         onChange={onChange}
       />
       <span className="text-xs float-right mt-1">{warningText}</span>
