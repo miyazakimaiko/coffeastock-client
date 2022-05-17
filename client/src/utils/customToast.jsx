@@ -5,7 +5,7 @@ const MODE = {
   ERROR: 'error'
 }
 
-export default function myToast(mode, message) {
+export default function toastOnBottomCenter(mode, message) {
   switch(mode) {
     case MODE.SUCCESS:
       return toast.success(message, {
