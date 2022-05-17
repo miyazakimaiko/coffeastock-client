@@ -103,6 +103,7 @@ describe('Beans API', () => {
           done();
         })
     });
+
     it("should return error if blend ratio is not JSON object", (done) => {
       chai.request(app)
         .post(`${endpoint}/user/${existingUserId}/bean`)
@@ -129,6 +130,163 @@ describe('Beans API', () => {
           done();
         })
     });
+
+    it("should return error if origin is not an array", (done) => {
+      chai.request(app)
+        .post(`${endpoint}/user/${existingUserId}/bean`)
+        .send({
+          "label": "Test",
+          "single_origin": true,
+          "origin": 1, 
+          "farm": [3, 3], 
+          "variety": [1, 3], 
+          "process": [1, 2], 
+          "altitude": "2000 MASL",
+          "grade": 82.5,
+          "harvest_period": "Oct 2020",
+          "roaster": [1, 2],
+          "roast_level": 8.5,
+          "roast_date": "2021-10-12",
+          "aroma": [1, 3, 5],
+          "memo": "Testing..."
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          response.body.error.should.have.property('message', 'Invalid Origin');
+          done();
+        })
+    });
+
+    it("should return error if farm is not an array", (done) => {
+      chai.request(app)
+        .post(`${endpoint}/user/${existingUserId}/bean`)
+        .send({
+          "label": "Test",
+          "single_origin": true,
+          "origin": [3, 3], 
+          "farm": 1, 
+          "variety": [1, 3], 
+          "process": [1, 2], 
+          "altitude": "2000 MASL",
+          "grade": 82.5,
+          "harvest_period": "Oct 2020",
+          "roaster": [1, 2],
+          "roast_level": 8.5,
+          "roast_date": "2021-10-12",
+          "aroma": [1, 3, 5],
+          "memo": "Testing..."
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          response.body.error.should.have.property('message', 'Invalid Farm');
+          done();
+        })
+    });
+
+    it("should return error if variety is not an array", (done) => {
+      chai.request(app)
+        .post(`${endpoint}/user/${existingUserId}/bean`)
+        .send({
+          "label": "Test",
+          "single_origin": true,
+          "origin": [3, 3], 
+          "farm": [1, 3], 
+          "variety": 1, 
+          "process": [1, 2], 
+          "altitude": "2000 MASL",
+          "grade": 82.5,
+          "harvest_period": "Oct 2020",
+          "roaster": [1, 2],
+          "roast_level": 8.5,
+          "roast_date": "2021-10-12",
+          "aroma": [1, 3, 5],
+          "memo": "Testing..."
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          response.body.error.should.have.property('message', 'Invalid Variety');
+          done();
+        })
+    });
+
+    it("should return error if process is not an array", (done) => {
+      chai.request(app)
+        .post(`${endpoint}/user/${existingUserId}/bean`)
+        .send({
+          "label": "Test",
+          "single_origin": true,
+          "origin": [3, 3], 
+          "farm": [1, 3], 
+          "variety": [1, 3], 
+          "process": 1, 
+          "altitude": "2000 MASL",
+          "grade": 82.5,
+          "harvest_period": "Oct 2020",
+          "roaster": [1, 2],
+          "roast_level": 8.5,
+          "roast_date": "2021-10-12",
+          "aroma": [1, 3, 5],
+          "memo": "Testing..."
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          response.body.error.should.have.property('message', 'Invalid Process');
+          done();
+        })
+    });
+
+    it("should return error if roaster is not an array", (done) => {
+      chai.request(app)
+        .post(`${endpoint}/user/${existingUserId}/bean`)
+        .send({
+          "label": "Test",
+          "single_origin": true,
+          "origin": [3, 3], 
+          "farm": [1, 3], 
+          "variety": [1, 3], 
+          "process": [1, 3], 
+          "altitude": "2000 MASL",
+          "grade": 82.5,
+          "harvest_period": "Oct 2020",
+          "roaster": "test",
+          "roast_level": 8.5,
+          "roast_date": "2021-10-12",
+          "aroma": [1, 3, 5],
+          "memo": "Testing..."
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          response.body.error.should.have.property('message', 'Invalid Roaster');
+          done();
+        })
+    });
+
+    it("should return error if aroma is not an array", (done) => {
+      chai.request(app)
+        .post(`${endpoint}/user/${existingUserId}/bean`)
+        .send({
+          "label": "Test",
+          "single_origin": true,
+          "origin": [3, 3], 
+          "farm": [1, 3], 
+          "variety": [1, 3], 
+          "process": [1, 3], 
+          "altitude": "2000 MASL",
+          "grade": 82.5,
+          "harvest_period": "Oct 2020",
+          "roaster": [1, 3, 5],
+          "roast_level": 8.5,
+          "roast_date": "2021-10-12",
+          "aroma": "[1, 3, 5]",
+          "memo": "Testing..."
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          response.body.error.should.have.property('message', 'Invalid Aroma');
+          done();
+        })
+    });
+
     it("should return error if roast level is not 0 - 10", (done) => {
       chai.request(app)
         .post(`${endpoint}/user/${existingUserId}/bean`)

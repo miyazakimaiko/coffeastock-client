@@ -8,13 +8,14 @@ chai.use(chaiHttp);
 
 describe('Recipes API', () => {
   const endpoint = process.env.API_ENDPOINT;
-  const existingCoffeeBeanId = 'f72720ec-78ad-4dba-90e3-71d9199d0af4';
+  const existingUserId = 'd14607a6-aabd-4f06-9956-83b4fc229053';
+  const existingCoffeeBeanId = '8cdf2273-b8e9-40d8-8a98-64bd0ac7196e';
   const wrongCoffeeBeanId = 'testtesttesttesttest';
 
-  describe(`GET ${endpoint}/bean/:productid/recipes`, () => {
+  describe(`GET ${endpoint}/user/:userid/bean/:productid/recipes`, () => {
     it("should GET the recipes with correct bean_id", (done) => {
       chai.request(app)
-      .get(`${endpoint}/bean/${existingCoffeeBeanId}/recipes`)
+      .get(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipes`)
       .end((err, response) => {
         response.should.have.status(200);
         response.body.should.be.a('array');
@@ -23,7 +24,7 @@ describe('Recipes API', () => {
     })
     it("should NOT GET the recipes with wrong bean_id", (done) => {
       chai.request(app)
-      .get(`${endpoint}/bean/${wrongCoffeeBeanId}/recipes`)
+      .get(`${endpoint}/user/${existingUserId}/bean/${wrongCoffeeBeanId}/recipes`)
       .end((err, response) => {
         response.should.have.status(500);
         done();
@@ -31,10 +32,10 @@ describe('Recipes API', () => {
     })
   })
 
-  describe(`POST ${endpoint}/bean/:bean_id/recipe`, () => {
+  describe(`POST ${endpoint}/user/:user_id/bean/:bean_id/recipe`, () => {
     it("should return success if all fields are valid", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "2021-12-01",
         "method": "1",
@@ -64,7 +65,7 @@ describe('Recipes API', () => {
 
     it("should return error if bean_id is invalid", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${wrongCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${wrongCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "2021-12-01",
         "method": "1",
@@ -94,7 +95,7 @@ describe('Recipes API', () => {
 
     it("should return error if brew_date is invalid", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "test",
         "method": "1",
@@ -125,7 +126,7 @@ describe('Recipes API', () => {
 
     it("should return error if grind_size is invalid", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "2021-12-12",
         "method": "1",
@@ -156,7 +157,7 @@ describe('Recipes API', () => {
 
     it("should return error if grind_size is negative number", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "2021-12-12",
         "method": "1",
@@ -187,7 +188,7 @@ describe('Recipes API', () => {
 
     it("should return error if grounds_weight is invalid", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "2021-12-12",
         "method": "1",
@@ -218,7 +219,7 @@ describe('Recipes API', () => {
 
     it("should return error if grounds_weight is negative number", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "2021-12-12",
         "method": "1",
@@ -249,7 +250,7 @@ describe('Recipes API', () => {
 
     it("should return error if water_weight is invalid", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "2021-12-12",
         "method": "1",
@@ -280,7 +281,7 @@ describe('Recipes API', () => {
 
     it("should return error if water_weight is negative number", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "2021-12-12",
         "method": "1",
@@ -311,7 +312,7 @@ describe('Recipes API', () => {
 
     it("should return error if water_temp is invalid", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "2021-12-12",
         "method": "1",
@@ -342,7 +343,7 @@ describe('Recipes API', () => {
 
     it("should return error if water_temp is negative number", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "2021-12-12",
         "method": "1",
@@ -373,7 +374,7 @@ describe('Recipes API', () => {
 
     it("should return error if yield_weight is invalid", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "2021-12-12",
         "method": "1",
@@ -404,7 +405,7 @@ describe('Recipes API', () => {
 
     it("should return error if yield_weight is negative number", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "2021-12-12",
         "method": "1",
@@ -435,7 +436,7 @@ describe('Recipes API', () => {
 
     it("should return error if tds is invalid", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "2021-12-12",
         "method": "1",
@@ -466,7 +467,7 @@ describe('Recipes API', () => {
 
     it("should return error if tds is negative number", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "2021-12-12",
         "method": "1",
@@ -497,7 +498,7 @@ describe('Recipes API', () => {
 
     it("should return error if extraction_time is invalid", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "2021-12-12",
         "method": "1",
@@ -528,7 +529,7 @@ describe('Recipes API', () => {
 
     it("should return error if palate is not an object", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "2021-12-12",
         "method": "1",
@@ -557,9 +558,133 @@ describe('Recipes API', () => {
       })
     });
 
+    it("should return error if method is empty", (done) => {
+      chai.request(app)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
+      .send({
+        "brew_date": "2021-12-12",
+        "method": null,
+        "grinder": "1",
+        "grind_size": "10",
+        "grounds_weight": "18",
+        "water_weight": "200.2",
+        "water": "2",
+        "water_temp": "90",
+        "yield_weight": "180.1",
+        "extraction_time": "00:03:58",
+        "tds": "9",
+        "palate": {
+          "1": "5.5",
+          "2": "6",
+          "3": "4.0",
+          "4": "8",
+          "5": "9"
+        },
+        "memo": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qu"
+      })
+      .end((err, response) => {
+        response.should.have.status(422);
+        response.body.error.should.have.property('message', 'Invalid Method');
+        done();
+      })
+    });
+
+    it("should return error if method is not an integer", (done) => {
+      chai.request(app)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
+      .send({
+        "brew_date": "2021-12-12",
+        "method": "test",
+        "grinder": "1",
+        "grind_size": "10",
+        "grounds_weight": "18",
+        "water_weight": "200.2",
+        "water": "2",
+        "water_temp": "90",
+        "yield_weight": "180.1",
+        "extraction_time": "00:03:58",
+        "tds": "9",
+        "palate": {
+          "1": "5.5",
+          "2": "6",
+          "3": "4.0",
+          "4": "8",
+          "5": "9"
+        },
+        "memo": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qu"
+      })
+      .end((err, response) => {
+        response.should.have.status(422);
+        response.body.error.should.have.property('message', 'Invalid Method');
+        done();
+      })
+    });
+
+    it("should return error if grinder is not an integer", (done) => {
+      chai.request(app)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
+      .send({
+        "brew_date": "2021-12-12",
+        "method": "1",
+        "grinder": "test",
+        "grind_size": "10",
+        "grounds_weight": "18",
+        "water_weight": "200.2",
+        "water": "2",
+        "water_temp": "90",
+        "yield_weight": "180.1",
+        "extraction_time": "00:03:58",
+        "tds": "9",
+        "palate": {
+          "1": "5.5",
+          "2": "6",
+          "3": "4.0",
+          "4": "8",
+          "5": "9"
+        },
+        "memo": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qu"
+      })
+      .end((err, response) => {
+        response.should.have.status(422);
+        response.body.error.should.have.property('message', 'Invalid Grinder');
+        done();
+      })
+    });
+
+    it("should return error if water is not an integer", (done) => {
+      chai.request(app)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
+      .send({
+        "brew_date": "2021-12-12",
+        "method": "1",
+        "grinder": "2",
+        "grind_size": "10",
+        "grounds_weight": "18",
+        "water_weight": "200.2",
+        "water": "test",
+        "water_temp": "90",
+        "yield_weight": "180.1",
+        "extraction_time": "00:03:58",
+        "tds": "9",
+        "palate": {
+          "1": "5.5",
+          "2": "6",
+          "3": "4.0",
+          "4": "8",
+          "5": "9"
+        },
+        "memo": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qu"
+      })
+      .end((err, response) => {
+        response.should.have.status(422);
+        response.body.error.should.have.property('message', 'Invalid Water');
+        done();
+      })
+    });
+
     it("should return error if palate is longer than 400 characters", (done) => {
       chai.request(app)
-      .post(`${endpoint}/bean/${existingCoffeeBeanId}/recipe`)
+      .post(`${endpoint}/user/${existingUserId}/bean/${existingCoffeeBeanId}/recipe`)
       .send({
         "brew_date": "2021-12-12",
         "method": "1",
