@@ -1,24 +1,13 @@
 require("dotenv").config();
 const db = require("../db");
-const { body, validationResult } = require('express-validator');
+const { validationResult } = require('express-validator');
+const { beanValidator } = require("../utils/validators");
+const { CustomException } = require("../utils/customExcetions");
+const { getUniqueItemInFirstArgArray } = require("../helper/compareArrays");
+const { getIncrementCountInUseBaseQuery, getDecrementCountInUseBaseQuery } = require("../utils/baseQueries");
+const { DatabaseError } = require("pg");
 
-let validator = [
-  body('label', 'Invalid Name').not().isEmpty().escape().isLength({ max: 60 }),
-  body('single_origin', 'Invalid Single Origin').not().isEmpty().isBoolean(),
-  body('blend_ratio', 'Invalid Blend Ratio').isObject().optional({ checkFalsy: true }),
-  body('origin', 'Invalid Origin').isObject({ strict: false }).optional({ checkFalsy: true }),
-  body('farm', 'Invalid Farm').isObject({ strict: false }).optional({ checkFalsy: true }),
-  body('variety', 'Invalid Variety').isObject({ strict: false }).optional({ checkFalsy: true }),
-  body('process', 'Invalid Process').isObject({ strict: false }).optional({ checkFalsy: true }),
-  body('roaster', 'Invalid Roaster').isObject({ strict: false }).optional({ checkFalsy: true }),
-  body('aroma', 'Invalid Aroma').isObject({ strict: false }).optional({ checkFalsy: true }),
-  body('roast_level', 'Invalid Roast Level').isFloat({ min: 0, max: 10 }).optional({ checkFalsy: true }),
-  body('grade', 'Invalid Grade').isFloat({ min: 0, max: 100 }).optional({ checkFalsy: true }),
-  body('roast_date', 'Invalid Roast Date').isDate().optional({ checkFalsy: true }),
-  body('memo', 'Invalid Memo').escape().isLength({ max: 400 }).optional({ checkFalsy: true }),
-  body('altitude').escape(),
-  body('harvest_period').escape(),
-]
+const beanRangeKeys = ['origin', 'farm', 'variety', 'process', 'roaster', 'aroma']
 
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
@@ -51,136 +40,253 @@ module.exports = (app) => {
     }
   });
 
-  // create beans of a user
+  // create a bean of a user
   app.post(endpoint + "/user/:userid/bean", 
-    validator,
+    beanValidator,
     async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ 
-        error: {
-          message: errors.array()[0]['msg']
-        }
-      });
-    }
-    try {
-      const results = await db.query(`
-      INSERT INTO 
-      BEANS (
-        user_id, 
-        label,
-        single_origin,
-        blend_ratio,
-        origin, 
-        farm, 
-        variety, 
-        process, 
-        altitude,
-        grade,
-        harvest_period,
-        roaster,
-        roast_level,
-        roast_date,
-        aroma,
-        memo
-      )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
-      RETURNING *`,
-      [
-        req.params.userid,
-        req.body.label,
-        req.body.single_origin,
-        req.body.blend_ratio,
-        req.body.origin,
-        req.body.farm,
-        req.body.variety,
-        req.body.process,
-        req.body.altitude,
-        req.body.grade,
-        req.body.harvest_period,
-        req.body.roaster,
-        req.body.roast_level,
-        req.body.roast_date,
-        req.body.aroma,
-        req.body.memo
-      ]);
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        CustomException(422, errors.array()[0]['msg'])
+      }
 
-      res.status(200).json(results.rows);
+      try {
+        await db.query('BEGIN')
+
+        const rangeKeys = ['origin', 'farm', 'variety', 'process', 'roaster', 'aroma']
+
+        for await (const rangeKey of rangeKeys) {
+          const rangeItemIds = req.body[rangeKey]
+          if (rangeItemIds.length > 0) {
+            const baseQuery = getIncrementCountInUseBaseQuery(rangeKey, rangeItemIds);
+            await db.query(baseQuery, [req.params.userid])
+          }
+        }
+
+        const blendBeanIdList = Object.keys(req.body.blend_ratio)
+        const blendBeanId1 = blendBeanIdList[0] ? blendBeanIdList[0] : null;
+        const blendBeanId2 = blendBeanIdList[1] ? blendBeanIdList[1] : null;
+        const blendBeanId3 = blendBeanIdList[2] ? blendBeanIdList[2] : null;
+        const blendBeanId4 = blendBeanIdList[3] ? blendBeanIdList[3] : null;
+        const blendBeanId5 = blendBeanIdList[4] ? blendBeanIdList[4] : null;
         
-    } catch (error) {
-      next(error);
+        const insertBeanResult = await db.query(
+          `INSERT INTO 
+            BEANS (
+              user_id,
+              label,
+              single_origin,
+              blend_ratio,
+              blend_bean_id_1,
+              blend_bean_id_2,
+              blend_bean_id_3,
+              blend_bean_id_4,
+              blend_bean_id_5,    
+              origin, 
+              farm, 
+              variety, 
+              process, 
+              altitude,
+              grade,
+              harvest_period,
+              roaster,
+              roast_level,
+              roast_date,
+              aroma,
+              memo
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
+            RETURNING *
+          `,
+          [
+            req.params.userid,         // $1
+            req.body.label,            // $2
+            req.body.single_origin,    // $3
+            req.body.blend_ratio,      // $4
+            blendBeanId1,              // $5
+            blendBeanId2,              // $6
+            blendBeanId3,              // $7
+            blendBeanId4,              // $8
+            blendBeanId5,              // $9
+            req.body.origin,           // $10
+            req.body.farm,             // $11
+            req.body.variety,          // $12
+            req.body.process,          // $13
+            req.body.altitude,         // $14
+            req.body.grade,            // $15
+            req.body.harvest_period,   // $16
+            req.body.roaster,          // $17
+            req.body.roast_level,      // $18
+            req.body.roast_date,       // $19
+            req.body.aroma,            // $20
+            req.body.memo,             // $21
+          ]
+        )
+
+        await db.query('COMMIT')
+
+        res.status(200).json(insertBeanResult.rows);
+          
+      } catch (error) {
+        next(error)
+      }
     }
-  }); 
+  ); 
   
   // update beans of a user
   app.post(endpoint + "/user/:userid/bean/:beanid",
-    validator,
+    beanValidator,
     async (req, res, next) => {
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({
-        error: {
-          message: errors.array()[0]['msg']
-        } 
-      });
-    }
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        CustomException(422, errors.array()[0]['msg'])
+      }
+      
+      try {
+        await db.query('BEGIN')
 
+        let result = await db.query(
+          `SELECT * FROM beans
+            WHERE user_id = $1 AND bean_id = $2
+          `, [
+            req.params.userid,
+            req.params.beanid
+          ]);
+  
+        if(result.rows.length === 0) {
+          CustomException(404, 'Not Found')
+        }
+
+        const beanData = result.rows[0]
+
+        console.log('req.body: ', req.body)
+
+        for (const rangeKey of beanRangeKeys) {
+          if(req.body[rangeKey]) {
+            const currentRangeIdList = beanData[rangeKey]
+            const newRangeIdList = req.body[rangeKey]
+  
+            const removedRangeIdList = getUniqueItemInFirstArgArray(currentRangeIdList, newRangeIdList)
+            const addedRangeIdList = getUniqueItemInFirstArgArray(newRangeIdList, currentRangeIdList)
+  
+            if (removedRangeIdList.length > 0) {
+              for (const removedRangeId of removedRangeIdList) {
+                const baseQuery = getDecrementCountInUseBaseQuery(rangeKey, removedRangeId);
+                try {
+                  await db.query(baseQuery, [req.params.userid])
+                } catch (error) {
+                  next(error)
+                }
+              }
+            }
+            if (addedRangeIdList.length > 0) {
+              for (const addeddRangeId of addedRangeIdList) {
+                const baseQuery = getIncrementCountInUseBaseQuery(rangeKey, addeddRangeId);
+                try {
+                  await db.query(baseQuery, [req.params.userid])
+                } catch (error) {
+                  next(error)
+                }
+              }
+            }
+          }
+        }
+
+        const blendBeanIdList = Object.keys(req.body.blend_ratio)
+        const blendBeanId1 = blendBeanIdList[0] ? blendBeanIdList[0] : null;
+        const blendBeanId2 = blendBeanIdList[1] ? blendBeanIdList[1] : null;
+        const blendBeanId3 = blendBeanIdList[2] ? blendBeanIdList[2] : null;
+        const blendBeanId4 = blendBeanIdList[3] ? blendBeanIdList[3] : null;
+        const blendBeanId5 = blendBeanIdList[4] ? blendBeanIdList[4] : null;
+
+        result = await db.query(
+          `UPDATE beans 
+            SET 
+              label = $1, 
+              single_origin = $2, 
+              blend_ratio = $3,
+              blend_bean_id_1 = $4,
+              blend_bean_id_2 = $5,
+              blend_bean_id_3 = $6,
+              blend_bean_id_4 = $7,
+              blend_bean_id_5 = $8,    
+              origin = $9, 
+              farm = $10, 
+              variety = $11, 
+              process = $12, 
+              grade = $13,
+              harvest_period = $14, 
+              roaster = $15, 
+              roast_level = $16, 
+              roast_date = $17,
+              aroma = $18,
+              memo = $19
+            WHERE user_id = $20 AND bean_id = $21 
+            RETURNING *
+          `,
+          [
+            req.body.label,            // $1
+            req.body.single_origin,    // $2
+            req.body.blend_ratio,      // $3
+            blendBeanId1,              // $4
+            blendBeanId2,              // $5
+            blendBeanId3,              // $6
+            blendBeanId4,              // $7
+            blendBeanId5,              // $8
+            req.body.origin,           // $9
+            req.body.farm,             // $10
+            req.body.variety,          // $11
+            req.body.process,          // $12
+            req.body.grade,            // $13
+            req.body.harvest_period,   // $14
+            req.body.roaster,          // $15
+            req.body.roast_level,      // $16
+            req.body.roast_date,       // $17
+            req.body.aroma,            // $18
+            req.body.memo,             // $19
+            req.params.userid,         // $20
+            req.params.beanid          // $21
+          ]
+        );
+
+        await db.query('COMMIT')
+
+        res.status(200).json(result.rows);
+
+      } catch (error) {
+        next(error);
+      }
+    }
+  )
+
+  // delete bean
+  app.post(endpoint + "/user/:userid/bean/delete/:beanid", async (req, res, next) => {
     try {
-      const results = await db.query(`
-      UPDATE beans 
-      SET 
-        label = $1, 
-        single_origin = $2, 
-        blend_ratio = $3,
-        origin = $4, 
-        farm = $5, 
-        variety = $6, 
-        process = $7, 
-        grade = $8,
-        harvest_period = $9, 
-        roaster = $10, 
-        roast_level = $11, 
-        roast_date = $12,
-        aroma = $13,
-        memo = $14
-      WHERE user_id = $15 AND bean_id = $16 
-      RETURNING *`,
-      [
-        req.body.label,
-        req.body.single_origin,
-        req.body.blend_ratio,
-        req.body.origin,
-        req.body.farm,
-        req.body.variety,
-        req.body.process,
-        req.body.grade,
-        req.body.harvest_period,
-        req.body.roaster,
-        req.body.roast_level,
-        req.body.roast_date,
-        req.body.aroma,
-        req.body.memo,
-        req.params.userid,
-        req.params.beanid
-      ]);
+      await db.query('BEGIN')
+
+      const results = await db.query(
+        `DELETE FROM beans WHERE user_id = $1 AND bean_id = $2`,
+        [req.params.userid, req.params.beanid]
+      );
+
+      for (const rangeKey of beanRangeKeys) {
+        if(req.body[rangeKey].length > 0) {
+          for await (const id of req.body[rangeKey]) {
+            const decrementCountInUseBaseQuery = getDecrementCountInUseBaseQuery(rangeKey, id);
+            await db.query(decrementCountInUseBaseQuery, [req.params.userid])
+          }
+        }
+      }
+
+      await db.query('COMMIT')
 
       res.status(200).json(results.rows);
 
     } catch (error) {
-      next(error);
-    }
-  });
-
-  // delete beans
-  app.delete(endpoint + "/user/:userid/bean/:beanid", async (req, res, next) => {
-    try {
-      const results = await db.query(`
-      DELETE FROM beans WHERE user_id = $1 AND bean_id = $2`,
-      [req.params.userid, req.params.beanid]);
-      res.status(200).json(results.rows);
-    } catch (error) {
-      next(error);
+      if (error instanceof DatabaseError && error.code === '23503') {
+        error.message = 'This item is tagged with other item(s) therefore cannot be deleted.'
+      }
+      next(error)
     }
   });
 }

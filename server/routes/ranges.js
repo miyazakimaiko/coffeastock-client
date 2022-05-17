@@ -1,25 +1,18 @@
 require("dotenv").config();
 const db = require("../db");
-const { body, validationResult } = require('express-validator');
-const { reorderAttributeRangeList } = require("../helper/reorderRangeList");
+const { validationResult } = require('express-validator');
+const { rangeItemValidator } = require("../utils/validators");
+const { reorderRangeListItems } = require("../helper/reorderRangeItems");
 const { 
   getGetRangeBaseQuery, 
-  getPostRangeBaseQuery,
   getGetNextIdBaseQuery,
   getUpdateNextIdBaseQuery,
   getInsertRangeBaseQuery,
   getDeleteRangeBaseQuery,
   getFindEntryByIdBaseQuery
-} = require("../utils/query-generator");
-const { reorderRange } = require("../helper/reorderRange");
-
-const validator = [
-  body('label', 'Invalid Name').not().contains('<')
-    .not().contains('>').not().contains('"').not().contains("'")
-    .not().contains('&').not().contains('/').isLength({ max: 60 })
-    .optional({ nullable: false }),
-  body('def', 'Invalid Details').escape().isLength({ max: 400 }).optional({ checkFalsy: true })
-];
+} = require("../utils/baseQueries");
+const { reorderRangeItems } = require("../helper/reorderRangeItems");
+const { CustomException } = require('../utils/customExcetions');
 
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
@@ -29,10 +22,10 @@ module.exports = (app) => {
     try {
       const existingUser = await db.query(`SELECT * FROM USERS WHERE user_id = $1`, [req.params.userid])
       if (existingUser.rows.length !== 0) {
-        return res.status(409).json("Specified user already has a row.")
+        CustomException(409, "This user already has a row.")
       }
 
-      const result = await db.query(`
+      await db.query(`
         INSERT INTO
         USERS (
           user_id,
@@ -89,15 +82,10 @@ module.exports = (app) => {
       [req.params.userid]);
 
       if(results.rows.length === 0) {
-        res.status(404).json({
-          'error': {
-            "message": "Not Found"
-          }
-        });
+        CustomException(404, "Not Found")
       }
-      const parseRes = await results.rows[0];
-      const orderedRangeList = reorderAttributeRangeList(parseRes)
-      console.log('orderedRangeList: ', orderedRangeList)
+      const rangeItemsList = results.rows[0];
+      const orderedRangeList = reorderRangeListItems(rangeItemsList)
       res.status(200).json(orderedRangeList);
 
     } catch (error) {
@@ -110,8 +98,8 @@ module.exports = (app) => {
     const baseQuery = getGetRangeBaseQuery(req.params.rangename)
     try {
       const results = await db.query(baseQuery, [req.params.userid]);
-      const range = results.rows[0]['range']
-      const orderedRange = reorderRange(range)
+      const rangeItems = results['rows'][0]['items']
+      const orderedRange = reorderRangeItems(rangeItems)
       res.status(200).json(orderedRange);
     } catch (error) { next(error); }
   });
@@ -131,57 +119,50 @@ module.exports = (app) => {
 
   // Add new entry in the specified range 
   app.post(endpoint + "/user/:userid/range/:rangename", 
-  validator,
+  rangeItemValidator,
   async (req, res, next) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(422).json({ 
-        error: {
-          message: errors.array()[0]['msg']
-        }
-      });
+      CustomException(422, errors.array()[0]['msg'])
     }
 
-    const baseQuery = getPostRangeBaseQuery(req.params.rangename)
+    const baseQuery = getGetRangeBaseQuery(req.params.rangename)
     try {
-      let uniqueName = true;
       const range = await db.query(baseQuery, [req.params.userid]);
-
-      for (const key of Object.keys(range.rows[0]['range'])) {
-        if (range.rows[0]['range'][key].label === req.body.label) {
+      const rangeItems = range.rows[0]['items']
+      let uniqueName = true;
+      for (const key of Object.keys(rangeItems)) {
+        if (rangeItems[key].label === req.body.label) {
           uniqueName = false;
         }
       }
 
       if (!uniqueName) {
-        res.status(422).json({
-          'error': {
-            'message': 'An entry with the same name already exists.'
-          }
-        });
+        CustomException(422, 'An entry with the same name already exists.')
       } 
       else {
+        await db.query('BEGIN')
+
         // get the ID of the last entry to create new ID
         const bqGetNextId = getGetNextIdBaseQuery(req.params.rangename)
         const idResult = await db.query(bqGetNextId, [req.params.userid]);
-        const newid = idResult.rows[0]['next_id'];
+        const newid = idResult.rows[0]['nextid'];
 
         // Update the next_id
         const bqUpdateNextId = getUpdateNextIdBaseQuery(req.params.rangename)
         await db.query(bqUpdateNextId, [newid + 1, req.params.userid]);
 
         // Insert new entry
-        const newData = `{
-          "${newid}" : {
-            "label": "${req.body.label}",
-            "def": "${req.body.def}"
-          }
-        }`
+        const newData = {}
+        newData[newid] = {...req.body, value: newid, inUse: 0}
+        console.log('newData: ', newData)
         const bqInsertRange = getInsertRangeBaseQuery(req.params.rangename)
         const result = await db.query(bqInsertRange,[newData, req.params.userid]);
-      
-        res.status(200).json(result.rows[0][req.params.rangename + '_range']['range']);
+        
+        await db.query('COMMIT')
+
+        res.status(200).json(result.rows[0][req.params.rangename + '_range']['items']);
       }
     } catch (error) {
       next(error);
@@ -190,15 +171,11 @@ module.exports = (app) => {
 
   // Edit an entry in a specified range 
   app.post(endpoint + "/user/:userid/range/:rangename/:id", 
-  validator,
+  rangeItemValidator,
   async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(422).json({
-        error: {
-          message: errors.array()[0]['msg']
-        } 
-      });
+      CustomException(422, errors.array()[0]['msg'])
     }
     
     try {
@@ -212,43 +189,29 @@ module.exports = (app) => {
         }
       });
       if (!entryExists) {
-        res.status(500).json({
-          'error': {
-            'message': 'Entry with the ID does not exist.'
-          }
-        });
+        CustomException(500, 'Entry with the ID does not exist.')
       }
       // Validate the uniqueness of the new name
       let uniqueName = true;
       const bqGetRange = getGetRangeBaseQuery(req.params.rangename)
       const data = await db.query(bqGetRange, [req.params.userid]);
-      for (const key of Object.keys(data.rows[0]['range'])) {
-        if (data.rows[0]['range'][key].label === req.body.label && key !== req.params.id) {
+      for (const key of Object.keys(data.rows[0]['items'])) {
+        if (data.rows[0]['items'][key].label === req.body.label && key !== req.params.id) {
           uniqueName = false;
         }
       }
       if (!uniqueName) {
-        res.status(500).json({
-          'error': {
-            'message': 'An entry with the same name already exists.'
-          }
-        });
+        CustomException(500, 'An entry with the same name already exists.')
       } 
       else {
-        // Delete the entry to edit
-        const bqUpdateRange = getDeleteRangeBaseQuery(req.params.rangename)
-        await db.query(bqUpdateRange, [req.params.id, req.params.userid]);
-        // Insert new entry
-        const newData = `{
-          "${req.params.id}" : {
-            "label": "${req.body.label}",
-            "def": "${req.body.def}"
-          }
-        }`
+        // Insert new entry to overwrite existing one
+        const newData = {}
+        newData[req.params.id] = req.body
         const bqInsertRange = getInsertRangeBaseQuery(req.params.rangename)
         const result = await db.query(bqInsertRange,[newData, req.params.userid]);
-        const range = result.rows[0][req.params.rangename + '_range']['range']
-        const reorderedRange = reorderRange(range)
+
+        const range = result.rows[0][req.params.rangename + '_range']['items']
+        const reorderedRange = reorderRangeItems(range)
         res.status(200).json(reorderedRange);
       }
     } catch (error) {
@@ -257,72 +220,17 @@ module.exports = (app) => {
   }); 
 
   // Delete an entry from specified range
-  app.delete(endpoint + "/user/:userid/range/:rangename/:id", async (req, res, next) => {
-    // get all beans if the range is related to beans
-    const searchRangeInUse = async () => {
-      let inUse = false;
-      let query = '';
-      const coffeeRangeList = ['origin', 'farm', 'variety', 'process', 'roaster', 'aroma'];
-      const recipeRangeList = ['grinder', 'method', 'water', 'palate'];
-      
-      if (coffeeRangeList.includes(req.params.rangename)) {
-        query = 'SELECT * FROM beans WHERE user_id = $1';
-      } 
-      else if (recipeRangeList.includes(req.params.rangename)) {
-        query = 'SELECT * FROM recipes WHERE user_id = $1';
+  app.post(endpoint + "/user/:userid/range/:rangename/delete/:id", async (req, res, next) => {
+    try {
+      if (req.body.inUse > 0) {
+        CustomException(422, `This entry is tagged with ${req.body.inUse} item(s), therefore cannot be deleted.`)
       }
-    
-      try {
-        const selectResult = await db.query(query, [req.params.userid]);
-        const entries = selectResult.rows;
+      const bqDeleteRange = getDeleteRangeBaseQuery(req.params.rangename)
+      const result = await db.query(bqDeleteRange, [req.body.value, req.params.userid]);
 
-        if (entries.length > 0) {
-          entries.forEach(entry => {
-            if (entry[req.params.rangename] !== null && entry[req.params.rangename] !== undefined) {
-              if (req.params.rangename === 'palate' && Object.keys(entry[req.params.rangename]).length > 0) {
-                Object.keys(entry[req.params.rangename]).forEach(palateId => {
-                  if (parseInt(palateId) === parseInt(req.params.id)) { 
-                    inUse = true;
-                  }
-                })
-              }
-              else if (['grinder', 'method', 'water'].includes(req.params.rangename)) {
-                if (parseInt(entry[req.params.rangename]) === parseInt(req.params.id)) { 
-                  inUse = true;
-                }
-              }
-              else if (entry[req.params.rangename].length > 0) {
-                entry[req.params.rangename].forEach(entryId => {
-                  if (parseInt(entryId) === parseInt(req.params.id)) { 
-                    inUse = true;
-                  }
-                })
-              }
-            }
-          });
-        }
-      } catch (error) {
-        next(error);
-      }
-      return inUse;
-    }
-
-    const inUse = await searchRangeInUse();
-    if (inUse) {
-      res.status(500).json({
-        'error': {
-          'message': 'This entry cannot be deleted since it is in use by beans or recipes.'
-        }
-      });
-    } else {
-      try {
-        const bqDeleteRange = getDeleteRangeBaseQuery(req.params.rangename)
-        const result = await db.query(bqDeleteRange, [req.params.id, req.params.userid]);
-        res.status(200).json(result.rows[0][req.params.rangename + '_range']['range']);
-  
-      } catch (error) {
-        next(error);
-      }
+      res.status(200).json(result.rows[0][req.params.rangename + '_range']['items']);
+    } catch (error) {
+      next(error)
     }
   });
 }

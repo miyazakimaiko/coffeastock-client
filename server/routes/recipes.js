@@ -1,29 +1,8 @@
 require("dotenv").config();
 const db = require("../db");
-const { body, validationResult } = require('express-validator');
-
-let validator = [
-  body('brew_date', 'Invalid Brew Date').isDate().optional({ checkFalsy: true }),
-  body('grind_size', 'Invalid Grind Size').isFloat({ min: 0 }).optional({ checkFalsy: true }),
-  body('grounds_weight', 'Invalid Grounds Weight').isFloat({ min: 0 }).optional({ checkFalsy: true }),
-  body('water_weight', 'Invalid Water Weight').isFloat({ min: 0 }).optional({ checkFalsy: true }),
-  body('water_temp', 'Invalid Water Temperature').isFloat({ min: 0 }).optional({ checkFalsy: true }),
-  body('yield_weight', 'Invalid Yield Weight').isFloat({ min: 0 }).optional({ checkFalsy: true }),
-  body('tds', 'Invalid TDS').isFloat({ min: 0 }).optional({ checkFalsy: true }),
-  body('palate', 'Invalid Palate Rates').isObject().optional({ checkFalsy: true }),
-  body('method', 'Invalid Method').isInt({ min: 1 }),
-  body('grinder', 'Invalid Grinder').isInt({ min: 1 }).optional({ checkFalsy: true }),
-  body('water', 'Invalid Water').isInt({ min: 1 }).optional({ checkFalsy: true }),
-  body('memo', 'Invalid Memo').escape().isLength({ max: 400 }).optional({ checkFalsy: true }),
-  body('extraction_time').custom(value => {
-    let valid = String(value).match(/^([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/);
-    if (valid || value === null) {
-      return true
-    } else {
-      throw new Error('Invalid Extraction Time')
-    }
-  })
-]
+const { validationResult } = require('express-validator');
+const { recipeValidator } = require("../utils/validators");
+const { CustomException } = require("../utils/customExcetions");
 
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
@@ -56,15 +35,11 @@ module.exports = (app) => {
 
   // Create a recipe of beans
   app.post(endpoint + "/user/:userid/bean/:beanid/recipe", 
-  validator,
+  recipeValidator,
   async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(422).json({ 
-        error: {
-          message: errors.array()[0]['msg']
-        }
-      });
+      CustomException(422, errors.array()[0]['msg'])
     }
     try {
       const results = await db.query(`
@@ -115,15 +90,11 @@ module.exports = (app) => {
   
   // update a recipe of beans
   app.post(endpoint + "/user/:userid/bean/:beanid/recipe/:recipeid",
-  validator,
+  recipeValidator,
   async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(422).json({ 
-        error: {
-          message: errors.array()[0]['msg']
-        }
-      });
+      CustomException(422, errors.array()[0]['msg'])
     }
     try {
       const results = await db.query(`
