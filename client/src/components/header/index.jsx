@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useContext } from 'react';
-import { toast } from 'react-toastify';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { MenuAlt2Icon, PlusIcon, XIcon } from '@heroicons/react/outline'
 
+import toastOnTopRight from '../../utils/customToast';
 import { NavStateContext } from '../../context/NavStateContext';
 import { useUserData, useSetAuthenticated, useSignout } from '../../context/AccountContext';
 import imgFace from '../../assets/images/face.jpg'
@@ -30,6 +30,7 @@ const Header = (props) => {
   const userData = useUserData()
   const setAuthenticated = useSetAuthenticated()
   const signout = useSignout()
+  const navigate = useNavigate()
 
   const [modal, setModal] = useState({mode: '', isOpen: false})
 
@@ -37,10 +38,8 @@ const Header = (props) => {
     forceUnpin();
     signout();
     setAuthenticated(false);
-    toast.success(
-      "Logged out successfully.", 
-      { position: toast.POSITION.BOTTOM_CENTER }
-    )
+    navigate('/login', {replace: true})
+    toastOnTopRight('success', 'Logged out successfully.')
   }
 
   useEffect(() => {
