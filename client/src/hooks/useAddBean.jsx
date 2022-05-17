@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query'
 import * as api from '../api/Beans'
-import myToast from '../utils/myToast'
+import toastOnBottomCenter from '../utils/customToast'
 
 export default function useAddBean(userid) {
   const queryClient = useQueryClient();
@@ -10,11 +10,12 @@ export default function useAddBean(userid) {
     {
       enabled: Boolean(userid),
       onSuccess: async () => {
-        await queryClient.refetchQueries('beans')
-        myToast('success', 'Coffee bean is added successfully.')
+        await queryClient.invalidateQueries('beans')
+        await queryClient.invalidateQueries('ranges')
+        toastOnBottomCenter('success', 'Coffee bean is added successfully.')
       },
       onError: error => {
-        myToast('error', error.message ? error.message : 'An unknown error has ocurred.')
+        toastOnBottomCenter('error', error.message ? error.message : 'An unknown error has ocurred.')
       }
     }
   )

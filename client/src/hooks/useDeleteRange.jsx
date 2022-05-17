@@ -1,20 +1,20 @@
 import { useMutation, useQueryClient } from 'react-query'
 import * as api from '../api/Ranges'
-import myToast from '../utils/myToast'
+import toastOnBottomCenter from '../utils/customToast'
 
-export default function useDeleteRange(userid, rangeName) {
+export default function useDeleteRange(userid) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (rangeid) => api.deleteRange(userid, rangeName, rangeid),
+    (data) => api.deleteRange(userid, data.rangeName, data.body),
     {
       enabled: Boolean(userid),
-      onSuccess: () => {
-        queryClient.invalidateQueries(['ranges', `${rangeName}_range`])
-        myToast('success', 'Selected range has been deleted successfully.')
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(['ranges'])
+        toastOnBottomCenter('success', 'Selected range has been deleted successfully.')
       },
       onError: error => {
-        myToast('error', error.message ? error.message : 'An unknown error has ocurred.')
+        toastOnBottomCenter('error', error.message ? error.message : 'An unknown error has ocurred.')
       }
     }
   )
