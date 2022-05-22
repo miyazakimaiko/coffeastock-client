@@ -3,6 +3,9 @@ const db = require("../db");
 const { validationResult } = require('express-validator');
 const { recipeValidator } = require("../utils/validators");
 const { CustomException } = require("../utils/customExcetions");
+const { getIncrementCountInUseBaseQuery, getDecrementCountInUseBaseQuery } = require("../utils/baseQueries");
+
+const recipeRangeKeys = ['method', 'grinder', 'water'];
 
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
@@ -21,11 +24,11 @@ module.exports = (app) => {
     });
 
   // Get all recipes of a bean
-  app.get(endpoint + "/user/:userid/bean/:productid/recipes", async (req, res, next) => {
+  app.get(endpoint + "/user/:userid/bean/:beanid/recipes", async (req, res, next) => {
     try {
       const results = await db.query(`
       SELECT * FROM recipes WHERE user_id = $1 AND bean_id = $2`, 
-      [req.params.userid, req.params.productid]);
+      [req.params.userid, req.params.beanid]);
 
       res.status(200).json(results.rows);
     } catch (error) {
@@ -42,8 +45,10 @@ module.exports = (app) => {
       CustomException(422, errors.array()[0]['msg'])
     }
     try {
+      await db.query('BEGIN');
+
       const results = await db.query(`
-      INSERT INTO recipes (
+      INSERT INTO RECIPES (
         user_id,
         bean_id, 
         brew_date, 
@@ -58,7 +63,7 @@ module.exports = (app) => {
         extraction_time,
         tds, 
         total_rate,
-        palate, 
+        palate_rates, 
         memo
       )
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
@@ -78,11 +83,23 @@ module.exports = (app) => {
         req.body.extraction_time,
         req.body.tds, 
         req.body.total_rate,
-        req.body.palate, 
+        req.body.palate_rates, 
         req.body.memo
       ]);
 
-      res.status(200).json(results.rows); 
+
+      for await (const rangeKey of recipeRangeKeys) {
+        const rangeItemIds = req.body[rangeKey]
+        if (rangeItemIds.length > 0) {
+          const baseQuery = getIncrementCountInUseBaseQuery(rangeKey, rangeItemIds);
+          await db.query(baseQuery, [req.params.userid])
+        }
+      }
+
+      await db.query('COMMIT');
+
+      res.status(200).json(results.rows);
+
     } catch (error) {
       next(error);
     }
@@ -112,7 +129,7 @@ module.exports = (app) => {
       extraction_time = $10,
       tds = $11, 
       total_rate = $12,
-      palate = $13, 
+      palate_rates = $13, 
       memo = $14
       WHERE user_id = $15 AND bean_id = $16 AND recipe_id = $17 RETURNING *`,
       [
@@ -128,7 +145,7 @@ module.exports = (app) => {
         req.body.extraction_time,
         req.body.tds,
         req.body.total_rate,
-        req.body.palate,
+        req.body.palate_rates,
         req.body.memo,
         req.params.userid,
         req.params.beanid,
@@ -143,11 +160,25 @@ module.exports = (app) => {
   });
 
   // delete a recipe
-  app.delete(endpoint + "/user/:userid/bean/:beanid/recipe/:recipeid", async (req, res, next) => {
+  app.post(endpoint + "/user/:userid/bean/:beanid/recipe/delete/:recipeid", async (req, res, next) => {
     try {
+      await db.query('BEGIN');
+
       const results = await db.query(`
-      DELETE FROM recipes WHERE user_id = $1 AND bean_id = $2 AND recipe_id = $3`,
-      [req.params.userid, req.params.beanid, req.params.recipeid]);
+        DELETE FROM recipes WHERE user_id = $1 AND bean_id = $2 AND recipe_id = $3`,
+        [req.params.userid, req.params.beanid, req.params.recipeid]
+      );
+
+      for (const rangeKey of recipeRangeKeys) {
+        if(req.body[rangeKey].length > 0) {
+          for await (const id of req.body[rangeKey]) {
+            const decrementCountInUseBaseQuery = getDecrementCountInUseBaseQuery(rangeKey, id);
+            await db.query(decrementCountInUseBaseQuery, [req.params.userid])
+          }
+        }
+      }
+
+      await db.query('COMMIT');
 
       res.status(200).json(results.rows);
 

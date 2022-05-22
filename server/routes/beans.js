@@ -19,7 +19,12 @@ module.exports = (app) => {
       const results = await db.query(`
       SELECT * FROM beans WHERE user_id = $1`, 
       [req.params.userid]);
-      res.status(200).json(results.rows);
+      
+      const result = results.rows.map(bean => {
+        return {...bean, value: bean['bean_id']}
+      })
+      
+      res.status(200).json(result);
       
     } catch (error) {
       next(error);
@@ -52,9 +57,7 @@ module.exports = (app) => {
       try {
         await db.query('BEGIN')
 
-        const rangeKeys = ['origin', 'farm', 'variety', 'process', 'roaster', 'aroma']
-
-        for await (const rangeKey of rangeKeys) {
+        for await (const rangeKey of beanRangeKeys) {
           const rangeItemIds = req.body[rangeKey]
           if (rangeItemIds.length > 0) {
             const baseQuery = getIncrementCountInUseBaseQuery(rangeKey, rangeItemIds);
@@ -70,32 +73,31 @@ module.exports = (app) => {
         const blendBeanId5 = blendBeanIdList[4] ? blendBeanIdList[4] : null;
         
         const insertBeanResult = await db.query(
-          `INSERT INTO 
-            BEANS (
-              user_id,
-              label,
-              single_origin,
-              blend_ratio,
-              blend_bean_id_1,
-              blend_bean_id_2,
-              blend_bean_id_3,
-              blend_bean_id_4,
-              blend_bean_id_5,    
-              origin, 
-              farm, 
-              variety, 
-              process, 
-              altitude,
-              grade,
-              harvest_period,
-              roaster,
-              roast_level,
-              roast_date,
-              aroma,
-              memo
-            )
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
-            RETURNING *
+          `INSERT INTO BEANS (
+            user_id,
+            label,
+            single_origin,
+            blend_ratio,
+            blend_bean_id_1,
+            blend_bean_id_2,
+            blend_bean_id_3,
+            blend_bean_id_4,
+            blend_bean_id_5,    
+            origin, 
+            farm, 
+            variety, 
+            process, 
+            altitude,
+            grade,
+            harvest_period,
+            roaster,
+            roast_level,
+            roast_date,
+            aroma,
+            memo
+          )
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
+          RETURNING *
           `,
           [
             req.params.userid,         // $1
@@ -122,7 +124,7 @@ module.exports = (app) => {
           ]
         )
 
-        await db.query('COMMIT')
+        await db.query('COMMIT');
 
         res.status(200).json(insertBeanResult.rows);
           
@@ -158,8 +160,6 @@ module.exports = (app) => {
         }
 
         const beanData = result.rows[0]
-
-        console.log('req.body: ', req.body)
 
         for (const rangeKey of beanRangeKeys) {
           if(req.body[rangeKey]) {
