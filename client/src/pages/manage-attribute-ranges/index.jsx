@@ -21,10 +21,10 @@ const MODE = {
   DELETE: 'delete'
 }
 
-const ManageAttributeRanges = ({cat}) => {
+const ManageAttributeRanges = ({cat: rangeName}) => {
   const userData = useUserData()
-  const { data: range , isLoading: rangeIsLoading } = useRange(userData.sub, cat)
-  const editRange = useEditRange(userData.sub)
+  const { data: range , isLoading: rangeIsLoading } = useRange(userData.sub, rangeName)
+  const editRange = useEditRange(userData.sub, rangeName)
   const addRange = useAddRange(userData.sub)
   const deleteRange = useDeleteRange(userData.sub)
 
@@ -62,10 +62,24 @@ const ManageAttributeRanges = ({cat}) => {
       "label": rangeItem.label, 
       "def": rangeItem.def.replace(/(\r\n|\n|\r)/gm, " "),
     }
-    addRange.mutate({
-      rangeName: cat,
-      body: body
-    })
+    addRange.mutate(
+      {
+        rangeName: rangeName,
+        body: body,
+      },
+      {
+        onSuccess: 
+          toastOnBottomCenter(
+            "success",
+            `New range is added successfully.`
+          ),
+        onError: (error) =>
+          toastOnBottomCenter(
+            "error",
+            error.message ?? "An unknown error has ocurred."
+          ),
+      }
+    );
   }
 
   const onEditSubmit = (event) => {
@@ -79,7 +93,7 @@ const ManageAttributeRanges = ({cat}) => {
       "def": rangeItem.def.replace(/(\r\n|\n|\r)/gm, " ")
     }
     editRange.mutate({
-      rangeName: cat, 
+      rangeName: rangeName, 
       body: decodedRangeItem
     })
   }
@@ -87,7 +101,7 @@ const ManageAttributeRanges = ({cat}) => {
   const onDeleteSubmit = async (event) => {
     event.preventDefault();
     deleteRange.mutate({
-      rangeName: cat, 
+      rangeName: rangeName, 
       body: rangeItem
     })
     setModal({ mode: '', isOpen: false })
@@ -102,29 +116,37 @@ const ManageAttributeRanges = ({cat}) => {
   useEffect(() => {
     if (!rangeIsLoading && range) {
       let elements = [];
-      Object.keys(range).forEach(key => {
+      Object.keys(range).forEach((key) => {
         const item = range[key];
         elements.push(
-          <Row 
-            category={cat}
-            value={item['value']}
-            label={item['label']}
-            def={item['def']}
+          <Row
+            category={rangeName}
+            value={item["value"]}
+            label={item["label"]}
+            def={item["def"]}
             onEditClick={() => {
-              setRangeItem({...rangeItem, ...item});
-              setModal({ mode: MODE.EDIT, isOpen: true })
+              setRangeItem({ ...rangeItem, ...item });
+              setModal({ mode: MODE.EDIT, isOpen: true });
             }}
             onDeleteClick={() => {
-              setRangeItem({...rangeItem, ...item})
-              setModal({ mode: MODE.DELETE, isOpen: true })
+              setRangeItem({ ...rangeItem, ...item });
+              setModal({ mode: MODE.DELETE, isOpen: true });
             }}
           />
-        )
+        );
       });
       setAttributeListHtml(elements);
+    } 
+    else {
+      setAttributeListHtml([
+        <tr>
+          <td className="text-center bg-white" colSpan="3">
+            There's no entry for this range.
+          </td>
+        </tr>,
+      ]);
     }
-    else setAttributeListHtml( [<tr><td className="text-center bg-white" colSpan="3">There's no entry for this range.</td></tr>] );
-  }, [range, cat]);
+  }, [range, rangeName]);
 
   if (rangeIsLoading) {
     return 'loading...'
@@ -132,9 +154,9 @@ const ManageAttributeRanges = ({cat}) => {
   return (
     <>
       <div className="px-2 md:px-4 pt-8">
-        <ToolBar pageTitle={`${cat} Range`}>
+        <ToolBar pageTitle={`${rangeName} Range`}>
           <ToolBarButton 
-            title={`New ${cat}`}
+            title={`New ${rangeName}`}
             onClick={() => {
               setRangeItem({ value: '', label: '', def: '' });
               setModal({ mode: MODE.ADD, isOpen: true })
@@ -150,22 +172,22 @@ const ManageAttributeRanges = ({cat}) => {
         ? 
       <AddEditModal
         mode={modal.mode}
-        category={cat}
+        category={rangeName}
         onCloseClick={() => setModal({ mode: '', isOpen: false })}>
           <AddEditForm
-            category={cat}
+            category={rangeName}
             isLoading={editRange.isLoading}
             onCloseClick={() => setModal({ mode: '', isOpen: false })}
             onSubmit={modal.mode === MODE.ADD ? onAddSubmit : modal.mode === MODE.EDIT ? onEditSubmit : null}
           >
             <NameInput 
-              category={cat}
+              category={rangeName}
               nameValue={rangeItem.label}
               nameOnChange={e => setName(e.target.value)}
               nameWarningText={nameWarningText}
             />
             <DetailsTextarea 
-              category={cat}
+              category={rangeName}
               detailsValue={rangeItem.def}
               detailsOnChange={e => setRangeItem({...rangeItem, def: e.target.value})}
             />

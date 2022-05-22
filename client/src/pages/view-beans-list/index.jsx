@@ -58,13 +58,17 @@ const ViewBeansList = () => {
             coffeeHtmlDictionary[attrId].push(<CoffeeSection bean={bean} />)
             pushed = true
           }
-          else if (Object.keys(bean['blend_ratio']).length !== 0) {
+          else if (bean['blend_ratio']) {
+            let found = false;
             Object.keys(bean['blend_ratio']).forEach(blendBeanId => {
               if (beanList?.find(d => d.bean_id == blendBeanId)[groupState].includes(parseInt(attrId))) {
-                coffeeHtmlDictionary[attrId].push(<CoffeeSection bean={bean} />)
-                pushed = true
+                found = true
               }
             })
+            if (found) {
+              coffeeHtmlDictionary[attrId].push(<CoffeeSection bean={bean} />)
+              pushed = true
+            }
           }
         })
         if (!pushed) {

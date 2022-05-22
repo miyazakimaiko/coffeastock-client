@@ -1,5 +1,5 @@
 import React from 'react'
-import { unescapeHtml } from '../../utils/HtmlConverter'
+import { unescapeHtml } from '../../helpers/HtmlConverter'
 
 const CoffeeBagRight = ({name}) => {
   const unescapedName = unescapeHtml(name)

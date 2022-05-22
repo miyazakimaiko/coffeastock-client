@@ -338,23 +338,27 @@ CREATE TABLE RECIPES (
     bean_id uuid NOT NULL,
     brew_date date,
     total_rate NUMERIC(4, 1),
-    method INT,
-    grinder INT,
+    method INT [],
+    grinder INT [],
     grind_size NUMERIC(7, 1),
     grounds_weight NUMERIC(7, 1),
     water_weight NUMERIC(7, 1),
-    water INT,
+    water INT [],
     water_temp NUMERIC(7, 1),
     yield_weight NUMERIC(7, 1),
     extraction_time interval,
     tds NUMERIC(4, 2),
-    palate jsonb,
+    palate_rates jsonb,
     memo text,
     FOREIGN KEY (user_id)
         REFERENCES USERS (user_id),
     FOREIGN KEY (bean_id)
         REFERENCES BEANS (bean_id)
 );
+
+-- How to manage palate rates?
+-- Can user delete palate somehow?
+-- Wouldn't each palate be used for every recipes?
 
 
 INSERT INTO RECIPES (

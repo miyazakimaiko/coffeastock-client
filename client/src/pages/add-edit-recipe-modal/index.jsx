@@ -1,9 +1,14 @@
 import React, { useEffect, useState, createRef } from 'react'
 import { useUserData } from '../../context/AccountContext';
-import { useInsertAttribute } from '../../context/AttributeRangeContext';
-import { useRecipeList, useInsertRecipe, useUpdateRecipe } from '../../context/RecipeContext';
-import { unescapeHtml } from '../../utils/HtmlConverter'
-import './modals.scss'
+import { unescapeHtml } from '../../helpers/HtmlConverter';
+import extractNewItems from '../../helpers/ExtractNewItems';
+import { convertIdListToItemList, convertItemListToIdList } from '../../helpers/ListConverter';
+import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
+import useBeans from '../../hooks/useBeans';
+import useRanges from '../../hooks/useRanges';
+import useAddRange from '../../hooks/useAddRange';
+import useAddRecipe from '../../hooks/useAddRecipe';
+import useEditRecipe from '../../hooks/useEditRecipe';
 import ModalWrapperContainer from '../../components/elements/ModalWrapperContainer';
 import FormInput from '../../components/elements/FormInput';
 import FormMultiSelect from '../../components/elements/FormMultiSelect';
@@ -23,9 +28,7 @@ import AddEditPalateRangeInput from './components/AddEditPalateRangeInput';
 import AddEditMemoTextarea from './components/AddEditMemoTextarea';
 import InputConfirmSection from './components/InputConfirmSection';
 import MultiselectConfirmSection from './components/MultiselectConfirmSection';
-import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
-import useBeans from '../../hooks/useBeans';
-import useRanges from '../../hooks/useRanges';
+import './modals.scss'
 
 const MODE = {
   ADD: 'add',
@@ -36,44 +39,41 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
   const userData = useUserData()
   const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub)
   const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub)
-  const insertAttribute = useInsertAttribute()
-  const recipeList = useRecipeList()
-  const insertRecipe = useInsertRecipe()
-  const updateRecipe = useUpdateRecipe()
+  const addRange = useAddRange(userData.sub)
+  const addRecipe = useAddRecipe(userData.sub)
+  const editRecipe = useEditRecipe(userData.sub)
 
   const [recipe, setRecipe] = useState({
     bean_id: null,
     brew_date: null,
-    method: null,
-    grinder: null,
+    method: {},
+    grinder: [],
     grind_size: null,
     grounds_weight: null,
     water_weight: null,
-    water: null,
+    water: {},
     water_temp: null,
     yield_weight: null,
     extraction_time: null,
     tds: null,
     total_rate: null,
-    palate: {},
+    palate_rates: {},
     memo: null,
-  })
+  });
 
   const [selectedBean, setSelectedBean] = useState(null)
-  const [selectedMethod, setSelectedMethod] = useState(null)
-  const [selectedGrinder, setSelectedGrinder] = useState(null)
-  const [selectedWater, setSelectedWater] = useState(null)
+  const [selectedMethod, setSelectedMethod] = useState([])
+  const [selectedGrinder, setSelectedGrinder] = useState([])
+  const [selectedWater, setSelectedWater] = useState([])
   const [palateRate, innerSetPalateRate] = useState({})
   const [palateRateHtmlDict, setPalateRateHtmlDict] = useState({})
   const [palateRateConfirmationHtmlDict, setPalateRateConfirmationHtmlDict] = useState({})
-  
+
   const setPalateRate = (key, value) => {
     const newRate = {};
     newRate[key] = value;
-    innerSetPalateRate(palateRate => (
-      { ...palateRate, ...newRate }
-    ));
-  }
+    innerSetPalateRate((palateRate) => ({ ...palateRate, ...newRate }));
+  };
 
   const [tabState, setTabState] = useState({
     coffeeBeansTab: true,
@@ -105,20 +105,22 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     hidePage(waterYieldPage);
     hidePage(palatesPage);
     hidePage(confirmationPage);
-    setTabState({...tabState, 
-      coffeeBeansTab: true, 
-      waterYieldTab: false, 
-      palatesTab: false, 
-      confirmationTab: false
+    setTabState({
+      ...tabState,
+      coffeeBeansTab: true,
+      waterYieldTab: false,
+      palatesTab: false,
+      confirmationTab: false,
     });
- } 
+  }; 
 
   const setOpenWaterYieldTab = () => {
     hidePage(coffeeBeansPage);
     showPage(waterYieldPage);
     hidePage(palatesPage);
     hidePage(confirmationPage);
-    setTabState({...tabState, 
+    setTabState({
+      ...tabState, 
       coffeeBeansTab: false, 
       waterYieldTab: true, 
       palatesTab: false, 
@@ -131,7 +133,8 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     hidePage(waterYieldPage);
     showPage(palatesPage);    
     hidePage(confirmationPage);
-    setTabState({...tabState, 
+    setTabState({
+      ...tabState, 
       coffeeBeansTab: false, 
       waterYieldTab: false, 
       palatesTab: true, 
@@ -144,7 +147,8 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     hidePage(waterYieldPage);
     hidePage(palatesPage);
     showPage(confirmationPage);
-    setTabState({...tabState, 
+    setTabState({
+      ...tabState, 
       coffeeBeansTab: false, 
       waterYieldTab: false, 
       palatesTab: false, 
@@ -152,79 +156,48 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     });
   }
 
-  const convertAttrToId = (selectedRange, category) => {
-    let id = null
-    try {      
-      Object.values(rangeList[category + '_range']).forEach(entry => {
-        if (unescapeHtml(entry['label']) === selectedRange['label']) {
-          id = entry['value']
-        }
-      })
-    } catch { }
-    return id
-  }
-
-  const convertBeanToId = (selectedBean) => {
-    let id = null
-    Object.keys(beanList).forEach(beanId => {
-      if (selectedBean['value'] === beanId) {
-        id = beanId
-      }
-    })
-    return id
-  }
-
   const finalizeRecipe = () => {
-    const beanId = convertBeanToId(selectedBean)
-    const methodId = convertAttrToId(selectedMethod, 'method')
-    const grinderId = convertAttrToId(selectedGrinder, 'grinder')
-    const waterId = convertAttrToId(selectedWater, 'water')
+    const methodId = convertItemListToIdList([selectedMethod], rangeList['method_range'])
+    const grinderId = convertItemListToIdList([selectedGrinder], rangeList['grinder_range'])
+    const waterId = convertItemListToIdList([selectedWater], rangeList['water_range'])
     setRecipe({...recipe, 
-      bean_id: beanId,
+      bean_id: selectedBean['bean_id'],
       method: methodId,
       grinder: grinderId,
       water: waterId,
-      palate: palateRate
+      palate_rates: palateRate
     });
   }
 
-  const getNewRange = (selectedRange) => {
-    if (selectedRange !== null && selectedRange !== undefined && "__isNew__" in selectedRange) {
-      return selectedRange
-    }
-    return
-  }
-
   const insertNewRangeList = async () => {
-    let newRangeObj = {
-      'method': getNewRange(selectedMethod),
-      'grinder': getNewRange(selectedGrinder),
-      'water': getNewRange(selectedWater)
-    }
-    for await (const category of Object.keys(newRangeObj)) {
-      if (newRangeObj[category]) {
-        const body = { "label": newRangeObj[category].label, "def": "" };
-        await insertAttribute(userData.sub, category, body);
+    let newRangeList = {
+      method: extractNewItems([selectedMethod]),
+      grinder: extractNewItems([selectedGrinder]),
+      water: extractNewItems([selectedWater]),
+    };
+    for (const [rangeName, entries] of Object.entries(newRangeList)) {
+      for await (const entry of entries) {
+        const body = { "label": entry.label, "def": "" }
+        await addRange.mutate({ rangeName,body })
       }
     }
-  }
+  };
 
   const [processAddSubmit, setProcessAddSubmit] = useState(false);
   const [processEditSubmit, setProcessEditSubmit] = useState(false);
 
   const onSubmit = () => {
     finalizeRecipe();
-    if (mode === 'add') {
+    if (mode === MODE.ADD) {
       setProcessAddSubmit(true);
     }
-    else if (mode === 'edit') {
+    else if (mode === MODE.EDIT) {
       setProcessEditSubmit(true);
     }
   }
 
   const canGoToConfirmation = () => {
-    if (selectedBean === null || selectedBean.length === 0 ||
-      selectedMethod === null || selectedMethod.length === 0) {
+    if (selectedBean === null || selectedMethod === null) {
         return false
     } 
     return true
@@ -239,7 +212,10 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
         palateRate={palateRate}
         setPalateRate={setPalateRate}
       />
-      setPalateRateHtmlDict(palateRateHtmlDict => ({...palateRateHtmlDict, ...elem}))
+      setPalateRateHtmlDict((palateRateHtmlDict) => ({
+        ...palateRateHtmlDict,
+        ...elem,
+      }));
       let confirmElem = {}
       confirmElem[id] = (
         <InputConfirmSection
@@ -247,9 +223,10 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
           content={palateRate[rangeList['palate_range'][id]['value']]}
         />
       )
-      setPalateRateConfirmationHtmlDict(
-        palateRateConfirmationHtmlDict => ({...palateRateConfirmationHtmlDict, ...confirmElem})
-      )
+      setPalateRateConfirmationHtmlDict((palateRateConfirmationHtmlDict) => ({
+        ...palateRateConfirmationHtmlDict,
+        ...confirmElem,
+      }));
     })
   },[palateRate])
 
@@ -274,80 +251,84 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     return result.length === 0 ? null : result
   }
 
-  const formatSelectedRange = (category) =>{
-    let selectedRange = null
-    if (targetRecipe[category]) {
-      selectedRange = rangeList[category + '_range']['id-' + targetRecipe[category]]
-    }
-    return selectedRange
-  }
-
-  useEffect(async () => {
+  useEffect(() => {
     if (processAddSubmit && recipe.bean_id !== null) {
-      const insertSuccess = await insertRecipe(userData.sub, recipe.bean_id, recipe);
-      if (insertSuccess)
-        setModal({mode: '', isOpen: false});
+      addRecipe.mutate(recipe, {
+        onSuccess: () => {
+          setModal({ mode: "", isOpen: false });
+        },
+      });
     }
-  }, [processAddSubmit])
+  }, [processAddSubmit]);
 
-  useEffect(async () => {
+  useEffect(() => {
     if (processEditSubmit && recipe.bean_id !== null) {
-      const updateSuccess = await updateRecipe(userData.sub, recipe.bean_id, targetRecipe['recipe_id'], recipe);
-      if (updateSuccess)
-        setModal({mode: '', isOpen: false});
+      editRecipe.mutate(recipe, {
+        onSuccess: () => {
+          setModal({ mode: "", isOpen: false });
+        },
+      });
     }
-  }, [processEditSubmit])
+  }, [processEditSubmit]);
 
   useEffect(() => {
-    if (mode === 'edit') {
-      setRecipe({...recipe,
-        brew_date: targetRecipe['brew_date'] ? targetRecipe['brew_date'].split('T')[0] : undefined,
-        grind_size: targetRecipe['grind_size'],
-        grounds_weight: targetRecipe['grounds_weight'],
-        water_weight: targetRecipe['water_weight'],
-        water_temp: targetRecipe['water_temp'],
-        yield_weight: targetRecipe['yield_weight'],
-        extraction_time: formatExtractionTimeInputValue(targetRecipe['extraction_time']),
-        total_rate: targetRecipe['total_rate'],
-        tds: targetRecipe['tds'],
-        memo: targetRecipe['memo'],
-      })
-      setSelectedBean(beanList[targetRecipe['bean_id']])
-      setSelectedMethod(formatSelectedRange('method'))
-      setSelectedGrinder(formatSelectedRange('grinder'))
-      setSelectedWater(formatSelectedRange('water'))
+    if (mode === "edit") {
+      setRecipe({
+        ...recipe,
+        ...targetRecipe,
+        brew_date: targetRecipe["brew_date"]
+          ? targetRecipe["brew_date"].split("T")[0]
+          : undefined,
+        extraction_time: formatExtractionTimeInputValue(
+          targetRecipe["extraction_time"]
+        ),
+      });
+      for (const bean of beanList) {
+        if (bean["bean_id"] === targetRecipe["bean_id"]) {
+          setSelectedBean({ ...bean, value: bean["bean_id"] });
+        }
+      }
+      console.log('targetRecipe: ', targetRecipe)
+      setSelectedMethod(convertIdListToItemList(targetRecipe["method"], rangeList["method_range"]));
+      setSelectedGrinder(convertIdListToItemList(targetRecipe["grinder"], rangeList["grinder_range"]));
+      setSelectedWater(convertIdListToItemList(targetRecipe["water"], rangeList["water_range"]));
     }
-  },[])
+  }, []);
 
   useEffect(() => {
-    if (mode === 'edit' && Object.keys(targetRecipe['palate']).length !== 0) {
-      Object.keys(targetRecipe['palate']).forEach(id => {
-        setPalateRate(id, targetRecipe['palate'][id])
-      })
+    if (mode === "edit" && Object.keys(targetRecipe["palate_rates"]).length !== 0) {
+      Object.keys(targetRecipe["palate_rates"]).forEach((id) => {
+        setPalateRate(id, targetRecipe["palate_rates"][id]);
+      });
     }
-  }, [recipe])
+  }, [recipe]);
 
   if (beanListIsLoading || rangeListIsLoading) {
-    return
+    return 'Loading...'
   }
 
   return (
     <ModalWrapperContainer
-      onCloseClick={() => setModal({mode: '', isOpen: false})}
+      onCloseClick={() => setModal({ mode: "", isOpen: false })}
       title={
-        mode === 'add' ? 'Add New Recipe' :
-        mode === 'edit' ? `Edit recipe for ${beanList[targetRecipe['bean_id']]['label']}` : null
+        mode === "add"
+          ? "Add New Recipe"
+          : mode === "edit"
+          ? `Edit recipe`
+          : null
       }
     >
-      {Object.keys(beanList).length === 0
-        ? 
+      {Object.keys(beanList).length === 0 ? (
         <div className="flex flex-col items-center">
           <div className="w-40 my-20">
-            <CoffeeBagRight name="No Coffee Beans Available"/>
+            <CoffeeBagRight name="No Coffee Beans Available" />
           </div>
-          <p className="mb-16">There must be at least one coffee bean entry to create a new recipe. Please add coffee beans first.</p>
+          <p className="mb-16">
+            There must be at least one coffee bean entry to create a new recipe.
+            Please add coffee beans first.
+          </p>
         </div>
-        :
+      ) : (
         <>
           {/*body*/}
           <ul className="flex">
@@ -376,25 +357,24 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
               title="4. Confirmation"
               disabled={!canGoToConfirmation()}
               tabState={tabState.confirmationTab}
-              onClick={() =>{
+              onClick={() => {
                 setOpenConfirmationTab();
                 insertNewRangeList();
               }}
             />
           </ul>
 
-          <form 
-            className="tab-content"
-          >
-            <div 
-              ref={coffeeBeansPage} 
+          <form className="tab-content">
+            <div
+              ref={coffeeBeansPage}
               className="ease-linear transition-all duration-300"
             >
               <div className="md:flex md:px-8 my-8">
                 <div className="flex flex-col md:w-1/2">
-                  <FormMultiSelect 
+                  <FormMultiSelect
                     title="Coffee Bean"
                     options={Object.values(beanList)}
+                    isDisabled={mode === MODE.EDIT}
                     value={selectedBean}
                     onChange={setSelectedBean}
                     required={true}
@@ -403,12 +383,14 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                   />
                   <FormInput
                     title="Brewing Date"
-                    type="date" 
-                    name="brewingdate" 
+                    type="date"
+                    name="brewingdate"
                     value={recipe.brew_date}
-                    onChange={e => setRecipe({...recipe, brew_date: e.target.value})}
+                    onChange={(e) =>
+                      setRecipe({ ...recipe, brew_date: e.target.value })
+                    }
                   />
-                  <FormMultiSelect 
+                  <FormMultiSelect
                     title="Brewing Method"
                     options={Object.values(rangeList.method_range)}
                     value={selectedMethod}
@@ -420,7 +402,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                 </div>
 
                 <div className="md:w-1/2">
-                  <FormMultiSelect 
+                  <FormMultiSelect
                     title="Grinder"
                     options={Object.values(rangeList.grinder_range)}
                     value={selectedGrinder}
@@ -434,14 +416,14 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                   />
                   <AddEditGroundsWeightInput
                     recipe={recipe}
-                    setRecipe={setRecipe}              
+                    setRecipe={setRecipe}
                   />
                 </div>
               </div>
               <div className="flex items-center justify-between px-2 md:px-8 pb-8">
                 <RedOutlineButton
                   text="Cancel"
-                  onClick={() => setModal({mode: '', isOpen: false})}
+                  onClick={() => setModal({ mode: "", isOpen: false })}
                 />
                 <BlueButton
                   text="Next"
@@ -451,13 +433,13 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
               </div>
             </div>
 
-            <div 
+            <div
               ref={waterYieldPage}
               className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300"
             >
               <div className="md:px-8 my-8 block md:flex">
                 <div className="flex flex-col md:w-1/2">
-                  <FormMultiSelect 
+                  <FormMultiSelect
                     title="Water"
                     options={Object.values(rangeList.water_range)}
                     value={selectedWater}
@@ -467,11 +449,11 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                   />
                   <AddEditWaterWeightInput
                     recipe={recipe}
-                    setRecipe={setRecipe}              
+                    setRecipe={setRecipe}
                   />
                   <AddEditWaterTempInput
                     recipe={recipe}
-                    setRecipe={setRecipe}              
+                    setRecipe={setRecipe}
                   />
                 </div>
 
@@ -484,10 +466,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                     recipe={recipe}
                     setRecipe={setRecipe}
                   />
-                  <AddEditTdsInput
-                    recipe={recipe}
-                    setRecipe={setRecipe}
-                  />
+                  <AddEditTdsInput recipe={recipe} setRecipe={setRecipe} />
                   <AddEditTotalRateInput
                     recipe={recipe}
                     setRecipe={setRecipe}
@@ -502,7 +481,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                 />
                 <BlueButton
                   text="Next"
-                  disabled={selectedBean === null || selectedBean.length === 0}
+                  disabled={selectedBean === null}
                   onClick={() => {
                     setOpenPalatesTab();
                     insertNewRangeList();
@@ -511,7 +490,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
               </div>
             </div>
 
-            <div 
+            <div
               ref={palatesPage}
               className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300"
             >
@@ -519,11 +498,8 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                 {Object.values(palateRateHtmlDict)}
               </div>
 
-              <div className="md:px-8 mb-8">          
-                <AddEditMemoTextarea
-                  recipe={recipe}
-                  setRecipe={setRecipe}
-                />
+              <div className="md:px-8 mb-8">
+                <AddEditMemoTextarea recipe={recipe} setRecipe={setRecipe} />
               </div>
 
               <div className="flex items-center justify-between px-2 md:px-8 pb-8">
@@ -533,7 +509,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                 />
                 <BlueButton
                   text="Next"
-                  disabled={selectedBean === null || selectedBean.length === 0}
+                  disabled={selectedBean === null}
                   onClick={() => {
                     setOpenConfirmationTab();
                     insertNewRangeList();
@@ -542,11 +518,10 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
               </div>
             </div>
 
-            <div 
+            <div
               ref={confirmationPage}
               className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300"
             >
-                
               <div className="md:px-8 my-10">
                 <div className="md:flex">
                   <div className="flex flex-col w-full md:w-1/3">
@@ -616,10 +591,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                         title="Extraction Time"
                         content={recipe.extraction_time}
                       />
-                      <InputConfirmSection
-                        title="TDS"
-                        content={recipe.tds}
-                      />
+                      <InputConfirmSection title="TDS" content={recipe.tds} />
                       <InputConfirmSection
                         title="Total Rate"
                         content={recipe.total_rate}
@@ -650,7 +622,9 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                         onClick={setOpenPalatesTab}
                       />
                       :
-                      <p className="inline ml-8">{recipe.memo ? recipe.memo : 'Not Entered'}</p>
+                      <p className="inline ml-8">
+                        {recipe.memo ? recipe.memo : "Not Entered"}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -663,16 +637,16 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                 />
                 <BlueButton
                   text="Submit"
-                  disabled={selectedBean === null || selectedBean.length === 0}
+                  disabled={selectedBean === null}
                   onClick={onSubmit}
                 />
               </div>
             </div>
           </form>
         </>
-      }
+      )}
     </ModalWrapperContainer>
-  )
+  );
 }
 
 export default AddEditRecipeModal

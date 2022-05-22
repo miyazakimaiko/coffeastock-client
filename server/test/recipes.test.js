@@ -48,7 +48,7 @@ describe('Recipes API', () => {
         "yield_weight": "180",
         "extraction_time": "23:59:59",
         "tds": "9.1",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -78,7 +78,7 @@ describe('Recipes API', () => {
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -108,7 +108,7 @@ describe('Recipes API', () => {
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -139,7 +139,7 @@ describe('Recipes API', () => {
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -170,7 +170,7 @@ describe('Recipes API', () => {
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -201,7 +201,7 @@ describe('Recipes API', () => {
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -232,7 +232,7 @@ describe('Recipes API', () => {
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -263,7 +263,7 @@ describe('Recipes API', () => {
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -294,7 +294,7 @@ describe('Recipes API', () => {
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -325,7 +325,7 @@ describe('Recipes API', () => {
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -356,7 +356,7 @@ describe('Recipes API', () => {
         "yield_weight": "180",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -387,7 +387,7 @@ describe('Recipes API', () => {
         "yield_weight": "test",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -418,7 +418,7 @@ describe('Recipes API', () => {
         "yield_weight": "-10",
         "extraction_time": "00:03:58",
         "tds": "9.1",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -449,7 +449,7 @@ describe('Recipes API', () => {
         "yield_weight": "180.1",
         "extraction_time": "00:03:58",
         "tds": "test",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -480,7 +480,7 @@ describe('Recipes API', () => {
         "yield_weight": "180.1",
         "extraction_time": "00:03:58",
         "tds": "-1",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -511,7 +511,7 @@ describe('Recipes API', () => {
         "yield_weight": "180.1",
         "extraction_time": "24:00:00",
         "tds": "9",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -542,7 +542,7 @@ describe('Recipes API', () => {
         "yield_weight": "180.1",
         "extraction_time": "00:03:58",
         "tds": "9",
-        "palate": [{
+        "palate_rates": [{
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -573,7 +573,7 @@ describe('Recipes API', () => {
         "yield_weight": "180.1",
         "extraction_time": "00:03:58",
         "tds": "9",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -604,7 +604,7 @@ describe('Recipes API', () => {
         "yield_weight": "180.1",
         "extraction_time": "00:03:58",
         "tds": "9",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -635,7 +635,7 @@ describe('Recipes API', () => {
         "yield_weight": "180.1",
         "extraction_time": "00:03:58",
         "tds": "9",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -666,7 +666,7 @@ describe('Recipes API', () => {
         "yield_weight": "180.1",
         "extraction_time": "00:03:58",
         "tds": "9",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
@@ -697,7 +697,7 @@ describe('Recipes API', () => {
         "yield_weight": "180.1",
         "extraction_time": "00:03:58",
         "tds": "9",
-        "palate": {
+        "palate_rates": {
           "1": "5.5",
           "2": "6",
           "3": "4.0",
