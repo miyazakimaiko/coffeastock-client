@@ -2,7 +2,7 @@ import React from 'react'
 import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
 
-const FormMultiSelect = ({title, required = false, options, value, onChange, isCreatable = false, isMulti = true}) => {
+const FormMultiSelect = ({title, required = false, options, value, onChange, isCreatable = false, isDisabled = false, isMulti = true}) => {
 
   return (
     <div className="form-section">
@@ -10,6 +10,7 @@ const FormMultiSelect = ({title, required = false, options, value, onChange, isC
       {isCreatable ? 
         <CreatableSelect
           isMulti={isMulti}
+          isDisabled={isDisabled}
           options={options}
           defaultValue={value}
           value={value}
@@ -18,6 +19,7 @@ const FormMultiSelect = ({title, required = false, options, value, onChange, isC
         :
         <Select
           isMulti={isMulti}
+          isDisabled={isDisabled}
           options={options}
           defaultValue={value}
           value={value}
