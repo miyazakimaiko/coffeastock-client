@@ -1,5 +1,5 @@
 import React from 'react'
-import { capitalize } from '../../utils/HtmlConverter'
+import { capitalize } from '../../helpers/HtmlConverter'
 
 const ToolbarDropdownButton = ({title, onClick, active}) => {
   return (

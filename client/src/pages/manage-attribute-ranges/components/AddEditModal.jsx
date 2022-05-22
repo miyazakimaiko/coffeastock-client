@@ -1,6 +1,6 @@
 import { XIcon } from '@heroicons/react/outline'
 import React from 'react'
-import { capitalize } from '../../../utils/HtmlConverter'
+import { capitalize } from '../../../helpers/HtmlConverter'
 
 const AddEditModal = ({children, mode, category, onCloseClick}) => {
   const titleAdd = `Add New ${capitalize(category)}`

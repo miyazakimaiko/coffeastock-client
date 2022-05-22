@@ -1,5 +1,5 @@
 import React from 'react'
-import { capitalize } from '../../utils/HtmlConverter';
+import { capitalize } from '../../helpers/HtmlConverter';
 import Dropdown from '../elements/Dropdown';
 
 const ToolbarDropdown = ({children, title}) => {

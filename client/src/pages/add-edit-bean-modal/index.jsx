@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState, createRef } from 'react'
 import { useUserData } from '../../context/AccountContext';
-import { unescapeHtml } from '../../utils/HtmlConverter'
-import './modals.scss'
+import { convertIdListToItemList, convertItemListToIdList } from '../../helpers/ListConverter';
+import extractNewItems from '../../helpers/ExtractNewItems';
 import ModalWrapperContainer from '../../components/elements/ModalWrapperContainer';
 import FormInput from '../../components/elements/FormInput';
 import FormRadio from '../../components/elements/FormRadio';
@@ -24,7 +24,7 @@ import useEditBean from '../../hooks/useEditBean';
 import useBeans from '../../hooks/useBeans';
 import useRanges from '../../hooks/useRanges';
 import useAddRange from '../../hooks/useAddRange';
-
+import './modals.scss'
 
 const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   const userData = useUserData()
@@ -143,40 +143,14 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     }
   }, [bean.single_origin, selectedBlendBeans, selectedOrigin]);
 
-
-  const makeIdList = (selectedRange, category) => {
-    const idList = [];
-    try {      
-      selectedRange.forEach(range => {
-        for (const entry of Object.values(rangeList[category + '_range'])) {
-          if (unescapeHtml(entry['label']) === range['label']) {
-            idList.push(parseInt(entry['value']));
-          }
-        }
-      })
-    } catch { }
-    return idList;
-  }
-
-  const makeSelectedRangeList = (idList, category) => {
-    const selectedRangeList = [];
-    for (const entry of Object.values(rangeList[category + '_range'])) {
-      const id = parseInt(entry['value'])
-      if (idList.includes(id)) {
-        selectedRangeList.push(entry);
-      }
-    }
-    return selectedRangeList;
-  }
-
   const finalizeBean = () => {
-    const roasterIdList = makeIdList(selectedRoaster, "roaster");
-    const aromaIdList = makeIdList(selectedAroma, "aroma");
+    const roasterIdList = convertItemListToIdList(selectedRoaster, rangeList["roaster_range"]);
+    const aromaIdList = convertItemListToIdList(selectedAroma, rangeList["aroma_range"]);
     if (bean.single_origin) {
-      const originIdList = makeIdList(selectedOrigin, "origin");
-      const farmIdList = makeIdList(selectedFarm, "farm");
-      const varietyIdList = makeIdList(selectedVariety, "variety");
-      const processIdList = makeIdList(selectedProcess, "process");
+      const originIdList = convertItemListToIdList(selectedOrigin, rangeList["origin_range"]);
+      const farmIdList = convertItemListToIdList(selectedFarm, rangeList["farm_range"]);
+      const varietyIdList = convertItemListToIdList(selectedVariety, rangeList["variety_range"]);
+      const processIdList = convertItemListToIdList(selectedProcess, rangeList["process_range"]);
       
       setBean({...bean, 
         roaster: [...roasterIdList],
@@ -195,22 +169,14 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     }
   }
 
-  const getNewRangeList = (selectedRange) => {
-    let newRangeList = [];
-    if (selectedRange.length > 0) {
-      newRangeList = selectedRange.filter((x) => "__isNew__" in x);
-    }
-    return newRangeList;
-  }
-
   const insertNewRangeList = async () => {
     let newRangeList = {
-      'origin': getNewRangeList(selectedOrigin),
-      'roaster': getNewRangeList(selectedRoaster),
-      'farm': getNewRangeList(selectedFarm),
-      'process': getNewRangeList(selectedProcess),
-      'aroma': getNewRangeList(selectedAroma),
-      'variety': getNewRangeList(selectedVariety)
+      'origin': extractNewItems(selectedOrigin),
+      'roaster': extractNewItems(selectedRoaster),
+      'farm': extractNewItems(selectedFarm),
+      'process': extractNewItems(selectedProcess),
+      'aroma': extractNewItems(selectedAroma),
+      'variety': extractNewItems(selectedVariety)
     }
 
     for (const [rangeName, entries] of Object.entries(newRangeList)) {
@@ -236,15 +202,11 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
 
   useEffect(() => {
     if (processAddSubmit && bean.label !== null) {
-      addBean.mutate(bean)
+      addBean.mutate(bean, {
+        onSuccess: setModal({mode: '', isOpen: false})
+      })
     }
   }, [processAddSubmit])
-  
-  useEffect(() => {
-    if (addBean.isSuccess) {
-      setModal({mode: '', isOpen: false})
-    }
-  }, [addBean.isSuccess])
 
   useEffect(() => {
     if (processEditSubmit && bean.label !== null) {
@@ -263,15 +225,11 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
         bean.process = [];
         bean.variety = [];
       }
-      editBean.mutate(bean)
+      editBean.mutate(bean, {
+        onSuccess: setModal({mode: '', isOpen: false})
+      })
     }
   }, [processEditSubmit])
-
-  useEffect(() => {
-    if (editBean.isSuccess) {
-      setModal({mode: '', isOpen: false})
-    }
-  }, [editBean.isSuccess])
 
   // To enable/disable Next button to go to confirmation section
   useEffect(() => {
@@ -295,31 +253,40 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   }, [selectedBlendBeans, blendRatios]);
 
   useEffect(() => {
-    if (mode === 'edit') {
-      setBean({...bean, ...targetBean,
-        roast_date: targetBean['roast_date'] ? targetBean['roast_date'].split('T')[0] : undefined,
-      })
-      setSelectedRoaster(makeSelectedRangeList(targetBean['roaster'], 'roaster'))
-      setSelectedOrigin(makeSelectedRangeList(targetBean['origin'], 'origin'))
-      setSelectedFarm(makeSelectedRangeList(targetBean['farm'], 'farm'))
-      setSelectedVariety(makeSelectedRangeList(targetBean['variety'], 'variety'))
-      setSelectedProcess(makeSelectedRangeList(targetBean['process'], 'process'))
-      setSelectedAroma(makeSelectedRangeList(targetBean['aroma'], 'aroma'))
+    if (mode === "edit") {
+      setBean({
+        ...bean,
+        ...targetBean,
+        roast_date: targetBean["roast_date"]
+          ? targetBean["roast_date"].split("T")[0]
+          : undefined,
+      });
+      setSelectedRoaster(convertIdListToItemList(targetBean["roaster"], rangeList["roaster_range"]));
+      setSelectedOrigin(convertIdListToItemList(targetBean["origin"], rangeList["origin_range"]));
+      setSelectedFarm(convertIdListToItemList(targetBean["farm"], rangeList["farm_range"]));
+      setSelectedVariety(convertIdListToItemList(targetBean["variety"], rangeList["variety_range"]));
+      setSelectedProcess(convertIdListToItemList(targetBean["process"], rangeList["process_range"]));
+      setSelectedAroma(convertIdListToItemList(targetBean["aroma"], rangeList["aroma_range"]));
     }
-  },[])
+  }, []);
 
   useEffect(() => {
-    Object.keys(blendRatios).forEach(id => {
-      const html = {}
-      html[id] = <FormBlendRatioInput
-        title={beanList.find(d => d.bean_id == id)['label']}
-        name={id}
-        value={blendRatios[id]}
-        onChange={e => setBlendRatio(id, e.target.value)}
-      />
-      setBlendRatioHtmlDict(blendRatioHtmlDict => ({...blendRatioHtmlDict, ...html}))
-    })
-  }, [blendRatios])
+    Object.keys(blendRatios).forEach((id) => {
+      const html = {};
+      html[id] = (
+        <FormBlendRatioInput
+          title={beanList.find((d) => d.bean_id == id)["label"]}
+          name={id}
+          value={blendRatios[id]}
+          onChange={(e) => setBlendRatio(id, e.target.value)}
+        />
+      );
+      setBlendRatioHtmlDict((blendRatioHtmlDict) => ({
+        ...blendRatioHtmlDict,
+        ...html,
+      }));
+    });
+  }, [blendRatios]);
 
   useEffect(() => {
     if (mode === 'edit' && selectedBlendBeans.length === 0 && targetBean['blend_ratio']) {

@@ -41,7 +41,6 @@ const ChartRadarTaste = ({ className, labels, rates }) => {
   },
 };
 
-  console.log('data: ', data)
   return (
     <div className={className}>
       <Radar data={data} options={options} />
