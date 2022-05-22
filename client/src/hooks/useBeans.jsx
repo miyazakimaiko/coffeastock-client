@@ -11,7 +11,7 @@ export default function useBeans(userid) {
       enabled: Boolean(userid),
       onSuccess: beans => {
         beans.forEach(bean => {
-          queryClient.setQueryData(['beans', bean.bean_id], bean)
+          queryClient.setQueryData(['bean', bean.bean_id], bean)
         });
       }
     }

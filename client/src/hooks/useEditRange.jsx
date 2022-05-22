@@ -2,22 +2,24 @@ import { useMutation, useQueryClient } from 'react-query'
 import * as api from '../api/Ranges'
 import toastOnBottomCenter from '../utils/customToast'
 
-export default function useEditRange(userid) {
+export default function useEditRange(userid, rangeName) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (data) => {
-      api.editRange(userid, data.rangeName, data.body.value, data.body)
-    },
+    async (data) =>
+      await api.editRange(userid, rangeName, data.body.value, data.body),
     {
       enabled: Boolean(userid),
       onSuccess: async () => {
-        await queryClient.invalidateQueries(['ranges'])
-        toastOnBottomCenter('success', `Entry is edited successfully.`)
+        await queryClient.invalidateQueries(["range", `${rangeName}_range`]);
+        toastOnBottomCenter("success", `Entry is edited successfully.`);
       },
-      onError: error => {
-        toastOnBottomCenter('error', error.message ?? 'An unknown error has ocurred.')
+      onError: (error) => {
+        toastOnBottomCenter(
+          "error",
+          error.message ?? "An unknown error has ocurred."
+        );
       },
     }
-  )
+  );
 }

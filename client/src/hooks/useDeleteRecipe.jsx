@@ -1,18 +1,18 @@
 import { useMutation, useQueryClient } from 'react-query'
-import * as api from '../api/Beans'
+import * as api from '../api/Recipes'
 import toastOnBottomCenter from '../utils/customToast'
 
-export default function useEditBean(userid) {
+export default function useDeleteRecipe(userid, beanid) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (bean) => await api.editBean(userid, bean),
+    async (body) => await api.deleteRecipe(userid, beanid, body),
     {
-      enabled: Boolean(userid),
-      onSuccess: async (variables) => {
-        await queryClient.invalidateQueries(['bean', variables[0].bean_id])
+      enabled: Boolean(userid && beanid),
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(["bean", beanid, "recipes"])
         await queryClient.invalidateQueries('ranges')
-        toastOnBottomCenter('success', 'Coffee bean is edited successfully.')
+        toastOnBottomCenter('success', 'Recipe is deleted successfully.')
       },
       onError: error => {
         toastOnBottomCenter('error', error.message ? error.message : 'An unknown error has ocurred.')

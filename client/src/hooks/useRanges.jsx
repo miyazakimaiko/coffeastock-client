@@ -11,7 +11,7 @@ const useRanges = (userid) => {
       enabled: Boolean(userid),
       onSuccess: ranges => {
         Object.keys(ranges).forEach(range => {
-          queryClient.setQueryData(['ranges', range], ranges[range])
+          queryClient.setQueryData(['range', range], ranges[range])
         })
       }
     }

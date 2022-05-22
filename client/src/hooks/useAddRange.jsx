@@ -7,17 +7,22 @@ export default function useAddRange(userid) {
 
   return useMutation(
     async (data) => {
-      await api.addRange(userid, data.rangeName, data.body)
+      await api.addRange(userid, data.rangeName, data.body);
     },
     {
       enabled: Boolean(userid),
-      onSuccess: () => {
-        queryClient.invalidateQueries('ranges')
-        toastOnBottomCenter('success', `New range is added successfully.`)
+      onSuccess: async (_, variables) => {
+        await queryClient.invalidateQueries([
+          "range",
+          `${variables.rangeName}_range`,
+        ]);
       },
       onError: (error) => {
-        toastOnBottomCenter('error', error.message ?? 'An unknown error has ocurred.')
-      }
+        toastOnBottomCenter(
+          "error",
+          error.message ?? "An unknown error has ocurred."
+        );
+      },
     }
-  )
+  );
 }

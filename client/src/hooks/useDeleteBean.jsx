@@ -6,7 +6,7 @@ export default function useDeleteBean(userid) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (beanid) => api.deleteBean(userid, beanid),
+    async (body) => await api.deleteBean(userid, body),
     {
       enabled: Boolean(userid),
       onSuccess: async () => {

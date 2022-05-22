@@ -5,7 +5,7 @@ export default function useBean(userid, beanId) {
   const queryClient = useQueryClient();
 
   return useQuery(
-    ['beans', beanId],
+    ['bean', beanId],
     () => api.getBean(userid, beanId), 
     {
       enabled: Boolean(userid) && Boolean(beanId),

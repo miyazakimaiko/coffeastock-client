@@ -6,7 +6,7 @@ export default function useAddBean(userid) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (bean) => api.addBean(userid, bean),
+    async (body) => await api.addBean(userid, body),
     {
       enabled: Boolean(userid),
       onSuccess: async () => {
