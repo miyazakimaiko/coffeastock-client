@@ -1,4 +1,4 @@
-import axios from './customAxios'
+import axios from './CustomAxios'
 
 export const getRanges = async (userid) => await axios.get(`/user/${userid}/ranges`).then(res => res.data)
 
