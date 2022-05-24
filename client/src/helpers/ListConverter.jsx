@@ -1,8 +1,6 @@
 import { unescapeHtml } from "./HtmlConverter";
 
 export const convertItemListToIdList = (selectedRange, rangeItems) => {
-  console.log('selectedRange: ', selectedRange) // does not work as expected
-  console.log('rangeItems: ', rangeItems) 
   const idList = [];
   selectedRange.forEach(range => {
     for (const entry of Object.values(rangeItems)) {
