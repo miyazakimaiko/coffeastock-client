@@ -159,11 +159,11 @@ module.exports = (app) => {
           CustomException(404, 'Not Found')
         }
 
-        const beanData = result.rows[0]
+        const currentBeanData = result.rows[0]
 
         for (const rangeKey of beanRangeKeys) {
           if(req.body[rangeKey]) {
-            const currentRangeIdList = beanData[rangeKey]
+            const currentRangeIdList = currentBeanData[rangeKey]
             const newRangeIdList = req.body[rangeKey]
   
             const removedRangeIdList = getUniqueItemInFirstArgArray(currentRangeIdList, newRangeIdList)

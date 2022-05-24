@@ -25,6 +25,7 @@ import useBeans from '../../hooks/useBeans';
 import useRanges from '../../hooks/useRanges';
 import useAddRange from '../../hooks/useAddRange';
 import './modals.scss'
+import toastOnBottomCenter from '../../utils/customToast';
 
 const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   const userData = useUserData()
@@ -64,18 +65,23 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   const [blendRatioHtmlDict, setBlendRatioHtmlDict] = useState({})
 
   const setSelectedBlendBeans = (e) => {
-    innerSetSelectedBlendBeans(e);
-    // If parameter e contains the newly selected BlendBean,
-    // it must be found and set it in the blendRatio with the value of zero
-    e.forEach(bean => {
-      let found = false;
-      for (const beanId of Object.keys(blendRatios)) {
-        if (bean.value === beanId) found = true;
-      }
-      if (!found) {
-        setBlendRatio(bean.value, '0');
-      }
-    })
+    if (e.length > 5) {
+      toastOnBottomCenter('error', 'Cannot select more than five coffee bean types.')
+    }
+    else {
+      innerSetSelectedBlendBeans(e);
+      // If parameter e contains the newly selected BlendBean,
+      // it must be found and set it in the blendRatio with the value of zero
+      e.forEach(bean => {
+        let found = false;
+        for (const beanId of Object.keys(blendRatios)) {
+          if (bean.value === beanId) found = true;
+        }
+        if (!found) {
+          setBlendRatio(bean.value, '0');
+        }
+      })
+    }
   }
   
   const setBlendRatio = (key, value) => {
@@ -144,13 +150,14 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   }, [bean.single_origin, selectedBlendBeans, selectedOrigin]);
 
   const finalizeBean = () => {
-    const roasterIdList = convertItemListToIdList(selectedRoaster, rangeList["roaster_range"]);
-    const aromaIdList = convertItemListToIdList(selectedAroma, rangeList["aroma_range"]);
+    const roasterIdList = convertItemListToIdList(selectedRoaster, rangeList.roaster_range);
+    const aromaIdList = convertItemListToIdList(selectedAroma, rangeList.aroma_range);
+
     if (bean.single_origin) {
-      const originIdList = convertItemListToIdList(selectedOrigin, rangeList["origin_range"]);
-      const farmIdList = convertItemListToIdList(selectedFarm, rangeList["farm_range"]);
-      const varietyIdList = convertItemListToIdList(selectedVariety, rangeList["variety_range"]);
-      const processIdList = convertItemListToIdList(selectedProcess, rangeList["process_range"]);
+      const originIdList = convertItemListToIdList(selectedOrigin, rangeList.origin_range);
+      const farmIdList = convertItemListToIdList(selectedFarm, rangeList.farm_range);
+      const varietyIdList = convertItemListToIdList(selectedVariety, rangeList.variety_range);
+      const processIdList = convertItemListToIdList(selectedProcess, rangeList.process_range);
       
       setBean({...bean, 
         roaster: [...roasterIdList],
@@ -160,7 +167,8 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
         variety: [...varietyIdList],
         process: [...processIdList],
       });
-    } else {
+    }
+    else {
       setBean({...bean, 
         roaster: [...roasterIdList],
         aroma: [...aromaIdList],
@@ -180,6 +188,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     }
 
     for (const [rangeName, entries] of Object.entries(newRangeList)) {
+
       for await (const entry of entries) {
         const body = { "label": entry.label, "def": "" }
         await addRange.mutate({ rangeName,body })
@@ -201,7 +210,15 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   }
 
   useEffect(() => {
-    if (processAddSubmit && bean.label !== null) {
+    if (processAddSubmit) {
+      if (Object.keys(bean.blend_ratio).length > 5) {
+        toastOnBottomCenter('error', 'No more than five coffee types can be selected as blend beans.')
+        return;
+      } 
+      if (bean.label === null) {
+        toastOnBottomCenter('error', 'Coffee Bean Name is blank.')
+        return;
+      }
       addBean.mutate(bean, {
         onSuccess: setModal({mode: '', isOpen: false})
       })
@@ -209,7 +226,17 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   }, [processAddSubmit])
 
   useEffect(() => {
-    if (processEditSubmit && bean.label !== null) {
+    if (processEditSubmit) {
+
+      if (!bean.single_origin && Object.keys(bean.blend_ratio).length > 5) {
+        toastOnBottomCenter('error', 'No more than five coffee types can be selected as blend beans.');
+        return;
+      } 
+      if (bean.label === null) {
+        toastOnBottomCenter('error', 'Coffee Bean Name is blank.')
+        return;
+      }
+
       if (bean.single_origin) {
         bean.blend_ratio = {}
         bean.blend_bean_id_1 = null;
@@ -225,6 +252,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
         bean.process = [];
         bean.variety = [];
       }
+
       editBean.mutate(bean, {
         onSuccess: setModal({mode: '', isOpen: false})
       })
