@@ -13,7 +13,7 @@ import ViewMyCoffees from './pages/view-beans-list';
 import ManageAttributeRanges from './pages/manage-attribute-ranges';
 import { useGetSession, useSetUserData, useAuthenticated, useSetAuthenticated } from './context/AccountContext';
 import NavStateProvider from './context/NavStateContext';
-import ScrollBackButton from './components/elements/ScrollBackButton';
+import ScrollBackButton from './elements/ScrollBackButton';
 
 const App = () => {
   const mainRef = createRef();

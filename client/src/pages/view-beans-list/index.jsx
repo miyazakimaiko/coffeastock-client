@@ -5,7 +5,7 @@ import ToolBar from '../../components/tool-bar';
 import ToolbarDropdown from '../../components/tool-bar/ToolBarDropdown';
 import ToolbarDropdownButton from '../../components/tool-bar/ToolbarDropdownButton';
 import ToolBarSearchBar from '../../components/tool-bar/ToolBarSearchBar';
-import TooltipBottomLeft from '../../components/elements/TooltipBottomLeft';
+import TooltipBottomLeft from '../../elements/TooltipBottomLeft';
 import CoffeeGroupSection from './CoffeeGroupSection';
 import CoffeeSection from './CoffeeSection'
 import useBeans from '../../hooks/useBeans';

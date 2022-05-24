@@ -6,10 +6,10 @@ import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
 import { generateStarIconList, generateFireIconList } from '../../helpers/GenerateIconList';
 import { unescapeHtml } from '../../helpers/HtmlConverter'
 import { useUserData } from '../../context/AccountContext';
-import TooltipLeft from '../../components/elements/TooltipLeft';
+import TooltipLeft from '../../elements/TooltipLeft';
 import CoffeeAttributeSection from './components/CoffeeAttributeSection';
 import ToolBar from '../../components/tool-bar';
-import Dropdown from '../../components/elements/Dropdown';
+import Dropdown from '../../elements/Dropdown';
 import DeleteModal from '../delete-modal';
 import RecipeGroupSection from './components/RecipeGroupSection';
 import './ViewBeanAndRecipes.scss'

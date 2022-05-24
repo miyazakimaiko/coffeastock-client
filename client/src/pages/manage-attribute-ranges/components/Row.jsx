@@ -1,7 +1,7 @@
 import { PencilAltIcon, XIcon } from '@heroicons/react/outline'
 import React from 'react'
 import { unescapeHtml } from '../../../helpers/HtmlConverter'
-import Dropdown from '../../../components/elements/Dropdown'
+import Dropdown from '../../../elements/Dropdown'
 
 const Row = ({category, value, label, def, onEditClick, onDeleteClick}) => {
   return (

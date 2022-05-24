@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import FormInput from '../../../components/elements/FormInput'
+import FormInput from '../../../elements/FormInput'
 
 const AddEditRoastLevelInput = ({bean, setBean}) => {
 

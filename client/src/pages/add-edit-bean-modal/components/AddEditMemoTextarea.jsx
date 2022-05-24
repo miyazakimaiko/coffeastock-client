@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import FormTextarea from '../../../components/elements/FormTextarea';
+import FormTextarea from '../../../elements/FormTextarea';
 import { escapeHtml } from '../../../helpers/HtmlConverter';
 
 const AddEditMemoTextarea = ({bean, setBean}) => {

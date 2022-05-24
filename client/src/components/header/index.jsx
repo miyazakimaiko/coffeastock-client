@@ -10,7 +10,7 @@ import imgFace from '../../assets/images/face.jpg'
 import AddEditBeanModal from '../../pages/add-edit-bean-modal';
 import AddRecipeModal from '../../pages/add-edit-recipe-modal';
 import './header.scss'
-import Dropdown from '../elements/Dropdown';
+import Dropdown from '../../elements/Dropdown';
 
 const MODE = {
   BEAN: 'bean',
