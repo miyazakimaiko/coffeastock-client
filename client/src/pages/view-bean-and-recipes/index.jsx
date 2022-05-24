@@ -10,14 +10,14 @@ import TooltipLeft from '../../elements/TooltipLeft';
 import CoffeeAttributeSection from './components/CoffeeAttributeSection';
 import ToolBar from '../../components/tool-bar';
 import Dropdown from '../../elements/Dropdown';
-import DeleteModal from '../delete-modal';
+import DeleteModal from '../../modals/delete-modal';
 import RecipeGroupSection from './components/RecipeGroupSection';
 import './ViewBeanAndRecipes.scss'
 import useBeans from '../../hooks/useBeans';
 import useBean from '../../hooks/useBean';
 import useDeleteBean from '../../hooks/useDeleteBean';
 import useRanges from '../../hooks/useRanges';
-import AddEditBeanModal from '../add-edit-bean-modal'
+import AddEditBeanModal from '../../modals/add-edit-bean-modal'
 import useRecipes from '../../hooks/useRecipes';
 
 const ViewBeanAndRecipes = () => {

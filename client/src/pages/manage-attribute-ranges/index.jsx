@@ -8,7 +8,7 @@ import AddEditModal from './components/AddEditModal';
 import AddEditForm from './components/AddEditForm';
 import NameInput from './components/NameInput';
 import DetailsTextarea from './components/DetailsTextarea';
-import DeleteModal from '../../pages/delete-modal'
+import DeleteModal from '../../modals/delete-modal'
 import useRange from '../../hooks/useRange';
 import useEditRange from '../../hooks/useEditRange';
 import toastOnBottomCenter from '../../utils/customToast';

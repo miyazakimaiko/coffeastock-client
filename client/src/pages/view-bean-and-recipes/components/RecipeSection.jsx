@@ -6,11 +6,11 @@ import { HiOutlineChevronDown, HiOutlineChevronUp } from 'react-icons/hi'
 import ChartRadarTaste from './ChartRadarTaste'
 import { generateStarIconList } from '../../../helpers/GenerateIconList'
 import Dropdown from '../../../elements/Dropdown'
-import AddEditRecipeModal from '../../add-edit-recipe-modal'
+import AddEditRecipeModal from '../../../modals/add-edit-recipe-modal'
 import useRanges from '../../../hooks/useRanges'
 import { useUserData } from '../../../context/AccountContext'
 import useDeleteRecipe from '../../../hooks/useDeleteRecipe'
-import DeleteModal from '../../delete-modal'
+import DeleteModal from '../../../modals/delete-modal'
 
 const MODAL_MODE = {
   EDIT: 'edit',

@@ -7,8 +7,8 @@ import toastOnTopRight from '../../utils/customToast';
 import { NavStateContext } from '../../context/NavStateContext';
 import { useUserData, useSetAuthenticated, useSignout } from '../../context/AccountContext';
 import imgFace from '../../assets/images/face.jpg'
-import AddEditBeanModal from '../../pages/add-edit-bean-modal';
-import AddRecipeModal from '../../pages/add-edit-recipe-modal';
+import AddEditBeanModal from '../../modals/add-edit-bean-modal';
+import AddRecipeModal from '../../modals/add-edit-recipe-modal';
 import './header.scss'
 import Dropdown from '../../elements/Dropdown';
 
