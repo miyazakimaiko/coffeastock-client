@@ -1,17 +1,18 @@
-import { BookOpenIcon, GlobeIcon, LightBulbIcon } from '@heroicons/react/outline'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import CoffeeBagLeft from '../../assets/svgs/CoffeeBagLeft'
-import UserPool from '../../utils/UserPool'
+import { BookOpenIcon, GlobeIcon, LightBulbIcon } from '@heroicons/react/outline'
 import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
+import UserPool from '../../utils/UserPool'
 import toastOnBottomCenter from '../../utils/customToast'
+import CoffeeBagLeft from '../../assets/svgs/CoffeeBagLeft'
+import useAddUser from '../../hooks/useAddUser';
 
 const Register = () => {
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const addUser = useAddUser();
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -29,9 +30,8 @@ const Register = () => {
       } else {
         try {
           const userId = data.userSub;
-          setDefaultAttributeRange(userId);
+          setDefaultRangeList(userId);
           navigate('/login', {replace: true})
-          toastOnBottomCenter('success', 'Registered successfully!')
         } catch (error) {
           toastOnBottomCenter('error', error.message)
         }
@@ -39,247 +39,11 @@ const Register = () => {
     });
   };
 
-  const setDefaultAttributeRange = async (userid) => {
-    try {
-      await fetch(
-        `http://localhost:4000/api/v1/user/${userid}`,
-        {
-          method: "POST",
-          headers: {
-            'Content-Type': "application/json"
-          },
-          body: JSON.stringify({
-            "origin_range": {
-              "nextId": 6,
-              "items": {
-                "3" : {
-                  "label": "Yirgacheffe, Ethiopia",
-                  "def": "Location details here...",
-                  "inUse": 0
-                },
-                "2": {
-                  "label": "Sidamo, Ethiopia",
-                  "def": "Location details here...",
-                  "inUse": 0
-                },
-                "5": {
-                  "label": "Kaffa, Ethiopia",
-                  "def": "Location details here...",
-                  "inUse": 0
-                },
-                "4": {
-                  "label": "Ruiri, Kenya",
-                  "def": "Location details here...",
-                  "inUse": 0
-                },
-                "1": {
-                  "label": "Thika, Kenya",
-                  "def": "Location details here...",
-                  "inUse": 0
-                }
-              }
-            },
-            "farm_range": {
-              "nextId": 4,
-              "items": {
-                "3" : {
-                  "label": "Farm 1",
-                  "def": "details...",
-                  "inUse": 0
-                },
-                "2": {
-                  "label": "Farm 2",
-                  "def": "details...",
-                  "inUse": 0
-                },
-                "1": {
-                  "label": "Farm 3",
-                  "def": "details...",
-                  "inUse": 0
-                }
-              }
-            },
-            "variety_range": {
-              "nextId": 4,
-              "items": {
-                "1" : {
-                  "label": "Typica",
-                  "def": "Details what typica is...",
-                  "inUse": 0
-                },
-                "3": {
-                  "label": "Caturra",
-                  "def": "Details what caturra is...",
-                  "inUse": 0
-                },
-                "2": {
-                  "label": "Burbon",
-                  "def": "Details what Burbon is...",
-                  "inUse": 0
-                }
-              }
-            },
-            "process_range": {
-              "nextId": 4,
-              "items": {
-                "1" : {
-                  "label": "Washed",
-                  "def": "Details what washed is...",
-                  "inUse": 0
-                },
-                "2": {
-                  "label": "Semi-Washed",
-                  "def": "Details what semi-washed is...",
-                  "inUse": 0
-                },
-                "3": {
-                  "label": "Natural",
-                  "def": "Details what natural is...",
-                  "inUse": 0
-                }
-              }
-            },
-            "roaster_range": {
-              "nextId": 4,
-              "items": {
-                "3" : {
-                  "label": "Coffeeangel",
-                  "def": "Definition of Coffeeangel...",
-                  "inUse": 0
-                },
-                "1": {
-                  "label": "Coffee Collective",
-                  "def": "Coffee Collective definition...",
-                  "inUse": 0
-                },
-                "2": {
-                  "label": "Koppi",
-                  "def": "Koppi details...",
-                  "inUse": 0
-                }
-              }
-            },
-            "method_range": {
-              "nextId": 4,
-                "items": {
-                "1" : {
-                  "label": "French Press",
-                  "def": "details...",
-                  "inUse": 0
-                },
-                "3": {
-                  "label": "Espresso",
-                  "def": "details...",
-                  "inUse": 0
-                },
-                "2": {
-                  "label": "Mocha Pot",
-                  "def": "details...",
-                  "inUse": 0
-                }
-              }
-            },
-            "water_range": {
-              "nextId": 3,
-              "items": {
-                "2" : {
-                  "label": "Water 1",
-                  "def": "details...",
-                  "inUse": 0
-                },
-                "1": {
-                  "label": "Water 2",
-                  "def": "details...",
-                  "inUse": 0
-                }
-              }
-            },
-            "grinder_range": {
-              "nextId": 4,
-              "items": {
-                "2" : {
-                  "label": "Hario Mini Handmill",
-                  "def": "details...",
-                  "inUse": 0
-                },
-                "3": {
-                  "label": "EKS",
-                  "def": "details...",
-                  "inUse": 0
-                },
-                "1": {
-                  "label": "Sage espresso grinder",
-                  "def": "details...",
-                  "inUse": 0
-                }
-              }
-            },
-            "palate_range": {
-              "nextId": 7,
-              "items": {
-                "5" : {
-                  "label": "sweet",
-                  "def": "details...",
-                  "inUse": 0
-                },
-                "2": {
-                  "label": "aclabelic",
-                  "def": "details...",
-                  "inUse": 0
-                },
-                "4": {
-                  "label": "cherries",
-                  "def": "details...",
-                  "inUse": 0
-                },
-                "1" : {
-                  "label": "stonefruit",
-                  "def": "details...",
-                  "inUse": 0
-                },
-                "6": {
-                  "label": "citrus fruit",
-                  "def": "details...",
-                  "inUse": 0
-                },
-                "3": {
-                  "label": "chocolate",
-                  "def": "details...",
-                  "inUse": 0
-                }
-              }
-            },
-            "aroma_range": {
-              "nextId": 5,
-              "items": {
-                "4" : {
-                  "label": "Walnut",
-                  "def": "details...",
-                  "inUse": 0
-                },
-                "2": {
-                  "label": "Peach",
-                  "def": "details...",
-                  "inUse": 0
-                },
-                "1": {
-                  "label": "Pineapple",
-                  "def": "details...",
-                  "inUse": 0
-                },
-                "3" : {
-                  "label": "Green apple",
-                  "def": "details..."
-                }
-              }
-            }
-          })
-        }
-      );
-
-    } catch (error) {
-      toastOnBottomCenter('error', error.message)
-    }
+  const setDefaultRangeList = async (userid) => {
+    addUser.mutate(userid, {
+      onSuccess: toastOnBottomCenter('success', 'Your account is created successfully!'),
+      onError: (error) => toastOnBottomCenter('error', error.message)
+    })
   }
 
   return (
