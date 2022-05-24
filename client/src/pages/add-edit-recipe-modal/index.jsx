@@ -157,14 +157,23 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
   }
 
   const finalizeRecipe = () => {
-    const methodId = convertItemListToIdList([selectedMethod], rangeList['method_range'])
-    const grinderId = convertItemListToIdList([selectedGrinder], rangeList['grinder_range'])
-    const waterId = convertItemListToIdList([selectedWater], rangeList['water_range'])
+    const methodId = Object.values(rangeList.method_range).map(item => {
+      if (item.label === selectedMethod.label) 
+        return parseInt(item.value)
+    });
+    const grinderId = Object.values(rangeList.grinder_range).map(item => {
+      if (item.label === selectedGrinder.label) 
+        return parseInt(item.value)
+    });
+    const waterId = Object.values(rangeList.water_range).map(item => {
+      if (item.label === selectedWater.label) 
+        return parseInt(item.value)
+    });
     setRecipe({...recipe, 
-      bean_id: selectedBean['bean_id'],
-      method: methodId,
-      grinder: grinderId,
-      water: waterId,
+      bean_id: selectedBean.bean_id,
+      method: methodId.filter(Number),
+      grinder: grinderId.filter(Number),
+      water: waterId.filter(Number),
       palate_rates: palateRate
     });
   }
@@ -204,11 +213,11 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
   }
 
   useEffect(() => {
-    Object.keys(rangeList['palate_range']).forEach(id => {
+    Object.keys(rangeList.palate_range).forEach(id => {
       let elem = {}
       elem[id] = <AddEditPalateRangeInput
-        title={rangeList['palate_range'][id]['label']}
-        parateId={rangeList['palate_range'][id]['value']}
+        title={rangeList.palate_range[id].label}
+        parateId={rangeList.palate_range[id].value}
         palateRate={palateRate}
         setPalateRate={setPalateRate}
       />
@@ -219,8 +228,8 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
       let confirmElem = {}
       confirmElem[id] = (
         <InputConfirmSection
-          title={rangeList['palate_range'][id]['label']}
-          content={palateRate[rangeList['palate_range'][id]['value']]}
+          title={rangeList.palate_range[id].label}
+          content={palateRate[rangeList.palate_range[id].value]}
         />
       )
       setPalateRateConfirmationHtmlDict((palateRateConfirmationHtmlDict) => ({
@@ -272,33 +281,35 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
   }, [processEditSubmit]);
 
   useEffect(() => {
-    if (mode === "edit") {
+    if (mode === MODE.EDIT) {
       setRecipe({
         ...recipe,
         ...targetRecipe,
-        brew_date: targetRecipe["brew_date"]
-          ? targetRecipe["brew_date"].split("T")[0]
+        brew_date: targetRecipe.brew_date
+          ? targetRecipe.brew_date.split("T")[0]
           : undefined,
         extraction_time: formatExtractionTimeInputValue(
-          targetRecipe["extraction_time"]
+          targetRecipe.extraction_time
         ),
       });
       for (const bean of beanList) {
-        if (bean["bean_id"] === targetRecipe["bean_id"]) {
-          setSelectedBean({ ...bean, value: bean["bean_id"] });
+        if (bean.bean_id === targetRecipe.bean_id) {
+          setSelectedBean({ ...bean, value: bean.bean_id });
         }
       }
-      console.log('targetRecipe: ', targetRecipe)
-      setSelectedMethod(convertIdListToItemList(targetRecipe["method"], rangeList["method_range"]));
-      setSelectedGrinder(convertIdListToItemList(targetRecipe["grinder"], rangeList["grinder_range"]));
-      setSelectedWater(convertIdListToItemList(targetRecipe["water"], rangeList["water_range"]));
+      const method = rangeList.method_range[`id-${targetRecipe.method[0]}`]
+      const grinder = rangeList.grinder_range[`id-${targetRecipe.grinder[0]}`]
+      const water = rangeList.water_range[`id-${targetRecipe.water[0]}`]
+      setSelectedMethod(method);
+      setSelectedGrinder(grinder);
+      setSelectedWater(water);
     }
   }, []);
 
   useEffect(() => {
-    if (mode === "edit" && Object.keys(targetRecipe["palate_rates"]).length !== 0) {
-      Object.keys(targetRecipe["palate_rates"]).forEach((id) => {
-        setPalateRate(id, targetRecipe["palate_rates"][id]);
+    if (mode === MODE.EDIT && Object.keys(targetRecipe.palate_rates).length !== 0) {
+      Object.keys(targetRecipe.palate_rates).forEach((id) => {
+        setPalateRate(id, targetRecipe.palate_rates[id]);
       });
     }
   }, [recipe]);

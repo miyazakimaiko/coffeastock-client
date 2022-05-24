@@ -4,8 +4,9 @@ const { validationResult } = require('express-validator');
 const { recipeValidator } = require("../utils/validators");
 const { CustomException } = require("../utils/customExcetions");
 const { getIncrementCountInUseBaseQuery, getDecrementCountInUseBaseQuery } = require("../utils/baseQueries");
+const { getUniqueItemInFirstArgArray } = require("../helper/compareArrays");
 
-const recipeRangeKeys = ['method', 'grinder', 'water'];
+const recipeRangeKeys = ['method', 'grinder', 'water', 'palate'];
 
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
@@ -31,6 +32,7 @@ module.exports = (app) => {
       [req.params.userid, req.params.beanid]);
 
       res.status(200).json(results.rows);
+
     } catch (error) {
       next(error)
     }
@@ -40,10 +42,13 @@ module.exports = (app) => {
   app.post(endpoint + "/user/:userid/bean/:beanid/recipe", 
   recipeValidator,
   async (req, res, next) => {
+    
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
-      CustomException(422, errors.array()[0]['msg'])
+      CustomException(422, errors.array()[0].msg)
     }
+
     try {
       await db.query('BEGIN');
 
@@ -89,10 +94,23 @@ module.exports = (app) => {
 
 
       for await (const rangeKey of recipeRangeKeys) {
-        const rangeItemIds = req.body[rangeKey]
+
+        let rangeItemIds = []; 
+
+        if (rangeKey === 'palate') {
+          rangeItemIds = Object.keys(req.body.palate_rates).map(key => parseInt(key))
+        }
+        else {
+          rangeItemIds = req.body[rangeKey];
+        }
+
         if (rangeItemIds.length > 0) {
-          const baseQuery = getIncrementCountInUseBaseQuery(rangeKey, rangeItemIds);
-          await db.query(baseQuery, [req.params.userid])
+
+          for (const id of rangeItemIds) {
+
+            const baseQuery = getIncrementCountInUseBaseQuery(rangeKey, id);
+            await db.query(baseQuery, [req.params.userid])
+          }
         }
       }
 
@@ -114,6 +132,74 @@ module.exports = (app) => {
       CustomException(422, errors.array()[0]['msg'])
     }
     try {
+      await db.query('BEGIN')
+
+      const getRecipeResult = await db.query(
+        `SELECT * FROM recipes
+        WHERE user_id = $1 
+          AND bean_id = $2
+          AND recipe_id = $3`, 
+        [
+          req.params.userid,
+          req.params.beanid,
+          req.params.recipeid
+        ]
+      );
+
+      if (getRecipeResult.rows[0]) {
+        const currentRecipe = getRecipeResult.rows[0];
+
+        for (const rangeKey of recipeRangeKeys) {
+
+          let currentRangeIdList = [];
+          let newRangeIdList = [];
+
+          if (rangeKey === 'palate') {
+            currentRangeIdList = Object.keys(currentRecipe.palate_rates).map(key => parseInt(key))
+            newRangeIdList = Object.keys(req.body.palate_rates).map(key => parseInt(key))
+          }
+          else if (currentRecipe[rangeKey] && req.body[rangeKey]) {
+            currentRangeIdList = currentRecipe[rangeKey]
+            newRangeIdList = req.body[rangeKey]
+          }
+
+          const removedRangeIdList = getUniqueItemInFirstArgArray(currentRangeIdList, newRangeIdList)
+          const addedRangeIdList = getUniqueItemInFirstArgArray(newRangeIdList, currentRangeIdList)
+
+          if (removedRangeIdList.length > 0) {
+
+            for (const removedRangeId of removedRangeIdList) {
+
+              const baseQuery = getDecrementCountInUseBaseQuery(rangeKey, removedRangeId);
+
+              try {
+                await db.query(baseQuery, [req.params.userid])
+
+              } catch (error) {
+                next(error)
+              }
+            }
+          }
+          if (addedRangeIdList.length > 0) {
+
+            for (const addeddRangeId of addedRangeIdList) {
+
+              const baseQuery = getIncrementCountInUseBaseQuery(rangeKey, addeddRangeId);
+
+              try {
+                await db.query(baseQuery, [req.params.userid])
+
+              } catch (error) {
+                next(error)
+              }
+            }
+          }
+        }
+      }
+      else {
+        CustomException(404, 'Not Found')
+      }
+
       const results = await db.query(`
       UPDATE recipes 
       SET 
@@ -152,6 +238,8 @@ module.exports = (app) => {
         req.params.recipeid
       ]);
 
+      await db.query('COMMIT');
+
       res.status(200).json(results.rows);
 
     } catch (error) {
@@ -170,12 +258,23 @@ module.exports = (app) => {
       );
 
       for (const rangeKey of recipeRangeKeys) {
-        if(req.body[rangeKey].length > 0) {
-          for await (const id of req.body[rangeKey]) {
-            const decrementCountInUseBaseQuery = getDecrementCountInUseBaseQuery(rangeKey, id);
-            await db.query(decrementCountInUseBaseQuery, [req.params.userid])
+
+          let idList = [];
+
+          if (rangeKey === 'palate') {
+            idList = Object.keys(req.body.palate_rates).map(key => parseInt(key));
           }
-        }
+          else if (req.body[rangeKey]){
+            idList = req.body[rangeKey];
+          }
+
+          if (idList.length > 0) {
+
+            for await (const id of idList) {
+              const decrementCountInUseBaseQuery = getDecrementCountInUseBaseQuery(rangeKey, id);
+              await db.query(decrementCountInUseBaseQuery, [req.params.userid])
+            }
+          }
       }
 
       await db.query('COMMIT');
