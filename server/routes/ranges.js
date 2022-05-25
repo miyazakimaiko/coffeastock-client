@@ -122,16 +122,19 @@ module.exports = (app) => {
   rangeItemValidator,
   async (req, res, next) => {
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      CustomException(422, errors.array()[0]['msg'])
-    }
-
-    const baseQuery = getGetRangeBaseQuery(req.params.rangename)
     try {
+
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        CustomException(422, errors.array()[0]['msg'])
+      }
+  
+      const baseQuery = getGetRangeBaseQuery(req.params.rangename);
       const range = await db.query(baseQuery, [req.params.userid]);
-      const rangeItems = range.rows[0]['items']
+      const rangeItems = range.rows[0].items;
       let uniqueName = true;
+
       for (const key of Object.keys(rangeItems)) {
         if (rangeItems[key].label === req.body.label) {
           uniqueName = false;
@@ -156,7 +159,6 @@ module.exports = (app) => {
         // Insert new entry
         const newData = {}
         newData[newid] = {...req.body, value: newid, inUse: 0}
-        console.log('newData: ', newData)
         const bqInsertRange = getInsertRangeBaseQuery(req.params.rangename)
         const result = await db.query(bqInsertRange,[newData, req.params.userid]);
         
@@ -173,12 +175,14 @@ module.exports = (app) => {
   app.post(endpoint + "/user/:userid/range/:rangename/:id", 
   rangeItemValidator,
   async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      CustomException(422, errors.array()[0]['msg'])
-    }
-    
+
     try {
+
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        CustomException(422, errors.array()[0]['msg'])
+      }
+
       // Ensure the entry exists
       let entryExists = false;
       const bqFindEntry = getFindEntryByIdBaseQuery(req.params.rangename);
