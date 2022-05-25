@@ -167,7 +167,7 @@ const ViewBeanAndRecipes = () => {
 
   const onDeleteSubmit = () => {
     deleteBean.mutate(targetBean, {
-      onSuccess: navigate('/coffees', {replace: true})
+      onSuccess: () => navigate('/coffees', {replace: true})
     })
     setModal({mode: '', isOpen: false})
   }

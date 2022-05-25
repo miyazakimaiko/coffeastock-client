@@ -220,7 +220,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
         return;
       }
       addBean.mutate(bean, {
-        onSuccess: setModal({mode: '', isOpen: false})
+        onSuccess: () => setModal({mode: '', isOpen: false})
       })
     }
   }, [processAddSubmit])
@@ -254,7 +254,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
       }
 
       editBean.mutate(bean, {
-        onSuccess: setModal({mode: '', isOpen: false})
+        onSuccess: () => setModal({mode: '', isOpen: false})
       })
     }
   }, [processEditSubmit])

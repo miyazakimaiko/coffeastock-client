@@ -68,16 +68,18 @@ const ManageAttributeRanges = ({cat: rangeName}) => {
         body: body,
       },
       {
-        onSuccess: 
+        onSuccess: () => {
           toastOnBottomCenter(
             "success",
             `New range is added successfully.`
-          ),
-        onError: (error) =>
+          )
+        },
+        onError: (error) => {
           toastOnBottomCenter(
             "error",
             error.message ?? "An unknown error has ocurred."
-          ),
+          )
+        }
       }
     );
   }
