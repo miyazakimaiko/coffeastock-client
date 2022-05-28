@@ -3,28 +3,54 @@ import FormTextarea from '../../../elements/FormTextarea';
 import { escapeHtml } from '../../../helpers/HtmlConverter';
 
 const AddEditMemoTextarea = ({bean, setBean}) => {
-
-  const [memoWarningText, setMemoWarningText] = useState("400/400");
+  const [counter, setCounter] = useState(0);
+  const [warning, setWarning] = useState({
+    invalid: false,
+    message: "",
+  });
 
   const setMemo = (memo) => {
-    const encoded = escapeHtml(memo);
-    if (encoded.length > 400) {
-      setMemoWarningText(<span className="text-red">{400 - encoded.length}/400</span>)
-    } else {
-      setMemoWarningText(`${400 - encoded.length}/400`)
-    }
     if (memo.length === 0) {
-      memo = null
+      setBean({...bean, memo: null});
+      setCounter(0);
+      clearWarning();
     }
-    setBean({...bean, memo})
+    else {
+      setBean({...bean, memo});
+    
+      const encodedValue = escapeHtml(memo);
+      setCounter(encodedValue.length);
+  
+      if (encodedValue.length > 400) {
+        setWarning({
+          ...warning,
+          invalid: true,
+          message: <span className="text-red">
+            Please enter less than 400 letters.
+          </span>
+        });
+      } else {
+        clearWarning();
+      }
+    }
   }
+  const clearWarning = () => {
+    setWarning({
+      ...warning,
+      invalid: false,
+      message: ''
+    });
+  }
+
   return (
     <FormTextarea
       title="Memo"
       name="memo"
       value={bean.memo}
+      invalid={warning.invalid}
       onChange={e => setMemo(e.target.value)}
-      warningText={memoWarningText}
+      warningText={warning.message}
+      counterText={`${counter}/400`}
     />
   )
 }

@@ -2,34 +2,78 @@ import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput';
 
 const AddEditGradeInput = ({bean, setBean}) => {
-
-  const [gradeWarningText, setGradeWarningText] = useState("");
+  const [warning, setWarning] = useState({
+    invalid: false,
+    message: "",
+  });
 
   const setGrade = (grade) => {
-    const gradeWithinRange = grade >= 0.0 && grade <= 100.0
-    if (!gradeWithinRange) {
-      setGradeWarningText(<span className="text-red">Please enter a number between 0.0 and 100.0</span>)
+    if (grade.length === 0) {
+      setBean({...bean, grade: null});
+      resetWarning();
     }
     else {
-      if (grade.length === 0) {
-        grade = null
-      }
       setBean({...bean, grade});
-      setGradeWarningText("")
+
+      const valueIsNumber = checkValueIsNumber(grade);
+  
+      if (!valueIsNumber) {
+        
+        setWarning({
+          ...warning,
+          invalid: true,
+          message: <span className="text-red">
+            Value must be a number.
+          </span>
+        });
+      }
+      else {
+        const gradeIsInRange = checkNumberIsInRange(grade);
+  
+        if (!gradeIsInRange) {
+
+          setWarning({
+            ...warning,
+            invalid: true,
+            message: <span className="text-red">
+              Please enter a number between 0.0 and 100.0.
+            </span> 
+          });
+        }
+        else {
+          resetWarning();
+        }
+      }
     }
+  }
+
+  const checkValueIsNumber = (grade) => {
+    const includesForbiddenChar = ["e", "E", "+", "-"].includes(grade);
+    return !isNaN(grade) && !includesForbiddenChar;
+  }
+
+  const checkNumberIsInRange = (grade) => {
+    return grade >= 0.0 && grade <= 100.0;
+  }
+
+  const resetWarning = () => {
+    setWarning({
+      ...warning,
+      invalid: false,
+      message: "",
+    });
   }
 
   return (
     <FormInput
       title="Grade (0.0 - 100.0)"
-      type="number"
-      step="0.1"
+      type="text"
       name="grade"
       placeholder="e.g. 85.5"
       value={bean.grade}
-      onKeyDown={(e) =>["e", "E", "+", "-"].includes(e.key) && e.preventDefault()}
+      invalid={warning.invalid}
       onChange={e => setGrade(e.target.value)}
-      warningText={gradeWarningText}
+      warningText={warning.message}
     />
   )
 }

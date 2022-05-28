@@ -2,30 +2,62 @@ import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput';
 
 const AddEditNameInput = ({bean, setBean}) => {
-  const [nameWarningText, setNameWarningText] = useState("* Required");
+  const [counter, setCounter] = useState(0);
+  const [warning, setWarning] = useState({
+    invalid: false,
+    message: "* Required",
+  });
 
   const setName = (inputValue) => {
-    const banned = ['&', '<', '>', '"', "'"];
-    let includesBannedChar = false;
-    banned.forEach(char => {
-      if (inputValue.includes(char)) includesBannedChar = true;
-    })
-    if (!includesBannedChar) {
-      setBean({...bean, label: inputValue});  
+    setBean({...bean, label: inputValue}); 
+
+    const nameIsValid = validateName(inputValue);
+
+    if (nameIsValid) {
+      setCounter(inputValue.length);
 
       if (inputValue.length === 0) {
-        setNameWarningText(<span className="text-red">* Required</span>);
+        setWarning({
+          ...warning,
+          invalid: true,
+          message: <span className="text-red">* Required</span>
+        })
       } 
       else if (inputValue.length > 60) {
-        setNameWarningText(<span className="text-red">{60 - inputValue.length}/60</span>);
+        setWarning({
+          ...warning,
+          invalid: true,
+          message: <span className="text-red">
+            Please enter less than 60 characters.
+          </span>
+        })
       } 
       else {
-        setNameWarningText(`${60 - inputValue.length}/60`);
+        setWarning({
+          ...warning,
+          invalid: false,
+          message: ''
+        })
       }
     }
     else {
-      setNameWarningText(<span className="text-red">Special characters cannot be used.</span>)
+      setWarning({
+        ...warning,
+        invalid: true,
+        message: <span className="text-red">
+          Special characters cannot be used.
+        </span>
+      });
     }
+  }
+
+  const validateName = (name) => {
+    const banned = ['&', '<', '>', '"', "'", "`"];
+    let includesBannedChar = false;
+    banned.forEach(char => {
+      if (name.includes(char)) includesBannedChar = true;
+    })
+    return !includesBannedChar;
   }
 
   return (
@@ -35,8 +67,10 @@ const AddEditNameInput = ({bean, setBean}) => {
       name="label" 
       placeholder="e.g. Seasonal House Blend"
       value={bean.label}
+      invalid={warning.invalid}
       onChange={e => setName(e.target.value)}
-      warningText={nameWarningText}
+      warningText={warning.message}
+      counterText={`${counter}/60`}
     />
   )
 }
