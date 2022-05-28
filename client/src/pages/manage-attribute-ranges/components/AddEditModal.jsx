@@ -12,7 +12,7 @@ const AddEditModal = ({children, mode, category, onCloseClick}) => {
         className="justify-center flex 
         overflow-x-hidden overflow-y-auto 
         fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative w-full md:w-550px px-2 my-16 mx-auto">
+        <div className="relative w-full md:w-800px px-2 my-16 mx-auto">
           {/*content*/}
           <div
             className="border-0 rounded-lg 
