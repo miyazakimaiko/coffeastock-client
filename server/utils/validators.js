@@ -5,7 +5,7 @@ const rangeItemValidator = [
     .not().contains('>').not().contains('"').not().contains("'")
     .not().contains('&').not().contains('/').isLength({ max: 60 })
     .optional({ nullable: false }),
-  body('def', 'Invalid Details').escape().isLength({ max: 400 }).optional({ checkFalsy: true })
+  body('def', 'Invalid Details').escape().isLength({ max: 600 }).optional({ checkFalsy: true })
 ]
 
 const beanValidator = [
