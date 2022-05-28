@@ -18,7 +18,7 @@ module.exports = {
         'red': '#EB5E28'
       },
       width: {
-        '550px': '550px'
+        '800px': '800px'
       },
       maxWidth: {
         '1/2': '50%',

@@ -71,8 +71,7 @@ const Nav = (props) => {
         className="l-nav fixed top-0 bottom-0 overflow-auto
           bg-burnt-sienna border-r text-white">
         <div 
-          className=" border-b border-creme 
-          border-opacity-20 h-16 px-6 flex justify-between items-center">
+          className="h-16 px-6 flex justify-between items-center">
           <h1 className=" text-lg">Coffee Journal</h1>
           <button 
             type="button" 

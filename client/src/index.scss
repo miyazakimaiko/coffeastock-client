@@ -97,6 +97,11 @@ body {
   }
 }
 
+.red-outline {
+  outline: none;
+  box-shadow: 0 0 0 2pt var(--red)
+}
+
 .button-transition {
   opacity: 0.8;
   transition: all 0.4s ease;
@@ -162,7 +167,10 @@ body {
 
   label {
     display: inline-block;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0;
+  }
+  input {
+    margin-top: 5px;
   }
   .divider {
     position: relative;
