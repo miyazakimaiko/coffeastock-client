@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import FormMultiSelect from '../../../elements/FormMultiSelect';
 
 const MethodInput = ({ rangeList, selectedMethod, setSelectedMethod }) => {
+
+  const options = Object.values(rangeList.method_range);
+
   const [warning, setWarning] = useState({
     invalid: false,
     message: "* Required",
@@ -29,10 +32,10 @@ const MethodInput = ({ rangeList, selectedMethod, setSelectedMethod }) => {
   return (
     <FormMultiSelect
       title="Brewing Method"
-      options={Object.values(rangeList.method_range)}
+      options={options}
       value={selectedMethod}
       onChange={setMethod}
-      isCreatable={true}
+      isCreatable={options.length > 150 ? false : true}
       isMulti={false}
       warningText={warning.message}
     />

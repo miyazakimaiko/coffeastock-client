@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import FormMultiSelect from '../../../elements/FormMultiSelect';
 
 const OriginInput = ({ rangeList, selectedOrigin, setSelectedOrigin }) => {
+  
+  const options = Object.values(rangeList.origin_range);
+
   const [warning, setWarning] = useState({
     invalid: false,
     message: "* Required",
@@ -29,11 +32,11 @@ const OriginInput = ({ rangeList, selectedOrigin, setSelectedOrigin }) => {
   return (
     <FormMultiSelect
       title="Origin"
-      options={Object.values(rangeList.origin_range)}
+      options={options}
       value={selectedOrigin}
       invalid={warning.invalid}
       onChange={setOriginList}
-      isCreatable={true}
+      isCreatable={options.length > 150 ? false : true}
       warningText={warning.message}
     />
   );

@@ -2,6 +2,9 @@ import React from 'react'
 import FormMultiSelect from '../../../elements/FormMultiSelect';
 
 const GrinderInput = ({ rangeList, selectedGrinder, setSelectedGrinder }) => {
+
+  const options = Object.values(rangeList.grinder_range);
+
   const setGrinder = (selectedItem) => {
     setSelectedGrinder(selectedItem);
   };
@@ -9,10 +12,10 @@ const GrinderInput = ({ rangeList, selectedGrinder, setSelectedGrinder }) => {
   return (
     <FormMultiSelect
       title="Grinder"
-      options={Object.values(rangeList.grinder_range)}
+      options={options}
       value={selectedGrinder}
       onChange={setGrinder}
-      isCreatable={true}
+      isCreatable={options.length > 150 ? false : true}
       isMulti={false}
     />
   );

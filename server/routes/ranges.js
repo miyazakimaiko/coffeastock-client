@@ -150,7 +150,11 @@ module.exports = (app) => {
         // get the ID of the last entry to create new ID
         const bqGetNextId = getGetNextIdBaseQuery(req.params.rangename)
         const idResult = await db.query(bqGetNextId, [req.params.userid]);
-        const newid = idResult.rows[0]['nextid'];
+        const newid = idResult.rows[0].nextid;
+
+        if (parseInt(newid) > 150) {
+          CustomException(422, 'Failed to add due to the maximum number of entries.')
+        }
 
         // Update the next_id
         const bqUpdateNextId = getUpdateNextIdBaseQuery(req.params.rangename)

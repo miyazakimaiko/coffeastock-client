@@ -48,6 +48,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   const editBean = useEditBean(userData.sub)
   const addRange = useAddRange(userData.sub)
   const [bean, setBean, onSubmit] = useBeanModel(setModal, mode);
+  const [tabState, setTabState] = useTabStateModel();
 
   const [selectedOrigin, setSelectedOrigin] = useState([]);
   const [selectedRoaster, setSelectedRoaster] = useState([]);
@@ -86,7 +87,19 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   }, []);
 
 
-  const [tabState, setTabState] = useTabStateModel();
+  useEffect(() => {
+    if (mode === 'edit' && selectedBlendBeans.length === 0 && targetBean.blend_ratio) {
+
+      const selectedBeans = [];
+      Object.keys(targetBean.blend_ratio).forEach(id => {
+        setBlendRatio(blendRatio => ({ ...blendRatio, [id]: targetBean.blend_ratio[id] }))
+        selectedBeans.push(beanList[id])
+      })
+      setSelectedBlendBeans(selectedBeans);
+    }
+  }, [bean])
+
+
 
 
   useEffect(() => {
@@ -259,18 +272,6 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   }
 
 
-  useEffect(() => {
-    if (mode === 'edit' && selectedBlendBeans.length === 0 && targetBean.blend_ratio) {
-
-      const selectedBeans = [];
-      Object.keys(targetBean.blend_ratio).forEach(id => {
-        setBlendRatio(blendRatio => ({ ...blendRatio, [id]: targetBean.blend_ratio[id] }))
-        selectedBeans.push(beanList[id])
-      })
-      setSelectedBlendBeans(selectedBeans);
-    }
-  }, [bean])
-
   if (rangeListIsLoading || beanListIsLoading) {
     return 'loading...'
   }
@@ -359,7 +360,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
                 options={Object.values(rangeList.roaster_range)}
                 value={selectedRoaster}
                 onChange={setSelectedRoaster}
-                isCreatable={true}
+                isCreatable={Object.values(rangeList.roaster_range).length > 150 ? false : true}
               />
               <FormInput
                 title="Roast Date"
@@ -413,7 +414,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
                 title="Aroma"
                 options={Object.values(rangeList.aroma_range)}
                 value={selectedAroma}
-                isCreatable={true}
+                isCreatable={Object.values(rangeList.aroma_range).length > 150 ? false : true}
                 onChange={setSelectedAroma}
               />
               <MemoTextarea bean={bean} setBean={setBean} />
@@ -436,14 +437,14 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
                 options={Object.values(rangeList.farm_range)}
                 value={selectedFarm}
                 onChange={setSelectedFarm}
-                isCreatable={true}
+                isCreatable={Object.values(rangeList.farm_range).length > 150 ? false : true}
               />
               <FormMultiSelect
                 title="Variety"
                 options={Object.values(rangeList.variety_range)}
                 value={selectedVariety}
                 onChange={setSelectedVariety}
-                isCreatable={true}
+                isCreatable={Object.values(rangeList.variety_range).length > 150 ? false : true}
               />
               <HarvestPeriodInput bean={bean} setBean={setBean} />
               <AltitudeInput bean={bean} setBean={setBean} />
@@ -455,14 +456,14 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
                 options={Object.values(rangeList.process_range)}
                 value={selectedProcess}
                 onChange={setSelectedProcess}
-                isCreatable={true}
+                isCreatable={Object.values(rangeList.process_range).length > 150 ? false : true}
               />
               <FormMultiSelect
                 title="Aroma"
                 options={Object.values(rangeList.aroma_range)}
                 value={selectedAroma}
                 onChange={setSelectedAroma}
-                isCreatable={true}
+                isCreatable={Object.values(rangeList.aroma_range).length > 150 ? false : true}
               />
               <MemoTextarea bean={bean} setBean={setBean} />
             </div>
