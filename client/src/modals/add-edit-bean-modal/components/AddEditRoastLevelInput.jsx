@@ -59,7 +59,7 @@ const AddEditRoastLevelInput = ({bean, setBean}) => {
   }
 
   const checkNumberIsInRange = (number) => {
-    return number >= 0.0 && number <= 100.0;
+    return number >= 0.0 && number <= 10.0;
   }
 
   return (

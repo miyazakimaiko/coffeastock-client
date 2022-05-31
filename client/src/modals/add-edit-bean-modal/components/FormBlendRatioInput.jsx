@@ -1,9 +1,10 @@
 import React from 'react'
+import { unescapeHtml } from '../../../helpers/HtmlConverter'
 
 const FormBlendRatioInput = ({title, name, value, onChange}) => {
   return (
     <div className="flex justify-between items-center py-2">
-      <label className="">{title}</label>
+      <label className="">{unescapeHtml(title)}</label>
       <div className="percent-char w-1/2">
         <input 
           type="number" 

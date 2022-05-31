@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { escapeHtml } from '../../../helpers/HtmlConverter';
 import FormInput from '../../../elements/FormInput';
 
@@ -9,19 +9,21 @@ const AddEditHarvestPeriodInput = ({bean, setBean}) => {
     message: "",
   });
 
+  useEffect(() => {
+    if (bean.harvest_period) {
+      setCounter(escapeHtml(bean.harvest_period).length)
+    }
+  }, [bean.harvest_period])
+
   const setHarvestPeriod = (period) => {
     if (period.length === 0) {
-      setBean({...bean, harvest_period: null});
-      setCounter(0);
+      setBean({...bean, harvest_period: ""});
       clearWarning();
     }
     else {
       setBean({...bean, harvest_period: period});
-
-      const encodedValue = escapeHtml(period);
-      setCounter(encodedValue.length);
-  
-      if (encodedValue.length > 60) {
+        
+      if (escapeHtml(period).length > 60) {
         setWarning({
           ...warning,
           invalid: true,

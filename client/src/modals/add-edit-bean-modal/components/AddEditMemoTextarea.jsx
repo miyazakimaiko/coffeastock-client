@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FormTextarea from '../../../elements/FormTextarea';
 import { escapeHtml } from '../../../helpers/HtmlConverter';
 
@@ -9,19 +9,21 @@ const AddEditMemoTextarea = ({bean, setBean}) => {
     message: "",
   });
 
+  useEffect(() => {
+    if (bean.memo) {
+      setCounter(escapeHtml(bean.memo).length)
+    }
+  }, [bean.memo])
+
   const setMemo = (memo) => {
     if (memo.length === 0) {
-      setBean({...bean, memo: null});
-      setCounter(0);
+      setBean({...bean, memo: ""});
       clearWarning();
     }
     else {
       setBean({...bean, memo});
-    
-      const encodedValue = escapeHtml(memo);
-      setCounter(encodedValue.length);
-  
-      if (encodedValue.length > 400) {
+      
+      if (escapeHtml(memo).length > 400) {
         setWarning({
           ...warning,
           invalid: true,

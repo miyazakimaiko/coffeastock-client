@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FormInput from '../../../elements/FormInput';
+import { escapeHtml } from '../../../helpers/HtmlConverter';
 
 const AddEditNameInput = ({bean, setBean}) => {
   const [counter, setCounter] = useState(0);
@@ -8,56 +9,40 @@ const AddEditNameInput = ({bean, setBean}) => {
     message: "* Required",
   });
 
+  useEffect(() => {
+    if (bean.label) {
+      setCounter(escapeHtml(bean.label).length)
+    }
+  }, [bean.label])
+
   const setName = (inputValue) => {
     setBean({...bean, label: inputValue}); 
 
-    const nameIsValid = validateName(inputValue);
+    const escapedValue = escapeHtml(inputValue);
 
-    if (nameIsValid) {
-      setCounter(inputValue.length);
-
-      if (inputValue.length === 0) {
-        setWarning({
-          ...warning,
-          invalid: true,
-          message: <span className="text-red">* Required</span>
-        })
-      } 
-      else if (inputValue.length > 60) {
-        setWarning({
-          ...warning,
-          invalid: true,
-          message: <span className="text-red">
-            Please enter less than 60 characters.
-          </span>
-        })
-      } 
-      else {
-        setWarning({
-          ...warning,
-          invalid: false,
-          message: ''
-        })
-      }
-    }
-    else {
+    if (escapedValue.length === 0) {
+      setWarning({
+        ...warning,
+        invalid: true,
+        message: <span className="text-red">* Required</span>
+      })
+    } 
+    else if (escapedValue.length > 60) {
       setWarning({
         ...warning,
         invalid: true,
         message: <span className="text-red">
-          Special characters cannot be used.
+          Please enter less than 60 characters.
         </span>
-      });
+      })
+    } 
+    else {
+      setWarning({
+        ...warning,
+        invalid: false,
+        message: ''
+      })
     }
-  }
-
-  const validateName = (name) => {
-    const banned = ['&', '<', '>', '"', "'", "`"];
-    let includesBannedChar = false;
-    banned.forEach(char => {
-      if (name.includes(char)) includesBannedChar = true;
-    })
-    return !includesBannedChar;
   }
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FormInput from '../../../elements/FormInput';
 import { escapeHtml } from '../../../helpers/HtmlConverter';
 
@@ -9,19 +9,21 @@ const AddEditAltitudeInput = ({bean, setBean}) => {
     message: "",
   });
 
+  useEffect(() => {
+    if (bean.altitude) {
+      setCounter(escapeHtml(bean.altitude).length)
+    }
+  }, [bean.altitude])
+
   const setAltitude = (altitude) => {
     if (altitude.length === 0) {
-      setBean({...bean, altitude: null});
-      setCounter(0);
+      setBean(bean => ({...bean, altitude: ""}));
       clearWarning();
     }
     else {      
-      setBean({...bean, altitude});
-
-      const encodedValue = escapeHtml(altitude);
-      setCounter(encodedValue.length);
+      setBean(bean => ({...bean, altitude}));
   
-      if (encodedValue.length > 60) {
+      if (escapeHtml(altitude).length > 60) {
         setWarning({
           ...warning,
           invalid: true,

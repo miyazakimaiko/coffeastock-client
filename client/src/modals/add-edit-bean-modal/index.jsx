@@ -24,8 +24,10 @@ import useEditBean from '../../hooks/useEditBean';
 import useBeans from '../../hooks/useBeans';
 import useRanges from '../../hooks/useRanges';
 import useAddRange from '../../hooks/useAddRange';
-import './modals.scss'
+import '../modals.scss'
 import toastOnBottomCenter from '../../utils/customToast';
+import { escapeHtml, unescapeHtml } from '../../helpers/HtmlConverter';
+import OriginInput from './components/OriginInput';
 
 const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   const userData = useUserData()
@@ -62,7 +64,125 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   const [selectedVariety, setSelectedVariety] = useState([]);
   const [selectedBlendBeans, innerSetSelectedBlendBeans] = useState([]);
   const [blendRatios, innerSetBlendRatio] = useState({});
-  const [blendRatioHtmlDict, setBlendRatioHtmlDict] = useState({})
+  const [blendRatioHtmlDict, setBlendRatioHtmlDict] = useState({});
+
+  useEffect(() => {
+    if (mode === "edit") {
+      setBean({
+        ...targetBean,
+        label: unescapeHtml(targetBean.label),
+        harvest_period: unescapeHtml(targetBean.harvest_period),
+        altitude: unescapeHtml(targetBean.altitude),
+        memo: unescapeHtml(targetBean.memo),
+        roast_date: targetBean.roast_date
+          ? targetBean.roast_date.split("T")[0]
+          : undefined,
+      });
+      setSelectedRoaster(convertIdListToItemList(targetBean.roaster, rangeList.roaster_range));
+      setSelectedOrigin(convertIdListToItemList(targetBean.origin, rangeList.origin_range));
+      setSelectedFarm(convertIdListToItemList(targetBean.farm, rangeList.farm_range));
+      setSelectedVariety(convertIdListToItemList(targetBean.variety, rangeList.variety_range));
+      setSelectedProcess(convertIdListToItemList(targetBean.process, rangeList.process_range));
+      setSelectedAroma(convertIdListToItemList(targetBean.aroma, rangeList.aroma_range));
+    }
+    console.log('bean has been set')
+  }, []);
+
+  const [tabState, setTabState] = useState({
+    baseInfoTabIsOpen: true,
+    detailsTabIsOpen: false,
+    confirmationTabIsOpen: false,
+    canOpenDetailsTab: false,
+    canOpenConfirmation: false
+  });
+
+  useEffect(() => {
+    setDetailsTabState();
+  }, [bean.label])
+
+  useEffect(() => {
+    setConfirmationTabState();
+  }, [bean.single_origin, selectedOrigin, selectedBlendBeans]);
+
+  const setDetailsTabState = () => {
+    const esacapedLabel = escapeHtml(bean.label ? bean.label : '');
+    console.log('esacapedLabel.length: ', esacapedLabel.length)
+    if (esacapedLabel.length === 0 || esacapedLabel.length > 60) {
+      setTabState(tabState => ({
+        ...tabState,
+        canOpenDetailsTab: false,
+        canOpenConfirmation: false,
+      }));
+    }
+    else {
+      setTabState(tabState => ({ ...tabState, canOpenDetailsTab: true }));
+    }
+  }
+
+  const setConfirmationTabState = useCallback(() => {
+    if (bean.single_origin && selectedOrigin.length !== 0) {
+      setTabState(tabState => ({ ...tabState, canOpenConfirmation: true }));
+    }
+    else if (!bean.single_origin && selectedBlendBeans.length !== 0) {
+      setTabState(tabState => ({ ...tabState, canOpenConfirmation: true }));
+    }
+    else {
+      setTabState(tabState => ({ ...tabState, canOpenConfirmation: false }));
+    }
+  }, [bean.single_origin, selectedBlendBeans, selectedOrigin]);
+
+  const baseInfoPage = createRef(null);
+  const detailsPage = createRef(null);
+  const confirmationPage = createRef(null);
+
+  const showPage = (pageRef) => {
+    pageRef.current.style.opacity = 1;
+    pageRef.current.style.height = "auto";
+    pageRef.current.style.overflow = "visible";
+  }
+
+  const hidePage = (pageRef) => {
+    pageRef.current.style.opacity = 0;
+    pageRef.current.style.height = 0;
+    pageRef.current.style.overflow = "hidden";
+  }
+
+  // To toggle click from the Next button
+  const setOpenBaseInfoTab = () => {
+    showPage(baseInfoPage);
+    hidePage(detailsPage);
+    hidePage(confirmationPage);
+    setTabState(tabState => ({
+      ...tabState,
+      baseInfoTabIsOpen: true,
+      detailsTabIsOpen: false,
+      confirmationTabIsOpen: false,
+    }));
+  }; 
+
+  const setOpenDetailsTab = () => {
+    hidePage(baseInfoPage);
+    showPage(detailsPage);
+    hidePage(confirmationPage);
+    setTabState(tabState => ({
+      ...tabState,
+      baseInfoTabIsOpen: false,
+      detailsTabIsOpen: true,
+      confirmationTabIsOpen: false,
+    }));
+  };
+
+  const setOpenConfirmationTab = () => {
+    hidePage(baseInfoPage);
+    hidePage(detailsPage);
+    showPage(confirmationPage);
+    setTabState(tabState => ({
+      ...tabState,
+      baseInfoTabIsOpen: false,
+      detailsTabIsOpen: false,
+      confirmationTabIsOpen: true,
+    }));
+  };
 
   const setSelectedBlendBeans = (e) => {
     if (e.length > 5) {
@@ -92,105 +212,37 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     ));
   }
 
-  const [tabState, setTabState] = useState({
-    baseInfoTab: true,
-    detailsTab: false,
-    confirmationTab: false,
-    canGoToConfirmation: false
-  });
-
-  const baseInfoPage = createRef(null);
-  const detailsPage = createRef(null);
-  const confirmationPage = createRef(null);
-
-  const showPage = (pageRef) => {
-    pageRef.current.style.opacity = 1;
-    pageRef.current.style.height = "auto";
-    pageRef.current.style.overflow = "visible";
-  }
-
-  const hidePage = (pageRef) => {
-    pageRef.current.style.opacity = 0;
-    pageRef.current.style.height = 0;
-    pageRef.current.style.overflow = "hidden";
-  }
-
-  // To toggle click from the Next button
-  const setOpenBaseInfoTab = () => {
-    showPage(baseInfoPage);
-    hidePage(detailsPage);
-    hidePage(confirmationPage);
-    setTabState({...tabState, baseInfoTab: true, detailsTab: false, confirmationTab: false});
- } 
-
-  const setOpenDetailsTab = () => {
-    hidePage(baseInfoPage);
-    showPage(detailsPage);
-    hidePage(confirmationPage);
-    setTabState({...tabState, baseInfoTab: false, detailsTab: true, confirmationTab: false});
-  }
-
-  const setOpenConfirmationTab = () => {
-    hidePage(baseInfoPage);
-    hidePage(detailsPage);
-    showPage(confirmationPage);
-    setTabState({...tabState, baseInfoTab: false, detailsTab: false, confirmationTab: true});
-  }
-
-  const checkCanGoToConfirmation = useCallback(() => {
-    if (bean.single_origin && selectedOrigin !== null) {
-      setTabState({...tabState, canGoToConfirmation: true});
-    }
-    else if (!bean.single_origin && selectedBlendBeans !== null) {
-      setTabState({...tabState, canGoToConfirmation: true});
-    }
-    else {
-      setTabState({...tabState, canGoToConfirmation: false});
-    }
-  }, [bean.single_origin, selectedBlendBeans, selectedOrigin]);
-
   const finalizeBean = () => {
-    const roasterIdList = convertItemListToIdList(selectedRoaster, rangeList.roaster_range);
-    const aromaIdList = convertItemListToIdList(selectedAroma, rangeList.aroma_range);
+    const roaster = convertItemListToIdList(selectedRoaster, rangeList.roaster_range);
+    const aroma = convertItemListToIdList(selectedAroma, rangeList.aroma_range);
 
     if (bean.single_origin) {
-      const originIdList = convertItemListToIdList(selectedOrigin, rangeList.origin_range);
-      const farmIdList = convertItemListToIdList(selectedFarm, rangeList.farm_range);
-      const varietyIdList = convertItemListToIdList(selectedVariety, rangeList.variety_range);
-      const processIdList = convertItemListToIdList(selectedProcess, rangeList.process_range);
+      const origin = convertItemListToIdList(selectedOrigin, rangeList.origin_range);
+      const farm = convertItemListToIdList(selectedFarm, rangeList.farm_range);
+      const variety = convertItemListToIdList(selectedVariety, rangeList.variety_range);
+      const process = convertItemListToIdList(selectedProcess, rangeList.process_range);
       
-      setBean({...bean, 
-        roaster: [...roasterIdList],
-        aroma: [...aromaIdList],
-        origin: [...originIdList],
-        farm: [...farmIdList],
-        variety: [...varietyIdList],
-        process: [...processIdList],
-      });
+      setBean(bean => ({ ...bean, roaster, aroma, origin, farm, variety, process }));
     }
     else {
-      setBean({...bean, 
-        roaster: [...roasterIdList],
-        aroma: [...aromaIdList],
-        blend_ratio: blendRatios,
-      });
+      setBean(bean => ({ ...bean, roaster, aroma, blend_ratio: blendRatios }));
     }
   }
 
   const insertNewRangeList = async () => {
     let newRangeList = {
-      'origin': extractNewItems(selectedOrigin),
-      'roaster': extractNewItems(selectedRoaster),
-      'farm': extractNewItems(selectedFarm),
-      'process': extractNewItems(selectedProcess),
-      'aroma': extractNewItems(selectedAroma),
-      'variety': extractNewItems(selectedVariety)
+      origin: extractNewItems(selectedOrigin),
+      roaster: extractNewItems(selectedRoaster),
+      farm: extractNewItems(selectedFarm),
+      process: extractNewItems(selectedProcess),
+      aroma: extractNewItems(selectedAroma),
+      variety: extractNewItems(selectedVariety)
     }
 
     for (const [rangeName, entries] of Object.entries(newRangeList)) {
 
       for await (const entry of entries) {
-        const body = { "label": entry.label, "def": "" }
+        const body = { label: entry.label, def: "" }
         await addRange.mutate({ rangeName,body })
       }
     }
@@ -213,15 +265,15 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     if (processAddSubmit) {
       if (Object.keys(bean.blend_ratio).length > 5) {
         toastOnBottomCenter('error', 'No more than five coffee types can be selected as blend beans.')
-        return;
       } 
-      if (bean.label === null) {
+      else if (bean.label === null) {
         toastOnBottomCenter('error', 'Coffee Bean Name is blank.')
-        return;
       }
-      addBean.mutate(bean, {
-        onSuccess: () => setModal({mode: '', isOpen: false})
-      })
+      else {
+        addBean.mutate(bean, {
+          onSuccess: () => setModal({mode: '', isOpen: false})
+        });
+      } 
     }
   }, [processAddSubmit])
 
@@ -255,14 +307,9 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
 
       editBean.mutate(bean, {
         onSuccess: () => setModal({mode: '', isOpen: false})
-      })
+      });
     }
   }, [processEditSubmit])
-
-  // To enable/disable Next button to go to confirmation section
-  useEffect(() => {
-    checkCanGoToConfirmation();
-  }, [bean.single_origin, selectedOrigin, selectedBlendBeans]);
 
   // To delete unselected BlendBean from the blendRatios object
   useEffect(() => {
@@ -281,29 +328,11 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   }, [selectedBlendBeans, blendRatios]);
 
   useEffect(() => {
-    if (mode === "edit") {
-      setBean({
-        ...bean,
-        ...targetBean,
-        roast_date: targetBean["roast_date"]
-          ? targetBean["roast_date"].split("T")[0]
-          : undefined,
-      });
-      setSelectedRoaster(convertIdListToItemList(targetBean["roaster"], rangeList["roaster_range"]));
-      setSelectedOrigin(convertIdListToItemList(targetBean["origin"], rangeList["origin_range"]));
-      setSelectedFarm(convertIdListToItemList(targetBean["farm"], rangeList["farm_range"]));
-      setSelectedVariety(convertIdListToItemList(targetBean["variety"], rangeList["variety_range"]));
-      setSelectedProcess(convertIdListToItemList(targetBean["process"], rangeList["process_range"]));
-      setSelectedAroma(convertIdListToItemList(targetBean["aroma"], rangeList["aroma_range"]));
-    }
-  }, []);
-
-  useEffect(() => {
     Object.keys(blendRatios).forEach((id) => {
       const html = {};
       html[id] = (
         <FormBlendRatioInput
-          title={beanList.find((d) => d.bean_id == id)["label"]}
+          title={beanList.find((d) => d.bean_id == id).label}
           name={id}
           value={blendRatios[id]}
           onChange={(e) => setBlendRatio(id, e.target.value)}
@@ -317,14 +346,14 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   }, [blendRatios]);
 
   useEffect(() => {
-    if (mode === 'edit' && selectedBlendBeans.length === 0 && targetBean['blend_ratio']) {
-      Object.keys(targetBean['blend_ratio']).forEach(id => {
-        setBlendRatio(id, targetBean['blend_ratio'][id])
+    if (mode === 'edit' && selectedBlendBeans.length === 0 && targetBean.blend_ratio) {
+      Object.keys(targetBean.blend_ratio).forEach(id => {
+        setBlendRatio(id, targetBean.blend_ratio[id])
         innerSetSelectedBlendBeans(selectedBlendBeans => [
           ...selectedBlendBeans, 
           { 
-            label:beanList.find(d => d.bean_id == id)['label'],
-            value:beanList.find(d => d.bean_id == id)['bean_id']
+            label:beanList.find(d => d.bean_id == id).label,
+            value:beanList.find(d => d.bean_id == id).bean_id
           }
         ])
       })
@@ -335,91 +364,87 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     return 'loading...'
   }
 
-  return (
+  console.log('tabState: ', tabState)
 
+  return (
     <ModalWrapperContainer
       title={
-        mode === 'add' ? 'Add New Coffee Bean Type' :
-        mode === 'edit' ? `Edit Coffee Bean ${targetBean['label']}` : null
+        mode === "add"
+          ? "Add New Coffee Bean Type"
+          : mode === "edit"
+          ? `Edit Coffee Bean ${unescapeHtml(targetBean.label)}`
+          : null
       }
-      onCloseClick={() => setModal({mode: '', isOpen: false})}
+      onCloseClick={() => setModal({ mode: "", isOpen: false })}
     >
       {/*body*/}
       <ul className="flex">
-          <StepsTab
-            key="base-info"
-            title="1. Base Info"
-            tabState={tabState.baseInfoTab}
-            onClick={setOpenBaseInfoTab}
-          />
-          <StepsTab
-            key="details"
-            title="2. Details"
-            disabled={bean.label === '' || bean.label === null}
-            tabState={tabState.detailsTab}
-            onClick={setOpenDetailsTab}
-          />
-          <StepsTab
-            key="confirmation"
-            title="3. Confirmation"
-            disabled={!tabState.canGoToConfirmation}
-            tabState={tabState.confirmationTab}
-            onClick={() =>{
-              setOpenConfirmationTab();
-              insertNewRangeList();
-            }}
-          />
+        <StepsTab
+          key="base-info"
+          title="1. Base Info"
+          tabState={tabState.baseInfoTabIsOpen}
+          onClick={setOpenBaseInfoTab}
+        />
+        <StepsTab
+          key="details"
+          title="2. Details"
+          disabled={!tabState.canOpenDetailsTab}
+          tabState={tabState.detailsTabIsOpen}
+          onClick={setOpenDetailsTab}
+        />
+        <StepsTab
+          key="confirmation"
+          title="3. Confirmation"
+          disabled={!tabState.canOpenConfirmation}
+          tabState={tabState.confirmationTabIsOpen}
+          onClick={() => {
+            setOpenConfirmationTab();
+            insertNewRangeList();
+          }}
+        />
       </ul>
 
-
-      <form 
-        className="tab-content"
-      >
-        <div 
-          ref={baseInfoPage} 
+      <form className="tab-content">
+        <div
+          ref={baseInfoPage}
           className="ease-linear transition-all duration-300"
         >
           <div className="md:flex md:px-8 my-8">
             <div className="flex flex-col md:w-1/2">
-              <AddEditNameInput
-                bean={bean}
-                setBean={setBean}
-              />
-              <AddEditGradeInput
-                bean={bean}
-                setBean={setBean}
-              />
-              <AddEditRoastLevelInput
-                bean={bean}
-                setBean={setBean}             
-              />
+              <AddEditNameInput bean={bean} setBean={setBean} />
+              <AddEditGradeInput bean={bean} setBean={setBean} />
+              <AddEditRoastLevelInput bean={bean} setBean={setBean} />
             </div>
 
             <div className="md:w-1/2">
               <div className="form-section h-1/3 flex flex-col justify-center">
-                {Object.keys(beanList).length === 0 
-                    ? 
-                  <span className="text-xs block mb-4">* There must be at least one single origin beans entry to add new blend beans.</span>
-                    :
-                  null
-                }
+                {Object.keys(beanList).length === 0 ? (
+                  <span className="text-xs block mb-4">
+                    * There must be at least one single origin beans entry to
+                    add new blend beans.
+                  </span>
+                ) : null}
                 <div className="flex">
                   <FormRadio
                     title="Single Origin"
                     name="single_origin"
                     checked={bean.single_origin ? true : false}
-                    onChange={e => {setBean({...bean, single_origin: true})}}
+                    onChange={() => {
+                      setBean(bean => ({ ...bean, single_origin: true }));
+                    }}
                   />
                   <FormRadio
                     title="Blend"
                     name="single_origin"
                     checked={bean.single_origin ? false : true}
                     disabled={Object.keys(beanList).length === 0}
-                    onChange={e => {setBean({...bean, single_origin: false})}}
+                    onChange={() => {
+                      setBean(bean => ({ ...bean, single_origin: false }));
+                    }}
                   />
                 </div>
               </div>
-              <FormMultiSelect 
+              <FormMultiSelect
                 title="Roaster"
                 options={Object.values(rangeList.roaster_range)}
                 value={selectedRoaster}
@@ -428,132 +453,123 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
               />
               <FormInput
                 title="Roast Date"
-                type="date" 
-                name="roastdate" 
-                placeholder="e.g. 2021-12-10" 
+                type="date"
+                name="roastdate"
+                placeholder="e.g. 2021-12-10"
                 value={bean.roast_date}
-                onChange={e => setBean({...bean, roast_date: e.target.value})}
+                onChange={(e) =>
+                  setBean(bean => ({ ...bean, roast_date: e.target.value }))
+                }
               />
             </div>
           </div>
           <div className="flex items-center justify-between px-2 md:px-8 pb-8">
             <RedOutlineButton
               text="Cancel"
-              onClick={() => setModal({mode: '', isOpen: false})}
+              onClick={() => setModal({ mode: "", isOpen: false })}
             />
             <BlueButton
               text="Next"
-              disabled={
-                bean.label === null || 
-                bean.label.length === 0 ? true : false
-              }
+              disabled={!tabState.canOpenDetailsTab}
               onClick={setOpenDetailsTab}
             />
           </div>
         </div>
 
-        <div 
+        <div
           ref={detailsPage}
           className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300"
         >
-          <div className={`md:px-8 my-8 ${bean.single_origin ? "hidden" : "block md:flex"}`}>
+          <div
+            className={`md:px-8 my-8 ${
+              bean.single_origin ? "hidden" : "block md:flex"
+            }`}
+          >
             <div className="flex flex-col md:w-1/2">
-              <FormMultiSelect 
+              <FormMultiSelect
                 title="Blend of"
                 required={true}
                 options={Object.values(beanList).map(
-                  ({ bean_id: value, ...rest }) => ({ value, isDisabled: bean.bean_id === value, ...rest })
+                  ({ bean_id: value, ...rest }) => ({
+                    value,
+                    isDisabled: bean.bean_id === value,
+                    ...rest,
+                  })
                 )}
                 value={selectedBlendBeans}
-                onChange={e => setSelectedBlendBeans(e)}
+                onChange={(e) => setSelectedBlendBeans(e)}
               />
               <div className="form-section my-4">
                 <label className="font-medium divider">Blend Ratio</label>
-                <div>
-                  { Object.values(blendRatioHtmlDict) }
-                </div>
+                <div>{Object.values(blendRatioHtmlDict)}</div>
               </div>
             </div>
 
             <div className="md:w-1/2">
-              <FormMultiSelect 
+              <FormMultiSelect
                 title="Aroma"
                 options={Object.values(rangeList.aroma_range)}
                 value={selectedAroma}
                 isCreatable={true}
                 onChange={setSelectedAroma}
               />
-              <AddEditMemoTextarea
-                bean={bean}
-                setBean={setBean}
-              />
+              <AddEditMemoTextarea bean={bean} setBean={setBean} />
             </div>
           </div>
 
-          <div className={`md:px-8 my-8 ${bean.single_origin ? "block md:flex" : "hidden"}`}>
+          <div
+            className={`md:px-8 my-8 ${
+              bean.single_origin ? "block md:flex" : "hidden"
+            }`}
+          >
             <div className="flex flex-col md:w-1/2">
-              <FormMultiSelect 
-                title="Origin"
-                required={true}
-                options={Object.values(rangeList.origin_range)}
-                value={selectedOrigin}
-                onChange={setSelectedOrigin}
-                isCreatable={true}
+              <OriginInput
+                rangeList={rangeList}
+                selectedOrigin={selectedOrigin}
+                setSelectedOrigin={setSelectedOrigin}
               />
-              <FormMultiSelect 
+              <FormMultiSelect
                 title="Farm"
                 options={Object.values(rangeList.farm_range)}
                 value={selectedFarm}
                 onChange={setSelectedFarm}
                 isCreatable={true}
               />
-              <FormMultiSelect 
+              <FormMultiSelect
                 title="Variety"
                 options={Object.values(rangeList.variety_range)}
                 value={selectedVariety}
                 onChange={setSelectedVariety}
                 isCreatable={true}
               />
-              <AddEditHarvestPeriodInput
-                bean={bean}
-                setBean={setBean}
-              />
-              <AddEditAltitudeInput
-                bean={bean}
-                setBean={setBean}
-              />
+              <AddEditHarvestPeriodInput bean={bean} setBean={setBean} />
+              <AddEditAltitudeInput bean={bean} setBean={setBean} />
             </div>
 
             <div className="md:w-1/2">
-              <FormMultiSelect 
+              <FormMultiSelect
                 title="Process"
                 options={Object.values(rangeList.process_range)}
                 value={selectedProcess}
                 onChange={setSelectedProcess}
                 isCreatable={true}
               />
-              <FormMultiSelect 
+              <FormMultiSelect
                 title="Aroma"
                 options={Object.values(rangeList.aroma_range)}
                 value={selectedAroma}
                 onChange={setSelectedAroma}
                 isCreatable={true}
               />
-              <AddEditMemoTextarea
-                bean={bean}
-                setBean={setBean}
-              />
+              <AddEditMemoTextarea bean={bean} setBean={setBean} />
             </div>
           </div>
 
           <div className="flex items-center justify-between px-2 md:px-8 pb-8">
-            <RedOutlineButton
-              text="Go Back"
-              onClick={setOpenBaseInfoTab}
-            />
+            <RedOutlineButton text="Go Back" onClick={setOpenBaseInfoTab} />
             <BlueButton
               text="Next"
-              disabled={!tabState.canGoToConfirmation}
+              disabled={!tabState.canOpenConfirmation}
               onClick={() => {
                 setOpenConfirmationTab();
                 insertNewRangeList();
@@ -562,11 +578,10 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
           </div>
         </div>
 
-        <div 
+        <div
           ref={confirmationPage}
           className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300"
         >
-            
           <div className="md:px-8 my-10">
             <div className="md:flex">
               <div className="flex flex-col w-full md:w-1/2">
@@ -579,13 +594,10 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
                     />
                   </div>
                   <div className="mb-8 md:m-8">
-                    <InputConfirmSection
-                      title="Name"
-                      content={bean.label}
-                    />
+                    <InputConfirmSection title="Name" content={bean.label} />
                     <InputConfirmSection
                       title="Single Origin"
-                      content={bean.single_origin ? 'Yes' : 'No'}
+                      content={bean.single_origin ? "Yes" : "No"}
                     />
                     <InputConfirmSection
                       title="Grade (0 - 100)"
@@ -610,13 +622,10 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
               <div className="md:w-1/2">
                 <div className="flex mx-4 mb-4">
                   <h3 className="text-lg">Details</h3>
-                  <PencilAltIconButton
-                    width="5"
-                    onClick={setOpenDetailsTab}
-                  />
+                  <PencilAltIconButton width="5" onClick={setOpenDetailsTab} />
                 </div>
                 <div className="mb-8 md:m-8">
-                  { bean.single_origin ? 
+                  {bean.single_origin ? (
                     <>
                       <MultiselectConfirmSection
                         title="Origin"
@@ -647,23 +656,27 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
                         content={selectedAroma}
                       />
                     </>
-                    : 
+                  ) : (
                     // Blend Beans
                     <>
                       <MultiselectConfirmSection
                         title="Aroma"
                         content={selectedAroma}
                       />
-                    <div className="confirm-section">
-                      <label className=" mr-4">Blend Ratio</label>
-                      <div className="font-medium">
-                      {selectedBlendBeans !== null ? selectedBlendBeans.map((entry) => (
-                        <span className="basic-chip">{entry.label}: {blendRatios[entry.value]}%</span>
-                      )): null}
+                      <div className="confirm-section">
+                        <label className=" mr-4">Blend Ratio</label>
+                        <div className="font-medium">
+                          {selectedBlendBeans !== null
+                            ? selectedBlendBeans.map((entry) => (
+                                <span className="basic-chip">
+                                  {entry.label}: {blendRatios[entry.value]}%
+                                </span>
+                              ))
+                            : null}
+                        </div>
                       </div>
-                    </div>
                     </>
-                  }
+                  )}
                 </div>
               </div>
             </div>
@@ -672,32 +685,35 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
               <div className="mx-4 md:mx-6 my-2">
                 <div className="w-full flex items-center">
                   <h3 className="inline">Memo</h3>
-                  <PencilAltIconButton
-                    width="5"
-                    onClick={setOpenDetailsTab}
-                  />
-                  :
-                  <p className="inline ml-8">{bean.memo ? bean.memo : 'Not Entered'}</p>
+                  <PencilAltIconButton width="5" onClick={setOpenDetailsTab} />:
+                  <p className="inline ml-8">
+                    {bean.memo ? bean.memo : "Not Entered"}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="flex items-center justify-between px-2 md:px-8 py-8">
-            <RedOutlineButton
-              text="Go Back"
-              onClick={setOpenDetailsTab}
-            />
+            <RedOutlineButton text="Go Back" onClick={setOpenDetailsTab} />
             <BlueButton
-              text={editBean.isLoading || addBean.isLoading ? 'Submitting...' : 'Submit'}
-              disabled={!tabState.canGoToConfirmation || editBean.isLoading || addBean.isLoading}
+              text={
+                editBean.isLoading || addBean.isLoading
+                  ? "Submitting..."
+                  : "Submit"
+              }
+              disabled={
+                !tabState.canOpenConfirmation ||
+                editBean.isLoading ||
+                addBean.isLoading
+              }
               onClick={onSubmit}
             />
           </div>
         </div>
       </form>
     </ModalWrapperContainer>
-  )
+  );
 }
 
 export default AddEditBeanModal

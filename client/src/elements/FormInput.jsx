@@ -12,6 +12,7 @@ const FormInput = ({
   warningText,
   counterText
 }) => {
+
   return (
     <div className="form-section">
       <label className="font-medium">{title}</label>
