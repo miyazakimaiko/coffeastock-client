@@ -13,7 +13,14 @@ const NameInput = ({rangeName, rangeItem, setRangeItem}) => {
     const encodedValue = escapeHtml(name);
     setCounter(encodedValue.length);
 
-    if (encodedValue.length > 60) {
+    if (encodedValue.length === 0) {
+      setWarning({ 
+        ...warning, 
+        invalid: true,
+        message: '* This field is required.',
+      });
+    }
+    else if (encodedValue.length > 60) {
       setWarning({ 
         ...warning, 
         invalid: true,
