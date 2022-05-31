@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput'
 
-const AddEditWaterWeightInput = ({recipe, setRecipe}) => {
+const WaterWeightInput = ({recipe, setRecipe}) => {
 
   const [weightWarningText, setWeightWarningText] = useState("");
 
@@ -32,4 +32,4 @@ const AddEditWaterWeightInput = ({recipe, setRecipe}) => {
   )
 }
 
-export default AddEditWaterWeightInput
+export default WaterWeightInput

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput';
 
-const AddEditTotalRateInput = ({recipe, setRecipe}) => {
+const TotalRateInput = ({recipe, setRecipe}) => {
 
   const [rateWarningText, setRateWarningText] = useState("");
 
@@ -31,4 +31,4 @@ const AddEditTotalRateInput = ({recipe, setRecipe}) => {
   )
 }
 
-export default AddEditTotalRateInput
+export default TotalRateInput

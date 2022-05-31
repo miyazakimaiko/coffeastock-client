@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput'
 
-const AddEditTdsInput = ({recipe, setRecipe}) => {
+const TdsInput = ({recipe, setRecipe}) => {
 
   const [tdsWarningText, setTdsWarningText] = useState("");
 
@@ -32,4 +32,4 @@ const AddEditTdsInput = ({recipe, setRecipe}) => {
   )
 }
 
-export default AddEditTdsInput
+export default TdsInput

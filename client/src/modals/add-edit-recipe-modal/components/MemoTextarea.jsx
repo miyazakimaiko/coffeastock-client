@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import FormTextarea from '../../../elements/FormTextarea'
 import { escapeHtml } from '../../../helpers/HtmlConverter';
 
-const AddEditMemoTextarea = ({recipe, setRecipe}) => {
+const MemoTextarea = ({recipe, setRecipe}) => {
 
   const [memoWarningText, setMemoWarningText] = useState("400/400");
 
@@ -29,4 +29,4 @@ const AddEditMemoTextarea = ({recipe, setRecipe}) => {
   )
 }
 
-export default AddEditMemoTextarea
+export default MemoTextarea

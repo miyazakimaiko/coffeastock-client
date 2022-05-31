@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput'
 
-const AddEditRxtractTimeInput = ({recipe, setRecipe}) => {
+const ExtractTimeInput = ({recipe, setRecipe}) => {
 
   const [timeWarningText, setTimeWarningText] = useState("");
 
@@ -30,4 +30,4 @@ const AddEditRxtractTimeInput = ({recipe, setRecipe}) => {
   )
 }
 
-export default AddEditRxtractTimeInput
+export default ExtractTimeInput

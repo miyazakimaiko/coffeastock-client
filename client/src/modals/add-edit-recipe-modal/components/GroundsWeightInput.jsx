@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput'
 
-const AddEditGroundsWeightInput = ({recipe, setRecipe}) => {
+const GroundsWeightInput = ({recipe, setRecipe}) => {
 
   const [weightWarningText, setWeightWarningText] = useState("");
 
@@ -32,4 +32,4 @@ const AddEditGroundsWeightInput = ({recipe, setRecipe}) => {
   )
 }
 
-export default AddEditGroundsWeightInput
+export default GroundsWeightInput

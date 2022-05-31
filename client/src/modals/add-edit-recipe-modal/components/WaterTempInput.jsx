@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput'
 
-const AddEditWaterTempInput = ({recipe, setRecipe}) => {
+const WaterTempInput = ({recipe, setRecipe}) => {
 
   const [tempWarningText, setTempWarningText] = useState("");
 
@@ -32,4 +32,4 @@ const AddEditWaterTempInput = ({recipe, setRecipe}) => {
   )
 }
 
-export default AddEditWaterTempInput
+export default WaterTempInput

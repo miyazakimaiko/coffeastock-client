@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput'
 
-const AddEditGrindSizeInput = ({recipe, setRecipe}) => {
+const GrindSizeInput = ({recipe, setRecipe}) => {
 
   const [sizeWarningText, setSizeWarningText] = useState("");
 
@@ -31,4 +31,4 @@ const AddEditGrindSizeInput = ({recipe, setRecipe}) => {
   )
 }
 
-export default AddEditGrindSizeInput
+export default GrindSizeInput

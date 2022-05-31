@@ -8,30 +8,28 @@ import useAddRange from '../../hooks/useAddRange';
 import useAddRecipe from '../../hooks/useAddRecipe';
 import useEditRecipe from '../../hooks/useEditRecipe';
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer';
-import FormInput from '../../elements/FormInput';
-import FormMultiSelect from '../../elements/FormMultiSelect';
 import RedOutlineButton from '../../elements/RedOutlineButton';
 import BlueButton from '../../elements/BlueButton';
 import PencilAltIconButton from '../../elements/PencilAltIconButton';
 import StepsTab from './components/StepsTab';
-import AddEditGrindSizeInput from './components/AddEditGrindSizeInput';
-import AddEditGroundsWeightInput from './components/AddEditGroundsWeightInput';
-import AddEditWaterWeightInput from './components/AddEditWaterWeightInput';
-import AddEditWaterTempInput from './components/AddEditWaterTempInput';
-import AddEditYieldWeightInput from './components/AddEditYieldWeightInput';
-import AddEditExtractTimeInput from './components/AddEditExtractTimeInput';
-import AddEditTdsInput from './components/AddEditTdsInput';
-import AddEditTotalRateInput from './components/AddEditTotalRateInput'
-import AddEditPalateRangeInput from './components/AddEditPalateRangeInput';
-import AddEditMemoTextarea from './components/AddEditMemoTextarea';
+import GrindSizeInput from './components/GrindSizeInput';
+import GroundsWeightInput from './components/GroundsWeightInput';
+import WaterWeightInput from './components/WaterWeightInput';
+import WaterTempInput from './components/WaterTempInput';
+import YieldWeightInput from './components/YieldWeightInput';
+import ExtractTimeInput from './components/ExtractTimeInput';
+import TdsInput from './components/TdsInput';
+import TotalRateInput from './components/TotalRateInput'
+import PalateRangeInput from './components/PalateRangeInput';
+import MemoTextarea from './components/MemoTextarea';
 import InputConfirmSection from './components/InputConfirmSection';
 import MultiselectConfirmSection from './components/MultiselectConfirmSection';
-import '../modals.scss'
 import BeanInput from './components/BeanInput';
 import BrewingDateInput from './components/BrewingDateInput';
 import MethodInput from './components/MethodInput.jsx';
 import GrinderInput from './components/GrinderInput';
 import WaterInput from './components/WaterInput';
+import '../modals.scss'
 
 const MODE = {
   ADD: 'add',
@@ -218,7 +216,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
   useEffect(() => {
     Object.keys(rangeList.palate_range).forEach(id => {
       let elem = {}
-      elem[id] = <AddEditPalateRangeInput
+      elem[id] = <PalateRangeInput
         title={rangeList.palate_range[id].label}
         parateId={rangeList.palate_range[id].value}
         palateRate={palateRate}
@@ -408,11 +406,11 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                     selectedGrinder={selectedGrinder}
                     setSelectedGrinder={setSelectedGrinder}
                   />
-                  <AddEditGrindSizeInput
+                  <GrindSizeInput
                     recipe={recipe}
                     setRecipe={setRecipe}
                   />
-                  <AddEditGroundsWeightInput
+                  <GroundsWeightInput
                     recipe={recipe}
                     setRecipe={setRecipe}
                   />
@@ -442,27 +440,27 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                     selectedWater={selectedWater}
                     setSelectedWater={setSelectedWater}
                   />
-                  <AddEditWaterWeightInput
+                  <WaterWeightInput
                     recipe={recipe}
                     setRecipe={setRecipe}
                   />
-                  <AddEditWaterTempInput
+                  <WaterTempInput
                     recipe={recipe}
                     setRecipe={setRecipe}
                   />
                 </div>
 
                 <div className="md:w-1/2">
-                  <AddEditYieldWeightInput
+                  <YieldWeightInput
                     recipe={recipe}
                     setRecipe={setRecipe}
                   />
-                  <AddEditExtractTimeInput
+                  <ExtractTimeInput
                     recipe={recipe}
                     setRecipe={setRecipe}
                   />
-                  <AddEditTdsInput recipe={recipe} setRecipe={setRecipe} />
-                  <AddEditTotalRateInput
+                  <TdsInput recipe={recipe} setRecipe={setRecipe} />
+                  <TotalRateInput
                     recipe={recipe}
                     setRecipe={setRecipe}
                   />
@@ -494,7 +492,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
               </div>
 
               <div className="md:px-8 mb-8">
-                <AddEditMemoTextarea recipe={recipe} setRecipe={setRecipe} />
+                <MemoTextarea recipe={recipe} setRecipe={setRecipe} />
               </div>
 
               <div className="flex items-center justify-between px-2 md:px-8 pb-8">
