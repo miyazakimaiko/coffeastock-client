@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput';
+import { checkGradeIsInRange, checkValueIsNumber } from '../helper/InputValidators';
 
 const GradeInput = ({bean, setBean}) => {
   const [warning, setWarning] = useState({
@@ -28,7 +29,7 @@ const GradeInput = ({bean, setBean}) => {
         });
       }
       else {
-        const gradeIsInRange = checkNumberIsInRange(grade);
+        const gradeIsInRange = checkGradeIsInRange(grade);
   
         if (!gradeIsInRange) {
 
@@ -45,15 +46,6 @@ const GradeInput = ({bean, setBean}) => {
         }
       }
     }
-  }
-
-  const checkValueIsNumber = (grade) => {
-    const includesForbiddenChar = ["e", "E", "+", "-"].includes(grade);
-    return !isNaN(grade) && !includesForbiddenChar;
-  }
-
-  const checkNumberIsInRange = (grade) => {
-    return grade >= 0.0 && grade <= 100.0;
   }
 
   const resetWarning = () => {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import FormTextarea from '../../../elements/FormTextarea';
 import { escapeHtml } from '../../../helpers/HtmlConverter';
+import { checkMemoIsInRange } from '../helper/InputValidators';
 
 const MemoTextarea = ({bean, setBean}) => {
   const [counter, setCounter] = useState(0);
@@ -22,8 +23,10 @@ const MemoTextarea = ({bean, setBean}) => {
     }
     else {
       setBean({...bean, memo});
+
+      const valueIsInRange = checkMemoIsInRange(memo);
       
-      if (escapeHtml(memo).length > 400) {
+      if (!valueIsInRange) {
         setWarning({
           ...warning,
           invalid: true,

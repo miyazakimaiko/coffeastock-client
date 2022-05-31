@@ -28,6 +28,8 @@ import '../modals.scss'
 import toastOnBottomCenter from '../../utils/customToast';
 import { escapeHtml, unescapeHtml } from '../../helpers/HtmlConverter';
 import OriginInput from './components/OriginInput';
+import { checkAltitudeIsInRange, checkBlendBeansCountInRange, checkGradeIsInRange, checkHarvestPeriodIsInRange, checkMemoIsInRange, checkRoastLevelIsInRange, checkValueIsNumber } from './helper/InputValidators';
+import BlendBeanInput from './components/BlendBeanInput';
 
 const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   const userData = useUserData()
@@ -85,7 +87,6 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
       setSelectedProcess(convertIdListToItemList(targetBean.process, rangeList.process_range));
       setSelectedAroma(convertIdListToItemList(targetBean.aroma, rangeList.aroma_range));
     }
-    console.log('bean has been set')
   }, []);
 
   const [tabState, setTabState] = useState({
@@ -96,40 +97,80 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     canOpenConfirmation: false
   });
 
+
   useEffect(() => {
     setDetailsTabState();
-  }, [bean.label])
+  }, [bean.label, bean.grade, bean.roast_level]);
+
 
   useEffect(() => {
     setConfirmationTabState();
-  }, [bean.single_origin, selectedOrigin, selectedBlendBeans]);
+  }, [
+    bean.single_origin,
+    bean.harvest_period,
+    bean.altitude,
+    bean.memo,
+    selectedOrigin,
+    selectedBlendBeans,
+  ]);
+
 
   const setDetailsTabState = () => {
+    
     const esacapedLabel = escapeHtml(bean.label ? bean.label : '');
-    console.log('esacapedLabel.length: ', esacapedLabel.length)
-    if (esacapedLabel.length === 0 || esacapedLabel.length > 60) {
+    const lebelIsValid = esacapedLabel.length > 0 && esacapedLabel.length <= 60;
+    const gradeIsValid = checkValueIsNumber(bean.grade) && checkGradeIsInRange(bean.grade);
+    const roastLevelIsValid = checkValueIsNumber(bean.roast_level) && checkRoastLevelIsInRange(bean.roast_level);
+
+    if (lebelIsValid && gradeIsValid && roastLevelIsValid) {
+      setTabState(tabState => ({ ...tabState, canOpenDetailsTab: true }));
+    }
+    else {
       setTabState(tabState => ({
         ...tabState,
         canOpenDetailsTab: false,
         canOpenConfirmation: false,
-      }));
-    }
-    else {
-      setTabState(tabState => ({ ...tabState, canOpenDetailsTab: true }));
+      }));    
     }
   }
 
-  const setConfirmationTabState = useCallback(() => {
-    if (bean.single_origin && selectedOrigin.length !== 0) {
-      setTabState(tabState => ({ ...tabState, canOpenConfirmation: true }));
+
+  const setConfirmationTabState = () => {
+
+    if (bean.single_origin) {
+      const originIsSelected = selectedOrigin.length > 0;
+      const altitudeIsInRange = checkAltitudeIsInRange(bean.altitude);
+      const harvestPeriodIsInRange = checkHarvestPeriodIsInRange(bean.harvest_period);
+      const memoIsInRange = checkMemoIsInRange(bean.memo);
+
+      if (
+        originIsSelected &&
+        altitudeIsInRange &&
+        harvestPeriodIsInRange &&
+        memoIsInRange
+      ) {
+        setTabState((tabState) => ({ ...tabState, canOpenConfirmation: true }));
+      }
+      else {
+        setTabState((tabState) => ({ ...tabState, canOpenConfirmation: false }));
+      }
     }
-    else if (!bean.single_origin && selectedBlendBeans.length !== 0) {
-      setTabState(tabState => ({ ...tabState, canOpenConfirmation: true }));
+    else if (!bean.single_origin) {
+
+      const blendBeanCountIsInRange = checkBlendBeansCountInRange(selectedBlendBeans);
+      const memoIsInRange = checkMemoIsInRange(bean.memo);
+
+      if (blendBeanCountIsInRange && memoIsInRange) {
+        setTabState(tabState => ({ ...tabState, canOpenConfirmation: true }));
+      }
+      else {
+        setTabState(tabState => ({ ...tabState, canOpenConfirmation: false }));
+      }
     }
     else {
       setTabState(tabState => ({ ...tabState, canOpenConfirmation: false }));
     }
-  }, [bean.single_origin, selectedBlendBeans, selectedOrigin]);
+  }
 
   const baseInfoPage = createRef(null);
   const detailsPage = createRef(null);
@@ -185,23 +226,18 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   };
 
   const setSelectedBlendBeans = (e) => {
-    if (e.length > 5) {
-      toastOnBottomCenter('error', 'Cannot select more than five coffee bean types.')
-    }
-    else {
-      innerSetSelectedBlendBeans(e);
-      // If parameter e contains the newly selected BlendBean,
-      // it must be found and set it in the blendRatio with the value of zero
-      e.forEach(bean => {
-        let found = false;
-        for (const beanId of Object.keys(blendRatios)) {
-          if (bean.value === beanId) found = true;
-        }
-        if (!found) {
-          setBlendRatio(bean.value, '0');
-        }
-      })
-    }
+    innerSetSelectedBlendBeans(e);
+    // If parameter e contains the newly selected BlendBean,
+    // it must be found and set it in the blendRatio with the value of zero
+    e.forEach(bean => {
+      let found = false;
+      for (const beanId of Object.keys(blendRatios)) {
+        if (bean.value === beanId) found = true;
+      }
+      if (!found) {
+        setBlendRatio(bean.value, '0');
+      }
+    })
   }
   
   const setBlendRatio = (key, value) => {
@@ -364,7 +400,6 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     return 'loading...'
   }
 
-  console.log('tabState: ', tabState)
 
   return (
     <ModalWrapperContainer
@@ -486,18 +521,11 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
             }`}
           >
             <div className="flex flex-col md:w-1/2">
-              <FormMultiSelect
-                title="Blend of"
-                required={true}
-                options={Object.values(beanList).map(
-                  ({ bean_id: value, ...rest }) => ({
-                    value,
-                    isDisabled: bean.bean_id === value,
-                    ...rest,
-                  })
-                )}
-                value={selectedBlendBeans}
-                onChange={(e) => setSelectedBlendBeans(e)}
+              <BlendBeanInput
+                targetBean={bean}
+                beanList={beanList}
+                selectedBlendBeans={selectedBlendBeans}
+                setSelectedBlendBeans={setSelectedBlendBeans}
               />
               <div className="form-section my-4">
                 <label className="font-medium divider">Blend Ratio</label>

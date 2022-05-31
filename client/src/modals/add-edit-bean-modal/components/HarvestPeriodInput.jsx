@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { escapeHtml } from '../../../helpers/HtmlConverter';
 import FormInput from '../../../elements/FormInput';
+import { checkHarvestPeriodIsInRange } from '../helper/InputValidators';
 
 const HarvestPeriodInput = ({bean, setBean}) => {
   const [counter, setCounter] = useState(0);
@@ -22,8 +23,10 @@ const HarvestPeriodInput = ({bean, setBean}) => {
     }
     else {
       setBean({...bean, harvest_period: period});
+
+      const valueIsInRange = checkHarvestPeriodIsInRange(period);
         
-      if (escapeHtml(period).length > 60) {
+      if (!valueIsInRange) {
         setWarning({
           ...warning,
           invalid: true,

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import FormInput from '../../../elements/FormInput';
 import { escapeHtml } from '../../../helpers/HtmlConverter';
+import { checkAltitudeIsInRange } from '../helper/InputValidators';
 
 const AltitudeInput = ({bean, setBean}) => {
   const [counter, setCounter] = useState(0);
@@ -23,7 +24,9 @@ const AltitudeInput = ({bean, setBean}) => {
     else {      
       setBean(bean => ({...bean, altitude}));
   
-      if (escapeHtml(altitude).length > 60) {
+      const valueIsInRange = checkAltitudeIsInRange(altitude);
+
+      if (!valueIsInRange) {
         setWarning({
           ...warning,
           invalid: true,

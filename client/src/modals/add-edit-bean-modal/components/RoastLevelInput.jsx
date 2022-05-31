@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput'
+import { checkRoastLevelIsInRange, checkValueIsNumber } from '../helper/InputValidators';
 
 const RoastLevelInput = ({bean, setBean}) => {
   const [warning, setWarning] = useState({
@@ -27,7 +28,7 @@ const RoastLevelInput = ({bean, setBean}) => {
         }); 
       }
       else {
-        const numberIsInRange = checkNumberIsInRange(level);
+        const numberIsInRange = checkRoastLevelIsInRange(level);
 
         if (!numberIsInRange) {
           setWarning({
@@ -51,15 +52,6 @@ const RoastLevelInput = ({bean, setBean}) => {
       invalid: false,
       message: "",
     });
-  }
-
-  const checkValueIsNumber = (value) => {
-    const includesForbiddenChar = ["e", "E", "+", "-"].includes(value);
-    return !isNaN(value) && !includesForbiddenChar;
-  }
-
-  const checkNumberIsInRange = (number) => {
-    return number >= 0.0 && number <= 10.0;
   }
 
   return (
