@@ -8,7 +8,7 @@ import { unescapeHtml } from '../../helpers/HtmlConverter'
 import { useUserData } from '../../context/AccountContext';
 import TooltipLeft from '../../elements/TooltipLeft';
 import CoffeeAttributeSection from './components/CoffeeAttributeSection';
-import ToolBar from '../../components/tool-bar';
+import ToolBar from '../../components/toolbar';
 import Dropdown from '../../elements/Dropdown';
 import DeleteModal from '../../modals/delete-modal';
 import RecipeGroupSection from './components/RecipeGroupSection';
@@ -230,7 +230,7 @@ const ViewBeanAndRecipes = () => {
         <ToolBar
           titleHtml={
             <span className="flex items-center">
-              {targetBean["single_origin"] ? "Single Origin" : "Blend"}
+              {targetBean.single_origin ? "Single Origin" : "Blend"}
               <HiOutlineChevronRight className="h-5 w-5 mx-5" />
               {unescapeHtml(targetBean["label"])}
             </span>

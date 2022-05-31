@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import TooltipBottomLeft from '../../../elements/TooltipBottomLeft'
-import ToolBar from '../../../components/tool-bar'
-import ToolbarDropdown from '../../../components/tool-bar/ToolBarDropdown'
-import ToolbarDropdownButton from '../../../components/tool-bar/ToolbarDropdownButton'
-import ToolBarSearchBar from '../../../components/tool-bar/ToolBarSearchBar'
+import ToolBar from '../../../components/toolbar'
+import ToolbarDropdown from '../../../components/toolbar/ToolBarDropdown'
+import ToolbarDropdownButton from '../../../components/toolbar/ToolbarDropdownButton'
+import ToolBarSearchBar from '../../../components/toolbar/ToolBarSearchBar'
 import RecipeSection from './RecipeSection'
 
 const GROUPBY = {

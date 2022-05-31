@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useUserData } from '../../context/AccountContext';
-import ToolBar from '../../components/tool-bar';
-import ToolBarButton from '../../components/tool-bar/ToolBarButton';
+import ToolBar from '../../components/toolbar';
+import ToolBarButton from '../../components/toolbar/ToolBarButton';
 import Table from './components/Table';
 import Row from './components/Row';
 import DeleteModal from '../../modals/delete-modal'
@@ -11,6 +11,7 @@ import useAddRange from '../../hooks/useAddRange';
 import useDeleteRange from '../../hooks/useDeleteRange';
 import { unescapeHtml } from '../../helpers/HtmlConverter';
 import AddEditRangeModal from '../../modals/add-edit-range-modal';
+import ToolBarSearchBar from '../../components/toolbar/ToolBarSearchBar';
 
 const MODE = {
   ADD: 'add',
@@ -28,6 +29,8 @@ const ManageAttributeRanges = ({cat: rangeName}) => {
   const [rangeItem, setRangeItem] = useState({ value: '', label: '', def: '' });
   const [modal, setModal] = useState({ mode: '', isOpen: false });
   const [attributeListHtml, setAttributeListHtml] = useState([]);
+
+  const [searchValue, setSearchValue] = useState("");
 
   const onDeleteSubmit = async (event) => {
     event.preventDefault();
@@ -101,20 +104,22 @@ const ManageAttributeRanges = ({cat: rangeName}) => {
               setModal({ mode: MODE.ADD, isOpen: true });
             }}
           />
+          <div className="flex">
+            <ToolBarSearchBar value={searchValue} onChange={setSearchValue} />
+          </div>
         </ToolBar>
         <Table>{attributeListHtml}</Table>
       </div>
 
       {modal.isOpen === true &&
-        (modal.mode === MODE.ADD || modal.mode === MODE.EDIT) ? (
-          <AddEditRangeModal
-            setModal={setModal}
-            rangeName={rangeName}
-            targetRangeItem={modal.mode === MODE.EDIT ? rangeItem : null}
-            mode={modal.mode}
-          />
-        ) : null
-      }
+      (modal.mode === MODE.ADD || modal.mode === MODE.EDIT) ? (
+        <AddEditRangeModal
+          setModal={setModal}
+          rangeName={rangeName}
+          targetRangeItem={modal.mode === MODE.EDIT ? rangeItem : null}
+          mode={modal.mode}
+        />
+      ) : null}
 
       {modal.isOpen === true && modal.mode === MODE.DELETE ? (
         <DeleteModal
@@ -122,8 +127,7 @@ const ManageAttributeRanges = ({cat: rangeName}) => {
           onCloseClick={() => setModal({ mode: "", isOpen: false })}
           onDeleteSubmit={onDeleteSubmit}
         />
-        ) : null
-      }
+      ) : null}
     </>
   );
 }
