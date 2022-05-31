@@ -3,7 +3,7 @@ import { useUserData } from '../../../context/AccountContext';
 import useBeans from '../../../hooks/useBeans';
 import BlendRatioInput from '../components/BlendRatioInput';
 
-const useSelectedBeansAndBlendRatio = () => {
+const useSelectedBeansAndRatio = () => {
   const userData = useUserData()
   const { data: beanList } = useBeans(userData.sub)
 
@@ -68,4 +68,4 @@ const useSelectedBeansAndBlendRatio = () => {
   ];
 }
 
-export default useSelectedBeansAndBlendRatio
+export default useSelectedBeansAndRatio
