@@ -42,14 +42,13 @@ module.exports = (app) => {
   app.post(endpoint + "/user/:userid/bean/:beanid/recipe", 
   recipeValidator,
   async (req, res, next) => {
-    
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      CustomException(422, errors.array()[0].msg)
-    }
-
+        
     try {
+      const errors = validationResult(req);
+  
+      if (!errors.isEmpty()) {
+        CustomException(422, errors.array()[0].msg)
+      }
       await db.query('BEGIN');
 
       const results = await db.query(`
@@ -127,11 +126,14 @@ module.exports = (app) => {
   app.post(endpoint + "/user/:userid/bean/:beanid/recipe/:recipeid",
   recipeValidator,
   async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      CustomException(422, errors.array()[0]['msg'])
-    }
+
     try {
+
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        CustomException(422, errors.array()[0].msg)
+      }
+
       await db.query('BEGIN')
 
       const getRecipeResult = await db.query(
