@@ -4,6 +4,7 @@ const FormInput = ({
   title, 
   type,
   name, 
+  step,
   autoComplete = "off", 
   placeholder, 
   value,
@@ -20,6 +21,7 @@ const FormInput = ({
       <input 
         type={type}
         name={name}
+        step={step}
         autoComplete={autoComplete}
         placeholder={placeholder}
         className={`${invalid ? 'red-outline' : 'blue-outline-transition'}
