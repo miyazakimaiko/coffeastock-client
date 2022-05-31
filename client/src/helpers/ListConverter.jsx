@@ -4,7 +4,7 @@ export const convertItemListToIdList = (selectedRange, rangeItems) => {
   const idList = [];
   selectedRange.forEach(range => {
     for (const entry of Object.values(rangeItems)) {
-      if (unescapeHtml(entry['label']) === range['label']) {
+      if (unescapeHtml(entry.label) === range.label) {
         idList.push(parseInt(entry['value']));
       }
     }
@@ -17,7 +17,10 @@ export const convertIdListToItemList = (idList, rangeItems) => {
   for (const entry of Object.values(rangeItems)) {
     const id = parseInt(entry['value'])
     if (idList.includes(id)) {
-      selectedRangeList.push(entry);
+      selectedRangeList.push({
+        ...entry,
+        label: unescapeHtml(entry.label)
+      });
     }
   }
   return selectedRangeList;
