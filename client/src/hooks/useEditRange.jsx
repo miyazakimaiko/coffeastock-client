@@ -12,14 +12,7 @@ export default function useEditRange(userid, rangeName) {
       enabled: Boolean(userid),
       onSuccess: async () => {
         await queryClient.invalidateQueries(["range", `${rangeName}_range`]);
-        toastOnBottomCenter("success", `Entry is edited successfully.`);
-      },
-      onError: (error) => {
-        toastOnBottomCenter(
-          "error",
-          error.message ?? "An unknown error has ocurred."
-        );
-      },
+      }
     }
   );
 }
