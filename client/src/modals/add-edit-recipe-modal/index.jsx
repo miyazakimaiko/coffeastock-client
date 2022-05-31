@@ -27,6 +27,11 @@ import AddEditMemoTextarea from './components/AddEditMemoTextarea';
 import InputConfirmSection from './components/InputConfirmSection';
 import MultiselectConfirmSection from './components/MultiselectConfirmSection';
 import '../modals.scss'
+import BeanInput from './components/BeanInput';
+import BrewingDateInput from './components/BrewingDateInput';
+import MethodInput from './components/MethodInput.jsx';
+import GrinderInput from './components/GrinderInput';
+import WaterInput from './components/WaterInput';
 
 const MODE = {
   ADD: 'add',
@@ -380,44 +385,28 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
             >
               <div className="md:flex md:px-8 my-8">
                 <div className="flex flex-col md:w-1/2">
-                  <FormMultiSelect
-                    title="Coffee Bean"
-                    options={Object.values(beanList)}
-                    isDisabled={mode === MODE.EDIT}
-                    value={selectedBean}
-                    onChange={setSelectedBean}
-                    required={true}
-                    isCreatable={false}
-                    isMulti={false}
+                  <BeanInput
+                    mode={mode}
+                    beanList={beanList}
+                    selectedBean={selectedBean}
+                    setSelectedBean={setSelectedBean}
                   />
-                  <FormInput
-                    title="Brewing Date"
-                    type="date"
-                    name="brewingdate"
-                    value={recipe.brew_date}
-                    onChange={(e) =>
-                      setRecipe({ ...recipe, brew_date: e.target.value })
-                    }
+                  <BrewingDateInput
+                    recipe={recipe}
+                    setRecipe={setRecipe}
                   />
-                  <FormMultiSelect
-                    title="Brewing Method"
-                    options={Object.values(rangeList.method_range)}
-                    value={selectedMethod}
-                    onChange={setSelectedMethod}
-                    required={true}
-                    isCreatable={true}
-                    isMulti={false}
+                  <MethodInput
+                    rangeList={rangeList}
+                    selectedMethod={selectedMethod}
+                    setSelectedMethod={setSelectedMethod}
                   />
                 </div>
 
                 <div className="md:w-1/2">
-                  <FormMultiSelect
-                    title="Grinder"
-                    options={Object.values(rangeList.grinder_range)}
-                    value={selectedGrinder}
-                    onChange={setSelectedGrinder}
-                    isCreatable={true}
-                    isMulti={false}
+                  <GrinderInput
+                    rangeList={rangeList}
+                    selectedGrinder={selectedGrinder}
+                    setSelectedGrinder={setSelectedGrinder}
                   />
                   <AddEditGrindSizeInput
                     recipe={recipe}
@@ -448,13 +437,10 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
             >
               <div className="md:px-8 my-8 block md:flex">
                 <div className="flex flex-col md:w-1/2">
-                  <FormMultiSelect
-                    title="Water"
-                    options={Object.values(rangeList.water_range)}
-                    value={selectedWater}
-                    onChange={setSelectedWater}
-                    isCreatable={true}
-                    isMulti={false}
+                  <WaterInput
+                    rangeList={rangeList}
+                    selectedWater={selectedWater}
+                    setSelectedWater={setSelectedWater}
                   />
                   <AddEditWaterWeightInput
                     recipe={recipe}
