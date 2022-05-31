@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, createRef } from 'react'
+import React, { useEffect, useState, createRef } from 'react'
 import { useUserData } from '../../context/AccountContext';
 import { convertIdListToItemList, convertItemListToIdList } from '../../helpers/ListConverter';
 import extractNewItems from '../../helpers/ExtractNewItems';
@@ -12,7 +12,6 @@ import StepsTab from './components/StepsTab';
 import InputConfirmSection from './components/InputConfirmSection';
 import MultiselectConfirmSection from './components/MultiselectConfirmSection';
 import PencilAltIconButton from '../../elements/PencilAltIconButton';
-import BlendRatioInput from './components/BlendRatioInput';
 import NameInput from './components/NameInput';
 import GradeInput from './components/GradeInput';
 import RoastLevelInput from './components/RoastLevelInput';
@@ -28,8 +27,19 @@ import '../modals.scss'
 import toastOnBottomCenter from '../../utils/customToast';
 import { escapeHtml, unescapeHtml } from '../../helpers/HtmlConverter';
 import OriginInput from './components/OriginInput';
-import { checkAltitudeIsInRange, checkBlendBeansCountInRange, checkGradeIsInRange, checkHarvestPeriodIsInRange, checkMemoIsInRange, checkRoastLevelIsInRange, checkValueIsNumber } from './helper/InputValidators';
 import BlendBeanInput from './components/BlendBeanInput';
+import {
+  checkAltitudeIsInRange,
+  checkBlendBeansCountInRange,
+  checkGradeIsInRange,
+  checkHarvestPeriodIsInRange,
+  checkMemoIsInRange,
+  checkRoastLevelIsInRange,
+  checkValueIsNumber,
+} from "./helper/InputValidators";
+import useBeanModel from './hooks/useBeanModel';
+import useTabStateModel from './hooks/useTabStateModel';
+import useSelectedBeansAndBlendRatio from './hooks/useSelectedBlendBeans';
 
 const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   const userData = useUserData()
@@ -39,24 +49,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   const editBean = useEditBean(userData.sub)
   const addRange = useAddRange(userData.sub)
 
-  const [bean, setBean] = useState({
-    bean_id: null,
-    single_origin: true,
-    label: null,
-    grade: null,
-    roast_level: null,
-    roast_date: null,
-    harvest_period: null,
-    altitude: null,
-    memo: null,
-    blend_ratio: {},
-    origin: [],
-    farm: [],
-    variety: [],
-    process: [],
-    roaster: [],
-    aroma: []
-  })
+  const [bean, setBean] = useBeanModel();
 
   const [selectedOrigin, setSelectedOrigin] = useState([]);
   const [selectedRoaster, setSelectedRoaster] = useState([]);
@@ -64,9 +57,13 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   const [selectedProcess, setSelectedProcess] = useState([]);
   const [selectedAroma, setSelectedAroma] = useState([]);
   const [selectedVariety, setSelectedVariety] = useState([]);
-  const [selectedBlendBeans, innerSetSelectedBlendBeans] = useState([]);
-  const [blendRatios, innerSetBlendRatio] = useState({});
-  const [blendRatioHtmlDict, setBlendRatioHtmlDict] = useState({});
+  const [
+    selectedBlendBeans,
+    setSelectedBlendBeans,
+    blendRatios,
+    setBlendRatio,
+    blendRatioHtmlDict,
+  ] = useSelectedBeansAndBlendRatio();
 
   useEffect(() => {
     if (mode === "edit") {
@@ -89,13 +86,8 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     }
   }, []);
 
-  const [tabState, setTabState] = useState({
-    baseInfoTabIsOpen: true,
-    detailsTabIsOpen: false,
-    confirmationTabIsOpen: false,
-    canOpenDetailsTab: false,
-    canOpenConfirmation: false
-  });
+
+  const [tabState, setTabState] = useTabStateModel();
 
 
   useEffect(() => {
@@ -172,9 +164,11 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     }
   }
 
+
   const baseInfoPage = createRef(null);
   const detailsPage = createRef(null);
   const confirmationPage = createRef(null);
+
 
   const showPage = (pageRef) => {
     pageRef.current.style.opacity = 1;
@@ -182,13 +176,14 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     pageRef.current.style.overflow = "visible";
   }
 
+
   const hidePage = (pageRef) => {
     pageRef.current.style.opacity = 0;
     pageRef.current.style.height = 0;
     pageRef.current.style.overflow = "hidden";
   }
 
-  // To toggle click from the Next button
+
   const setOpenBaseInfoTab = () => {
     showPage(baseInfoPage);
     hidePage(detailsPage);
@@ -200,6 +195,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
       confirmationTabIsOpen: false,
     }));
   }; 
+
 
   const setOpenDetailsTab = () => {
     hidePage(baseInfoPage);
@@ -213,6 +209,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     }));
   };
 
+
   const setOpenConfirmationTab = () => {
     hidePage(baseInfoPage);
     hidePage(detailsPage);
@@ -225,28 +222,6 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     }));
   };
 
-  const setSelectedBlendBeans = (e) => {
-    innerSetSelectedBlendBeans(e);
-    // If parameter e contains the newly selected BlendBean,
-    // it must be found and set it in the blendRatio with the value of zero
-    e.forEach(bean => {
-      let found = false;
-      for (const beanId of Object.keys(blendRatios)) {
-        if (bean.value === beanId) found = true;
-      }
-      if (!found) {
-        setBlendRatio(bean.value, '0');
-      }
-    })
-  }
-  
-  const setBlendRatio = (key, value) => {
-    const newRatio = {};
-    newRatio[key] = value;
-    innerSetBlendRatio(blendRatios => (
-      { ...blendRatios, ...newRatio }
-    ));
-  }
 
   const finalizeBean = () => {
     const roaster = convertItemListToIdList(selectedRoaster, rangeList.roaster_range);
@@ -313,6 +288,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     }
   }, [processAddSubmit])
 
+  
   useEffect(() => {
     if (processEditSubmit) {
 
@@ -347,52 +323,16 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     }
   }, [processEditSubmit])
 
-  // To delete unselected BlendBean from the blendRatios object
-  useEffect(() => {
-    if (Object.keys(blendRatios).length > 0) {
-      for (const beanId of Object.keys(blendRatios)) {
-        let found = false;
-        selectedBlendBeans.forEach(selectedBean => {
-          if (selectedBean.value === beanId) found = true;
-        });
-        if (!found) {
-          delete blendRatios[beanId]
-          delete blendRatioHtmlDict[beanId]
-        }
-      }
-    }
-  }, [selectedBlendBeans, blendRatios]);
-
-  useEffect(() => {
-    Object.keys(blendRatios).forEach((id) => {
-      const html = {};
-      html[id] = (
-        <BlendRatioInput
-          title={beanList.find((d) => d.bean_id == id).label}
-          name={id}
-          value={blendRatios[id]}
-          onChange={(e) => setBlendRatio(id, e.target.value)}
-        />
-      );
-      setBlendRatioHtmlDict((blendRatioHtmlDict) => ({
-        ...blendRatioHtmlDict,
-        ...html,
-      }));
-    });
-  }, [blendRatios]);
 
   useEffect(() => {
     if (mode === 'edit' && selectedBlendBeans.length === 0 && targetBean.blend_ratio) {
+
+      const selectedBeans = [];
       Object.keys(targetBean.blend_ratio).forEach(id => {
-        setBlendRatio(id, targetBean.blend_ratio[id])
-        innerSetSelectedBlendBeans(selectedBlendBeans => [
-          ...selectedBlendBeans, 
-          { 
-            label:beanList.find(d => d.bean_id == id).label,
-            value:beanList.find(d => d.bean_id == id).bean_id
-          }
-        ])
+        setBlendRatio(blendRatio => ({ ...blendRatio, [id]: targetBean.blend_ratio[id] }))
+        selectedBeans.push(beanList[id])
       })
+      setSelectedBlendBeans(selectedBeans);
     }
   }, [bean])
 
