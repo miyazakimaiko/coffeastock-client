@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput';
 
-const AddEditGradeInput = ({bean, setBean}) => {
+const GradeInput = ({bean, setBean}) => {
   const [warning, setWarning] = useState({
     invalid: false,
     message: "",
@@ -78,4 +78,4 @@ const AddEditGradeInput = ({bean, setBean}) => {
   )
 }
 
-export default AddEditGradeInput
+export default GradeInput

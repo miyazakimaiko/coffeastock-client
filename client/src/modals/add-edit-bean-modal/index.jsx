@@ -12,13 +12,13 @@ import StepsTab from './components/StepsTab';
 import InputConfirmSection from './components/InputConfirmSection';
 import MultiselectConfirmSection from './components/MultiselectConfirmSection';
 import PencilAltIconButton from '../../elements/PencilAltIconButton';
-import FormBlendRatioInput from './components/FormBlendRatioInput';
-import AddEditNameInput from './components/AddEditNameInput';
-import AddEditGradeInput from './components/AddEditGradeInput';
-import AddEditRoastLevelInput from './components/AddEditRoastLevelInput';
-import AddEditHarvestPeriodInput from './components/AddEditHarvestPeriodInput';
-import AddEditAltitudeInput from './components/AddEditAltitudeInput';
-import AddEditMemoTextarea from './components/AddEditMemoTextarea';
+import BlendRatioInput from './components/BlendRatioInput';
+import NameInput from './components/NameInput';
+import GradeInput from './components/GradeInput';
+import RoastLevelInput from './components/RoastLevelInput';
+import HarvestPeriodInput from './components/HarvestPeriodInput';
+import AltitudeInput from './components/AltitudeInput';
+import MemoTextarea from './components/MemoTextarea';
 import useAddBean from '../../hooks/useAddBean';
 import useEditBean from '../../hooks/useEditBean';
 import useBeans from '../../hooks/useBeans';
@@ -331,7 +331,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     Object.keys(blendRatios).forEach((id) => {
       const html = {};
       html[id] = (
-        <FormBlendRatioInput
+        <BlendRatioInput
           title={beanList.find((d) => d.bean_id == id).label}
           name={id}
           value={blendRatios[id]}
@@ -411,9 +411,9 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
         >
           <div className="md:flex md:px-8 my-8">
             <div className="flex flex-col md:w-1/2">
-              <AddEditNameInput bean={bean} setBean={setBean} />
-              <AddEditGradeInput bean={bean} setBean={setBean} />
-              <AddEditRoastLevelInput bean={bean} setBean={setBean} />
+              <NameInput bean={bean} setBean={setBean} />
+              <GradeInput bean={bean} setBean={setBean} />
+              <RoastLevelInput bean={bean} setBean={setBean} />
             </div>
 
             <div className="md:w-1/2">
@@ -513,7 +513,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
                 isCreatable={true}
                 onChange={setSelectedAroma}
               />
-              <AddEditMemoTextarea bean={bean} setBean={setBean} />
+              <MemoTextarea bean={bean} setBean={setBean} />
             </div>
           </div>
 
@@ -542,8 +542,8 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
                 onChange={setSelectedVariety}
                 isCreatable={true}
               />
-              <AddEditHarvestPeriodInput bean={bean} setBean={setBean} />
-              <AddEditAltitudeInput bean={bean} setBean={setBean} />
+              <HarvestPeriodInput bean={bean} setBean={setBean} />
+              <AltitudeInput bean={bean} setBean={setBean} />
             </div>
 
             <div className="md:w-1/2">
@@ -561,7 +561,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
                 onChange={setSelectedAroma}
                 isCreatable={true}
               />
-              <AddEditMemoTextarea bean={bean} setBean={setBean} />
+              <MemoTextarea bean={bean} setBean={setBean} />
             </div>
           </div>
 

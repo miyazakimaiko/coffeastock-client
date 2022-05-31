@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import FormTextarea from '../../../elements/FormTextarea';
 import { escapeHtml } from '../../../helpers/HtmlConverter';
 
-const AddEditMemoTextarea = ({bean, setBean}) => {
+const MemoTextarea = ({bean, setBean}) => {
   const [counter, setCounter] = useState(0);
   const [warning, setWarning] = useState({
     invalid: false,
@@ -57,4 +57,4 @@ const AddEditMemoTextarea = ({bean, setBean}) => {
   )
 }
 
-export default AddEditMemoTextarea
+export default MemoTextarea

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import FormInput from '../../../elements/FormInput';
 import { escapeHtml } from '../../../helpers/HtmlConverter';
 
-const AddEditNameInput = ({bean, setBean}) => {
+const NameInput = ({bean, setBean}) => {
   const [counter, setCounter] = useState(0);
   const [warning, setWarning] = useState({
     invalid: false,
@@ -60,4 +60,4 @@ const AddEditNameInput = ({bean, setBean}) => {
   )
 }
 
-export default AddEditNameInput
+export default NameInput

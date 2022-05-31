@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput'
 
-const AddEditRoastLevelInput = ({bean, setBean}) => {
+const RoastLevelInput = ({bean, setBean}) => {
   const [warning, setWarning] = useState({
     invalid: false,
     message: "",
@@ -77,4 +77,4 @@ const AddEditRoastLevelInput = ({bean, setBean}) => {
   )
 }
 
-export default AddEditRoastLevelInput
+export default RoastLevelInput

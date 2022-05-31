@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import FormInput from '../../../elements/FormInput';
 import { escapeHtml } from '../../../helpers/HtmlConverter';
+import FormInput from '../../../elements/FormInput';
 
-const AddEditAltitudeInput = ({bean, setBean}) => {
+const HarvestPeriodInput = ({bean, setBean}) => {
   const [counter, setCounter] = useState(0);
   const [warning, setWarning] = useState({
     invalid: false,
@@ -10,20 +10,20 @@ const AddEditAltitudeInput = ({bean, setBean}) => {
   });
 
   useEffect(() => {
-    if (bean.altitude) {
-      setCounter(escapeHtml(bean.altitude).length)
+    if (bean.harvest_period) {
+      setCounter(escapeHtml(bean.harvest_period).length)
     }
-  }, [bean.altitude])
+  }, [bean.harvest_period])
 
-  const setAltitude = (altitude) => {
-    if (altitude.length === 0) {
-      setBean(bean => ({...bean, altitude: ""}));
+  const setHarvestPeriod = (period) => {
+    if (period.length === 0) {
+      setBean({...bean, harvest_period: ""});
       clearWarning();
     }
-    else {      
-      setBean(bean => ({...bean, altitude}));
-  
-      if (escapeHtml(altitude).length > 60) {
+    else {
+      setBean({...bean, harvest_period: period});
+        
+      if (escapeHtml(period).length > 60) {
         setWarning({
           ...warning,
           invalid: true,
@@ -47,17 +47,17 @@ const AddEditAltitudeInput = ({bean, setBean}) => {
 
   return (
     <FormInput
-      title="Altitude"
+      title="Harvest Period"
       type="text" 
-      name="altitude"
-      placeholder="e.g. 4000 MASL"
-      value={bean.altitude}
+      name="harvest-period"
+      placeholder="e.g. Sep 2020" 
+      value={bean.harvest_period}
       invalid={warning.invalid}
-      onChange={e => setAltitude(e.target.value)}
+      onChange={e => setHarvestPeriod(e.target.value)}
       warningText={warning.message}
       counterText={`${counter}/60`}
     />
   )
 }
 
-export default AddEditAltitudeInput
+export default HarvestPeriodInput
