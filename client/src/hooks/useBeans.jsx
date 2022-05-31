@@ -10,7 +10,7 @@ export default function useBeans(userid) {
     {
       enabled: Boolean(userid),
       onSuccess: beans => {
-        beans.forEach(bean => {
+        Object.values(beans).forEach(bean => {
           queryClient.setQueryData(['bean', bean.bean_id], bean)
         });
       }

@@ -46,11 +46,11 @@ const ViewBeansList = () => {
     }
     coffeeHtmlDictionary['No Group'] = []
 
-    beanList.map(bean => {
+    Object.values(beanList).forEach(bean => {
       const beanIsApplicableToShowState = showState === SHOW.ALL ||
-        (((showState === SHOW.SINGLE_ORIGIN) && bean['single_origin']) ||
-          ((showState === SHOW.BLEND) && !bean['single_origin']))
-
+        (((showState === SHOW.SINGLE_ORIGIN) && bean.single_origin) ||
+          ((showState === SHOW.BLEND) && !bean.single_origin))
+  
       if (beanIsApplicableToShowState) {
         let pushed = false
         Object.keys(coffeeHtmlDictionary).forEach(attrId => {
@@ -58,10 +58,10 @@ const ViewBeansList = () => {
             coffeeHtmlDictionary[attrId].push(<CoffeeSection bean={bean} />)
             pushed = true
           }
-          else if (bean['blend_ratio']) {
+          else if (bean.blend_ratio) {
             let found = false;
-            Object.keys(bean['blend_ratio']).forEach(blendBeanId => {
-              if (beanList?.find(d => d.bean_id == blendBeanId)[groupState].includes(parseInt(attrId))) {
+            Object.keys(bean.blend_ratio).forEach(blendBeanId => {
+              if(beanList[blendBeanId][groupState].includes(parseInt(attrId))) {
                 found = true
               }
             })

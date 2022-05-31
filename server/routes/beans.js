@@ -19,10 +19,10 @@ module.exports = (app) => {
       const results = await db.query(`
       SELECT * FROM beans WHERE user_id = $1`, 
       [req.params.userid]);
-      
-      const result = results.rows.map(bean => {
-        return {...bean, value: bean['bean_id']}
-      })
+
+      const result = results.rows.reduce((current, bean) => {
+        return {...current, [bean.bean_id]: {...bean, value: bean.bean_id } }
+      }, {}) 
       
       res.status(200).json(result);
       

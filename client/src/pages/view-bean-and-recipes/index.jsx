@@ -97,7 +97,7 @@ const ViewBeanAndRecipes = () => {
       const blend = targetBean["blend_ratio"];
       for (const beanId of Object.keys(blend)) {
         const ratio = blend[beanId];
-        const blendBean = beanList?.find((d) => d.bean_id == beanId);
+        const blendBean = beanList[beanId];
         const originNames = makeNameListHtml("origin", blendBean);
         const roasterNames = makeNameListHtml("roaster", blendBean);
         const processNames = makeNameListHtml("process", blendBean);
@@ -152,7 +152,7 @@ const ViewBeanAndRecipes = () => {
               <div className="flex items-center" id={`tooltip-blend-${beanId}`}>
                 <div className="text-right">
                   {`${unescapeHtml(
-                    beanList?.find((d) => d.bean_id == beanId)["label"]
+                    beanList[beanId].label
                   )}: ${ratio}%`}
                 </div>
                 <FaInfoCircle className="h-4 w-4 ml-2 flex-shrink-0" />
