@@ -1,9 +1,7 @@
 const { body } = require('express-validator');
 
 const rangeItemValidator = [
-  body('label', 'Invalid Name').not().contains('<')
-    .not().contains('>').not().contains('"').not().contains("'")
-    .not().contains('&').not().contains('/').isLength({ max: 60 })
+  body('label', 'Invalid Name').escape().isLength({ max: 60 })
     .optional({ nullable: false }),
   body('def', 'Invalid Details').escape().isLength({ max: 600 }).optional({ checkFalsy: true })
 ]
@@ -22,8 +20,8 @@ const beanValidator = [
   body('grade', 'Invalid Grade').isFloat({ min: 0, max: 100 }).optional({ checkFalsy: true }),
   body('roast_date', 'Invalid Roast Date').isDate().optional({ checkFalsy: true }),
   body('memo', 'Invalid Memo').escape().isLength({ max: 400 }).optional({ checkFalsy: true }),
-  body('altitude').escape(),
-  body('harvest_period').escape(),
+  body('altitude').escape().isLength({ max: 60 }).optional({ checkFalsy: true }),
+  body('harvest_period').escape().isLength({ max: 60 }).optional({ checkFalsy: true }),
 ]
 
 const recipeValidator = [
