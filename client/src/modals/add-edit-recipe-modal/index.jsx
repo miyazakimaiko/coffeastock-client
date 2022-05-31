@@ -1,8 +1,6 @@
 import React, { useEffect, useState, createRef } from 'react'
 import { useUserData } from '../../context/AccountContext';
-import { unescapeHtml } from '../../helpers/HtmlConverter';
 import extractNewItems from '../../helpers/ExtractNewItems';
-import { convertIdListToItemList, convertItemListToIdList } from '../../helpers/ListConverter';
 import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
 import useBeans from '../../hooks/useBeans';
 import useRanges from '../../hooks/useRanges';
@@ -28,7 +26,7 @@ import AddEditPalateRangeInput from './components/AddEditPalateRangeInput';
 import AddEditMemoTextarea from './components/AddEditMemoTextarea';
 import InputConfirmSection from './components/InputConfirmSection';
 import MultiselectConfirmSection from './components/MultiselectConfirmSection';
-import './modals.scss'
+import '../modals.scss'
 
 const MODE = {
   ADD: 'add',
