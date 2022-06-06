@@ -30,6 +30,18 @@ import MethodInput from './components/MethodInput.jsx';
 import GrinderInput from './components/GrinderInput';
 import WaterInput from './components/WaterInput';
 import '../modals.scss'
+import {
+  checkExtractionTimeIsInVaildForm,
+  checkGrindSizeIsInRange,
+  checkGroundsWeightIsInRange,
+  checkMemoIsInRange,
+  checkPalateRatesAreInRange,
+  checkTdsIsInRange,
+  checkTotalRateIsInRange,
+  checkWaterTempIsInRange,
+  checkWaterWeightIsInRange,
+  checkYieldWeightIsInRange,
+} from "./helpers/InputValidators";
 
 const MODE = {
   ADD: 'add',
@@ -48,7 +60,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     bean_id: null,
     brew_date: null,
     method: {},
-    grinder: [],
+    grinder: {},
     grind_size: null,
     grounds_weight: null,
     water_weight: null,
@@ -62,7 +74,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     memo: null,
   });
 
-  const [selectedBean, setSelectedBean] = useState(null)
+  const [selectedBean, setSelectedBean] = useState([])
   const [selectedMethod, setSelectedMethod] = useState([])
   const [selectedGrinder, setSelectedGrinder] = useState([])
   const [selectedWater, setSelectedWater] = useState([])
@@ -77,10 +89,13 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
   };
 
   const [tabState, setTabState] = useState({
-    coffeeBeansTab: true,
-    waterYieldTab: false,
-    palatesTab: false,
-    confirmationTab: false,
+    coffeeBeansTabIsOpen: true,
+    waterYieldTabIsOpen: false,
+    palatesTabIsOpen: false,
+    confirmationTabIsOpen: false,
+    canOpenWaterYieldTab: false,
+    canOpenPalatesTab: false,
+    canOpenConfirmationTab: false
   });
 
   const coffeeBeansPage = createRef(null);
@@ -108,10 +123,10 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     hidePage(confirmationPage);
     setTabState({
       ...tabState,
-      coffeeBeansTab: true,
-      waterYieldTab: false,
-      palatesTab: false,
-      confirmationTab: false,
+      coffeeBeansTabIsOpen: true,
+      waterYieldTabIsOpen: false,
+      palatesTabIsOpen: false,
+      confirmationTabIsOpen: false,
     });
   }; 
 
@@ -122,10 +137,10 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     hidePage(confirmationPage);
     setTabState({
       ...tabState, 
-      coffeeBeansTab: false, 
-      waterYieldTab: true, 
-      palatesTab: false, 
-      confirmationTab: false
+      coffeeBeansTabIsOpen: false, 
+      waterYieldTabIsOpen: true, 
+      palatesTabIsOpen: false, 
+      confirmationTabIsOpen: false
     });
   }
 
@@ -136,10 +151,10 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     hidePage(confirmationPage);
     setTabState({
       ...tabState, 
-      coffeeBeansTab: false, 
-      waterYieldTab: false, 
-      palatesTab: true, 
-      confirmationTab: false
+      coffeeBeansTabIsOpen: false, 
+      waterYieldTabIsOpen: false, 
+      palatesTabIsOpen: true, 
+      confirmationTabIsOpen: false
     });
   }
 
@@ -150,10 +165,10 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     showPage(confirmationPage);
     setTabState({
       ...tabState, 
-      coffeeBeansTab: false, 
-      waterYieldTab: false, 
-      palatesTab: false, 
-      confirmationTab: true
+      coffeeBeansTabIsOpen: false, 
+      waterYieldTabIsOpen: false, 
+      palatesTabIsOpen: false, 
+      confirmationTabIsOpen: true
     });
   }
 
@@ -187,7 +202,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     };
     for (const [rangeName, entries] of Object.entries(newRangeList)) {
       for await (const entry of entries) {
-        const body = { "label": entry.label, "def": "" }
+        const body = { label: entry.label, def: "" }
         await addRange.mutate({ rangeName,body })
       }
     }
@@ -206,39 +221,130 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     }
   }
 
-  const canGoToConfirmation = () => {
-    if (selectedBean === null || selectedMethod === null) {
-        return false
-    } 
-    return true
-  }
 
   useEffect(() => {
-    Object.keys(rangeList.palate_range).forEach(id => {
-      let elem = {}
-      elem[id] = <PalateRangeInput
-        title={rangeList.palate_range[id].label}
-        parateId={rangeList.palate_range[id].value}
-        palateRate={palateRate}
-        setPalateRate={setPalateRate}
-      />
-      setPalateRateHtmlDict((palateRateHtmlDict) => ({
-        ...palateRateHtmlDict,
-        ...elem,
+    setWaterYieldTabState();
+  }, [selectedBean, selectedMethod, recipe.grounds_weight, recipe.grind_size]);
+
+
+  const setWaterYieldTabState = () => {
+    
+    const grindSizeIsValid = checkGrindSizeIsInRange(recipe.grind_size);
+    const groundsWeightIsValid = checkGroundsWeightIsInRange(recipe.grounds_weight);
+
+    if (selectedBean && selectedMethod && 
+    grindSizeIsValid && groundsWeightIsValid) {
+      setTabState(tabState => ({
+        ...tabState,
+        canOpenWaterYieldTab: true
       }));
-      let confirmElem = {}
-      confirmElem[id] = (
-        <InputConfirmSection
+    }
+    else {
+      setTabState(tabState => ({
+        ...tabState,
+        canOpenWaterYieldTab: false
+      }));
+    }
+  }
+
+
+  useEffect(() => {
+    setPalatesTabState();
+  }, [
+    tabState.canOpenWaterYieldTab,
+    recipe.water_weight,
+    recipe.water_temp,
+    recipe.yield_weight,
+    recipe.extraction_time,
+    recipe.tds,
+    recipe.total_rate,
+  ]);
+
+
+  const setPalatesTabState = () => {
+
+    const waterWeightIsValid = checkWaterWeightIsInRange(recipe.water_weight);
+    const waterTempIsValid = checkWaterTempIsInRange(recipe.water_temp);
+    const yieldWeightIsValid = checkYieldWeightIsInRange(recipe.yield_weight);
+    const extractionTimeIsValid = checkExtractionTimeIsInVaildForm(recipe.extraction_time);
+    const tdsIsValid = checkTdsIsInRange(recipe.tds);
+    const totalRateIsValid = checkTotalRateIsInRange(recipe.total_rate);
+
+    if ( waterWeightIsValid && waterTempIsValid && yieldWeightIsValid &&
+    extractionTimeIsValid && tdsIsValid && totalRateIsValid && tabState.canOpenWaterYieldTab ) {
+      setTabState((tabState) => ({
+        ...tabState,
+        canOpenPalatesTab: true,
+      }));
+    } 
+    else {
+      setTabState((tabState) => ({
+        ...tabState,
+        canOpenPalatesTab: false,
+      }));
+    }
+  }
+
+
+  useEffect(() => {
+    setConfirmationTabState();
+  }, [
+    tabState.canOpenWaterYieldTab,
+    tabState.canOpenPalatesTab,
+    palateRate,
+    recipe.memo,
+  ]);
+
+
+  const setConfirmationTabState = () => {
+
+    const palatesAreInRange = checkPalateRatesAreInRange(palateRate);
+    const memoIsInRange = checkMemoIsInRange(recipe.memo);
+
+    if (palatesAreInRange && memoIsInRange && 
+    tabState.canOpenWaterYieldTab && tabState.canOpenPalatesTab) {
+      setTabState((tabState) => ({
+        ...tabState,
+        canOpenConfirmationTab: true,
+      }));
+    }
+    else {
+      setTabState((tabState) => ({
+        ...tabState,
+        canOpenConfirmationTab: false,
+      }));
+    }
+  }
+
+
+  useEffect(() => {
+    if (!rangeListIsLoading) {
+      Object.keys(rangeList.palate_range).forEach(id => {
+        let elem = {}
+        elem[id] = <PalateRangeInput
           title={rangeList.palate_range[id].label}
-          content={palateRate[rangeList.palate_range[id].value]}
+          parateId={rangeList.palate_range[id].value}
+          palateRate={palateRate}
+          setPalateRate={setPalateRate}
         />
-      )
-      setPalateRateConfirmationHtmlDict((palateRateConfirmationHtmlDict) => ({
-        ...palateRateConfirmationHtmlDict,
-        ...confirmElem,
-      }));
-    })
-  },[palateRate])
+        setPalateRateHtmlDict((palateRateHtmlDict) => ({
+          ...palateRateHtmlDict,
+          ...elem,
+        }));
+        let confirmElem = {}
+        confirmElem[id] = (
+          <InputConfirmSection
+            title={rangeList.palate_range[id].label}
+            content={palateRate[rangeList.palate_range[id].value]}
+          />
+        )
+        setPalateRateConfirmationHtmlDict((palateRateConfirmationHtmlDict) => ({
+          ...palateRateConfirmationHtmlDict,
+          ...confirmElem,
+        }));
+      })
+    }
+  },[rangeList, palateRate])
 
   const formatExtractionTimeInputValue = (extraction_time) => {
     const units = ['hours', 'minutes', 'seconds']
@@ -347,28 +453,28 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
             <StepsTab
               key="coffee-beans"
               title="1. Coffee Beans"
-              tabState={tabState.coffeeBeansTab}
+              tabState={tabState.coffeeBeansTabIsOpen}
               onClick={setOpenCoffeeBeansTab}
             />
             <StepsTab
               key="water-yield"
               title="2. Water and Yield"
-              disabled={!canGoToConfirmation()}
-              tabState={tabState.waterYieldTab}
+              disabled={!tabState.canOpenWaterYieldTab}
+              tabState={tabState.waterYieldTabIsOpen}
               onClick={setOpenWaterYieldTab}
             />
             <StepsTab
               key="palates"
               title="3. Palates and Memo"
-              disabled={!canGoToConfirmation()}
-              tabState={tabState.palatesTab}
+              disabled={!tabState.canOpenPalatesTab}
+              tabState={tabState.palatesTabIsOpen}
               onClick={setOpenPalatesTab}
             />
             <StepsTab
               key="confirmation"
               title="4. Confirmation"
-              disabled={!canGoToConfirmation()}
-              tabState={tabState.confirmationTab}
+              disabled={!tabState.canOpenConfirmationTab}
+              tabState={tabState.confirmationTabIsOpen}
               onClick={() => {
                 setOpenConfirmationTab();
                 insertNewRangeList();
@@ -423,7 +529,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                 />
                 <BlueButton
                   text="Next"
-                  disabled={!canGoToConfirmation()}
+                  disabled={!tabState.canOpenWaterYieldTab}
                   onClick={setOpenWaterYieldTab}
                 />
               </div>
@@ -474,7 +580,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                 />
                 <BlueButton
                   text="Next"
-                  disabled={selectedBean === null}
+                  disabled={!tabState.canOpenPalatesTab}
                   onClick={() => {
                     setOpenPalatesTab();
                     insertNewRangeList();
@@ -502,7 +608,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                 />
                 <BlueButton
                   text="Next"
-                  disabled={selectedBean === null}
+                  disabled={!tabState.canOpenConfirmationTab}
                   onClick={() => {
                     setOpenConfirmationTab();
                     insertNewRangeList();
