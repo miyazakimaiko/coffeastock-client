@@ -7,8 +7,6 @@ const WaterTempInput = ({recipe, setRecipe}) => {
     message: "",
   });
 
-  const [tempWarningText, setTempWarningText] = useState("");
-
   const setTemp = (temp) => {
     if (temp.length === 0) {
       setRecipe({...recipe, water_temp: null});
@@ -76,7 +74,7 @@ const WaterTempInput = ({recipe, setRecipe}) => {
       value={recipe.water_temp}
       invalid={warning.invalid}
       onChange={e => setTemp(e.target.value)}
-      warningText={tempWarningText}
+      warningText={warning.message}
     />
   )
 }

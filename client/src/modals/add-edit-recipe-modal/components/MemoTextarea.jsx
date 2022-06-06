@@ -1,30 +1,61 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FormTextarea from '../../../elements/FormTextarea'
 import { escapeHtml } from '../../../helpers/HtmlConverter';
+import { checkMemoIsInRange } from '../../add-edit-bean-modal/helpers/InputValidators';
 
 const MemoTextarea = ({recipe, setRecipe}) => {
+  const [counter, setCounter] = useState(0);
+  const [warning, setWarning] = useState({
+    invalid: false,
+    message: "",
+  });
 
-  const [memoWarningText, setMemoWarningText] = useState("400/400");
+  useEffect(() => {
+    if (recipe.memo) {
+      setCounter(escapeHtml(recipe.memo).length)
+    }
+  }, [recipe.memo])
 
   const setMemo = (memo) => {
-    const encoded = escapeHtml(memo);
-    if (encoded.length > 400) {
-      setMemoWarningText(<span className="text-red">{400 - encoded.length}/400</span>)
-    } else {
-      setMemoWarningText(`${400 - encoded.length}/400`)
-    }
     if (memo.length === 0) {
-      memo = null
+      setRecipe({...recipe, memo: ""});
+      clearWarning();
     }
-    setRecipe({...recipe, memo})
+    else {
+      setRecipe({...recipe, memo});
+
+      const valueIsInRange = checkMemoIsInRange(memo);
+      
+      if (!valueIsInRange) {
+        setWarning({
+          ...warning,
+          invalid: true,
+          message: <span className="text-red">
+            Please enter less than 400 letters.
+          </span>
+        });
+      } else {
+        clearWarning();
+      }
+    }
   }
+  const clearWarning = () => {
+    setWarning({
+      ...warning,
+      invalid: false,
+      message: ''
+    });
+  }
+
   return (
     <FormTextarea
       title="Memo"
       name="memo"
       value={recipe.memo}
+      invalid={warning.invalid}
       onChange={e => setMemo(e.target.value)}
-      warningText={memoWarningText}
+      warningText={warning.message}
+      counterText={`${counter}/400`}
     />
   )
 }

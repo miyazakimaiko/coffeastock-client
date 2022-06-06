@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput'
+import { checkValueIsNumber, checkWaterWeightIsInRange } from '../helpers/InputValidators';
 
 const WaterWeightInput = ({recipe, setRecipe}) => {
   const [warning, setWarning] = useState({
@@ -28,7 +29,7 @@ const WaterWeightInput = ({recipe, setRecipe}) => {
         });
       }
       else {
-        const weightIsInRange = checkNumberIsInRange(weight);
+        const weightIsInRange = checkWaterWeightIsInRange(weight);
   
         if (!weightIsInRange) {
 
@@ -45,15 +46,6 @@ const WaterWeightInput = ({recipe, setRecipe}) => {
         }
       }
     }
-  }
-
-  const checkValueIsNumber = (value) => {
-    const includesForbiddenChar = ["e", "E", "+", "-"].includes(value);
-    return !isNaN(value) && !includesForbiddenChar;
-  }
-
-  const checkNumberIsInRange = (number) => {
-    return number >= 0.0 && number <= 10000.0;
   }
 
   const resetWarning = () => {

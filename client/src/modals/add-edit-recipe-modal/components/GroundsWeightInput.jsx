@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput'
+import { checkGroundsWeightIsInRange, checkValueIsNumber } from '../helpers/InputValidators';
 
 const GroundsWeightInput = ({recipe, setRecipe}) => {
   const [warning, setWarning] = useState({
@@ -9,11 +10,11 @@ const GroundsWeightInput = ({recipe, setRecipe}) => {
 
   const setWeight = (weight) => {
     if (weight.length === 0) {
-      setRecipe({...recipe, grind_weight: null});
+      setRecipe({...recipe, grounds_weight: null});
       resetWarning();
     }
     else {
-      setRecipe({...recipe, grind_weight: weight});
+      setRecipe({...recipe, grounds_weight: weight});
 
       const valueIsNumber = checkValueIsNumber(weight);
   
@@ -28,7 +29,7 @@ const GroundsWeightInput = ({recipe, setRecipe}) => {
         });
       }
       else {
-        const weightIsInRange = checkNumberIsInRange(weight);
+        const weightIsInRange = checkGroundsWeightIsInRange(weight);
   
         if (!weightIsInRange) {
 
@@ -47,14 +48,6 @@ const GroundsWeightInput = ({recipe, setRecipe}) => {
     }
   }
 
-  const checkValueIsNumber = (value) => {
-    const includesForbiddenChar = ["e", "E", "+", "-"].includes(value);
-    return !isNaN(value) && !includesForbiddenChar;
-  }
-
-  const checkNumberIsInRange = (number) => {
-    return number >= 0.0 && number <= 1000.0;
-  }
 
   const resetWarning = () => {
     setWarning({

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput'
+import { checkGrindSizeIsInRange, checkValueIsNumber } from '../helpers/InputValidators';
 
 const GrindSizeInput = ({recipe, setRecipe}) => {
   const [warning, setWarning] = useState({
@@ -28,7 +29,7 @@ const GrindSizeInput = ({recipe, setRecipe}) => {
         });
       }
       else {
-        const gradeIsInRange = checkNumberIsInRange(grindSize);
+        const gradeIsInRange = checkGrindSizeIsInRange(grindSize);
   
         if (!gradeIsInRange) {
 
@@ -45,15 +46,6 @@ const GrindSizeInput = ({recipe, setRecipe}) => {
         }
       }
     }
-  }
-
-  const checkValueIsNumber = (value) => {
-    const includesForbiddenChar = ["e", "E", "+", "-"].includes(value);
-    return !isNaN(value) && !includesForbiddenChar;
-  }
-
-  const checkNumberIsInRange = (number) => {
-    return number >= 0.0 && number <= 100.0;
   }
 
   const resetWarning = () => {
