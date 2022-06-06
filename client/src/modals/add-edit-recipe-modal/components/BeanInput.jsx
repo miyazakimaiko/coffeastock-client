@@ -14,7 +14,7 @@ const BeanInput = ({ mode, beanList, selectedBean, setSelectedBean }) => {
       setWarning({
         ...warning,
         invalid: true,
-        message: <span className="text-red">At least one bean must be selected.</span>,
+        message: <span className="text-red">* Required</span>,
       });
 
     } else {
