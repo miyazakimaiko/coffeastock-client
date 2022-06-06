@@ -17,13 +17,7 @@ export default function useAddRange(userid) {
           "range",
           `${variables.rangeName}_range`,
         ]);
-      },
-      onError: (error) => {
-        toastOnBottomCenter(
-          "error",
-          error.message ?? "An unknown error has ocurred."
-        );
-      },
+      }
     }
   );
 }
