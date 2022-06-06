@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import FormTextarea from '../../../elements/FormTextarea';
 import { escapeHtml } from '../../../helpers/HtmlConverter';
-import { checkMemoIsInRange } from '../helper/InputValidators';
+import { checkMemoIsInRange } from '../helpers/InputValidators';
 
 const MemoTextarea = ({bean, setBean}) => {
   const [counter, setCounter] = useState(0);

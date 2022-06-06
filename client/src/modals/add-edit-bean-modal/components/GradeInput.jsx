@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput';
-import { checkGradeIsInRange, checkValueIsNumber } from '../helper/InputValidators';
+import { checkGradeIsInRange, checkValueIsNumber } from '../helpers/InputValidators';
 
 const GradeInput = ({bean, setBean}) => {
   const [warning, setWarning] = useState({

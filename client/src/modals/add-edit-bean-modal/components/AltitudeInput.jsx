@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import FormInput from '../../../elements/FormInput';
 import { escapeHtml } from '../../../helpers/HtmlConverter';
-import { checkAltitudeIsInRange } from '../helper/InputValidators';
+import { checkAltitudeIsInRange } from '../helpers/InputValidators';
 
 const AltitudeInput = ({bean, setBean}) => {
   const [counter, setCounter] = useState(0);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput'
-import { checkRoastLevelIsInRange, checkValueIsNumber } from '../helper/InputValidators';
+import { checkRoastLevelIsInRange, checkValueIsNumber } from '../helpers/InputValidators';
 
 const RoastLevelInput = ({bean, setBean}) => {
   const [warning, setWarning] = useState({

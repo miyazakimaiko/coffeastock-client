@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { escapeHtml } from '../../../helpers/HtmlConverter';
 import FormInput from '../../../elements/FormInput';
-import { checkHarvestPeriodIsInRange } from '../helper/InputValidators';
+import { checkHarvestPeriodIsInRange } from '../helpers/InputValidators';
 
 const HarvestPeriodInput = ({bean, setBean}) => {
   const [counter, setCounter] = useState(0);
