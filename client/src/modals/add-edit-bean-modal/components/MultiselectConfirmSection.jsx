@@ -4,7 +4,7 @@ const MultiselectConfirmSection = ({title, content}) => {
   return (
     <div className="confirm-section">
       <label className=" mr-4">{title}</label>
-      <div className="font-medium">
+      <div className="font-medium flex flex-wrap">
         {
           Array.isArray(content)
             ?
