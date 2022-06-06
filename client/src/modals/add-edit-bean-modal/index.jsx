@@ -35,7 +35,7 @@ import {
   checkMemoIsInRange,
   checkRoastLevelIsInRange,
   checkValueIsNumber,
-} from "./helper/InputValidators";
+} from "./helpers/InputValidators";
 import useTabStateModel from './hooks/useTabStateModel';
 import useSelectedBeansAndRatio from './hooks/useSelectedBeansAndRatio';
 import useBeanModel from './hooks/useBeanModel';
@@ -99,9 +99,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
     }
   }, [bean])
 
-
-
-
+  
   useEffect(() => {
     setDetailsTabState();
   }, [bean.label, bean.grade, bean.roast_level]);
@@ -110,6 +108,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   useEffect(() => {
     setConfirmationTabState();
   }, [
+    tabState.canOpenDetailsTab,
     bean.single_origin,
     bean.harvest_period,
     bean.altitude,
@@ -148,6 +147,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
       const memoIsInRange = checkMemoIsInRange(bean.memo);
 
       if (
+        tabState.canOpenDetailsTab,
         originIsSelected &&
         altitudeIsInRange &&
         harvestPeriodIsInRange &&
