@@ -13,7 +13,6 @@ const PalateRangeInput = ({title, parateId, palateRate, setPalateRate}) => {
   }
 
   useEffect(() => {
-    console.log('palateRate[parateId]: ', palateRate[parateId])
     if (palateRate[parateId] === undefined) {
       setPalateLevel(5)
     }
@@ -22,7 +21,7 @@ const PalateRangeInput = ({title, parateId, palateRate, setPalateRate}) => {
   return (
 
     <>
-      <div className="form-section w-1/2 md:w-1/4">
+      <div className="form-section w-full height-fit">
         <label className="font-medium">{title} : {palateRate[parateId]}</label>
         <input 
           type="range"

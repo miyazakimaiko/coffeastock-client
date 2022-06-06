@@ -5,6 +5,7 @@
 @import "./assets/scss/breakpoints";
 
 body {
+  box-sizing: border-box;
   position: relative;
   transition: .5s;
   font-weight: 300;
@@ -42,6 +43,8 @@ body {
   --orange: #FF8F5D;
   --green: #79C29A;
   --red: #EB5E28;
+  --pink: #FD7691;
+  --lightpink: #FFE1E6;
   --creme: #F4F3EE;
   --greycreme: #e9e8e3;
   --lightgrey: #E6E6E6;

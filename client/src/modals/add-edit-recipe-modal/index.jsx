@@ -42,6 +42,7 @@ import {
   checkWaterWeightIsInRange,
   checkYieldWeightIsInRange,
 } from "./helpers/InputValidators";
+import ChartRadarTaste from '../../pages/view-bean-and-recipes/components/ChartRadarTaste';
 
 const MODE = {
   ADD: 'add',
@@ -74,8 +75,8 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     memo: null,
   });
 
-  const [selectedBean, setSelectedBean] = useState([])
-  const [selectedMethod, setSelectedMethod] = useState([])
+  const [selectedBean, setSelectedBean] = useState(null)
+  const [selectedMethod, setSelectedMethod] = useState(null)
   const [selectedGrinder, setSelectedGrinder] = useState([])
   const [selectedWater, setSelectedWater] = useState([])
   const [palateRate, innerSetPalateRate] = useState({})
@@ -210,6 +211,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
 
   const [processAddSubmit, setProcessAddSubmit] = useState(false);
   const [processEditSubmit, setProcessEditSubmit] = useState(false);
+
 
   const onSubmit = () => {
     finalizeRecipe();
@@ -388,7 +390,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
   }, [processEditSubmit]);
 
   useEffect(() => {
-    if (mode === MODE.EDIT) {
+    if (!beanListIsLoading && mode === MODE.EDIT) {
       setRecipe({
         ...recipe,
         ...targetRecipe,
@@ -399,7 +401,8 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
           targetRecipe.extraction_time
         ),
       });
-      for (const bean of beanList) {
+      
+      for (const bean of Object.values(beanList)) {
         if (bean.bean_id === targetRecipe.bean_id) {
           setSelectedBean({ ...bean, value: bean.bean_id });
         }
@@ -407,9 +410,9 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
       const method = rangeList.method_range[`id-${targetRecipe.method[0]}`]
       const grinder = rangeList.grinder_range[`id-${targetRecipe.grinder[0]}`]
       const water = rangeList.water_range[`id-${targetRecipe.water[0]}`]
-      setSelectedMethod(method);
-      setSelectedGrinder(grinder);
-      setSelectedWater(water);
+      setSelectedMethod(method ? method : []);
+      setSelectedGrinder(grinder ? grinder : []);
+      setSelectedWater(water ? water : []);
     }
   }, []);
 
@@ -593,8 +596,19 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
               ref={palatesPage}
               className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300"
             >
-              <div className="md:px-8 my-8 flex flex-wrap">
-                {Object.values(palateRateHtmlDict)}
+              <div className="md:flex m-8">
+                <ChartRadarTaste
+                  className="w-full md:w-1/2 max-w-lg mx-auto"
+                  labels={Object.keys(palateRate).map((palateId) => {
+                    return rangeList.palate_range["id-" + palateId].label;
+                  })}
+                  rates={Object.values(palateRate).map((value) => {
+                    return parseFloat(value);
+                  })}
+                />
+                <div className="w-full md:w-1/2 max-w-lg mx-auto">
+                  {Object.values(palateRateHtmlDict)}
+                </div>
               </div>
 
               <div className="md:px-8 mb-8">
