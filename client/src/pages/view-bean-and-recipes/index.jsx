@@ -54,8 +54,8 @@ const ViewBeanAndRecipes = () => {
       const ranges = rangeList[`${category}_range`];
       targetBean[category].forEach((id) => {
         const range = ranges[`id-${id}`];
-        const label = unescapeHtml(range ? range["label"] : "error");
-        const info = unescapeHtml(range ? range["def"] : "error");
+        const label = unescapeHtml(range ? range.label : "error");
+        const info = unescapeHtml(range ? range.def : "error");
         const text = `${info === "" ? "No Info" : info}`;
         result.push(
           <div
@@ -83,7 +83,7 @@ const ViewBeanAndRecipes = () => {
     const ranges = rangeList[`${category}_range`];
     let nameListHtml = ids.map((id) => {
       const range = ranges[`id-${id}`];
-      return <span>{range ? range["label"] : "error"}</span>;
+      return <span>{range ? range.label : "error"}</span>;
     });
     if (nameListHtml.length === 0) {
       nameListHtml = <span>-</span>;
@@ -93,8 +93,8 @@ const ViewBeanAndRecipes = () => {
 
   const makeBlendRatioHtmlTags = (targetBean) => {
     const result = [];
-    if (targetBean["blend_ratio"]) {
-      const blend = targetBean["blend_ratio"];
+    if (targetBean.blend_ratio) {
+      const blend = targetBean.blend_ratio;
       for (const beanId of Object.keys(blend)) {
         const ratio = blend[beanId];
         const blendBean = beanList[beanId];
@@ -105,14 +105,14 @@ const ViewBeanAndRecipes = () => {
         const farmNames = makeNameListHtml("farm", blendBean);
         const aromaNames = makeNameListHtml("aroma", blendBean);
         const altitude =
-          blendBean["altitude"] === "" || blendBean["altitude"] === null
+          blendBean.AddEditBeanModalaltitude === "" || blendBean.altitude === null
             ? "-"
-            : blendBean["altitude"];
+            : blendBean.altitude;
         const harvestPeriod =
-          blendBean["harvest_period"] === "" ||
-          blendBean["harvest_period"] === null
+          blendBean.harvest_period === "" ||
+          blendBean.arvest_period === null
             ? "-"
-            : blendBean["harvest_period"];
+            : blendBean.harvest_period;
         const text = (
           <>
             <p className="py-1 slash-end">
@@ -189,11 +189,11 @@ const ViewBeanAndRecipes = () => {
       });
       setBeanAttrIcons({
         ...beanAttrIcons,
-        gradeStarIcons: targetBean["grade"]
-          ? generateStarIconList(targetBean["grade"])
+        gradeStarIcons: targetBean.grade
+          ? generateStarIconList(targetBean.grade)
           : null,
-        roastLevelFireIcons: targetBean["roast_level"]
-          ? generateFireIconList(targetBean["roast_level"])
+        roastLevelFireIcons: targetBean.roast_level
+          ? generateFireIconList(targetBean.roast_level)
           : null,
       });
       setBlendRatio(makeBlendRatioHtmlTags(targetBean));
@@ -203,7 +203,7 @@ const ViewBeanAndRecipes = () => {
   useEffect(() => {
     if (recipeList && Object.keys(recipeList).length > 0) {
       const list = Object.values(recipeList)
-        .filter((recipe) => recipe["bean_id"] === id)
+        .filter((recipe) => recipe.bean_id === id)
         .map((recipe) => recipe);
       setRecipeGroupSection(<RecipeGroupSection recipeList={list} />);
     } else {
@@ -232,7 +232,7 @@ const ViewBeanAndRecipes = () => {
             <span className="flex items-center">
               {targetBean.single_origin ? "Single Origin" : "Blend"}
               <HiOutlineChevronRight className="h-5 w-5 mx-5" />
-              {unescapeHtml(targetBean["label"])}
+              {unescapeHtml(targetBean.label)}
             </span>
           }
         ></ToolBar>
@@ -259,7 +259,7 @@ const ViewBeanAndRecipes = () => {
               </Dropdown>
             </div>
             <div className="coffee-bag-container mx-auto mt-14">
-              <CoffeeBagRight name={targetBean["label"]} />
+              <CoffeeBagRight name={targetBean.label} />
             </div>
             <div className="flex flex-wrap justify-center mt-16">
               <div className="w-full md:w-1/2 my-4 md:px-4">
@@ -271,7 +271,7 @@ const ViewBeanAndRecipes = () => {
                 <CoffeeAttributeSection
                   title="Roast Date"
                   contentType="date"
-                  content={targetBean["roast_date"]}
+                  content={targetBean.roast_date}
                 />
                 <CoffeeAttributeSection
                   title="Grade"
@@ -280,10 +280,10 @@ const ViewBeanAndRecipes = () => {
                     <div className="flex">
                       {beanAttrIcons.gradeStarIcons}
                       <span className="ml-2">
-                        {targetBean["grade"] !== null &&
-                        targetBean["grade"] !== undefined &&
-                        targetBean["grade"] !== ""
-                          ? `(${targetBean["grade"]}/100)`
+                        {targetBean.grade !== null &&
+                        targetBean.grade !== undefined &&
+                        targetBean.grade !== ""
+                          ? `(${targetBean.grade}/100)`
                           : "-"}
                       </span>
                     </div>
@@ -296,10 +296,10 @@ const ViewBeanAndRecipes = () => {
                     <div className="flex">
                       {beanAttrIcons.roastLevelFireIcons}
                       <span className="ml-2">
-                        {targetBean["roast_level"] !== null &&
-                        targetBean["roast_level"] !== undefined &&
-                        targetBean["roast_level"] !== ""
-                          ? `(${targetBean["roast_level"]}/10)`
+                        {targetBean.roast_level !== null &&
+                        targetBean.roast_level !== undefined &&
+                        targetBean.roast_level !== ""
+                          ? `(${targetBean.roast_level}/10)`
                           : "-"}
                       </span>
                     </div>
@@ -308,7 +308,7 @@ const ViewBeanAndRecipes = () => {
               </div>
 
               <div className="w-full md:w-1/2 my-4 md:px-4">
-                {targetBean["single_origin"] ? (
+                {targetBean.single_origin ? (
                   <>
                     <CoffeeAttributeSection
                       title="Origin"
@@ -333,12 +333,12 @@ const ViewBeanAndRecipes = () => {
                     <CoffeeAttributeSection
                       title="Altitude"
                       contentType="string"
-                      content={targetBean["altitude"]}
+                      content={targetBean.altitude}
                     />
                     <CoffeeAttributeSection
                       title="Harvest Period"
                       contentType="string"
-                      content={targetBean["harvest_period"]}
+                      content={targetBean.harvest_period}
                     />
                   </>
                 ) : (
@@ -356,11 +356,11 @@ const ViewBeanAndRecipes = () => {
               </div>
             </div>
 
-            {targetBean["memo"] !== null && targetBean["memo"] !== "" ? (
+            {targetBean.memo !== null && targetBean.memo !== "" ? (
               <div className="px-6 pt-4">
                 <label className=" font-medium mr-3">Memo: </label>
                 <div className="inline-block">
-                  {unescapeHtml(targetBean["memo"])}
+                  {unescapeHtml(targetBean.memo)}
                 </div>
               </div>
             ) : null}
@@ -378,7 +378,7 @@ const ViewBeanAndRecipes = () => {
       ) : null}
       {modal.mode === "delete" && modal.isOpen === true ? (
         <DeleteModal
-          label={targetBean["label"]}
+          label={targetBean.label}
           onCloseClick={() => setModal({ mode: "", isOpen: false })}
           onDeleteSubmit={onDeleteSubmit}
         />

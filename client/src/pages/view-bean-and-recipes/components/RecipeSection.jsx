@@ -93,7 +93,7 @@ const RecipeSection = ({recipe}) => {
             <p>{brew_date ? brew_date.split("T")[0] : "No date"}</p>
             <h3 className="text-xl my-2">
               {method[0]
-                ? rangeList["method_range"]["id-" + method[0]]["label"]
+                ? rangeList.method_range["id-" + method[0]].label
                 : "-"}
             </h3>
             <div className="flex justify-end">
@@ -116,7 +116,7 @@ const RecipeSection = ({recipe}) => {
               ) : null}
               {grinder[0] ? (
                 <span className="basic-chip">
-                  {rangeList["grinder_range"]["id-" + grinder[0]]["label"]}
+                  {rangeList.grinder_range["id-" + grinder[0]].label}
                 </span>
               ) : null}
             </div>
@@ -137,7 +137,7 @@ const RecipeSection = ({recipe}) => {
               ) : null}
               {water[0] ? (
                 <span className="basic-chip">
-                  {rangeList["water_range"]["id-" + water[0]]["label"]}
+                  {rangeList.water_range["id-" + water[0]].label}
                 </span>
               ) : null}
             </div>
@@ -165,7 +165,7 @@ const RecipeSection = ({recipe}) => {
             className="ease-in-out transition-all duration-500"
             style={openDetails ? {} : { marginTop: "-100%" }}
           >
-            <div className="flex my-8">
+            <div className="flex my-12">
               <div className="w-1/2 px-6 mt-auto mb-0">
                 <div className="coffee-detail-section">
                   <label>Total Rate: </label>
@@ -175,7 +175,7 @@ const RecipeSection = ({recipe}) => {
                   <label>Grinder: </label>
                   <p>
                     {grinder[0]
-                      ? rangeList["grinder_range"]["id-" + grinder[0]]["label"]
+                      ? rangeList.grinder_range["id-" + grinder[0]].label
                       : "-"}
                   </p>
                 </div>
@@ -191,7 +191,7 @@ const RecipeSection = ({recipe}) => {
                   <label>Water: </label>
                   <p>
                     {water[0]
-                      ? rangeList["water_range"]["id-" + water[0]]["label"]
+                      ? rangeList.water_range["id-" + water[0]].label
                       : "-"}
                   </p>
                 </div>
@@ -220,7 +220,7 @@ const RecipeSection = ({recipe}) => {
                 <ChartRadarTaste
                   className="w-1/2 px-6 mx-auto"
                   labels={Object.keys(palate_rates).map((palateId) => {
-                    return rangeList["palate_range"]["id-" + palateId]["label"];
+                    return rangeList.palate_range["id-" + palateId].label;
                   })}
                   rates={Object.values(palate_rates).map((value) => {
                     return parseFloat(value);
@@ -253,7 +253,7 @@ const RecipeSection = ({recipe}) => {
           mode="edit"
         />
       ) : null}
-      {modal.mode === "delete" && modal.isOpen === true ? (
+      {modal.mode === MODAL_MODE.DELETE && modal.isOpen === true ? (
         <DeleteModal
           label={`Recipe ID: ${recipe_id}`}
           onCloseClick={() => setModal({ mode: "", isOpen: false })}
