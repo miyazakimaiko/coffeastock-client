@@ -10,12 +10,12 @@ import NameInput from './components/NameInput'
 import DetailsTextarea from './components/DetailsTextarea'
 import { capitalize } from '../../helpers/HtmlConverter'
 
-const MODE = {
-  ADD: "add",
-  EDIT: "edit",
+const modalMode = {
+  addRange: "addRange",
+  editRange: "editRange",
 }
 
-const AddEditRangeModal = ({setModal, rangeName, targetRangeItem = null, mode = MODE.ADD}) => {
+const AddEditRangeModal = ({setModal, rangeName, targetRangeItem = null, mode = modalMode.addRange}) => {
   const userData = useUserData()
   const editRange = useEditRange(userData.sub, rangeName)
   const addRange = useAddRange(userData.sub)
@@ -24,7 +24,7 @@ const AddEditRangeModal = ({setModal, rangeName, targetRangeItem = null, mode = 
   const [rangeItemIsValid, setRangeItemIsValid] = useState(false);
 
   useEffect(() => {
-    if (targetRangeItem && mode === MODE.EDIT) {
+    if (targetRangeItem && mode === modalMode.editRange) {
       setRangeItem(targetRangeItem);
     }
   }, []);
@@ -106,8 +106,8 @@ const AddEditRangeModal = ({setModal, rangeName, targetRangeItem = null, mode = 
   return (
     <ModalWrapperContainer
       title={
-        mode === MODE.ADD ? `Add New ${capitalize(rangeName)} Range` :
-        mode === MODE.EDIT ? `Edit ${capitalize(rangeName)} Range` : null
+        mode === modalMode.addRange ? `Add New ${capitalize(rangeName)} Range` :
+        mode === modalMode.editRange ? `Edit ${capitalize(rangeName)} Range` : null
       }
       onCloseClick={() => setModal({ mode: '', isOpen: false })}
     >
@@ -134,7 +134,7 @@ const AddEditRangeModal = ({setModal, rangeName, targetRangeItem = null, mode = 
               <BlueButton
                 text={editRange.isLoading || addRange.isLoading ? 'Saving...' : 'Save'}
                 disabled={!rangeItemIsValid}
-                onClick={mode === MODE.ADD ? onAddSubmit : mode === MODE.EDIT ? onEditSubmit : null}
+                onClick={mode === modalMode.addRange ? onAddSubmit : mode === modalMode.editRange ? onEditSubmit : null}
               />
             </div>
           </div>
