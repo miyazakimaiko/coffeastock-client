@@ -55,6 +55,7 @@ const AddEditRangeModal = ({setModal, rangeName, targetRangeItem = null, mode = 
         },
         {
           onSuccess: () => {
+            setModal({ mode: '', isOpen: false });
             toastOnBottomCenter(
               "success",
               `New range is added successfully.`
