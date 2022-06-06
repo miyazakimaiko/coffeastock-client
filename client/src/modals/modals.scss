@@ -18,9 +18,8 @@ input[type='range']::-webkit-slider-runnable-track {
   -webkit-appearance: none ;
   appearance: none ;
   border-radius: 5px;
-  box-shadow: inset 1px 1px 1px rgba(000,000,000,0.10);
-  background-color: #CCC;
-  height: 8px;
+  background-color: var(--lightgrey);
+  height: 2px;
   vertical-align:middle;
   border: none;
   cursor: pointer;
@@ -28,26 +27,30 @@ input[type='range']::-webkit-slider-runnable-track {
 input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
   border-radius: 100%;
-  background-color: var(--blue);
-  box-shadow: inset 0 0 0 4px #CCC, inset 0 0 4px #CCC, inset 0 0 0 4px #CCC;
-  height: 22px;
-  width: 22px;
+  background-color: var(--lightpink);
+  box-shadow: inset 0 0 0 1px var(--pink), inset 0 0 1px var(--pink), inset 0 0 0 1px var(--pink);
+  height: 13px;
+  width: 13px;
   vertical-align:middle;
   border: none;
   cursor: pointer;
-  margin-top: -6px;
+  margin-top: -5px;
+  transition: all 0.1s;
 }
 input[type='range']::-webkit-slider-thumb:hover { 
-  opacity: 0.7;
+  margin-top: -7px;
+  width: 16px;
+  height: 16px;
 }
 input[type='range']:active::-webkit-slider-thumb { 
-  opacity: 0.7;
+  margin-top: -7px;
+  width: 16px;
+  height: 16px;
 }
 input[type='range']::-moz-range-track{
   -moz-appearance: none ;
   border-radius: 5px;
-  box-shadow: inset 1px 1px 1px rgba(000,000,000,0.10);
-  background-color: #CCC;
+  background-color: var(--lightgrey);
   height: 8px;
   vertical-align:middle;
   margin:0; padding:0;
@@ -57,10 +60,10 @@ input[type='range']::-moz-range-track{
 input[type='range']::-moz-range-thumb {
   -moz-appearance: none ;
   border-radius: 100%;
-  background-color: var(--blue);
-  box-shadow: inset 0 0 0 4px #CCC, inset 0 0 4px #CCC, inset 0 0 0 4px #CCC;
-  height: 22px;
-  width: 22px;
+  background-color: var(--lime);
+  box-shadow: inset 0 0 0 1px var(--pink), inset 0 0 1px var(--pink), inset 0 0 0 1px var(--pink);
+  height: 14px;
+  width: 14px;
   vertical-align:middle;
   border: none;
   cursor: pointer;

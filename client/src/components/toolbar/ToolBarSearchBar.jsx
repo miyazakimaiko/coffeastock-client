@@ -3,7 +3,7 @@ import React from 'react'
 
 const ToolBarSearchBar = ({value, onChange, placeholder = 'Search...', maxWidth = 'auto' }) => {
   return (
-    <div className="relative w-full ml-8 mr-2"
+    <div className="relative w-full mx-8"
       style={{maxWidth: maxWidth}}>
       <input 
         type="text" 
