@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import * as api from '../api/Ranges'
 
 export default function useRange(userid, rangeName) {
