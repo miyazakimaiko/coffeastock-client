@@ -1,7 +1,7 @@
 import React from 'react'
 import { unescapeHtml } from '../../../helpers/HtmlConverter'
 
-const CoffeeAttributeSection = ({ contentType, content, title }) => {
+const CoffeeRangeListItem = ({ contentType, content, title }) => {
   const makeInnerHtml = () => {
     if (contentType === "string") {
       return content !== null && content !== undefined && content !== ""
@@ -30,4 +30,4 @@ const CoffeeAttributeSection = ({ contentType, content, title }) => {
   );
 };
 
-export default CoffeeAttributeSection
+export default CoffeeRangeListItem
