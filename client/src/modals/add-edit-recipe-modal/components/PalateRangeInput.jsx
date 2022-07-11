@@ -14,7 +14,7 @@ const PalateRangeInput = ({title, parateId, palateRate, setPalateRate}) => {
 
   useEffect(() => {
     if (palateRate[parateId] === undefined) {
-      setPalateLevel(5)
+      setPalateLevel("5")
     }
   }, [])
 
@@ -34,7 +34,6 @@ const PalateRangeInput = ({title, parateId, palateRate, setPalateRate}) => {
         />
         <span className="text-xs float-right mt-1">{rangeWarningText}</span>
       </div>
-
     </>
   )
 }
