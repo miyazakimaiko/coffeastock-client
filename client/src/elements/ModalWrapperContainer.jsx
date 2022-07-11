@@ -9,7 +9,7 @@ const ModalWrapperContainer = ({children, title, onCloseClick}) => {
         overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
       >
         <div 
-          className="relative h-fit w-full max-w-6xl md:px-2 md:my-16 mx-auto"
+          className="relative h-fit w-full max-w-6xl md:px-2 md:my-8 mx-auto"
         >
           <div 
             className="w-full border-0 rounded-lg shadow-lg relative pt-4
