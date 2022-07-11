@@ -97,7 +97,7 @@ module.exports = (app) => {
         let rangeItemIds = []; 
 
         if (rangeKey === 'palate') {
-          rangeItemIds = Object.keys(req.body.palate_rates).map(key => parseInt(key))
+          rangeItemIds = Object.keys(req.body.palate_rates).map(key => key)
         }
         else {
           rangeItemIds = req.body[rangeKey];
@@ -107,7 +107,7 @@ module.exports = (app) => {
 
           for (const id of rangeItemIds) {
 
-            const baseQuery = getIncrementCountInUseBaseQuery(rangeKey, id);
+            const baseQuery = getIncrementCountInUseBaseQuery(rangeKey, parseInt(id));
             await db.query(baseQuery, [req.params.userid])
           }
         }
@@ -264,7 +264,7 @@ module.exports = (app) => {
           let idList = [];
 
           if (rangeKey === 'palate') {
-            idList = Object.keys(req.body.palate_rates).map(key => parseInt(key));
+            idList = Object.keys(req.body.palate_rates).map(key => key);
           }
           else if (req.body[rangeKey]){
             idList = req.body[rangeKey];
@@ -273,8 +273,10 @@ module.exports = (app) => {
           if (idList.length > 0) {
 
             for await (const id of idList) {
-              const decrementCountInUseBaseQuery = getDecrementCountInUseBaseQuery(rangeKey, id);
-              await db.query(decrementCountInUseBaseQuery, [req.params.userid])
+              if (parseInt(id)) {
+                const decrementCountInUseBaseQuery = getDecrementCountInUseBaseQuery(rangeKey, parseInt(id));
+                await db.query(decrementCountInUseBaseQuery, [req.params.userid]);
+              }
             }
           }
       }
