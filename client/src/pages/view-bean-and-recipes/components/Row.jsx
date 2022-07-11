@@ -6,13 +6,9 @@ import { HiOutlineChevronDown, HiOutlineChevronUp } from 'react-icons/hi'
 import ChartRadarTaste from './ChartRadarTaste'
 import { generateStarIconList } from '../../../helpers/GenerateIconList'
 import Dropdown from '../../../elements/Dropdown'
-import useRanges from '../../../hooks/useRanges'
-import { useUserData } from '../../../context/AccountContext'
 
 
 const Row = ({recipe, onEditClick, onDeleteClick}) => {
-  const userData = useUserData()
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub)
   const [openDetails, setOpenDetails] = useState(false)
 
   const parseExtractionTime = () => {
@@ -23,10 +19,6 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
     });
     return extractionTime;
   };
-
-  if (rangeListIsLoading) {
-    return 'Loading...'
-  }
 
   return (
     <>
@@ -56,9 +48,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
           <div className="flex flex-col justify-between w-1/4 h-auto px-4 border-r">
             <p>{recipe.brew_date ? recipe.brew_date.split("T")[0] : "No date"}</p>
             <h3 className="text-xl my-2">
-              {recipe.method[0]
-                ? rangeList.method_range["id-" + recipe.method[0]].label
-                : "-"}
+              {recipe.method[0]?.label ?? "-"}
             </h3>
             <div className="flex justify-end">
               {recipe.total_rate ? generateStarIconList(recipe.total_rate) : null}
@@ -80,7 +70,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
               ) : null}
               {recipe.grinder[0] ? (
                 <span className="basic-chip">
-                  {rangeList.grinder_range["id-" + recipe.grinder[0]].label}
+                  {recipe.grinder[0].label}
                 </span>
               ) : null}
             </div>
@@ -101,7 +91,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
               ) : null}
               {recipe.water[0] ? (
                 <span className="basic-chip">
-                  {rangeList.water_range["id-" + recipe.water[0]].label}
+                  {recipe.water[0].label}
                 </span>
               ) : null}
             </div>
@@ -138,9 +128,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                 <div className="coffee-detail-section">
                   <label>Grinder: </label>
                   <p>
-                    {recipe.grinder[0]
-                      ? rangeList.grinder_range["id-" + recipe.grinder[0]].label
-                      : "-"}
+                    {recipe.grinder[0]?.label ?? "-"}
                   </p>
                 </div>
                 <div className="coffee-detail-section">
@@ -154,9 +142,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                 <div className="coffee-detail-section">
                   <label>Water: </label>
                   <p>
-                    {recipe.water[0]
-                      ? rangeList.water_range["id-" + recipe.water[0]].label
-                      : "-"}
+                    {recipe.water[0]?.label ?? "-"}
                   </p>
                 </div>
                 <div className="coffee-detail-section">
@@ -183,12 +169,8 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
               {Object.keys(recipe.palate_rates).length > 0 ? (
                 <ChartRadarTaste
                   className="w-1/2 px-6 mx-auto"
-                  labels={Object.keys(recipe.palate_rates).map((palateId) => {
-                    return rangeList.palate_range["id-" + palateId].label;
-                  })}
-                  rates={Object.values(recipe.palate_rates).map((value) => {
-                    return parseFloat(value);
-                  })}
+                  labels={Object.values(recipe.palate_rates).map(palates => palates.label)}
+                  rates={Object.values(recipe.palate_rates).map(palates => palates.rate)}
                 />
               ) : null}
             </div>
