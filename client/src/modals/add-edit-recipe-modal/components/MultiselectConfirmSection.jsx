@@ -5,7 +5,7 @@ const MultiselectConfirmSection = ({title, content}) => {
     <div className="confirm-section">
       <label className=" mr-4">{title}</label>
       <div className="font-medium">
-        {content === null 
+        {content === null || content === undefined || content.length === 0 
             ? 
           <p>-</p>
             :
