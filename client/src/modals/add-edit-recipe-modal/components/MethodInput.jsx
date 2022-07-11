@@ -11,7 +11,7 @@ const MethodInput = ({ rangeList, selectedMethod, setSelectedMethod }) => {
   });
 
   const setMethod = (selectedItem) => {
-    setSelectedMethod(selectedItem);
+    setSelectedMethod(() => [selectedItem]);
 
     if (selectedItem.length === 0) {
       setWarning({

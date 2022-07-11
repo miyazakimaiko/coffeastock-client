@@ -6,7 +6,7 @@ const WaterInput = ({ rangeList, selectedWater, setSelectedWater }) => {
   const options = Object.values(rangeList.water_range);
 
   const setWater = (selectedItem) => {
-    setSelectedWater(selectedItem);
+    setSelectedWater(() => [selectedItem]);
   };
 
   return (

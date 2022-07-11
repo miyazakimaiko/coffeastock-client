@@ -6,7 +6,7 @@ const GrinderInput = ({ rangeList, selectedGrinder, setSelectedGrinder }) => {
   const options = Object.values(rangeList.grinder_range);
 
   const setGrinder = (selectedItem) => {
-    setSelectedGrinder(selectedItem);
+    setSelectedGrinder(() => [selectedItem]);
   };
 
   return (
