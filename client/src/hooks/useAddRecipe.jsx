@@ -15,7 +15,7 @@ export default function useAddRecipe(userid) {
         toastOnBottomCenter('success', 'Recipe is added successfully.')
       },
       onError: error => {
-        toastOnBottomCenter('error', error.message ? error.message : 'An unknown error has ocurred.')
+        toastOnBottomCenter('error', error.message ?? 'An unknown error has ocurred.')
       }
     }
   )

@@ -15,7 +15,7 @@ export default function useEditRecipe(userid) {
         toastOnBottomCenter('success', 'Recipe is edited successfully.')
       },
       onError: error => {
-        toastOnBottomCenter('error', error.message ? error.message : 'An unknown error has ocurred.')
+        toastOnBottomCenter('error', error.message ?? 'An unknown error has ocurred.')
       }
     }
   )
