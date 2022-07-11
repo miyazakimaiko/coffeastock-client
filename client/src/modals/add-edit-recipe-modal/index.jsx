@@ -42,6 +42,8 @@ import {
   checkWaterWeightIsInRange,
   checkYieldWeightIsInRange,
 } from "./helpers/InputValidators";
+import { formatExtractionTimeInputValue } from "./helpers/formatters"
+import { unescapeHtml } from "../../helpers/HtmlConverter"
 import ChartRadarTaste from '../../pages/view-bean-and-recipes/components/ChartRadarTaste';
 
 const MODE = {
@@ -50,12 +52,13 @@ const MODE = {
 }
 
 const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) => {
-  const userData = useUserData()
-  const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub)
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub)
-  const addRange = useAddRange(userData.sub)
-  const addRecipe = useAddRecipe(userData.sub)
-  const editRecipe = useEditRecipe(userData.sub)
+
+  const userData = useUserData();
+  const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub);
+  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub);
+  const addRange = useAddRange(userData.sub);
+  const addRecipe = useAddRecipe(userData.sub);
+  const editRecipe = useEditRecipe(userData.sub);
 
   const [recipe, setRecipe] = useState({
     bean_id: null,
@@ -76,17 +79,101 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
   });
 
   const [selectedBean, setSelectedBean] = useState(null)
-  const [selectedMethod, setSelectedMethod] = useState(null)
+  const [selectedMethod, setSelectedMethod] = useState([])
   const [selectedGrinder, setSelectedGrinder] = useState([])
   const [selectedWater, setSelectedWater] = useState([])
   const [palateRate, innerSetPalateRate] = useState({})
-  const [palateRateHtmlDict, setPalateRateHtmlDict] = useState({})
+  const [palateRateHtmlDict, setPalateRateHtmlDict] = useState([])
   const [palateRateConfirmationHtmlDict, setPalateRateConfirmationHtmlDict] = useState({})
 
   const setPalateRate = (key, value) => {
     const newRate = {};
     newRate[key] = value;
     innerSetPalateRate((palateRate) => ({ ...palateRate, ...newRate }));
+  };
+
+  useEffect(async () => {
+    if (beanList && targetRecipe) {
+      setRecipe({
+        ...recipe,
+        ...targetRecipe,
+        brew_date: targetRecipe.brew_date
+          ? targetRecipe.brew_date.split("T")[0]
+          : undefined,
+        extraction_time: formatExtractionTimeInputValue(
+          targetRecipe.extraction_time
+        ),
+      });
+
+      setSelectedBean({...beanList[targetRecipe.bean_id], label: unescapeHtml(beanList[targetRecipe.bean_id].label)});
+      setSelectedMethod(targetRecipe.method.map(method => ({...method, label: unescapeHtml(method.label)})));
+      setSelectedGrinder(targetRecipe.grinder.map(grinder => ({...grinder, label: unescapeHtml(grinder.label)})));
+      setSelectedWater(targetRecipe.water.map(water => ({...water, label: unescapeHtml(water.label)})));
+      for await (const palate of targetRecipe.palate_rates) {       
+        setPalateRate(palate.value, palate.rate);
+      }
+    }
+  }, [beanList]);
+
+
+  const [processAddSubmit, setProcessAddSubmit] = useState(false);
+  const [processEditSubmit, setProcessEditSubmit] = useState(false);
+
+
+  useEffect(() => {
+    if (processAddSubmit && recipe.bean_id !== null) {
+      addRecipe.mutate(recipe, {
+        onSuccess: () => {
+          setModal({ mode: "", isOpen: false });
+        },
+      });
+    }
+  }, [processAddSubmit]);
+
+
+  useEffect(() => {
+    if (processEditSubmit && recipe.bean_id !== null) {
+      editRecipe.mutate(recipe, {
+        onSuccess: () => {
+          setModal({ mode: "", isOpen: false });
+        },
+      });
+    }
+  }, [processEditSubmit]);
+
+
+  const onSubmit = () => {
+    finalizeRecipe();
+    if (mode === MODE.ADD) {
+      setProcessAddSubmit(true);
+    }
+    else if (mode === MODE.EDIT) {
+      setProcessEditSubmit(true);
+    }
+  }
+
+  const finalizeRecipe = () => {
+    setRecipe({...recipe, 
+      bean_id: selectedBean.bean_id,
+      method: selectedMethod.map(method => method.value),
+      grinder: selectedGrinder.map(grinder => grinder.value),
+      water: selectedWater.map(water => water.value),
+      palate_rates: palateRate
+    });
+  }
+
+  const insertNewRangeList = async () => {
+    let newRangeList = {
+      method: extractNewItems(selectedMethod),
+      grinder: extractNewItems(selectedGrinder),
+      water: extractNewItems(selectedWater),
+    };
+    for (const [rangeName, entries] of Object.entries(newRangeList)) {
+      for await (const entry of entries) {
+        const body = { label: entry.label, def: "" }
+        await addRange.mutate({ rangeName,body })
+      }
+    }
   };
 
   const [tabState, setTabState] = useState({
@@ -173,84 +260,53 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     });
   }
 
-  const finalizeRecipe = () => {
-    const methodId = Object.values(rangeList.method_range).map(item => {
-      if (item.label === selectedMethod.label) 
-        return parseInt(item.value)
-    });
-    const grinderId = Object.values(rangeList.grinder_range).map(item => {
-      if (item.label === selectedGrinder.label) 
-        return parseInt(item.value)
-    });
-    const waterId = Object.values(rangeList.water_range).map(item => {
-      if (item.label === selectedWater.label) 
-        return parseInt(item.value)
-    });
-    setRecipe({...recipe, 
-      bean_id: selectedBean.bean_id,
-      method: methodId.filter(Number),
-      grinder: grinderId.filter(Number),
-      water: waterId.filter(Number),
-      palate_rates: palateRate
-    });
-  }
-
-  const insertNewRangeList = async () => {
-    let newRangeList = {
-      method: extractNewItems([selectedMethod]),
-      grinder: extractNewItems([selectedGrinder]),
-      water: extractNewItems([selectedWater]),
-    };
-    for (const [rangeName, entries] of Object.entries(newRangeList)) {
-      for await (const entry of entries) {
-        const body = { label: entry.label, def: "" }
-        await addRange.mutate({ rangeName,body })
-      }
-    }
-  };
-
-  const [processAddSubmit, setProcessAddSubmit] = useState(false);
-  const [processEditSubmit, setProcessEditSubmit] = useState(false);
-
-
-  const onSubmit = () => {
-    finalizeRecipe();
-    if (mode === MODE.ADD) {
-      setProcessAddSubmit(true);
-    }
-    else if (mode === MODE.EDIT) {
-      setProcessEditSubmit(true);
-    }
-  }
-
 
   useEffect(() => {
+    const setWaterYieldTabState = () => {
+      const grindSizeIsValid = checkGrindSizeIsInRange(recipe.grind_size);
+      const groundsWeightIsValid = checkGroundsWeightIsInRange(recipe.grounds_weight);
+  
+      if (selectedBean && selectedMethod && 
+      grindSizeIsValid && groundsWeightIsValid) {
+        setTabState(tabState => ({
+          ...tabState,
+          canOpenWaterYieldTab: true
+        }));
+      }
+      else {
+        setTabState(tabState => ({
+          ...tabState,
+          canOpenWaterYieldTab: false
+        }));
+      }
+    }
     setWaterYieldTabState();
   }, [selectedBean, selectedMethod, recipe.grounds_weight, recipe.grind_size]);
 
 
-  const setWaterYieldTabState = () => {
-    
-    const grindSizeIsValid = checkGrindSizeIsInRange(recipe.grind_size);
-    const groundsWeightIsValid = checkGroundsWeightIsInRange(recipe.grounds_weight);
-
-    if (selectedBean && selectedMethod && 
-    grindSizeIsValid && groundsWeightIsValid) {
-      setTabState(tabState => ({
-        ...tabState,
-        canOpenWaterYieldTab: true
-      }));
-    }
-    else {
-      setTabState(tabState => ({
-        ...tabState,
-        canOpenWaterYieldTab: false
-      }));
-    }
-  }
-
-
   useEffect(() => {
+    const setPalatesTabState = () => {
+      const waterWeightIsValid = checkWaterWeightIsInRange(recipe.water_weight);
+      const waterTempIsValid = checkWaterTempIsInRange(recipe.water_temp);
+      const yieldWeightIsValid = checkYieldWeightIsInRange(recipe.yield_weight);
+      const extractionTimeIsValid = checkExtractionTimeIsInVaildForm(recipe.extraction_time);
+      const tdsIsValid = checkTdsIsInRange(recipe.tds);
+      const totalRateIsValid = checkTotalRateIsInRange(recipe.total_rate);
+  
+      if ( waterWeightIsValid && waterTempIsValid && yieldWeightIsValid &&
+      extractionTimeIsValid && tdsIsValid && totalRateIsValid && tabState.canOpenWaterYieldTab ) {
+        setTabState((tabState) => ({
+          ...tabState,
+          canOpenPalatesTab: true,
+        }));
+      } 
+      else {
+        setTabState((tabState) => ({
+          ...tabState,
+          canOpenPalatesTab: false,
+        }));
+      }
+    }
     setPalatesTabState();
   }, [
     tabState.canOpenWaterYieldTab,
@@ -263,32 +319,25 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
   ]);
 
 
-  const setPalatesTabState = () => {
-
-    const waterWeightIsValid = checkWaterWeightIsInRange(recipe.water_weight);
-    const waterTempIsValid = checkWaterTempIsInRange(recipe.water_temp);
-    const yieldWeightIsValid = checkYieldWeightIsInRange(recipe.yield_weight);
-    const extractionTimeIsValid = checkExtractionTimeIsInVaildForm(recipe.extraction_time);
-    const tdsIsValid = checkTdsIsInRange(recipe.tds);
-    const totalRateIsValid = checkTotalRateIsInRange(recipe.total_rate);
-
-    if ( waterWeightIsValid && waterTempIsValid && yieldWeightIsValid &&
-    extractionTimeIsValid && tdsIsValid && totalRateIsValid && tabState.canOpenWaterYieldTab ) {
-      setTabState((tabState) => ({
-        ...tabState,
-        canOpenPalatesTab: true,
-      }));
-    } 
-    else {
-      setTabState((tabState) => ({
-        ...tabState,
-        canOpenPalatesTab: false,
-      }));
-    }
-  }
-
-
   useEffect(() => {
+    const setConfirmationTabState = () => {
+      const palatesAreInRange = checkPalateRatesAreInRange(palateRate);
+      const memoIsInRange = checkMemoIsInRange(recipe.memo);
+  
+      if (palatesAreInRange && memoIsInRange && 
+      tabState.canOpenWaterYieldTab && tabState.canOpenPalatesTab) {
+        setTabState((tabState) => ({
+          ...tabState,
+          canOpenConfirmationTab: true,
+        }));
+      }
+      else {
+        setTabState((tabState) => ({
+          ...tabState,
+          canOpenConfirmationTab: false,
+        }));
+      }
+    }
     setConfirmationTabState();
   }, [
     tabState.canOpenWaterYieldTab,
@@ -296,27 +345,6 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     palateRate,
     recipe.memo,
   ]);
-
-
-  const setConfirmationTabState = () => {
-
-    const palatesAreInRange = checkPalateRatesAreInRange(palateRate);
-    const memoIsInRange = checkMemoIsInRange(recipe.memo);
-
-    if (palatesAreInRange && memoIsInRange && 
-    tabState.canOpenWaterYieldTab && tabState.canOpenPalatesTab) {
-      setTabState((tabState) => ({
-        ...tabState,
-        canOpenConfirmationTab: true,
-      }));
-    }
-    else {
-      setTabState((tabState) => ({
-        ...tabState,
-        canOpenConfirmationTab: false,
-      }));
-    }
-  }
 
 
   useEffect(() => {
@@ -348,81 +376,6 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     }
   },[rangeList, palateRate])
 
-  const formatExtractionTimeInputValue = (extraction_time) => {
-    const units = ['hours', 'minutes', 'seconds']
-    let result = '';
-    if (extraction_time) {
-      units.forEach(unit => {
-        let time = '00'
-        if (extraction_time[unit] !== undefined) {
-          time = extraction_time[unit].toString()
-          if (time.length === 1) {
-            time = `0${time}`
-          }
-        }
-        if (unit !== 'hours') {
-          result = result.concat(':', time)
-        }
-        else result = result.concat(time)
-      })
-    }
-    return result.length === 0 ? null : result
-  }
-
-  useEffect(() => {
-    if (processAddSubmit && recipe.bean_id !== null) {
-      addRecipe.mutate(recipe, {
-        onSuccess: () => {
-          setModal({ mode: "", isOpen: false });
-        },
-      });
-    }
-  }, [processAddSubmit]);
-
-  useEffect(() => {
-    if (processEditSubmit && recipe.bean_id !== null) {
-      editRecipe.mutate(recipe, {
-        onSuccess: () => {
-          setModal({ mode: "", isOpen: false });
-        },
-      });
-    }
-  }, [processEditSubmit]);
-
-  useEffect(() => {
-    if (!beanListIsLoading && mode === MODE.EDIT) {
-      setRecipe({
-        ...recipe,
-        ...targetRecipe,
-        brew_date: targetRecipe.brew_date
-          ? targetRecipe.brew_date.split("T")[0]
-          : undefined,
-        extraction_time: formatExtractionTimeInputValue(
-          targetRecipe.extraction_time
-        ),
-      });
-      
-      for (const bean of Object.values(beanList)) {
-        if (bean.bean_id === targetRecipe.bean_id) {
-          setSelectedBean({ ...bean, value: bean.bean_id });
-        }
-      }
-      const method = rangeList.method_range[`id-${targetRecipe.method[0]}`]
-      const grinder = rangeList.grinder_range[`id-${targetRecipe.grinder[0]}`]
-      const water = rangeList.water_range[`id-${targetRecipe.water[0]}`]
-      setSelectedMethod(method ? method : []);
-      setSelectedGrinder(grinder ? grinder : []);
-      setSelectedWater(water ? water : []);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (mode === MODE.EDIT && Object.keys(targetRecipe.palate_rates).length !== 0) {
-      Object.keys(targetRecipe.palate_rates).forEach((id) => {
-        setPalateRate(id, targetRecipe.palate_rates[id]);
-      });
-    }
-  }, [recipe]);
 
   if (beanListIsLoading || rangeListIsLoading) {
     return 'Loading...'
@@ -602,9 +555,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                   labels={Object.keys(palateRate).map((palateId) => {
                     return rangeList.palate_range["id-" + palateId].label;
                   })}
-                  rates={Object.values(palateRate).map((value) => {
-                    return parseFloat(value);
-                  })}
+                  rates={Object.values(palateRate).map(palate => parseFloat(palate))}
                 />
                 <div className="w-full md:w-1/2 max-w-lg mx-auto">
                   {Object.values(palateRateHtmlDict)}
@@ -618,7 +569,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
               <div className="flex items-center justify-between px-2 md:px-8 pb-8">
                 <RedOutlineButton
                   text="Go Back"
-                  onClick={setOpenCoffeeBeansTab}
+                  onClick={setOpenWaterYieldTab}
                 />
                 <BlueButton
                   text="Next"
