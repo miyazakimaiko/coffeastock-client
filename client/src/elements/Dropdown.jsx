@@ -16,24 +16,28 @@ const Dropdown = ({ children, type = 'chevron', dropdownText }) => {
   }
 
   const handleClickOutside = e => {
-    if (wrapperRef.current.contains(e.target)) {
+    if (wrapperRef.current?.contains(e.target)) {
       return;
     }
     closeDropdown();
   }
 
   const closeDropdown = async () => {
-    tipRef.current.style.visibility = "hidden";
-    tipRef.current.style.opacity = 0;
-    tipRef.current.style.marginTop = "10px";
-    setOpen(false);
+    if (tipRef.current) {
+      tipRef.current.style.visibility = "hidden";
+      tipRef.current.style.opacity = 0;
+      tipRef.current.style.marginTop = "10px";
+      setOpen(false);
+    }
   }
 
   const openDropdown = () => {
+    if (tipRef.current) {
       tipRef.current.style.visibility = "visible";
       tipRef.current.style.opacity = 1;
       tipRef.current.style.marginTop = "20px";
       setOpen(true);
+    }
   }
 
   useEffect(() => {
