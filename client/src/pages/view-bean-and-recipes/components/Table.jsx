@@ -12,9 +12,12 @@ const Table = ({searchValue, orderByState, orderByMethod}) => {
   const keys = ["brew_date", "grind_size"];
 
   const search = (data) => {
-    return data.filter((item) => 
-      keys.some(key => item[key].toLowerCase().includes(searchValue.toLowerCase()))
-    );
+    if (searchValue !== null && searchValue.length !== 0) {
+      return data.filter((item) => 
+        keys.some(key => item[key].toLowerCase().includes(searchValue.toLowerCase()))
+      );
+    }
+    return data;
   }
 
   if (isLoading) {
@@ -23,7 +26,7 @@ const Table = ({searchValue, orderByState, orderByMethod}) => {
 
   return (
     <div className="flex mb-4 w-full flex-wrap justify-center">
-      <table>
+      <table className="w-full">
         <tbody>
           <Rows data={search(Object.values(recipes))}/>
         </tbody>
