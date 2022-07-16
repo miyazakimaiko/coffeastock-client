@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createRef } from 'react'
+import React, { useEffect, useState, createRef, useContext } from 'react'
 import { useUserData } from '../../context/AccountContext';
 import { convertIdListToItemList, convertItemListToIdList } from '../../helpers/ListConverter';
 import extractNewItems from '../../helpers/ExtractNewItems';
@@ -18,8 +18,6 @@ import RoastLevelInput from './components/RoastLevelInput';
 import HarvestPeriodInput from './components/HarvestPeriodInput';
 import AltitudeInput from './components/AltitudeInput';
 import MemoTextarea from './components/MemoTextarea';
-import useAddBean from '../../hooks/useAddBean';
-import useEditBean from '../../hooks/useEditBean';
 import useBeans from '../../hooks/useBeans';
 import useRanges from '../../hooks/useRanges';
 import useAddRange from '../../hooks/useAddRange';
@@ -36,19 +34,20 @@ import {
   checkRoastLevelIsInRange,
   checkValueIsNumber,
 } from "./helpers/InputValidators";
-import useTabStateModel from './hooks/useTabStateModel';
+import TabStateModel from './models/TabStateModel';
 import useSelectedBeansAndRatio from './hooks/useSelectedBeansAndRatio';
-import useBeanModel from './hooks/useBeanModel';
+import BeanService from '../../services/BeanService';
+import { ModalStateContext } from '../../context/ModalStateContext';
 
-const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
+const AddEditBeanModal = ({targetBean = null}) => {
   const userData = useUserData()
   const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub)
   const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub)
-  const addBean = useAddBean(userData.sub)
-  const editBean = useEditBean(userData.sub)
+  const [bean, setBean, onSubmit, isSubmitting] = BeanService();
   const addRange = useAddRange(userData.sub)
-  const [bean, setBean, onSubmit] = useBeanModel(setModal, mode);
-  const [tabState, setTabState] = useTabStateModel();
+  const [tabState, setTabState] = TabStateModel();
+  const { modal, closeModal, modalModeSelection } = useContext(ModalStateContext);
+
 
   const [selectedOrigin, setSelectedOrigin] = useState([]);
   const [selectedRoaster, setSelectedRoaster] = useState([]);
@@ -66,7 +65,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   ] = useSelectedBeansAndRatio();
 
   useEffect(() => {
-    if (mode === "edit") {
+    if (modal.mode === modalModeSelection.editBean) {
       setBean({
         ...targetBean,
         label: unescapeHtml(targetBean.label),
@@ -88,7 +87,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
 
 
   useEffect(() => {
-    if (mode === 'edit' && selectedBlendBeans.length === 0 && targetBean.blend_ratio) {
+    if (modal.mode === modalModeSelection.editBean && selectedBlendBeans.length === 0 && targetBean.blend_ratio) {
 
       const selectedBeans = [];
       Object.keys(targetBean.blend_ratio).forEach(id => {
@@ -280,13 +279,13 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
   return (
     <ModalWrapperContainer
       title={
-        mode === "add"
+        modal.mode === modalModeSelection.addBean
           ? "Add New Coffee Bean Type"
-          : mode === "edit"
+          : modal.mode === modalModeSelection.editBean
           ? `Edit Coffee Bean ${unescapeHtml(targetBean.label)}`
           : null
       }
-      onCloseClick={() => setModal({ mode: "", isOpen: false })}
+      onCloseClick={closeModal}
     >
       {/*body*/}
       <ul className="flex">
@@ -377,7 +376,7 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
           <div className="flex items-center justify-between px-2 md:px-8 pb-8">
             <RedOutlineButton
               text="Cancel"
-              onClick={() => setModal({ mode: "", isOpen: false })}
+              onClick={closeModal}
             />
             <BlueButton
               text="Next"
@@ -602,14 +601,10 @@ const AddEditBeanModal = ({setModal, targetBean = null, mode = 'add'}) => {
             <RedOutlineButton text="Go Back" onClick={setOpenDetailsTab} />
             <BlueButton
               text={
-                editBean.isLoading || addBean.isLoading
-                  ? "Submitting..."
-                  : "Submit"
+                isSubmitting ? "Submitting..." : "Submit"
               }
               disabled={
-                !tabState.canOpenConfirmation ||
-                editBean.isLoading ||
-                addBean.isLoading
+                !tabState.canOpenConfirmation || isSubmitting
               }
               onClick={() => {
                 finalizeBean();

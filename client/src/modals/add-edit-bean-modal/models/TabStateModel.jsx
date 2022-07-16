@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const useTabStateModel = () => {
+const TabStateModel = () => {
   const [tabState, setTabState] = useState({
     baseInfoTabIsOpen: true,
     detailsTabIsOpen: false,
@@ -12,4 +12,4 @@ const useTabStateModel = () => {
   return [tabState, setTabState];
 }
 
-export default useTabStateModel
+export default TabStateModel
