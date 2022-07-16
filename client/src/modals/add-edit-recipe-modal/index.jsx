@@ -1,12 +1,10 @@
-import React, { useEffect, useState, createRef } from 'react'
+import React, { useEffect, useState, createRef, useContext } from 'react'
 import { useUserData } from '../../context/AccountContext';
 import extractNewItems from '../../helpers/ExtractNewItems';
 import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
 import useBeans from '../../hooks/useBeans';
 import useRanges from '../../hooks/useRanges';
 import useAddRange from '../../hooks/useAddRange';
-import useAddRecipe from '../../hooks/useAddRecipe';
-import useEditRecipe from '../../hooks/useEditRecipe';
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer';
 import RedOutlineButton from '../../elements/RedOutlineButton';
 import BlueButton from '../../elements/BlueButton';
@@ -45,38 +43,19 @@ import {
 import { formatExtractionTimeInputValue } from "./helpers/formatters"
 import { unescapeHtml } from "../../helpers/HtmlConverter"
 import ChartRadarTaste from '../../pages/view-bean-and-recipes/components/ChartRadarTaste';
+import RecipeService from '../../services/RecipeService';
+import { ModalStateContext } from '../../context/ModalStateContext';
 
-const MODE = {
-  ADD: 'add',
-  EDIT: 'edit'
-}
 
-const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) => {
+const AddEditRecipeModal = ({targetRecipe = null}) => {
 
   const userData = useUserData();
   const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub);
   const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub);
   const addRange = useAddRange(userData.sub);
-  const addRecipe = useAddRecipe(userData.sub);
-  const editRecipe = useEditRecipe(userData.sub);
+  const { modal, closeModal, modalModeSelection } = useContext(ModalStateContext);
 
-  const [recipe, setRecipe] = useState({
-    bean_id: null,
-    brew_date: null,
-    method: {},
-    grinder: {},
-    grind_size: null,
-    grounds_weight: null,
-    water_weight: null,
-    water: {},
-    water_temp: null,
-    yield_weight: null,
-    extraction_time: null,
-    tds: null,
-    total_rate: null,
-    palate_rates: {},
-    memo: null,
-  });
+  const [recipe, setRecipe, onSubmit, isSubmitting] = RecipeService();
 
   const [selectedBean, setSelectedBean] = useState(null)
   const [selectedMethod, setSelectedMethod] = useState([])
@@ -115,42 +94,6 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
     }
   }, [beanList]);
 
-
-  const [processAddSubmit, setProcessAddSubmit] = useState(false);
-  const [processEditSubmit, setProcessEditSubmit] = useState(false);
-
-
-  useEffect(() => {
-    if (processAddSubmit && recipe.bean_id !== null) {
-      addRecipe.mutate(recipe, {
-        onSuccess: () => {
-          setModal({ mode: "", isOpen: false });
-        },
-      });
-    }
-  }, [processAddSubmit]);
-
-
-  useEffect(() => {
-    if (processEditSubmit && recipe.bean_id !== null) {
-      editRecipe.mutate(recipe, {
-        onSuccess: () => {
-          setModal({ mode: "", isOpen: false });
-        },
-      });
-    }
-  }, [processEditSubmit]);
-
-
-  const onSubmit = () => {
-    finalizeRecipe();
-    if (mode === MODE.ADD) {
-      setProcessAddSubmit(true);
-    }
-    else if (mode === MODE.EDIT) {
-      setProcessEditSubmit(true);
-    }
-  }
 
   const finalizeRecipe = () => {
     setRecipe({...recipe, 
@@ -383,11 +326,11 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
 
   return (
     <ModalWrapperContainer
-      onCloseClick={() => setModal({ mode: "", isOpen: false })}
+      onCloseClick={closeModal}
       title={
-        mode === "add"
+        modal.mode === modalModeSelection.addRecipe
           ? "Add New Recipe"
-          : mode === "edit"
+          : modal.mode === modalModeSelection.editRecipe
           ? `Edit recipe`
           : null
       }
@@ -446,7 +389,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
               <div className="md:flex md:px-8 my-8">
                 <div className="flex flex-col md:w-1/2">
                   <BeanInput
-                    mode={mode}
+                    mode={modal.mode}
                     beanList={beanList}
                     selectedBean={selectedBean}
                     setSelectedBean={setSelectedBean}
@@ -481,7 +424,7 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
               <div className="flex items-center justify-between px-2 md:px-8 pb-8">
                 <RedOutlineButton
                   text="Cancel"
-                  onClick={() => setModal({ mode: "", isOpen: false })}
+                  onClick={closeModal}
                 />
                 <BlueButton
                   text="Next"
@@ -700,9 +643,14 @@ const AddEditRecipeModal = ({setModal, targetRecipe = null, mode = MODE.ADD}) =>
                   onClick={setOpenWaterYieldTab}
                 />
                 <BlueButton
-                  text="Submit"
-                  disabled={selectedBean === null}
-                  onClick={onSubmit}
+                  text={
+                    isSubmitting ? "Submitting..." : "Submit"
+                  }
+                  disabled={selectedBean === null || isSubmitting}
+                  onClick={() => {
+                    finalizeRecipe();
+                    onSubmit();
+                  }}
                 />
               </div>
             </div>
