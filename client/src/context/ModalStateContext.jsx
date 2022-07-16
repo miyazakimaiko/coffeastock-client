@@ -9,7 +9,7 @@ const ModalStateProvider = (props) => {
     isOpen: false,
   });
 
-  const mode = {
+  const modalModeSelection = {
     addRange: 'addRange',
     editRange: 'editRange',
     deleteRange: 'deleteRange',
@@ -23,10 +23,58 @@ const ModalStateProvider = (props) => {
     deleteRecipe: 'deleteRecipe',
   }
 
+  function openAddRangeModal() {
+    setModal({ mode: modalModeSelection.addRange, isOpen: true });
+  }
+
+  function openEditRangeModal() {
+    setModal({ mode: modalModeSelection.editRange, isOpen: true });
+  }
+
+  function openAddBeanModal() {
+    setModal({ mode: modalModeSelection.addBean, isOpen: true });
+  }
+
+  function openEditBeanModal() {
+    setModal({ mode: modalModeSelection.editBean, isOpen: true });
+  }
+
+  function openDeleteBeanModal() {
+    setModal({ mode: modalModeSelection.deleteBean, isOpen: true });
+  }
+
+  function openAddRecipeModal() {
+    setModal({ mode: modalModeSelection.addRecipe, isOpen: true });
+  }
+
+  function openEditRecipeModal() {
+    setModal({ mode: modalModeSelection.editRecipe, isOpen: true });
+  }
+
+  function openDeleteRecipeModal() {
+    setModal({ mode: modalModeSelection.deleteRecipe, isOpen: true });
+  }
+
+  function closeModal() {
+    setModal({ mode: "", isOpen: false });
+  }
+
   return (
     <ModalStateContext.Provider
       value={
-        {modal, setModal, mode}
+        {
+          modal, 
+          openAddRangeModal,
+          openEditRangeModal,
+          openAddBeanModal,
+          openEditBeanModal,
+          openDeleteBeanModal,
+          openAddRecipeModal,
+          openEditRecipeModal,
+          openDeleteRecipeModal,
+          closeModal,
+          modalModeSelection,
+        }
       }
     >
       {props.children}

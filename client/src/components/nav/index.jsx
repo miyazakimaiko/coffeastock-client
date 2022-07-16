@@ -6,17 +6,14 @@ import { NavStateContext } from '../../context/NavStateContext'
 import './nav.scss'
 import AddEditBeanModal from '../../modals/add-edit-bean-modal'
 import AddEditRecipeModal from '../../modals/add-edit-recipe-modal'
+import { ModalStateContext } from '../../context/ModalStateContext'
 
-const MODE = {
-  BEAN: 'bean',
-  RECIPE: 'recipe'
-}
 
 const Nav = (props) => {
   const { showNavbar, pinnedNavbar, setPinnedNavbar } = useContext(NavStateContext);
   const [openBeansAccordion, innerSetOpenBeansAccordion] = useState(false);
   const [openRecipesAccordion, innerSetOpenRecipesAccordion] = useState(false);
-  const [modal, setModal] = useState({mode: '', isOpen: false})
+  const {modal, openAddBeanModal, openAddRecipeModal, modalModeSelection} = useContext(ModalStateContext);
 
   const [beansOpacity, setBeansOpacity] = useState(0);
   const [recipesOpacity, setRecipesOpacity] = useState(0);
@@ -115,7 +112,7 @@ const Nav = (props) => {
           <ul className="ml-10">
             <li className="h-12 flex items-center justify-between">
               <button type="button"
-                onClick={() => setModal({mode: MODE.BEAN, isOpen: true})}
+                onClick={openAddBeanModal}
                 className="transition-opacity duration-300 ease-out opacity-70 hover:opacity-100">
                 New Coffee Bean
               </button>
@@ -123,7 +120,7 @@ const Nav = (props) => {
 
             <li className="h-12 flex items-center justify-between">
             <button type="button"
-                onClick={() => setModal({mode: MODE.RECIPE, isOpen: true})}
+                onClick={openAddRecipeModal}
                 className="transition-opacity duration-300 ease-out opacity-70 hover:opacity-100">
                 New Recipe
               </button>
@@ -298,8 +295,8 @@ const Nav = (props) => {
       </nav>
     </div>
 
-    {modal.mode === MODE.BEAN && modal.isOpen ?  <AddEditBeanModal setModal={setModal} mode="add" /> : null}
-    {modal.mode === MODE.RECIPE && modal.isOpen ?  <AddEditRecipeModal setModal={setModal} mode="add" /> : null}
+    {modal.mode === modalModeSelection.addBean && modal.isOpen ?  <AddEditBeanModal /> : null}
+    {modal.mode === modalModeSelection.addRecipe && modal.isOpen ?  <AddEditRecipeModal /> : null}
   </>
   )
 }

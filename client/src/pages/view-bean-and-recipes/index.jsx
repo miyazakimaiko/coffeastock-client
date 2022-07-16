@@ -26,7 +26,7 @@ const ViewBeanAndRecipes = () => {
 
   const navigate = useNavigate()
 
-  const {modal, setModal, mode} = useContext(ModalStateContext);
+  const {modal, openEditBeanModal, openDeleteBeanModal, closeModal, modalModeSelection} = useContext(ModalStateContext);
 
   useEffect(() => {
     window.scroll({ top: 0, behavior: 'smooth' });
@@ -36,7 +36,7 @@ const ViewBeanAndRecipes = () => {
     deleteBean.mutate(targetBean, {
       onSuccess: () => navigate('/coffees', {replace: true})
     })
-    setModal({mode: '', isOpen: false})
+    closeModal();
   }
 
 
@@ -64,14 +64,14 @@ const ViewBeanAndRecipes = () => {
                   <button
                     type="button"
                     className="dropdown-item"
-                    onClick={() => setModal({ mode: mode.editBean, isOpen: true })}
+                    onClick={openEditBeanModal}
                   >
                     Edit
                   </button>
                   <button
                     type="button"
                     className="dropdown-item"
-                    onClick={() => setModal({ mode: mode.deleteBean, isOpen: true })}
+                    onClick={openDeleteBeanModal}
                   >
                     Delete
                   </button>
@@ -108,17 +108,16 @@ const ViewBeanAndRecipes = () => {
         <RecipeSection />
       </div>
 
-      {modal.mode === mode.editBean && modal.isOpen ? (
+      {modal.mode === modalModeSelection.editBean && modal.isOpen ? (
         <AddEditBeanModal
           mode="edit"
           targetBean={targetBean}
-          setModal={setModal}
         />
       ) : null}
-      {modal.mode === mode.deleteBean && modal.isOpen ? (
+      {modal.mode === modalModeSelection.deleteBean && modal.isOpen ? (
         <DeleteModal
           label={targetBean.label}
-          onCloseClick={() => setModal({ mode: "", isOpen: false })}
+          onCloseClick={closeModal}
           onDeleteSubmit={onDeleteSubmit}
         />
       ) : null}

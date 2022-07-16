@@ -11,25 +11,25 @@ const Rows = ({data}) => {
   const userData = useUserData();
   const { id: beanId } = useParams();
   const deleteRecipe = useDeleteRecipe(userData.sub, beanId);
-  const {modal, setModal, mode} = useContext(ModalStateContext);
+  const {modal, openEditRecipeModal, openDeleteRecipeModal, closeModal, modalModeSelection} = useContext(ModalStateContext);
   const [recipe, setRecipe] = useState({})
 
   const onEditClick = (item) => {
     setRecipe(item);
-    setModal({ mode: mode.editRecipe, isOpen: true });
+    openEditRecipeModal();
   }
 
 
   const onDeleteClick = (item) => {
     setRecipe(item);
-    setModal({ mode: mode.deleteRecipe, isOpen: true });
+    openDeleteRecipeModal();
   }
 
 
   const onDeleteSubmit = async (event) => {
     event.preventDefault();
     deleteRecipe.mutate(recipe)
-    setModal({mode: '', isOpen: false})
+    closeModal();
   }
 
   return (
@@ -42,18 +42,17 @@ const Rows = ({data}) => {
         />
       ))}
 
-      {modal.mode === mode.editRecipe && modal.isOpen ? (
+      {modal.mode === modalModeSelection.editRecipe && modal.isOpen ? (
         <AddEditRecipeModal
-          setModal={setModal}
           targetRecipe={recipe}
-          mode="edit"
+          mode={modalModeSelection.editRecipe}
         />
       ) : null}
 
-      {modal.mode === mode.deleteRecipe && modal.isOpen ? (
+      {modal.mode === modalModeSelection.deleteRecipe && modal.isOpen ? (
         <DeleteModal
           label={`Recipe ID: ${recipe.recipe_id}`}
-          onCloseClick={() => setModal({ mode: "", isOpen: false })}
+          onCloseClick={closeModal}
           onDeleteSubmit={onDeleteSubmit}
         />
       ) : null}

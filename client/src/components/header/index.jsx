@@ -11,11 +11,8 @@ import AddEditBeanModal from '../../modals/add-edit-bean-modal';
 import AddRecipeModal from '../../modals/add-edit-recipe-modal';
 import './header.scss'
 import Dropdown from '../../elements/Dropdown';
+import { ModalStateContext } from '../../context/ModalStateContext';
 
-const MODE = {
-  BEAN: 'bean',
-  RECIPE: 'recipe'
-}
 
 const Header = (props) => {
   const { 
@@ -32,7 +29,7 @@ const Header = (props) => {
   const signout = useSignout()
   const navigate = useNavigate()
 
-  const [modal, setModal] = useState({mode: '', isOpen: false})
+  const {modal, openAddBeanModal, openAddRecipeModal, modalModeSelection} = useContext(ModalStateContext);
 
   const logout = () => {
     forceUnpin();
@@ -58,7 +55,7 @@ const Header = (props) => {
         </div>
         <div className="button-section">
           <button type="button"
-            onClick={() => setModal({mode: 'bean', isOpen: true})}
+            onClick={openAddBeanModal}
             className="flex items-center text-burnt-sienna  px-3 py-2 ml-4 mr-0 
             opacity-80 hover:opacity-100 ease-linear transition-all duration-150">
             <PlusIcon className="h-4 w-4 mr-2" />
@@ -66,7 +63,7 @@ const Header = (props) => {
           </button>
 
           <button type="button"
-            onClick={() => setModal({mode: 'recipe', isOpen: true})}
+            onClick={openAddRecipeModal}
             className="flex items-center text-burnt-sienna 
              px-3 py-2 ml-4 mr-0 
             opacity-80 hover:opacity-100 ease-linear transition-all duration-150">
@@ -95,8 +92,8 @@ const Header = (props) => {
     </div>
     <div className="w-hull border-b border-burnt-sienna border-opacity-20 "></div>
 
-    {modal.mode === MODE.BEAN && modal.isOpen ?  <AddEditBeanModal setModal={setModal} mode="add" /> : null}
-    {modal.mode === MODE.RECIPE && modal.isOpen ?  <AddRecipeModal setModal={setModal} mode="add" /> : null}
+    {modal.mode === modalModeSelection.addBean && modal.isOpen ?  <AddEditBeanModal /> : null}
+    {modal.mode === modalModeSelection.addRecipe && modal.isOpen ?  <AddRecipeModal /> : null}
     
     </>
     )
