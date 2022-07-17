@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import ToolBar from '../../components/toolbar';
 import ToolBarButton from '../../components/toolbar/ToolBarButton';
 import Table from './components/Table';
@@ -6,14 +6,9 @@ import ToolBarSearchBar from '../../components/toolbar/ToolBarSearchBar';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import AddEditRangeModal from '../../modals/add-edit-range-modal';
 
-const modalMode = {
-  addRange: 'addRange',
-  editRange: 'editRange',
-  deleteRange: 'deleteRange'
-}
 
-const ManageAttributeRanges = ({cat: rangeName}) => {
-  const { modal, setModal } = useContext(ModalStateContext);
+const ViewRanges = ({cat: rangeName}) => {
+  const { modal,  openAddRangeModal, modalModeSelection } = useContext(ModalStateContext);
 
   const [searchValue, setSearchValue] = useState("");
 
@@ -24,7 +19,7 @@ const ManageAttributeRanges = ({cat: rangeName}) => {
           <ToolBarButton
             title={`New ${rangeName}`}
             onClick={() => {
-              setModal({ mode: modalMode.addRange, isOpen: true });
+              openAddRangeModal();
             }}
           />
           <div className="flex">
@@ -34,15 +29,13 @@ const ManageAttributeRanges = ({cat: rangeName}) => {
         <Table searchValue={searchValue} rangeName={rangeName}/>
       </div>
 
-      {modal.mode === modalMode.addRange && modal.isOpen === true ? (
+      {modal.mode === modalModeSelection.addRange && modal.isOpen === true ? (
         <AddEditRangeModal
-          setModal={setModal}
           rangeName={rangeName}
-          mode={modal.mode}
         />
       ) : null}
     </>
   );
 }
 
-export default ManageAttributeRanges
+export default ViewRanges
