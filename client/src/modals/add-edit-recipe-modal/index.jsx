@@ -45,6 +45,7 @@ import { unescapeHtml } from "../../helpers/HtmlConverter"
 import ChartRadarTaste from '../../pages/view-bean-and-recipes/components/ChartRadarTaste';
 import RecipeService from '../../services/RecipeService';
 import { ModalStateContext } from '../../context/ModalStateContext';
+import { convertItemListToIdList } from '../../helpers/ListConverter';
 
 
 const AddEditRecipeModal = ({targetRecipe = null}) => {
@@ -96,9 +97,9 @@ const AddEditRecipeModal = ({targetRecipe = null}) => {
   const finalizeRecipe = () => {
     setRecipe({...recipe, 
       bean_id: selectedBean.bean_id,
-      method: selectedMethod.map(method => method.value),
-      grinder: selectedGrinder.map(grinder => grinder.value),
-      water: selectedWater.map(water => water.value),
+      method: convertItemListToIdList(selectedMethod, rangeList.method_range),
+      grinder: convertItemListToIdList(selectedGrinder, rangeList.grinder_range),
+      water: convertItemListToIdList(selectedWater, rangeList.water_range),
       palate_rates: palateRate
     });
   }
