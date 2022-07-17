@@ -52,7 +52,6 @@ const Rows = ({data}) => {
       {modal.mode === modalModeSelection.deleteRecipe && modal.isOpen ? (
         <DeleteModal
           label={`Recipe ID: ${recipe.recipe_id}`}
-          onCloseClick={closeModal}
           onDeleteSubmit={onDeleteSubmit}
         />
       ) : null}

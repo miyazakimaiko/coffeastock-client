@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import toastOnBottomCenter from '../../utils/customToast'
 import { useUserData } from '../../context/AccountContext'
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer'
@@ -9,22 +9,21 @@ import useEditRange from '../../hooks/useEditRange'
 import NameInput from './components/NameInput'
 import DetailsTextarea from './components/DetailsTextarea'
 import { capitalize } from '../../helpers/HtmlConverter'
+import { ModalStateContext } from '../../context/ModalStateContext'
 
-const modalMode = {
-  addRange: "addRange",
-  editRange: "editRange",
-}
 
-const AddEditRangeModal = ({setModal, rangeName, targetRangeItem = null, mode = modalMode.addRange}) => {
+const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
   const userData = useUserData()
   const editRange = useEditRange(userData.sub, rangeName)
   const addRange = useAddRange(userData.sub)
+  const {modal, closeModal, modalModeSelection} = useContext(ModalStateContext);
+
 
   const [rangeItem, setRangeItem] = useState({ value: '', label: '', def: '' });
   const [rangeItemIsValid, setRangeItemIsValid] = useState(false);
 
   useEffect(() => {
-    if (targetRangeItem && mode === modalMode.editRange) {
+    if (targetRangeItem && modal.mode === modalModeSelection.editRange) {
       setRangeItem(targetRangeItem);
     }
   }, []);
@@ -55,7 +54,7 @@ const AddEditRangeModal = ({setModal, rangeName, targetRangeItem = null, mode = 
         },
         {
           onSuccess: () => {
-            setModal({ mode: '', isOpen: false });
+            closeModal();
             toastOnBottomCenter(
               "success",
               `New range is added successfully.`
@@ -88,7 +87,7 @@ const AddEditRangeModal = ({setModal, rangeName, targetRangeItem = null, mode = 
     },
     {
       onSuccess: () => {
-        setModal({ mode: '', isOpen: false });
+        closeModal();
         toastOnBottomCenter(
           "success",
           `Entry is edited successfully.`
@@ -106,10 +105,10 @@ const AddEditRangeModal = ({setModal, rangeName, targetRangeItem = null, mode = 
   return (
     <ModalWrapperContainer
       title={
-        mode === modalMode.addRange ? `Add New ${capitalize(rangeName)} Range` :
-        mode === modalMode.editRange ? `Edit ${capitalize(rangeName)} Range` : null
+        modal.mode === modalModeSelection.addRange ? `Add New ${capitalize(rangeName)} Range` :
+        modal.mode === modalModeSelection.editRange ? `Edit ${capitalize(rangeName)} Range` : null
       }
-      onCloseClick={() => setModal({ mode: '', isOpen: false })}
+      onCloseClick={closeModal}
     >
       <div className="content">
         <form className="w-full">
@@ -129,12 +128,12 @@ const AddEditRangeModal = ({setModal, rangeName, targetRangeItem = null, mode = 
             <div className="flex items-center justify-between pl-4 pr-4 pb-8">
               <RedOutlineButton
                 text="Cancel"
-                onClick={() => setModal({ mode: '', isOpen: false })}
+                onClick={closeModal}
               />
               <BlueButton
                 text={editRange.isLoading || addRange.isLoading ? 'Saving...' : 'Save'}
                 disabled={!rangeItemIsValid}
-                onClick={mode === modalMode.addRange ? onAddSubmit : mode === modalMode.editRange ? onEditSubmit : null}
+                onClick={modal.mode === modalModeSelection.addRange ? onAddSubmit : modal.mode === modalModeSelection.editRange ? onEditSubmit : null}
               />
             </div>
           </div>

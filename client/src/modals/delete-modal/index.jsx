@@ -1,7 +1,12 @@
 import { XIcon } from '@heroicons/react/outline'
-import React from 'react'
+import React, { useContext } from 'react'
+import { ModalStateContext } from '../../context/ModalStateContext'
 
-const DeleteModal = ({label, onCloseClick, onDeleteSubmit}) => {
+const DeleteModal = ({label, onDeleteSubmit}) => {
+  const {closeModal} = useContext(ModalStateContext);
+
+  // can add all delete functionality here for Bean, Recipe, and Range by using modal.mode
+
   return (
     <>
       <div
@@ -19,7 +24,7 @@ const DeleteModal = ({label, onCloseClick, onDeleteSubmit}) => {
               border-b border-burnt-sienna border-opacity-20">
               <button
                 className="p-1 ml-auto border-0 text-black float-right"
-                onClick={onCloseClick}
+                onClick={closeModal}
               >
                 <XIcon className="h-6 w-6"/>
               </button>
@@ -36,7 +41,7 @@ const DeleteModal = ({label, onCloseClick, onDeleteSubmit}) => {
                   px-6 py-2  outline-none 
                 focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
-                onClick={onCloseClick}
+                onClick={closeModal}
               >
                 Cancel
               </button>

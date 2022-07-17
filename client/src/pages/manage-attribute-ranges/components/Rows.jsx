@@ -11,7 +11,7 @@ const Rows = ({data, rangeName}) => {
 
   const userData = useUserData();
   const deleteRange = useDeleteRange(userData.sub);
-  const {modal, setModal, mode} = useContext(ModalStateContext);
+  const {modal, openEditRangeModal, openDeleteRangeModal, closeModal, modalModeSelection} = useContext(ModalStateContext);
   const [rangeItem, setRangeItem] = useState({ value: "", label: "", def: "" });
 
 
@@ -21,7 +21,7 @@ const Rows = ({data, rangeName}) => {
       label: unescapeHtml(item.label),
       def: unescapeHtml(item.def),
     });
-    setModal({ mode: mode.editRange, isOpen: true });
+    openEditRangeModal();
   }
 
 
@@ -31,7 +31,7 @@ const Rows = ({data, rangeName}) => {
       label: unescapeHtml(item.label),
       def: unescapeHtml(item.def),
     });
-    setModal({ mode: mode.deleteRange, isOpen: true });
+    openDeleteRangeModal();
   }
 
 
@@ -41,7 +41,7 @@ const Rows = ({data, rangeName}) => {
       rangeName: rangeName, 
       body: rangeItem
     })
-    setModal({ mode: '', isOpen: false })
+    closeModal();
   }
 
 
@@ -57,19 +57,16 @@ const Rows = ({data, rangeName}) => {
         />
       ))}
 
-      {modal.mode === mode.editRange && modal.isOpen === true ? (
+      {modal.mode === modalModeSelection.editRange && modal.isOpen === true ? (
         <AddEditRangeModal
-          setModal={setModal}
           rangeName={rangeName}
           targetRangeItem={rangeItem}
-          mode={modal.mode}
         />
       ) : null}
 
-      {modal.mode === mode.deleteRange && modal.isOpen === true ? (
+      {modal.mode === modalModeSelection.deleteRange && modal.isOpen === true ? (
         <DeleteModal
           label={rangeItem.label}
-          onCloseClick={() => setModal({ mode: "", isOpen: false })}
           onDeleteSubmit={onDeleteSubmit}
         />
       ) : null}

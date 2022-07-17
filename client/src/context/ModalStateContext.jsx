@@ -31,6 +31,10 @@ const ModalStateProvider = (props) => {
     setModal({ mode: modalModeSelection.editRange, isOpen: true });
   }
 
+  function openDeleteRangeModal() {
+    setModal({ mode: modalModeSelection.deleteRange, isOpen: true });
+  }
+
   function openAddBeanModal() {
     setModal({ mode: modalModeSelection.addBean, isOpen: true });
   }
@@ -66,6 +70,7 @@ const ModalStateProvider = (props) => {
           modal, 
           openAddRangeModal,
           openEditRangeModal,
+          openDeleteRangeModal,
           openAddBeanModal,
           openEditBeanModal,
           openDeleteBeanModal,

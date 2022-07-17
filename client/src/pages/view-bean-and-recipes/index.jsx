@@ -117,7 +117,6 @@ const ViewBeanAndRecipes = () => {
       {modal.mode === modalModeSelection.deleteBean && modal.isOpen ? (
         <DeleteModal
           label={targetBean.label}
-          onCloseClick={closeModal}
           onDeleteSubmit={onDeleteSubmit}
         />
       ) : null}
