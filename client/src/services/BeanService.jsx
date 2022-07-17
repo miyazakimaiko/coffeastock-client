@@ -53,6 +53,7 @@ const BeanService = () => {
     }
   }, [editBean.isLoading, addBean.isLoading])
 
+
   useEffect(() => {
     if (processAddSubmit) {
       if (Object.keys(bean.blend_ratio).length > 5) {
@@ -65,7 +66,8 @@ const BeanService = () => {
         addBean.mutate(bean, {
           onSuccess: () => closeModal()
         });
-      } 
+      }
+      setProcessAddSubmit(false);
     }
   }, [processAddSubmit])
 
@@ -101,6 +103,7 @@ const BeanService = () => {
       editBean.mutate(bean, {
         onSuccess: () => closeModal()
       });
+      setProcessEditSubmit(false);
     }
   }, [processEditSubmit])
 

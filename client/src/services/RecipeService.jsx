@@ -39,6 +39,7 @@ const RecipeService = () => {
           closeModal();
         },
       });
+      setProcessAddSubmit(false);
     }
   }, [processAddSubmit]);
 
@@ -49,6 +50,7 @@ const RecipeService = () => {
           closeModal();
         },
       });
+      setProcessEditSubmit(false);
     }
   }, [processEditSubmit]);
 
