@@ -62,8 +62,6 @@ const AddEditRecipeModal = ({targetRecipe = null}) => {
   const [selectedGrinder, setSelectedGrinder] = useState([])
   const [selectedWater, setSelectedWater] = useState([])
   const [palateRate, innerSetPalateRate] = useState({})
-  const [palateRateHtmlDict, setPalateRateHtmlDict] = useState([])
-  const [palateRateConfirmationHtmlDict, setPalateRateConfirmationHtmlDict] = useState({})
 
   const setPalateRate = (key, value) => {
     const newRate = {};
@@ -290,36 +288,6 @@ const AddEditRecipeModal = ({targetRecipe = null}) => {
   ]);
 
 
-  useEffect(() => {
-    if (!rangeListIsLoading) {
-      Object.keys(rangeList.palate_range).forEach(id => {
-        let elem = {}
-        elem[id] = <PalateRangeInput
-          title={rangeList.palate_range[id].label}
-          parateId={rangeList.palate_range[id].value}
-          palateRate={palateRate}
-          setPalateRate={setPalateRate}
-        />
-        setPalateRateHtmlDict((palateRateHtmlDict) => ({
-          ...palateRateHtmlDict,
-          ...elem,
-        }));
-        let confirmElem = {}
-        confirmElem[id] = (
-          <InputConfirmSection
-            title={rangeList.palate_range[id].label}
-            content={palateRate[rangeList.palate_range[id].value]}
-          />
-        )
-        setPalateRateConfirmationHtmlDict((palateRateConfirmationHtmlDict) => ({
-          ...palateRateConfirmationHtmlDict,
-          ...confirmElem,
-        }));
-      })
-    }
-  },[rangeList, palateRate])
-
-
   if (beanListIsLoading || rangeListIsLoading) {
     return 'Loading...'
   }
@@ -495,13 +463,26 @@ const AddEditRecipeModal = ({targetRecipe = null}) => {
               <div className="md:flex m-8">
                 <ChartRadarTaste
                   className="w-full md:w-1/2 max-w-lg mx-auto"
-                  labels={Object.keys(palateRate).map((palateId) => {
-                    return rangeList.palate_range["id-" + palateId].label;
-                  })}
-                  rates={Object.values(palateRate).map(palate => parseFloat(palate))}
+                  labels={
+                    Object.keys(palateRate).map(palateId => (
+                    rangeList.palate_range["id-" + palateId].label
+                    ))
+                  }
+                  rates={
+                    Object.values(palateRate).map(palate => parseFloat(palate))
+                  }
                 />
                 <div className="w-full md:w-1/2 max-w-lg mx-auto">
-                  {Object.values(palateRateHtmlDict)}
+                  {
+                    Object.keys(rangeList.palate_range).map(id => (
+                      <PalateRangeInput
+                        title={rangeList.palate_range[id].label}
+                        parateId={rangeList.palate_range[id].value}
+                        palateRate={palateRate}
+                        setPalateRate={setPalateRate}
+                      />
+                    ))
+                  }
                 </div>
               </div>
 
@@ -615,7 +596,14 @@ const AddEditRecipeModal = ({targetRecipe = null}) => {
                       />
                     </div>
                     <div className="mb-8 md:m-8">
-                      {Object.values(palateRateConfirmationHtmlDict)}
+                      {
+                        Object.keys(rangeList.palate_range).map(id => (
+                          <InputConfirmSection
+                          title={rangeList.palate_range[id].label}
+                          content={palateRate[rangeList.palate_range[id].value]}
+                        />
+                        ))
+                      }
                     </div>
                   </div>
                 </div>
