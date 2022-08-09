@@ -84,12 +84,10 @@ const AddEditRecipeModal = ({targetRecipe = null}) => {
       });
 
       setSelectedBean({...beanList[targetRecipe.bean_id], label: unescapeHtml(beanList[targetRecipe.bean_id].label)});
-      setSelectedMethod(targetRecipe.method.map(method => ({...method, label: unescapeHtml(method.label)})));
-      setSelectedGrinder(targetRecipe.grinder.map(grinder => ({...grinder, label: unescapeHtml(grinder.label)})));
-      setSelectedWater(targetRecipe.water.map(water => ({...water, label: unescapeHtml(water.label)})));
-      for await (const palate of targetRecipe.palate_rates) {       
-        setPalateRate(palate.value, palate.rate);
-      }
+      setSelectedMethod(targetRecipe.method.map(id => rangeList.method_range[`id-${id}`]));
+      setSelectedGrinder(targetRecipe.grinder.map(id => rangeList.grinder_range[`id-${id}`]));
+      setSelectedWater(targetRecipe.water.map(id => rangeList.water_range[`id-${id}`]));
+      innerSetPalateRate(targetRecipe.palate_rates);
     }
   }, [beanList]);
 

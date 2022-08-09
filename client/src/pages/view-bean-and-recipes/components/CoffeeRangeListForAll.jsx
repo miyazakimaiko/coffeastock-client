@@ -9,7 +9,7 @@ import CoffeeRangeListItem from './CoffeeRangeListItem';
 
 const CoffeeRangeListForAll = ({bean}) => {
   const userData = useUserData()
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub)
+  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub);
 
   const [beanAttrIcons, setBeanAttrIcons] = useState({
     gradeStarIcons: null,
@@ -42,9 +42,8 @@ const CoffeeRangeListForAll = ({bean}) => {
   const makeHtmlTags = (targetBean, category) => {
     const result = [];
     if (targetBean[category]) {
-      const ranges = rangeList[`${category}_range`];
       targetBean[category].forEach((id) => {
-        const range = ranges[`id-${id}`];
+        const range = rangeList[`${category}_range`][`id-${id}`];
         const label = unescapeHtml(range ? range.label : "error");
         const info = unescapeHtml(range ? range.def : "error");
         const text = `${info === "" ? "No Info" : info}`;

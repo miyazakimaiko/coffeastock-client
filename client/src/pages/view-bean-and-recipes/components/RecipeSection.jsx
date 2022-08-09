@@ -25,7 +25,7 @@ const orderMethod = {
 }
 
 const RecipeSection = () => {
-  const [searchValue, setSearchValue] = useState('')
+  const [searchValue, setSearchValue] = useState("")
   const [orderByState, setOrderByState] = useState("");
   const [orderByMethod, setOrderByMethod] = useState(orderMethod.desc);
 

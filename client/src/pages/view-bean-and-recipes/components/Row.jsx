@@ -6,12 +6,20 @@ import { HiOutlineChevronDown, HiOutlineChevronUp } from 'react-icons/hi'
 import ChartRadarTaste from './ChartRadarTaste'
 import { generateStarIconList } from '../../../helpers/GenerateIconList'
 import Dropdown from '../../../elements/Dropdown'
+import { useUserData } from '../../../context/AccountContext'
+import useRanges from '../../../hooks/useRanges'
 
 
 const Row = ({recipe, onEditClick, onDeleteClick}) => {
-  const [openDetails, setOpenDetails] = useState(false)
+
+  const userData = useUserData();
+  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub);
+  
+  const [openDetails, setOpenDetails] = useState(false);
+
 
   const parseExtractionTime = () => {
+
     const extractionTime = Object.keys(recipe.extraction_time).map((timeUnit) => {
       const unit =
         timeUnit === "hours" ? "hr" : timeUnit === "minutes" ? "min" : "sec";
@@ -19,6 +27,10 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
     });
     return extractionTime;
   };
+
+  if (rangeListIsLoading) {
+    return "Loading...."
+  }
 
   return (
     <>
@@ -46,21 +58,25 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
 
         <div className="flex">
           <div className="flex flex-col justify-between w-1/4 h-auto px-4 border-r">
-            <p>{recipe.brew_date ? recipe.brew_date.split("T")[0] : "No date"}</p>
+            <p>
+              {recipe.brew_date ? recipe.brew_date.split("T")[0] : "No date"}
+            </p>
             <h3 className="text-xl my-2">
-              {recipe.method[0]?.label ?? "-"}
+              {recipe.method & recipe.method[0]
+                ? (rangeList.method_range[`id-${recipe.method[0]}`].label)
+                : "-"}
             </h3>
             <div className="flex justify-end">
-              {recipe.total_rate ? generateStarIconList(recipe.total_rate) : null}
+              {recipe.total_rate
+                ? generateStarIconList(recipe.total_rate)
+                : null}
             </div>
           </div>
           <div className="flex flex-col justify-between relative w-1/4 h-auto px-4 border-r">
             <div className="flex justify-between">
               <GiCoffeeBeans className="w-5 h-5 opacity-40" />
               <p className="text-right mb-4">
-                <span className="text-2xl">
-                  {recipe.grounds_weight ?? "-"}
-                </span>{" "}
+                <span className="text-2xl">{recipe.grounds_weight ?? "-"}</span>{" "}
                 g
               </p>
             </div>
@@ -68,9 +84,9 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
               {recipe.grind_size ? (
                 <span className="basic-chip">{recipe.grind_size}</span>
               ) : null}
-              {recipe.grinder[0] ? (
+              {recipe.grinder & recipe.grinder[0] ? (
                 <span className="basic-chip">
-                  {recipe.grinder[0].label}
+                  {rangeList.grinder_range[`id-${recipe.grinder[0]}`].label}
                 </span>
               ) : null}
             </div>
@@ -79,9 +95,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
             <div className="flex justify-between">
               <MdWaterDrop className="w-5 h-5 opacity-40" />
               <p className="text-right mb-4">
-                <span className="text-2xl">
-                  {recipe.water_weight ?? "-"}
-                </span>{" "}
+                <span className="text-2xl">{recipe.water_weight ?? "-"}</span>{" "}
                 ml
               </p>
             </div>
@@ -89,9 +103,9 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
               {recipe.water_temp ? (
                 <span className="basic-chip">{recipe.water_temp}</span>
               ) : null}
-              {recipe.water[0] ? (
+              {recipe.water && recipe.water[0] ? (
                 <span className="basic-chip">
-                  {recipe.water[0].label}
+                  {rangeList.water_range[`id-${recipe.water[0]}`].label}
                 </span>
               ) : null}
             </div>
@@ -100,9 +114,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
             <div className="flex justify-between">
               <FaCoffee className="w-5 h-5 opacity-40" />
               <p className="text-right mb-4">
-                <span className="text-2xl">
-                  {recipe.yield_weight ?? "-"}
-                </span>{" "}
+                <span className="text-2xl">{recipe.yield_weight ?? "-"}</span>{" "}
                 ml
               </p>
             </div>
@@ -110,7 +122,9 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
               {recipe.extraction_time ? (
                 <span className="basic-chip">{parseExtractionTime()}</span>
               ) : null}
-              {recipe.tds ? <span className="basic-chip">{recipe.tds}</span> : null}
+              {recipe.tds ? (
+                <span className="basic-chip">{recipe.tds}</span>
+              ) : null}
             </div>
           </div>
         </div>
@@ -128,7 +142,9 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                 <div className="coffee-detail-section">
                   <label>Grinder: </label>
                   <p>
-                    {recipe.grinder[0]?.label ?? "-"}
+                    {recipe.grinder & recipe.grinder[0]
+                      ? (rangeList.grinder_range[`id-${recipe.grinder[0]}`].label)
+                      : "-"}
                   </p>
                 </div>
                 <div className="coffee-detail-section">
@@ -142,7 +158,9 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                 <div className="coffee-detail-section">
                   <label>Water: </label>
                   <p>
-                    {recipe.water[0]?.label ?? "-"}
+                    {recipe.water & recipe.water[0]
+                      ? (rangeList.water_range[`id-${recipe.water[0]}`].label)
+                      : "-"}
                   </p>
                 </div>
                 <div className="coffee-detail-section">
@@ -169,8 +187,10 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
               {Object.keys(recipe.palate_rates).length > 0 ? (
                 <ChartRadarTaste
                   className="w-1/2 px-6 mx-auto"
-                  labels={Object.values(recipe.palate_rates).map(palates => palates.label)}
-                  rates={Object.values(recipe.palate_rates).map(palates => palates.rate)}
+                  labels={Object.keys(recipe.palate_rates).map(
+                    (id) => rangeList.palate_range[`id-${id}`].label
+                  )}
+                  rates={Object.values(recipe.palate_rates).map((rate) => rate)}
                 />
               ) : null}
             </div>
