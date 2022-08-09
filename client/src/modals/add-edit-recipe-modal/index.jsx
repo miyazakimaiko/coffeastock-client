@@ -18,7 +18,7 @@ import YieldWeightInput from './components/YieldWeightInput';
 import ExtractTimeInput from './components/ExtractTimeInput';
 import TdsInput from './components/TdsInput';
 import TotalRateInput from './components/TotalRateInput'
-import PalateRangeInput from './components/PalateRangeInput';
+import PalateRateInput from './components/PalateRateInput';
 import MemoTextarea from './components/MemoTextarea';
 import InputConfirmSection from './components/InputConfirmSection';
 import MultiselectConfirmSection from './components/MultiselectConfirmSection';
@@ -474,7 +474,7 @@ const AddEditRecipeModal = ({targetRecipe = null}) => {
                 <div className="w-full md:w-1/2 max-w-lg mx-auto">
                   {
                     Object.keys(rangeList.palate_range).map(id => (
-                      <PalateRangeInput
+                      <PalateRateInput
                         title={rangeList.palate_range[id].label}
                         parateId={rangeList.palate_range[id].value}
                         palateRate={palateRate}

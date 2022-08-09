@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-const PalateRangeInput = ({title, parateId, palateRate, setPalateRate}) => {
+const PalateRateInput = ({title, parateId, palateRate, setPalateRate}) => {
   const [rangeWarningText, setRangeWarningText] = useState("");
 
   const setPalateLevel = (level) => {
@@ -38,4 +38,4 @@ const PalateRangeInput = ({title, parateId, palateRate, setPalateRate}) => {
   )
 }
 
-export default PalateRangeInput
+export default PalateRateInput
