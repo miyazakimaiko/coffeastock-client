@@ -98,8 +98,8 @@ module.exports = (app) => {
     const baseQuery = getGetRangeBaseQuery(req.params.rangename)
     try {
       const results = await db.query(baseQuery, [req.params.userid]);
-      const rangeItems = results['rows'][0]['items']
-      const orderedRange = reorderRangeItems(rangeItems)
+      const rangeItems = results.rows[0].items;
+      const orderedRange = reorderRangeItems(rangeItems);
       res.status(200).json(orderedRange);
     } catch (error) { next(error); }
   });
@@ -164,6 +164,7 @@ module.exports = (app) => {
         const newData = {}
         newData[newid] = {...req.body, value: newid, inUse: 0}
         const bqInsertRange = getInsertRangeBaseQuery(req.params.rangename)
+        console.log({newData})
         const result = await db.query(bqInsertRange,[newData, req.params.userid]);
         
         await db.query('COMMIT')
