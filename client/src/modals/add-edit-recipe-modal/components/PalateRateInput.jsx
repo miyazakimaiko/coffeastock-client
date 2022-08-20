@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 const PalateRateInput = ({title, parateId, palateRate, setPalateRate}) => {
+
   const [rangeWarningText, setRangeWarningText] = useState("");
 
   const setPalateLevel = (level) => {
@@ -13,7 +14,7 @@ const PalateRateInput = ({title, parateId, palateRate, setPalateRate}) => {
   }
 
   useEffect(() => {
-    if (palateRate[parateId] === undefined) {
+    if (palateRate === undefined) {
       setPalateLevel("5")
     }
   }, [])
@@ -22,14 +23,14 @@ const PalateRateInput = ({title, parateId, palateRate, setPalateRate}) => {
 
     <>
       <div className="form-section w-full height-fit">
-        <label className="font-medium">{title} : {palateRate[parateId]}</label>
+        <label className="font-medium">{title} : {palateRate}</label>
         <input 
           type="range"
           min="0" max="10"
           step="0.1"
           name={title}
           className="block w-full py-2 mx-auto"
-          value={palateRate[parateId]}
+          value={palateRate}
           onChange={e => setPalateLevel(e.target.value)}
         />
         <span className="text-xs float-right mt-1">{rangeWarningText}</span>
