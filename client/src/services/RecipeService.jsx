@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useUserData } from '../context/AccountContext';
 import { ModalStateContext } from '../context/ModalStateContext';
 import useAddRecipe from '../hooks/useAddRecipe';
