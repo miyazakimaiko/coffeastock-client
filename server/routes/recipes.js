@@ -11,19 +11,6 @@ const recipeRangeKeys = ['method', 'grinder', 'water', 'palate'];
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
 
-    // Get all recipes of a user
-    app.get(endpoint + "/user/:userid/recipes", async (req, res, next) => {
-      try {
-        const results = await db.query(`
-        SELECT * FROM recipes WHERE user_id = $1`, 
-        [req.params.userid]);
-  
-        res.status(200).json(results.rows);
-      } catch (error) {
-        next(error)
-      }
-    });
-
   // Get all recipes of a bean
   app.get(endpoint + "/user/:userid/bean/:beanid/recipes", async (req, res, next) => {
     try {
@@ -37,6 +24,19 @@ module.exports = (app) => {
       next(error)
     }
   });
+
+    // Get a recipe of a bean
+    app.get(endpoint + "/user/:userid/bean/:beanid/recipe/:recipeid", async (req, res, next) => {
+      try {
+        const results = await db.query(`
+        SELECT * FROM recipes WHERE user_id = $1 and recipe_id = $2`, 
+        [req.params.userid, req.params.recipeid]);
+  
+        res.status(200).json(results.rows[0]);
+      } catch (error) {
+        next(error)
+      }
+    });
 
   // Create a recipe of beans
   app.post(endpoint + "/user/:userid/bean/:beanid/recipe", 
