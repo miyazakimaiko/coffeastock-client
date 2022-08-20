@@ -40,10 +40,7 @@ const Register = () => {
   };
 
   const setDefaultRangeList = async (userid) => {
-    addUser.mutate(userid, {
-      onSuccess: () => toastOnBottomCenter('success', 'Your account is created successfully!'),
-      onError: (error) => toastOnBottomCenter('error', error.message)
-    })
+    addUser.mutate(userid)
   }
 
   return (
