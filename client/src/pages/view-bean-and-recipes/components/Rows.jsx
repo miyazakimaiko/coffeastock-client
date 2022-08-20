@@ -11,9 +11,16 @@ const Rows = ({data}) => {
   const userData = useUserData();
   const { id: beanId } = useParams();
   const deleteRecipe = useDeleteRecipe(userData.sub, beanId);
-  const {modal, openEditRecipeModal, openDeleteRecipeModal, closeModal, modalModeSelection} = useContext(ModalStateContext);
+  const {
+    modal,
+    openEditRecipeModal,
+    openDeleteRecipeModal,
+    closeModal,
+    modalModeSelection,
+  } = useContext(ModalStateContext);
   const [recipe, setRecipe] = useState({})
 
+  
   const onEditClick = (item) => {
     setRecipe(item);
     openEditRecipeModal();
@@ -44,8 +51,8 @@ const Rows = ({data}) => {
 
       {modal.mode === modalModeSelection.editRecipe && modal.isOpen ? (
         <AddEditRecipeModal
-          targetRecipe={recipe}
-          mode={modalModeSelection.editRecipe}
+          beanId={recipe.bean_id}
+          recipeId={recipe.recipe_id}
         />
       ) : null}
 
