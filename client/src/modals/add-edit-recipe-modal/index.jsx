@@ -2,6 +2,7 @@ import React, { useEffect, useState, createRef, useContext } from 'react'
 import { useUserData } from '../../context/AccountContext';
 import extractNewItems from '../../helpers/ExtractNewItems';
 import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
+import useRecipe from '../../hooks/useRecipe';
 import useBeans from '../../hooks/useBeans';
 import useRanges from '../../hooks/useRanges';
 import useAddRange from '../../hooks/useAddRange';
@@ -46,14 +47,16 @@ import ChartRadarTaste from '../../pages/view-bean-and-recipes/components/ChartR
 import RecipeService from '../../services/RecipeService';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import { convertItemListToIdList } from '../../helpers/ListConverter';
+import PalateSelectionInput from './components/PalateSelectionInput';
 
 
-const AddEditRecipeModal = ({targetRecipe = null}) => {
+const AddEditRecipeModal = ({recipeId = null, beanId = null}) => {
 
   const userData = useUserData();
+  const addRange = useAddRange(userData.sub);
+  const { data: targetRecipe, isLoading: recipeIsLoading } = useRecipe(userData.sub, beanId, recipeId)
   const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub);
   const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub);
-  const addRange = useAddRange(userData.sub);
   const { modal, closeModal, modalModeSelection } = useContext(ModalStateContext);
 
   const [recipe, setRecipe, onSubmit, isSubmitting] = RecipeService();
@@ -62,16 +65,24 @@ const AddEditRecipeModal = ({targetRecipe = null}) => {
   const [selectedMethod, setSelectedMethod] = useState([])
   const [selectedGrinder, setSelectedGrinder] = useState([])
   const [selectedWater, setSelectedWater] = useState([])
+  const [selectedPalates, innerSetSelectedPalates] = useState([])
   const [palateRate, innerSetPalateRate] = useState({})
+
+  const setSelectedPalates = (value) => {
+    innerSetSelectedPalates(value);
+  }
 
   const setPalateRate = (key, value) => {
     const newRate = {};
     newRate[key] = value;
-    innerSetPalateRate((palateRate) => ({ ...palateRate, ...newRate }));
+    innerSetPalateRate(palateRate => ({ ...palateRate, ...newRate }));
   };
 
-  useEffect(async () => {
-    if (beanList && targetRecipe) {
+  useEffect(() => {
+    const editMode  = Boolean(beanList) && Boolean(targetRecipe);
+    const addMode  = Boolean(beanList) && Boolean(!targetRecipe);
+
+    if (editMode) {
       setRecipe({
         ...recipe,
         ...targetRecipe,
@@ -88,17 +99,39 @@ const AddEditRecipeModal = ({targetRecipe = null}) => {
       setSelectedGrinder(targetRecipe.grinder.map(id => rangeList.grinder_range[`id-${id}`]));
       setSelectedWater(targetRecipe.water.map(id => rangeList.water_range[`id-${id}`]));
       innerSetPalateRate(targetRecipe.palate_rates);
+      setSelectedPalates(Object.keys(targetRecipe.palate_rates).map(id => rangeList.palate_range[`id-${id}`]))
     }
-  }, [beanList]);
+    else if (addMode) {
+      setSelectedPalates(
+        Object.values(rangeList.palate_range).map(val => val)
+      )
+    }
+  }, [beanListIsLoading]);
 
 
   const finalizeRecipe = () => {
+    
+    extractNewItems(selectedPalates).forEach(newPalate => {
+      const label = newPalate.value;
+      const id = Object.values(rangeList.palate_range).find(palate => palate.label === label)?.value;
+      if (id) {
+        palateRate[id] = palateRate[label];
+        delete palateRate[label];
+      }
+    }) 
+
+    const finalPalateRate = {};
+
+    for (const palate of selectedPalates) {
+      finalPalateRate[palate.value] = palateRate[palate.value]
+    }
+    
     setRecipe({...recipe, 
       bean_id: selectedBean.bean_id,
       method: convertItemListToIdList(selectedMethod, rangeList.method_range),
       grinder: convertItemListToIdList(selectedGrinder, rangeList.grinder_range),
       water: convertItemListToIdList(selectedWater, rangeList.water_range),
-      palate_rates: palateRate
+      palate_rates: finalPalateRate
     });
   }
 
@@ -107,6 +140,7 @@ const AddEditRecipeModal = ({targetRecipe = null}) => {
       method: extractNewItems(selectedMethod),
       grinder: extractNewItems(selectedGrinder),
       water: extractNewItems(selectedWater),
+      palate: extractNewItems(selectedPalates),
     };
     for (const [rangeName, entries] of Object.entries(newRangeList)) {
       for await (const entry of entries) {
@@ -287,7 +321,7 @@ const AddEditRecipeModal = ({targetRecipe = null}) => {
   ]);
 
 
-  if (beanListIsLoading || rangeListIsLoading) {
+  if (recipeIsLoading || beanListIsLoading || rangeListIsLoading) {
     return 'Loading...'
   }
 
@@ -361,10 +395,7 @@ const AddEditRecipeModal = ({targetRecipe = null}) => {
                     selectedBean={selectedBean}
                     setSelectedBean={setSelectedBean}
                   />
-                  <BrewingDateInput
-                    recipe={recipe}
-                    setRecipe={setRecipe}
-                  />
+                  <BrewingDateInput recipe={recipe} setRecipe={setRecipe} />
                   <MethodInput
                     rangeList={rangeList}
                     selectedMethod={selectedMethod}
@@ -378,21 +409,12 @@ const AddEditRecipeModal = ({targetRecipe = null}) => {
                     selectedGrinder={selectedGrinder}
                     setSelectedGrinder={setSelectedGrinder}
                   />
-                  <GrindSizeInput
-                    recipe={recipe}
-                    setRecipe={setRecipe}
-                  />
-                  <GroundsWeightInput
-                    recipe={recipe}
-                    setRecipe={setRecipe}
-                  />
+                  <GrindSizeInput recipe={recipe} setRecipe={setRecipe} />
+                  <GroundsWeightInput recipe={recipe} setRecipe={setRecipe} />
                 </div>
               </div>
               <div className="flex items-center justify-between px-2 md:px-8 pb-8">
-                <RedOutlineButton
-                  text="Cancel"
-                  onClick={closeModal}
-                />
+                <RedOutlineButton text="Cancel" onClick={closeModal} />
                 <BlueButton
                   text="Next"
                   disabled={!tabState.canOpenWaterYieldTab}
@@ -412,30 +434,15 @@ const AddEditRecipeModal = ({targetRecipe = null}) => {
                     selectedWater={selectedWater}
                     setSelectedWater={setSelectedWater}
                   />
-                  <WaterWeightInput
-                    recipe={recipe}
-                    setRecipe={setRecipe}
-                  />
-                  <WaterTempInput
-                    recipe={recipe}
-                    setRecipe={setRecipe}
-                  />
+                  <WaterWeightInput recipe={recipe} setRecipe={setRecipe} />
+                  <WaterTempInput recipe={recipe} setRecipe={setRecipe} />
                 </div>
 
                 <div className="md:w-1/2">
-                  <YieldWeightInput
-                    recipe={recipe}
-                    setRecipe={setRecipe}
-                  />
-                  <ExtractTimeInput
-                    recipe={recipe}
-                    setRecipe={setRecipe}
-                  />
+                  <YieldWeightInput recipe={recipe} setRecipe={setRecipe} />
+                  <ExtractTimeInput recipe={recipe} setRecipe={setRecipe} />
                   <TdsInput recipe={recipe} setRecipe={setRecipe} />
-                  <TotalRateInput
-                    recipe={recipe}
-                    setRecipe={setRecipe}
-                  />
+                  <TotalRateInput recipe={recipe} setRecipe={setRecipe} />
                 </div>
               </div>
 
@@ -462,26 +469,27 @@ const AddEditRecipeModal = ({targetRecipe = null}) => {
               <div className="md:flex m-8">
                 <ChartRadarTaste
                   className="w-full md:w-1/2 max-w-lg mx-auto"
-                  labels={
-                    Object.keys(palateRate).map(palateId => (
-                    rangeList.palate_range["id-" + palateId].label
-                    ))
-                  }
-                  rates={
-                    Object.values(palateRate).map(palate => parseFloat(palate))
-                  }
+                  labels={Object.values(selectedPalates).map(
+                    (palate) => palate.label
+                  )}
+                  rates={Object.values(selectedPalates).map((palate) =>
+                    parseInt(palateRate[palate.value])
+                  )}
                 />
                 <div className="w-full md:w-1/2 max-w-lg mx-auto">
-                  {
-                    Object.keys(rangeList.palate_range).map(id => (
-                      <PalateRateInput
-                        title={rangeList.palate_range[id].label}
-                        parateId={rangeList.palate_range[id].value}
-                        palateRate={palateRate}
-                        setPalateRate={setPalateRate}
-                      />
-                    ))
-                  }
+                  <PalateSelectionInput
+                    rangeList={rangeList}
+                    selectedPalates={selectedPalates}
+                    setSelectedPalates={setSelectedPalates}
+                  />
+                  {Object.values(selectedPalates).map((palate) => (
+                    <PalateRateInput
+                      title={palate.label}
+                      parateId={palate.value}
+                      palateRate={palateRate[palate.value]}
+                      setPalateRate={setPalateRate}
+                    />
+                  ))}
                 </div>
               </div>
 
@@ -595,14 +603,12 @@ const AddEditRecipeModal = ({targetRecipe = null}) => {
                       />
                     </div>
                     <div className="mb-8 md:m-8">
-                      {
-                        Object.keys(rangeList.palate_range).map(id => (
-                          <InputConfirmSection
-                          title={rangeList.palate_range[id].label}
-                          content={palateRate[rangeList.palate_range[id].value]}
+                      {selectedPalates.map((palate) => (
+                        <InputConfirmSection
+                          title={palate.label}
+                          content={palateRate[palate.value]}
                         />
-                        ))
-                      }
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -630,9 +636,7 @@ const AddEditRecipeModal = ({targetRecipe = null}) => {
                   onClick={setOpenWaterYieldTab}
                 />
                 <BlueButton
-                  text={
-                    isSubmitting ? "Submitting..." : "Submit"
-                  }
+                  text={isSubmitting ? "Submitting..." : "Submit"}
                   disabled={selectedBean === null || isSubmitting}
                   onClick={() => {
                     finalizeRecipe();
