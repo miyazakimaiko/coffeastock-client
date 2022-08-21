@@ -110,7 +110,7 @@ const AddEditRecipeModal = ({recipeId = null, beanId = null}) => {
 
 
   const finalizeRecipe = () => {
-    
+
     extractNewItems(selectedPalates).forEach(newPalate => {
       const label = newPalate.value;
       const id = Object.values(rangeList.palate_range).find(palate => palate.label === label)?.value;
@@ -120,10 +120,12 @@ const AddEditRecipeModal = ({recipeId = null, beanId = null}) => {
       }
     }) 
 
+    // remove removed palate rates that are removed from palate selection
     const finalPalateRate = {};
+    const palateIdList = convertItemListToIdList(selectedPalates, rangeList.palate_range);
 
-    for (const palate of selectedPalates) {
-      finalPalateRate[palate.value] = palateRate[palate.value]
+    for (const id of palateIdList) {
+      finalPalateRate[id] = palateRate[id]
     }
     
     setRecipe({...recipe, 
