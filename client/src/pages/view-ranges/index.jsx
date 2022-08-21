@@ -8,7 +8,7 @@ import AddEditRangeModal from '../../modals/add-edit-range-modal';
 
 
 const ViewRanges = ({cat: rangeName}) => {
-  const { modal,  openAddRangeModal, modalModeSelection } = useContext(ModalStateContext);
+  const { modal, openAddRangeModal, modalModeSelection } = useContext(ModalStateContext);
 
   const [searchValue, setSearchValue] = useState("");
 
@@ -26,7 +26,7 @@ const ViewRanges = ({cat: rangeName}) => {
             <ToolBarSearchBar value={searchValue} onChange={setSearchValue} />
           </div>
         </ToolBar>
-        <Table searchValue={searchValue} rangeName={rangeName}/>
+        <Table searchValue={searchValue} rangeName={rangeName} />
       </div>
 
       {modal.mode === modalModeSelection.addRange && modal.isOpen === true ? (

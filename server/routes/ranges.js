@@ -4,7 +4,8 @@ const { validationResult } = require('express-validator');
 const { rangeItemValidator } = require("../utils/validators");
 const { reorderRangeListItems } = require("../helper/reorderRangeItems");
 const { 
-  getGetRangeBaseQuery, 
+  getGetRangeBaseQuery,
+  getGetPagenatedRangeBaseQuery,
   getGetNextIdBaseQuery,
   getUpdateNextIdBaseQuery,
   getInsertRangeBaseQuery,
@@ -95,12 +96,12 @@ module.exports = (app) => {
 
   // Get specified range
   app.get(endpoint + "/user/:userid/range/:rangename", async (req, res, next) => {
-    const baseQuery = getGetRangeBaseQuery(req.params.rangename)
+    const { page } = req.query;
+    const baseQuery = getGetPagenatedRangeBaseQuery(req.params.rangename, page)
     try {
       const results = await db.query(baseQuery, [req.params.userid]);
-      const rangeItems = results.rows[0].items;
-      const orderedRange = reorderRangeItems(rangeItems);
-      res.status(200).json(orderedRange);
+      results.rows[0].items = reorderRangeItems(results.rows[0].items);
+      res.status(200).json(results.rows[0]);
     } catch (error) { next(error); }
   });
 
@@ -123,7 +124,6 @@ module.exports = (app) => {
   async (req, res, next) => {
 
     try {
-
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
@@ -138,6 +138,7 @@ module.exports = (app) => {
       for (const key of Object.keys(rangeItems)) {
         if (rangeItems[key].label === req.body.label) {
           uniqueName = false;
+          break;
         }
       }
 
@@ -185,7 +186,7 @@ module.exports = (app) => {
 
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        CustomException(422, errors.array()[0]['msg'])
+        CustomException(422, errors.array()[0].msg)
       }
 
       // Ensure the entry exists

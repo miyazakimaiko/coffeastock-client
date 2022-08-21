@@ -2,6 +2,22 @@ const getGetRangeBaseQuery = (rangeName) => {
   return `SELECT ${rangeName}_range::jsonb->'items' as items FROM users WHERE user_id = $1`
 }
 
+const getGetPagenatedRangeBaseQuery = (rangeName, pageNumber) => {
+  const offset = (pageNumber - 1) * 10;
+  return `
+    WITH unnested_range as (
+      SELECT 
+        jsonb_array_elements(jsonb_path_query_array(${rangeName}_range::jsonb->'items', '$.*')) as items,
+        jsonb_array_length(jsonb_path_query_array(${rangeName}_range::jsonb->'items', '$.*')) as count
+      FROM users
+      WHERE user_id = $1 
+      LIMIT 10 
+      OFFSET ${offset}
+    )
+    SELECT COALESCE(jsonb_agg(items), '[]') as items, COALESCE(jsonb_agg(count) -> 0, '0') as totalCount from unnested_range
+  `
+}
+
 const getFindEntryByIdBaseQuery = (rangeName) => {
   return `SELECT jsonb_object_keys(${rangeName}_range::jsonb->'items') as id FROM users WHERE user_id = $1`
 }
@@ -39,7 +55,8 @@ const getDeleteRangeBaseQuery = (rangeName) => {
 }
 
 module.exports = { 
-  getGetRangeBaseQuery, 
+  getGetRangeBaseQuery,
+  getGetPagenatedRangeBaseQuery,
   getGetNextIdBaseQuery,
   getUpdateNextIdBaseQuery,
   getIncrementCountInUseBaseQuery,

@@ -242,4 +242,32 @@ body {
   margin: 4px
 }
 
+.pagination-section {
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
+  button {
+    padding: 3px;
+    margin: 0 5px;
+  }
+
+  .circle-button {
+    background: white;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+
+    &:disabled,
+    &[disabled]{
+      background-color: var(--lightgrey);
+      cursor: default;
+    }
+  }
+
+  .loading {
+    position: absolute;
+    left: 60%;
+  }
+}
