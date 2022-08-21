@@ -10,7 +10,7 @@ const CoffeeSection = ({bean}) => {
     const rounded = Math.ceil(bean['grade']/10)/2;
     for (let i = 1; i <= rounded; i ++) {
       grade.push(
-        <StarFullIcon/>
+        <StarFullIcon key={bean.bean_id + i} />
       )
     }
     if (rounded % 1 !== 0) {

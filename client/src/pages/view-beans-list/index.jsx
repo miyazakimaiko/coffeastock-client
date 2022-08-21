@@ -55,7 +55,7 @@ const ViewBeansList = () => {
         let pushed = false
         Object.keys(coffeeHtmlDictionary).forEach(attrId => {
           if (bean[groupState].includes(parseInt(attrId))) {
-            coffeeHtmlDictionary[attrId].push(<CoffeeSection bean={bean} />)
+            coffeeHtmlDictionary[attrId].push(<CoffeeSection bean={bean} key={bean.bean_id} />)
             pushed = true
           }
           else if (bean.blend_ratio) {
@@ -66,13 +66,13 @@ const ViewBeansList = () => {
               }
             })
             if (found) {
-              coffeeHtmlDictionary[attrId].push(<CoffeeSection bean={bean} />)
+              coffeeHtmlDictionary[attrId].push(<CoffeeSection bean={bean} key={bean.bean_id} />)
               pushed = true
             }
           }
         })
         if (!pushed) {
-          coffeeHtmlDictionary['No Group'].push(<CoffeeSection bean={bean} />)
+          coffeeHtmlDictionary['No Group'].push(<CoffeeSection bean={bean} key={bean.bean_id} />)
         }
       }
     })
@@ -134,6 +134,7 @@ const ViewBeansList = () => {
           <ToolbarDropdown title={`Show ${showState}`}>
             {Object.values(SHOW).map((state) => {
               return <ToolbarDropdownButton
+                key={state}
                 title={state}
                 active={showState === state}
                 onClick={() => { setShowState(state) }}
@@ -144,6 +145,7 @@ const ViewBeansList = () => {
           <ToolbarDropdown title={`group by ${groupState}`}>
             {Object.values(GROUPBY).map((state) => {
               return <ToolbarDropdownButton
+                key={state}
                 title={state}
                 active={groupState === state}
                 onClick={() => { setGroupState(state) }}
@@ -172,7 +174,7 @@ const ViewBeansList = () => {
               const title = rangeList[groupState + '_range']['id-' + attrId] ?
                 rangeList[groupState + '_range']['id-' + attrId]['label'] : attrId
               return (
-                <CoffeeGroupSection title={title}>
+                <CoffeeGroupSection title={title} key={title} >
                   {sortedCoffeesHtmlDictionary[attrId]
                     ?
                     Object.values(sortedCoffeesHtmlDictionary[attrId]).map(html => html)

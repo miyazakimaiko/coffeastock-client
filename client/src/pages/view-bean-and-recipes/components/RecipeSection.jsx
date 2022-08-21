@@ -39,6 +39,7 @@ const RecipeSection = () => {
           <ToolbarDropdown title={`Order by ${orderByState}`}>
             { Object.values(orderBy).map((state) => (
               <ToolbarDropdownButton
+                key={state}
                 title={state}
                 active={orderByState === state}
                 onClick={() => {setOrderByState(state)}}
@@ -48,6 +49,7 @@ const RecipeSection = () => {
           <ToolbarDropdown title={`${orderByMethod}`}>
             { Object.values(orderMethod).map((method) => (
               <ToolbarDropdownButton
+                key={method}
                 title={method}
                 active={orderMethod === method}
                 onClick={() => {setOrderByMethod(method)}}
