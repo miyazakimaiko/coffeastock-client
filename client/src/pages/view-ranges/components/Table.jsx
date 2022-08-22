@@ -6,7 +6,8 @@ import Rows from './Rows';
 const Table = ({searchValue, rangeName}) => {
   const userData = useUserData();
   const [pageNumber, setPageNumber] = useState(0);
-  const { data: items, isLoading, isFetching } = useRange(userData.sub, rangeName)
+  const { data: items, isLoading, isFetching } = useRange(userData.sub, rangeName);
+  const [filteredItems, setFilteredItems] = useState([])
   const itemsCountToDisplay = 10;
 
   const keys = ["label", "def"];
@@ -27,7 +28,13 @@ const Table = ({searchValue, rangeName}) => {
 
   useEffect(() => {
     setPageNumber(0);
-  }, [rangeName])
+  }, [rangeName, searchValue])
+
+  useEffect(() => {
+    if (Boolean(items)) {
+      setFilteredItems(search(Object.values(items)));
+    }
+  }, [searchValue, items])
 
   useEffect(() => {
     window.scroll({ top: 0, behavior: 'smooth' });
@@ -50,7 +57,7 @@ const Table = ({searchValue, rangeName}) => {
           </thead>
           <tbody>
             <Rows
-              data={search(Object.values(items)).slice(
+              data={filteredItems.slice(
                 pageNumber * itemsCountToDisplay,
                 pageNumber * itemsCountToDisplay + itemsCountToDisplay
               )}
@@ -69,7 +76,7 @@ const Table = ({searchValue, rangeName}) => {
             Prev
           </button>
           <div className="px-4 flex">
-            {Array(Math.ceil(Object.keys(items).length / 10))
+            {Array(Math.ceil(filteredItems.length / 10))
               .fill()
               .map((_, index) => (
                 <button
@@ -86,7 +93,7 @@ const Table = ({searchValue, rangeName}) => {
           <button
             className="circle-button"
             onClick={showNextPage}
-            disabled={Object.keys(items).length <= (pageNumber + 1) * 10}
+            disabled={filteredItems.length <= (pageNumber + 1) * 10}
           >
             Next
             <span className="loading">{isFetching && "Loading..."}</span>
