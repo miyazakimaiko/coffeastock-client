@@ -2,7 +2,7 @@ import axios from './CustomAxios'
 
 export const getRanges = async (userid) => await axios.get(`/user/${userid}/ranges`).then(res => res.data)
 
-export const getRange = async (userid, range, pageNumber) => await axios.get(`/user/${userid}/range/${range}?page=${pageNumber}`).then(res => res.data)
+export const getRange = async (userid, range) => await axios.get(`/user/${userid}/range/${range}`).then(res => res.data)
 
 export const editRange = async (userid, range, rangeid, body) => await axios.post(`/user/${userid}/range/${range}/${rangeid}`, body).then(res => res.data)
 

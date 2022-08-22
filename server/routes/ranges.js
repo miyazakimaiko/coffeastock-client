@@ -5,7 +5,6 @@ const { rangeItemValidator } = require("../utils/validators");
 const { reorderRangeListItems } = require("../helper/reorderRangeItems");
 const { 
   getGetRangeBaseQuery,
-  getGetPagenatedRangeBaseQuery,
   getGetNextIdBaseQuery,
   getUpdateNextIdBaseQuery,
   getInsertRangeBaseQuery,
@@ -96,12 +95,11 @@ module.exports = (app) => {
 
   // Get specified range
   app.get(endpoint + "/user/:userid/range/:rangename", async (req, res, next) => {
-    const { page } = req.query;
-    const baseQuery = getGetPagenatedRangeBaseQuery(req.params.rangename, page)
+    const baseQuery = getGetRangeBaseQuery(req.params.rangename)
     try {
       const results = await db.query(baseQuery, [req.params.userid]);
-      results.rows[0].items = reorderRangeItems(results.rows[0].items);
-      res.status(200).json(results.rows[0]);
+      const items = reorderRangeItems(results.rows[0].items);
+      res.status(200).json(items);
     } catch (error) { next(error); }
   });
 

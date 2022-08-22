@@ -4,14 +4,15 @@ import useRange from '../../../hooks/useRange';
 import Rows from './Rows';
 
 const Table = ({searchValue, rangeName}) => {
-  const userData = useUserData()
-  const [pageNumber, setPageNumber] = useState(1);
-  const { data, isLoading, isFetching } = useRange(userData.sub, rangeName, pageNumber)
+  const userData = useUserData();
+  const [pageNumber, setPageNumber] = useState(0);
+  const { data: items, isLoading, isFetching } = useRange(userData.sub, rangeName)
+  const itemsCountToDisplay = 10;
 
   const keys = ["label", "def"];
 
-  function search(data) {
-    return data.filter((item) => 
+  function search(items) {
+    return items.filter((item) => 
       keys.some(key => item[key].toLowerCase().includes(searchValue.toLowerCase()))
     );
   }
@@ -25,7 +26,7 @@ const Table = ({searchValue, rangeName}) => {
   }
 
   useEffect(() => {
-    setPageNumber(1);
+    setPageNumber(0);
   }, [rangeName])
 
   useEffect(() => {
@@ -49,7 +50,10 @@ const Table = ({searchValue, rangeName}) => {
           </thead>
           <tbody>
             <Rows
-              data={search(Object.values(data.items))}
+              data={search(Object.values(items)).slice(
+                pageNumber * itemsCountToDisplay,
+                pageNumber * itemsCountToDisplay + itemsCountToDisplay
+              )}
               rangeName={rangeName}
             />
           </tbody>
@@ -60,18 +64,20 @@ const Table = ({searchValue, rangeName}) => {
           <button
             className="circle-button"
             onClick={showPreviousPage}
-            disabled={pageNumber === 1}
+            disabled={pageNumber === 0}
           >
             Prev
           </button>
           <div className="px-4 flex">
-            {Array(Math.ceil(data.totalcount / 10))
+            {Array(Math.ceil(Object.keys(items).length / 10))
               .fill()
               .map((_, index) => (
-                <button 
-                  className={pageNumber === index + 1 ? "font-bold cursor-text" : ""}
-                  onClick={() => setPageNumber(index + 1)}
-                  disabled={pageNumber === index + 1}
+                <button
+                  className={
+                    pageNumber === index ? "font-bold cursor-text" : ""
+                  }
+                  onClick={() => setPageNumber(index)}
+                  disabled={pageNumber === index}
                 >
                   {index + 1}
                 </button>
@@ -80,12 +86,12 @@ const Table = ({searchValue, rangeName}) => {
           <button
             className="circle-button"
             onClick={showNextPage}
-            disabled={data.totalcount <= pageNumber * 10}
+            disabled={Object.keys(items).length <= (pageNumber + 1) * 10}
           >
             Next
+            <span className="loading">{isFetching && "Loading..."}</span>
           </button>
         </div>
-        <span className="loading">{isFetching && "Loading..."}</span>
       </div>
     </>
   );
