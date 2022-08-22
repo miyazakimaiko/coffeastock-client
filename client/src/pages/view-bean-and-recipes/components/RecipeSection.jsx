@@ -5,53 +5,37 @@ import ToolBar from '../../../components/toolbar'
 import ToolbarDropdown from '../../../components/toolbar/ToolBarDropdown'
 import ToolbarDropdownButton from '../../../components/toolbar/ToolbarDropdownButton'
 import ToolBarSearchBar from '../../../components/toolbar/ToolBarSearchBar'
+import { ORDER_BY, ORDER_METHOD } from '../utils/RecipeOrderConstants'
 import Table from './Table'
-
-const orderBy = {
-  methodName: 'method (A-Z)',
-  grinderName: 'grinder (A-Z)',
-  waterName: 'water (A-Z)',
-  brewDate: "brew date",
-  waterWeight: "water weight",
-  groundsWeight: "grounds weight",
-  extractionTime: "extraction time",
-  yieldWeight: "yield weight",
-  tds: "TDS",
-}
-
-const orderMethod = {
-  desc: 'descending',
-  asc: 'ascending'
-}
 
 const RecipeSection = () => {
   const [searchValue, setSearchValue] = useState("")
-  const [orderByState, setOrderByState] = useState("");
-  const [orderByMethod, setOrderByMethod] = useState(orderMethod.desc);
+  const [orderByState, setOrderByState] = useState(ORDER_BY.DATE_EDITED);
+  const [orderByMethod, setOrderByMethod] = useState(ORDER_METHOD.ASC);
 
   return (
     <>
-      <div className="px-4 pt-8 w-full max-w-980px mx-auto mb-8 border-b border-burnt-sienna border-opacity-20">
+      <div className="p-4 mt-10 w-full max-w-980px mx-auto border-t border-burnt-sienna border-opacity-20">
         <h3 className="my-5 text-xl text-center">
           Recipes
         </h3>
         <ToolBar>
-          <ToolbarDropdown title={`Order by ${orderByState}`}>
-            { Object.values(orderBy).map((state) => (
+          <ToolbarDropdown title={`Order by ${orderByState.replace('_', ' ').replace('temp', 'temperature')}`}>
+            { Object.values(ORDER_BY).map((state) => (
               <ToolbarDropdownButton
                 key={state}
-                title={state}
+                title={state.replace('_', ' ').replace('temp', 'temperature')}
                 active={orderByState === state}
                 onClick={() => {setOrderByState(state)}}
               />
             ))}
           </ToolbarDropdown>
           <ToolbarDropdown title={`${orderByMethod}`}>
-            { Object.values(orderMethod).map((method) => (
+            { Object.values(ORDER_METHOD).map((method) => (
               <ToolbarDropdownButton
                 key={method}
                 title={method}
-                active={orderMethod === method}
+                active={orderByMethod === method}
                 onClick={() => {setOrderByMethod(method)}}
               />
             ))}
@@ -71,7 +55,7 @@ const RecipeSection = () => {
           </div>
         </ToolBar>
       </div>
-      <Table searchValue={searchValue} orderByState={orderByState} orderByMethod={orderByMethod} />
+      <Table searchValue={searchValue} orderBy={orderByState} orderMethod={orderByMethod} />
     </>
   )
 }
