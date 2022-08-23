@@ -11,6 +11,7 @@ import Dashboard from './pages/dashboard';
 import ViewBeanAndRecipes from './pages/view-bean-and-recipes';
 import ViewMyCoffees from './pages/view-beans-list';
 import ViewRanges from './pages/view-ranges';
+import CompareRecipes from './pages/compare-recipes';
 import { useGetSession, useSetUserData, useAuthenticated, useSetAuthenticated } from './context/AccountContext';
 import NavStateProvider from './context/NavStateContext';
 import ScrollBackButton from './elements/ScrollBackButton';
@@ -45,6 +46,7 @@ const App = () => {
               <Routes>
                 <Route exact path="/coffees" element={<ViewMyCoffees />} />
                 <Route exact path="/coffee/:id" element={<ViewBeanAndRecipes />} />
+                <Route exact path="/compare/recipes" element={<CompareRecipes />} />
 
                 <Route exact path="/settings/aroma" element={<ViewRanges parentCat={'Coffee Beans'} cat={'aroma'}/>} />
                 <Route exact path="/settings/farm" element={<ViewRanges parentCat={'Coffee Beans'} cat={'farm'}/>} />

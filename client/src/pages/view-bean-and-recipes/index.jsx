@@ -57,7 +57,7 @@ const ViewBeanAndRecipes = () => {
           }
         ></ToolBar>
         <div className="my-4">
-          <div className="relative bg-white p-2 py-12 rounded-lg shadow-sm">
+          <div className="relative p-2 py-12">
             <div className="absolute top-5 right-4">
               <Dropdown dropdownText="" type="dot">
                 <div className="dropdown-content">

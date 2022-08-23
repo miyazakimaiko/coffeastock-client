@@ -99,7 +99,17 @@ const Nav = (props) => {
                 + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                 onClick={pinnedNavbar ? null : showNavbar}>
                 <BookOpenIcon className="h-4 w-4"></BookOpenIcon>
-                <span className="ml-4">My Coffees</span>
+                <span className="ml-4">View Coffees</span>
+              </NavLink>
+            </li>
+
+            <li className="h-12 flex items-center justify-between">
+              <NavLink exact="true" to="compare/recipes"
+                className={({ isActive }) => "flex items-center" 
+                + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
+                onClick={pinnedNavbar ? null : showNavbar}>
+                <BookOpenIcon className="h-4 w-4"></BookOpenIcon>
+                <span className="ml-4">Compare Recipes</span>
               </NavLink>
             </li>
           </ul>

@@ -4,7 +4,7 @@ import Select from 'react-select';
 import { unescapeHtml } from '../helpers/HtmlConverter';
 
 const FormMultiSelect = ({
-  title,
+  title = null,
   options,
   value,
   invalid = false,
@@ -34,10 +34,13 @@ const FormMultiSelect = ({
 
   return (
     <div className="form-section">
-      <div className="mb-1">
-        <label className="font-medium">{title}</label>
-        <span className="text-xs ml-2">{warningText}</span>
-      </div>
+      {title || warningText ? (
+        <div className="mb-1">
+          <label className="font-medium">{title}</label>
+          <span className="text-xs ml-2">{warningText}</span>
+        </div>
+        ) : null
+      }
       {isCreatable ? (
         <CreatableSelect
           isMulti={isMulti}
