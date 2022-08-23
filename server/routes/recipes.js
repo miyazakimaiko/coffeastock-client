@@ -18,7 +18,13 @@ module.exports = (app) => {
       SELECT * FROM recipes WHERE user_id = $1 AND bean_id = $2`, 
       [req.params.userid, req.params.beanid]);
 
-      res.status(200).json(results.rows);
+      const recipes = results.rows;
+      for(let i=0; i<recipes.length; i++) {
+        recipes[i]['value'] = recipes[i].recipe_id;
+        recipes[i]['label'] = `Recipe No.${recipes[i].recipe_no}`;
+      }
+
+      res.status(200).json(recipes);
 
     } catch (error) {
       next(error)
@@ -31,8 +37,12 @@ module.exports = (app) => {
         const results = await db.query(`
         SELECT * FROM recipes WHERE user_id = $1 and recipe_id = $2`, 
         [req.params.userid, req.params.recipeid]);
+
+        const recipe = results.rows[0];
+        recipe['value'] = recipe.recipe_id;
+        recipe['label'] = `Recipe No.${recipe.recipe_no}`;
   
-        res.status(200).json(results.rows[0]);
+        res.status(200).json(recipe);
       } catch (error) {
         next(error)
       }
@@ -51,10 +61,22 @@ module.exports = (app) => {
       }
       await db.query('BEGIN');
 
-      const results = await db.query(`
+      const recipeNoResult = await db.query(`
+          SELECT recipe_seq 
+          FROM beans
+          WHERE user_id = $1
+            AND bean_id = $2
+        `,
+        [
+          req.params.userid,         // $1
+          req.params.beanid          // $2
+        ]);
+
+      const insertionResult = await db.query(`
       INSERT INTO RECIPES (
         user_id,
-        bean_id, 
+        bean_id,
+        recipe_no,
         brew_date, 
         method, 
         grinder, 
@@ -70,11 +92,12 @@ module.exports = (app) => {
         palate_rates, 
         memo
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
       RETURNING *`,
       [
         req.params.userid,
         req.params.beanid,
+        recipeNoResult.rows[0].recipe_seq,
         req.body.brew_date,
         req.body.method, 
         req.body.grinder, 
@@ -113,9 +136,20 @@ module.exports = (app) => {
         }
       }
 
+      await db.query(`
+        UPDATE beans
+        SET recipe_seq = recipe_seq + 1
+        WHERE user_id = $1
+          AND bean_id = $2
+      `,
+      [
+        req.params.userid,         // $1
+        req.params.beanid          // $2
+      ]);
+
       await db.query('COMMIT');
 
-      res.status(200).json(results.rows);
+      res.status(200).json(insertionResult.rows);
 
     } catch (error) {
       next(error);
