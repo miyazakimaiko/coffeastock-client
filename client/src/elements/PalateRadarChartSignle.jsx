@@ -20,7 +20,8 @@ ChartJS.register(
 );
 
 
-const ChartRadarTaste = ({ className, labels, rates }) => {
+const PalateRadarChartSingle = ({ className, labels, rates }) => {
+
   const data = {
     labels: labels,
     datasets: [
@@ -33,13 +34,12 @@ const ChartRadarTaste = ({ className, labels, rates }) => {
       },
     ],
   };
-
   const options = {
     scale: {
       min: 0,
       max: 10,
-  },
-};
+    },
+  };
 
   return (
     <div className={className}>
@@ -48,4 +48,4 @@ const ChartRadarTaste = ({ className, labels, rates }) => {
   )
 }
 
-export default ChartRadarTaste
+export default PalateRadarChartSingle
