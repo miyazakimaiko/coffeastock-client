@@ -43,7 +43,7 @@ import {
 } from "./helpers/InputValidators";
 import { formatExtractionTimeInputValue } from "./helpers/formatters"
 import { unescapeHtml } from "../../helpers/HtmlConverter"
-import ChartRadarTaste from '../../pages/view-bean-and-recipes/components/ChartRadarTaste';
+import PalateRadarChartSingle from '../../elements/PalateRadarChartSignle';
 import RecipeService from '../../services/RecipeService';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import { convertItemListToIdList } from '../../helpers/ListConverter';
@@ -469,7 +469,7 @@ const AddEditRecipeModal = ({recipeId = null, beanId = null}) => {
               className="overflow-hidden h-0 opacity-0 ease-linear transition-all duration-300"
             >
               <div className="md:flex m-8">
-                <ChartRadarTaste
+                <PalateRadarChartSingle
                   className="w-full md:w-1/2 max-w-lg mx-auto"
                   labels={Object.values(selectedPalates).map(
                     (palate) => palate.label

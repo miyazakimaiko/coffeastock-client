@@ -3,7 +3,7 @@ import { GiCoffeeBeans } from 'react-icons/gi'
 import { MdWaterDrop } from 'react-icons/md'
 import { FaCoffee } from 'react-icons/fa'
 import { HiOutlineChevronDown, HiOutlineChevronUp } from 'react-icons/hi'
-import ChartRadarTaste from './ChartRadarTaste'
+import PalateRadarChartSingle from '../../../elements/PalateRadarChartSignle'
 import { generateStarIconList } from '../../../helpers/GenerateIconList'
 import Dropdown from '../../../elements/Dropdown'
 import { useUserData } from '../../../context/AccountContext'
@@ -185,7 +185,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                 </div>
               </div>
               {Object.keys(recipe.palate_rates).length > 0 ? (
-                <ChartRadarTaste
+                <PalateRadarChartSingle
                   className="w-1/2 px-6 mx-auto"
                   labels={Object.keys(recipe.palate_rates).map(
                     (id) => rangeList.palate_range[`id-${id}`].label
