@@ -4,6 +4,7 @@ import { MdWaterDrop } from 'react-icons/md'
 import { FaCoffee } from 'react-icons/fa'
 import { HiOutlineChevronDown, HiOutlineChevronUp } from 'react-icons/hi'
 import PalateRadarChartSingle from '../../../elements/PalateRadarChartSignle'
+import convertIntervalObjToString from '../../../helpers/ConvertIntervalObjToString.js'
 import { generateStarIconList } from '../../../helpers/GenerateIconList'
 import Dropdown from '../../../elements/Dropdown'
 import { useUserData } from '../../../context/AccountContext'
@@ -16,17 +17,6 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
   const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub);
   
   const [openDetails, setOpenDetails] = useState(false);
-
-
-  const parseExtractionTime = () => {
-
-    const extractionTime = Object.keys(recipe.extraction_time).map((timeUnit) => {
-      const unit =
-        timeUnit === "hours" ? "hr" : timeUnit === "minutes" ? "min" : "sec";
-      return `${recipe.extraction_time[timeUnit]} ${unit} `;
-    });
-    return extractionTime;
-  };
 
   if (rangeListIsLoading) {
     return "Loading...."
@@ -63,7 +53,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
             </p>
             <h3 className="text-xl my-2">
               {recipe.method & recipe.method[0]
-                ? (rangeList.method_range[`id-${recipe.method[0]}`].label)
+                ? rangeList.method_range[`id-${recipe.method[0]}`].label
                 : "-"}
             </h3>
             <div className="flex justify-end">
@@ -120,7 +110,9 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
             </div>
             <div className="flex justify-end flex-wrap">
               {recipe.extraction_time ? (
-                <span className="basic-chip">{parseExtractionTime()}</span>
+                <span className="basic-chip">
+                  {convertIntervalObjToString(recipe.extraction_time)}
+                </span>
               ) : null}
               {recipe.tds ? (
                 <span className="basic-chip">{recipe.tds}</span>
@@ -143,7 +135,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                   <label>Grinder: </label>
                   <p>
                     {recipe.grinder & recipe.grinder[0]
-                      ? (rangeList.grinder_range[`id-${recipe.grinder[0]}`].label)
+                      ? rangeList.grinder_range[`id-${recipe.grinder[0]}`].label
                       : "-"}
                   </p>
                 </div>
@@ -159,7 +151,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                   <label>Water: </label>
                   <p>
                     {recipe.water & recipe.water[0]
-                      ? (rangeList.water_range[`id-${recipe.water[0]}`].label)
+                      ? rangeList.water_range[`id-${recipe.water[0]}`].label
                       : "-"}
                   </p>
                 </div>
@@ -173,7 +165,11 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                 </div>
                 <div className="coffee-detail-section">
                   <label>Extraction Time: </label>
-                  <p>{recipe.extraction_time ? parseExtractionTime() : "-"}</p>
+                  <p>
+                    {recipe.extraction_time
+                      ? convertIntervalObjToString(recipe.extraction_time)
+                      : "-"}
+                  </p>
                 </div>
                 <div className="coffee-detail-section">
                   <label>Yield Weight: </label>
