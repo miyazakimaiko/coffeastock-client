@@ -20,8 +20,10 @@ module.exports = (app) => {
 
       const recipes = results.rows;
       for(let i=0; i<recipes.length; i++) {
-        recipes[i]['value'] = recipes[i].recipe_id;
-        recipes[i]['label'] = `Recipe No.${recipes[i].recipe_no}`;
+        const recipe = recipes[i];
+        recipes[i]['value'] = `${recipe.bean_id}-${recipe.recipe_no}`;
+        recipes[i]['label'] = `Recipe No.${recipe.recipe_no}`;
+        recipes[i]['recipe_id'] = `${recipe.bean_id}-${recipe.recipe_no}`
       }
 
       res.status(200).json(recipes);
@@ -32,15 +34,16 @@ module.exports = (app) => {
   });
 
     // Get a recipe of a bean
-    app.get(endpoint + "/user/:userid/bean/:beanid/recipe/:recipeid", async (req, res, next) => {
+    app.get(endpoint + "/user/:userid/bean/:beanid/recipe/:recipeno", async (req, res, next) => {
       try {
         const results = await db.query(`
-        SELECT * FROM recipes WHERE user_id = $1 and recipe_id = $2`, 
-        [req.params.userid, req.params.recipeid]);
+        SELECT * FROM recipes WHERE user_id = $1 AND bean_id = $2 AND recipe_no = $3`, 
+        [req.params.userid, req.params.beanid, req.params.recipeno]);
 
         const recipe = results.rows[0];
-        recipe['value'] = recipe.recipe_id;
+        recipe['value'] = `${recipe.bean_id}-${recipe.recipe_no}`;
         recipe['label'] = `Recipe No.${recipe.recipe_no}`;
+        recipe['recipe_id'] = `${recipe.bean_id}-${recipe.recipe_no}`
   
         res.status(200).json(recipe);
       } catch (error) {
@@ -157,7 +160,7 @@ module.exports = (app) => {
   }); 
   
   // update a recipe of beans
-  app.post(endpoint + "/user/:userid/bean/:beanid/recipe/:recipeid",
+  app.post(endpoint + "/user/:userid/bean/:beanid/recipe/:recipeno",
   recipeValidator,
   async (req, res, next) => {
 
@@ -174,11 +177,11 @@ module.exports = (app) => {
         `SELECT * FROM recipes
         WHERE user_id = $1 
           AND bean_id = $2
-          AND recipe_id = $3`, 
+          AND recipe_no = $3`, 
         [
           req.params.userid,
           req.params.beanid,
-          req.params.recipeid
+          req.params.recipeno
         ]
       );
 
@@ -253,7 +256,7 @@ module.exports = (app) => {
       total_rate = $12,
       palate_rates = $13, 
       memo = $14
-      WHERE user_id = $15 AND bean_id = $16 AND recipe_id = $17 RETURNING *`,
+      WHERE user_id = $15 AND bean_id = $16 AND recipe_no = $17 RETURNING *`,
       [
         req.body.brew_date,
         req.body.method,
@@ -271,7 +274,7 @@ module.exports = (app) => {
         req.body.memo,
         req.params.userid,
         req.params.beanid,
-        req.params.recipeid
+        req.params.recipeno
       ]);
 
       await db.query('COMMIT');
@@ -284,13 +287,13 @@ module.exports = (app) => {
   });
 
   // delete a recipe
-  app.post(endpoint + "/user/:userid/bean/:beanid/recipe/delete/:recipeid", async (req, res, next) => {
+  app.post(endpoint + "/user/:userid/bean/:beanid/recipe/delete/:recipeno", async (req, res, next) => {
     try {
       await db.query('BEGIN');
 
       const results = await db.query(`
-        DELETE FROM recipes WHERE user_id = $1 AND bean_id = $2 AND recipe_id = $3`,
-        [req.params.userid, req.params.beanid, req.params.recipeid]
+        DELETE FROM recipes WHERE user_id = $1 AND bean_id = $2 AND recipe_no = $3`,
+        [req.params.userid, req.params.beanid, req.params.recipeno]
       );
 
       for (const rangeKey of recipeRangeKeys) {

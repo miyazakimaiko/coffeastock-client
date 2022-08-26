@@ -334,10 +334,9 @@ VALUES (
 );
 
 CREATE TABLE RECIPES (
-    recipe_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id varchar(255) NOT NULL,
     bean_id uuid NOT NULL,
-    recipe_no INT,
+    recipe_no INT NOT NULL,
     brew_date date,
     total_rate NUMERIC(4, 1),
     method INT [],
@@ -355,7 +354,8 @@ CREATE TABLE RECIPES (
     FOREIGN KEY (user_id)
         REFERENCES USERS (user_id),
     FOREIGN KEY (bean_id)
-        REFERENCES BEANS (bean_id)
+        REFERENCES BEANS (bean_id),
+    PRIMARY KEY (bean_id, recipe_no)
 );
 
 -- How to manage palate rates?

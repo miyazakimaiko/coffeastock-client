@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from 'react-query'
 import * as apiRecipes from '../api/Recipes'
+import extractRecipeNoFromRecipeId from '../helpers/ExtractRecipeNoFromRecipeId';
 
 export default function useRecipes(userid, beanid) {
   const queryClient = useQueryClient();
@@ -10,10 +11,21 @@ export default function useRecipes(userid, beanid) {
     {
       enabled: Boolean(userid, beanid),
       onSuccess: recipes => {
-        Object.values(recipes).forEach(recipe => {
-          queryClient.setQueryData(['bean', recipe.bean_id, 'recipe', recipe.recipe_id], recipe)
+        recipes.forEach(recipe => {
+          queryClient.setQueryData(
+            [
+              "bean",
+              recipe.bean_id,
+              "recipe",
+              extractRecipeNoFromRecipeId(recipe.recipe_id),
+            ],
+            recipe
+          );
         });
       }
     }
   );
 }
+
+//["bean","5ce1ea33-411c-491f-9394-2660127d4fec","recipe","3"]
+//["bean","5ce1ea33-411c-491f-9394-2660127d4fec","recipe","3"]
