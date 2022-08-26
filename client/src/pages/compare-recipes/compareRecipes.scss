@@ -1,0 +1,29 @@
+.recipe-conparison-container {
+  border: 1px solid var(--greycreme);
+
+  .recipe-conparison-section {
+    display: flex;
+    justify-content: center;
+    padding: 10px 5px;
+
+    &:nth-child(even) {
+      background-color: var(--lightcreme);
+    }
+    
+    &>p {
+      width: 40%;
+
+      &:nth-child(1) {
+        text-align: right;
+      }
+    }
+    &>div {
+      width: 20%;
+      text-align: center;
+      font-weight: 500;
+    }
+    .name {
+      margin: 0 20px;
+    }
+  }
+}
