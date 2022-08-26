@@ -51,7 +51,6 @@ const Rows = ({data}) => {
 
       {modal.mode === modalModeSelection.editRecipe && modal.isOpen ? (
         <AddEditRecipeModal
-          beanId={recipe.bean_id}
           recipeId={recipe.recipe_id}
         />
       ) : null}

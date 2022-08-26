@@ -50,11 +50,11 @@ import { convertItemListToIdList } from '../../helpers/ListConverter';
 import PalateSelectionInput from './components/PalateSelectionInput';
 
 
-const AddEditRecipeModal = ({recipeId = null, beanId = null}) => {
+const AddEditRecipeModal = ({recipeId = null}) => {
 
   const userData = useUserData();
   const addRange = useAddRange(userData.sub);
-  const { data: targetRecipe, isLoading: recipeIsLoading } = useRecipe(userData.sub, beanId, recipeId)
+  const { data: targetRecipe, isLoading: recipeIsLoading } = useRecipe(userData.sub, recipeId)
   const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub);
   const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub);
   const { modal, closeModal, modalModeSelection } = useContext(ModalStateContext);

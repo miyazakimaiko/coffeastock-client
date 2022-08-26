@@ -1,4 +1,3 @@
-import { XIcon } from '@heroicons/react/outline'
 import React, { useContext } from 'react'
 import { ModalStateContext } from '../../context/ModalStateContext'
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer';
