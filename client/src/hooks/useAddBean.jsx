@@ -2,11 +2,11 @@ import { useMutation, useQueryClient } from 'react-query'
 import * as api from '../api/Beans'
 import toastOnBottomCenter from '../utils/customToast'
 
-export default function useAddBean(userid) {
+export default function useAddBean(userid, token) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (body) => await api.addBean(userid, body),
+    async (body) => await api.addBean(userid, body, token),
     {
       enabled: Boolean(userid),
       onSuccess: async () => {

@@ -2,12 +2,12 @@ import { useQuery, useQueryClient } from 'react-query'
 import * as apiRecipes from '../api/Recipes'
 import extractRecipeNoFromRecipeId from '../helpers/ExtractRecipeNoFromRecipeId';
 
-export default function useRecipes(userid, beanid) {
+export default function useRecipes(userid, beanid, token) {
   const queryClient = useQueryClient();
 
   return useQuery(
     ['bean', beanid, 'recipes'], 
-    () => apiRecipes.getRecipes(userid, beanid),
+    () => apiRecipes.getRecipes(userid, beanid, token),
     {
       enabled: Boolean(userid, beanid),
       onSuccess: recipes => {

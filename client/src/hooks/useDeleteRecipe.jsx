@@ -2,13 +2,13 @@ import { useMutation, useQueryClient } from 'react-query'
 import * as api from '../api/Recipes'
 import toastOnBottomCenter from '../utils/customToast'
 
-export default function useDeleteRecipe(userid, beanid) {
+export default function useDeleteRecipe(userid, beanid, token) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (body) => await api.deleteRecipe(userid, beanid, body),
+    async (body) => await api.deleteRecipe(userid, beanid, body, token),
     {
-      enabled: Boolean(userid && beanid),
+      enabled: userid && beanid && token ? true : false,
       onSuccess: async () => {
         await queryClient.invalidateQueries(["bean", beanid, "recipes"])
         await queryClient.invalidateQueries('ranges')

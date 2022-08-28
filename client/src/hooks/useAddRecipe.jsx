@@ -2,11 +2,11 @@ import { useMutation, useQueryClient } from 'react-query'
 import * as api from '../api/Recipes'
 import toastOnBottomCenter from '../utils/customToast'
 
-export default function useAddRecipe(userid) {
+export default function useAddRecipe(userid, token) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (body) => await api.addRecipe(userid, body.bean_id, body),
+    async (body) => await api.addRecipe(userid, body.bean_id, body, token),
     {
       enabled: Boolean(userid),
       onSuccess: (variables) => {

@@ -1,12 +1,12 @@
 import { useQuery, useQueryClient } from 'react-query'
 import * as api from '../api/Beans'
 
-export default function useBeans(userid) {
+export default function useBeans(userid, token) {
   const queryClient = useQueryClient();
 
   return useQuery(
     'beans', 
-    () => api.getBeans(userid),
+    () => api.getBeans(userid, token),
     {
       enabled: Boolean(userid),
       onSuccess: beans => {

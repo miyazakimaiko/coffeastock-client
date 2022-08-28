@@ -24,7 +24,7 @@ ChartJS.register(
 
 const PalateRadarChartDouble = ({ className, redTitle, blueTitle, redRatesObj, blueRatesObj }) => {
   const userData = useUserData();
-  const { data: palateRange, isLoading: palateRangeIsLoading } = useRange(userData.sub, 'palate')
+  const { data: palateRange, isLoading: palateRangeIsLoading } = useRange(userData.sub, 'palate', userData.accessToken.jwtToken)
 
   const [labels, setLabels] = useState([]);
   const [redRates, setRedRates] = useState([]);
