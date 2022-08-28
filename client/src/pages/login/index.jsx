@@ -1,5 +1,5 @@
 import { LoginIcon } from '@heroicons/react/outline'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import * as api from '../../api/Users';
 import toastOnBottomCenter from '../../utils/customToast';
@@ -11,7 +11,6 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const userData = useUserData();
   const setUserData = useSetUserData();
   const authenticate = useAuthenticate();
   const getSession = useGetSession();

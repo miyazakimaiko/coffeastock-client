@@ -5,7 +5,6 @@ import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
 import UserPool from '../../utils/UserPool'
 import toastOnBottomCenter from '../../utils/customToast'
 import CoffeeBagLeft from '../../assets/svgs/CoffeeBagLeft'
-import useAddUser from '../../hooks/useAddUser';
 import ConfirmUserModal from '../../modals/confirm-user-modal';
 
 const Register = () => {
@@ -34,9 +33,8 @@ const Register = () => {
         toastOnBottomCenter('error', err.message)
       } else {
         try {
-          const userId = data.userSub;
-          // setDefaultRangeList(userId);
           setCognitoUser(data.user);
+          console.log({data})
           setShowVerificationModal(true);
         } catch (error) {
           toastOnBottomCenter('error', error.message)
@@ -47,7 +45,6 @@ const Register = () => {
 
   function verifyUser(event) {
     event.preventDefault();
-
     cognitoUser.confirmRegistration(verificationCode, true, function(err, result) {
       if (err) {
         toastOnBottomCenter('error', err.message);
@@ -56,6 +53,16 @@ const Register = () => {
       toastOnBottomCenter('success', 'Accunt Confirmed.');
       navigate('/login', { replace: true } );
     })
+  }
+
+  function resendVerificationCode() {
+    cognitoUser.resendConfirmationCode(function(err, result) {
+      if (err) {
+        toastOnBottomCenter('error', err.message)
+        return;
+      }
+      toastOnBottomCenter('success', 'Verification Code has been sent.')
+    });
   }
 
   return (
@@ -179,6 +186,7 @@ const Register = () => {
           email={email}
           verificationCode={verificationCode}
           setVerificationCode={setVerificationCode}
+          resendVerificationCode={resendVerificationCode}
           onSubmit={verifyUser}
         />
       ) : null}

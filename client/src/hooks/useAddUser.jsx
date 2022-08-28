@@ -1,6 +1,5 @@
 import { useMutation } from 'react-query'
 import * as api from '../api/Users'
-import { useUserData } from '../context/AccountContext'
 import toastOnBottomCenter from '../utils/customToast'
 
 export default function useAddUser() {
@@ -72,7 +71,7 @@ export default function useAddUser() {
   return useMutation(
     async (userData) => await api.addUser(userData.sub, body, userData.accessToken.jwtToken),
     {
-      onSuccess: () => toastOnBottomCenter('success', 'Your account is created successfully!'),
+      onSuccess: () => toastOnBottomCenter('success', 'Welcome to Coffee Journal!'),
       onError: error => toastOnBottomCenter('error', error.message)
     }
   )

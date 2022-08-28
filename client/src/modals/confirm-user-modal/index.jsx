@@ -1,7 +1,7 @@
 import { LoginIcon } from '@heroicons/react/outline'
 import React from 'react'
 
-const ConfirmUserModal = ({ email, verificationCode, setVerificationCode, onSubmit }) => {
+const ConfirmUserModal = ({ email, verificationCode, setVerificationCode, resendVerificationCode, onSubmit }) => {
 
   return (
     <>
@@ -26,12 +26,7 @@ const ConfirmUserModal = ({ email, verificationCode, setVerificationCode, onSubm
                 . Didn't receive it? Check your spam folder.
               </p>
             </div>
-            <form 
-                method="#" 
-                action="#"
-                className="w-full"
-                onSubmit={onSubmit}
-              >
+            <div className="w-full">
               <div className="card-content w-80 mx-auto">
                 <div className="pb-6">
                   <input type="text" name="code" placeholder="Enter Verification Code" className="blue-outline-transition bg-creme block w-full py-2 px-3 rounded-md text-lg"
@@ -42,17 +37,18 @@ const ConfirmUserModal = ({ email, verificationCode, setVerificationCode, onSubm
               </div>
               <div className="flex items-center justify-end">
                 <div className="resend">
-                  <a href="#pablo">Resend Verification Code</a>
+                  <button onClick={resendVerificationCode}>Resend Verification Code</button>
                 </div>
                 <button 
                   type="submit"
+                  onClick={onSubmit}
                   className="shadow-sm rounded-3xl pl-6 pr-8 py-2 my-2 ml-4 bg-blue button-transition text-white flex"
                 >
                   <LoginIcon className="h-5 w-5 my-auto" />
                   <span className="ml-1">Submit</span>
                 </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
