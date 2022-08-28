@@ -5,7 +5,7 @@ import Pool from '../utils/UserPool'
 const AccountContext = createContext()
 
 const AccountProvider = (props) => {
-  const [userData, innerSetUserData] = useState({})
+  const [userData, innerSetUserData] = useState({});
 
   const setUserData = (data) => {
     innerSetUserData(data);
@@ -144,4 +144,12 @@ function useSignout() {
   return context.signout
 }
 
-export {AccountProvider, useAuthenticate, useGetSession, useUserData, useSetUserData, useAuthenticated, useSetAuthenticated, useSignout }
+export { AccountProvider, 
+        useAuthenticate, 
+        useGetSession, 
+        useUserData, 
+        useSetUserData, 
+        useAuthenticated, 
+        useSetAuthenticated, 
+        useSignout,
+      }

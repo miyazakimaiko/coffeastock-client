@@ -1,19 +1,23 @@
 import { LoginIcon } from '@heroicons/react/outline'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import * as api from '../../api/Users';
 import toastOnBottomCenter from '../../utils/customToast';
-import { useAuthenticate, useGetSession, useSetUserData, useSetAuthenticated } from '../../context/AccountContext';
+import { useAuthenticate, useGetSession, useSetUserData, useSetAuthenticated, useUserData } from '../../context/AccountContext';
+import useAddUser from '../../hooks/useAddUser';
 
 
 const Login = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const setUserData = useSetUserData()
-  const authenticate = useAuthenticate()
-  const getSession = useGetSession()
-  const setAuthenticated = useSetAuthenticated()
-  const navigate = useNavigate()
+  const userData = useUserData();
+  const setUserData = useSetUserData();
+  const authenticate = useAuthenticate();
+  const getSession = useGetSession();
+  const setAuthenticated = useSetAuthenticated();
+  const addUser = useAddUser();
+  const navigate = useNavigate();
 
 
   const onSubmit = (event) => {
@@ -27,8 +31,7 @@ const Login = () => {
         getSession().then((session) => {
           setUserData(session);
           setAuthenticated(true);
-          navigate('/', {replace: true})
-          toastOnBottomCenter('success', 'Logged in successfully.')
+          findOrCreateUser(session);
         });
       })
       .catch(err => {
@@ -37,6 +40,17 @@ const Login = () => {
     }
   };
 
+  async function findOrCreateUser(userData) {
+    if (userData.sub) {
+      const user = await api.findUser(userData.sub, userData.accessToken.jwtToken);
+
+      if (!user) {
+        addUser.mutate(userData);
+      }
+      navigate('/', {replace: true});
+      toastOnBottomCenter('success', 'Logged in successfully.');
+    }
+  }
 
   return (
     <div className="h-full">

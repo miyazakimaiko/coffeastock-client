@@ -5,8 +5,6 @@ import toastOnBottomCenter from '../utils/customToast'
 
 export default function useAddUser() {
 
-  const userData = useUserData()
-
   const body = {
     "origin_range": {
       "nextId": 121,
@@ -72,7 +70,7 @@ export default function useAddUser() {
 
   }
   return useMutation(
-    async (userid) => await api.addUser(userid, body),
+    async (userData) => await api.addUser(userData.sub, body, userData.accessToken.jwtToken),
     {
       onSuccess: () => toastOnBottomCenter('success', 'Your account is created successfully!'),
       onError: error => toastOnBottomCenter('error', error.message)

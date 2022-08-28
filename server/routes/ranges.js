@@ -63,6 +63,20 @@ module.exports = (app) => {
     }
   });
 
+  app.get(endpoint + "/user/:userid", async (req, res, next) => {
+    try {
+      const result = await db.query(`SELECT user_id FROM users WHERE user_id = $1`, [req.params.userid]);
+
+      if (result.rows.length === 0) {
+        res.status(200).json(false);
+      }
+      res.status(200).json(true);
+
+    } catch(err) {
+      next(err);
+    }
+  });
+
   // Get all custom range of a user
   app.get(endpoint + "/user/:userid/ranges", async (req, res, next) => {
     try {
@@ -82,7 +96,7 @@ module.exports = (app) => {
       [req.params.userid]);
 
       if(results.rows.length === 0) {
-        CustomException(404, "Not Found")
+        CustomException(404, "User Not Found")
       }
       const rangeItemsList = results.rows[0];
       const orderedRangeList = reorderRangeListItems(rangeItemsList)

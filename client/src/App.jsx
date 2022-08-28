@@ -15,6 +15,7 @@ import CompareRecipes from './pages/compare-recipes';
 import { useGetSession, useSetUserData, useAuthenticated, useSetAuthenticated } from './context/AccountContext';
 import NavStateProvider from './context/NavStateContext';
 import ScrollBackButton from './elements/ScrollBackButton';
+import ConfirmUser from './pages/confirm-user';
 
 const App = () => {
   const mainRef = createRef();
@@ -64,6 +65,7 @@ const App = () => {
               :
               <Routes>
                 <Route exact path='/register' element={<Register />} />
+                <Route exact path='/confirm' element={<ConfirmUser/>} />
                 <Route exact path='/login' element={<Login />} />
                 <Route path='/' element={<Login />} />
               </Routes>
