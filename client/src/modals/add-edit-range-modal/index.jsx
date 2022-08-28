@@ -14,8 +14,8 @@ import { ModalStateContext } from '../../context/ModalStateContext'
 
 const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
   const userData = useUserData()
-  const editRange = useEditRange(userData.sub, rangeName)
-  const addRange = useAddRange(userData.sub)
+  const editRange = useEditRange(userData.sub, rangeName, userData.accessToken.jwtToken)
+  const addRange = useAddRange(userData.sub, userData.accessToken.jwtToken)
   const {modal, closeModal, modalModeSelection} = useContext(ModalStateContext);
 
 

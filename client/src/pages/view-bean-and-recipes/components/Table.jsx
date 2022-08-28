@@ -9,8 +9,8 @@ import Rows from './Rows';
 const Table = ({searchValue, orderBy, orderMethod}) => {
   const { id } = useParams();
   const userData = useUserData();
-  const { data: ranges, isLoading: rangesAreLoading } = useRanges(userData.sub);
-  const { data: recipes, isLoading: recipesAreLoading } = useRecipes(userData.sub, id);
+  const { data: ranges, isLoading: rangesAreLoading } = useRanges(userData.sub, userData.accessToken.jwtToken);
+  const { data: recipes, isLoading: recipesAreLoading } = useRecipes(userData.sub, id, userData.accessToken.jwtToken);
   const [sortedRecipes, setSortedRecipes] = useState(recipes)
 
   useEffect(() => {

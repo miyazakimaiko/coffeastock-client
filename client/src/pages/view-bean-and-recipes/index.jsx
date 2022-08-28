@@ -21,16 +21,16 @@ import './ViewBeanAndRecipes.scss'
 const ViewBeanAndRecipes = () => {
   const { id } = useParams();
   const userData = useUserData()
-  const { data: targetBean, isLoading: targetBeanIsLoading } = useBean(userData.sub, id)
-  const deleteBean = useDeleteBean(userData.sub, id)
+  const { data: targetBean, isLoading: targetBeanIsLoading } = useBean(userData.sub, id, userData.accessToken.jwtToken)
+  const deleteBean = useDeleteBean(userData.sub, userData.accessToken.jwtToken)
 
   const navigate = useNavigate()
 
-  const {modal, openEditBeanModal, openDeleteBeanModal, closeModal, modalModeSelection} = useContext(ModalStateContext);
-
-  useEffect(() => {
-    window.scroll({ top: 0, behavior: 'smooth' });
-  },[]);
+  const { modal, 
+          openEditBeanModal, 
+          openDeleteBeanModal, 
+          closeModal, 
+          modalModeSelection} = useContext(ModalStateContext);
 
   const onDeleteSubmit = () => {
     deleteBean.mutate(targetBean, {
@@ -38,6 +38,10 @@ const ViewBeanAndRecipes = () => {
     })
     closeModal();
   }
+
+  useEffect(() => {
+    window.scroll({ top: 0, behavior: 'smooth' });
+  },[]);
 
 
   if (targetBeanIsLoading) {
@@ -83,15 +87,13 @@ const ViewBeanAndRecipes = () => {
             </div>
             <div className="flex flex-wrap justify-center mt-16">
               <div className="w-full md:w-1/2 my-4 md:px-4">
-                <CoffeeRangeListForAll bean={targetBean} />
+                { <CoffeeRangeListForAll bean={targetBean} /> }
               </div>
 
               <div className="w-full md:w-1/2 my-4 md:px-4">
-                {targetBean.single_origin ? (
-                  <CoffeeRangeListForSO bean={targetBean} />
-                ) : (
-                  <CoffeeRangeListForBlend bean={targetBean} />
-                )}
+                { targetBean.single_origin 
+                  ? <CoffeeRangeListForSO bean={targetBean} /> 
+                  : <CoffeeRangeListForBlend bean={targetBean} /> }
               </div>
             </div>
 

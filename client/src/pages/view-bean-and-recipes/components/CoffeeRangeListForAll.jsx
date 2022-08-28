@@ -9,7 +9,7 @@ import CoffeeRangeListItem from './CoffeeRangeListItem';
 
 const CoffeeRangeListForAll = ({bean}) => {
   const userData = useUserData()
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub);
+  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub, userData.accessToken.jwtToken);
 
   const [beanAttrIcons, setBeanAttrIcons] = useState({
     gradeStarIcons: null,

@@ -10,7 +10,7 @@ import Row from './Row'
 const Rows = ({data}) => {
   const userData = useUserData();
   const { id: beanId } = useParams();
-  const deleteRecipe = useDeleteRecipe(userData.sub, beanId);
+  const deleteRecipe = useDeleteRecipe(userData.sub, beanId, userData.accessToken.jwtToken);
   const {
     modal,
     openEditRecipeModal,

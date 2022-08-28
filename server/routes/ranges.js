@@ -164,14 +164,15 @@ module.exports = (app) => {
         newData[newid] = {...req.body, value: newid, inUse: 0}
         const bqInsertRange = getInsertRangeBaseQuery(req.params.rangename)
         const result = await db.query(bqInsertRange,[newData, req.params.userid]);
-        
-        await db.query('COMMIT')
 
         res.status(200).json(result.rows[0][req.params.rangename + '_range']['items']);
       }
     } catch (error) {
+      db.query('ROLLBACK')
       next(error);
     }
+
+    await db.query('COMMIT')
   }); 
 
   // Edit an entry in a specified range 
@@ -208,7 +209,7 @@ module.exports = (app) => {
         }
       }
       if (!uniqueName) {
-        CustomException(500, 'An entry with the same name already exists.')
+        CustomException(400, 'An entry with the same name already exists.')
       } 
       else {
         // Insert new entry to overwrite existing one

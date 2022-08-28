@@ -8,7 +8,7 @@ import RecipesInfoComparisonSection from './components/RecipesInfoComparisonSect
 
 const CompareRecipes = () => {
   const userData = useUserData();
-  const { data: beanList, isLoading } = useBeans(userData.sub);
+  const { data: beanList, isLoading } = useBeans(userData.sub, userData.accessToken.jwtToken);
 
   const [selectedBeanLeft, setSelectedBeanLeft] = useState(null);
   const [selectedBeanRight, setSelectedBeanRight] = useState(null);

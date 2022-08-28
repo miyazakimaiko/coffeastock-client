@@ -10,7 +10,7 @@ import Row from './Row'
 const Rows = ({data, rangeName}) => {
 
   const userData = useUserData();
-  const deleteRange = useDeleteRange(userData.sub);
+  const deleteRange = useDeleteRange(userData.sub, userData.accessToken.jwtToken);
   const {modal, openEditRangeModal, openDeleteRangeModal, closeModal, modalModeSelection} = useContext(ModalStateContext);
   const [rangeItem, setRangeItem] = useState({ value: "", label: "", def: "" });
 

@@ -30,6 +30,7 @@ const Register = () => {
       } else {
         try {
           const userId = data.userSub;
+          console.log({data})
           setDefaultRangeList(userId);
           navigate('/login', {replace: true})
         } catch (error) {

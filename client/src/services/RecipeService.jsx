@@ -6,8 +6,8 @@ import useEditRecipe from '../hooks/useEditRecipe';
 
 const RecipeService = () => {
   const userData = useUserData();
-  const addRecipe = useAddRecipe(userData.sub);
-  const editRecipe = useEditRecipe(userData.sub);
+  const addRecipe = useAddRecipe(userData.sub, userData.accessToken.jwtToken);
+  const editRecipe = useEditRecipe(userData.sub, userData.accessToken.jwtToken);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { modal, closeModal, modalModeSelection } = useContext(ModalStateContext);
 

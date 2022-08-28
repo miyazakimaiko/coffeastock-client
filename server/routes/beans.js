@@ -4,7 +4,8 @@ const { validationResult } = require('express-validator');
 const { beanValidator } = require("../utils/validators");
 const { CustomException } = require("../utils/customExcetions");
 const { getUniqueItemInFirstArgArray } = require("../helper/compareArrays");
-const { getIncrementCountInUseBaseQuery, getDecrementCountInUseBaseQuery } = require("../utils/baseQueries");
+const { getIncrementCountInUseBaseQuery, 
+        getDecrementCountInUseBaseQuery } = require("../utils/baseQueries");
 const { DatabaseError } = require("pg");
 
 const beanRangeKeys = ['origin', 'farm', 'variety', 'process', 'roaster', 'aroma']
@@ -126,13 +127,14 @@ module.exports = (app) => {
           ]
         )
 
-        await db.query('COMMIT');
-
         res.status(200).json(insertBeanResult.rows);
           
       } catch (error) {
+        db.query('ROLLBACK');
         next(error)
       }
+
+      await db.query('COMMIT');
     }
   ); 
   
@@ -250,14 +252,14 @@ module.exports = (app) => {
             req.params.beanid          // $21
           ]
         );
-
-        await db.query('COMMIT')
-
         res.status(200).json(result.rows);
 
       } catch (error) {
+        db.query('ROLLBACK')
         next(error);
       }
+
+      await db.query('COMMIT')
     }
   )
 
@@ -279,16 +281,17 @@ module.exports = (app) => {
           }
         }
       }
-
-      await db.query('COMMIT')
-
       res.status(200).json(results.rows);
 
     } catch (error) {
+      db.query('ROLLBACK')
+
       if (error instanceof DatabaseError && error.code === '23503') {
         error.message = 'This item is tagged with other item(s) therefore cannot be deleted.'
       }
       next(error)
     }
+
+    await db.query('COMMIT')
   });
 }

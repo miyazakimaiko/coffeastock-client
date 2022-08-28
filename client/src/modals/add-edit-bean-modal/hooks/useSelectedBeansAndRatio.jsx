@@ -5,7 +5,7 @@ import BlendRatioInput from '../components/BlendRatioInput';
 
 const useSelectedBeansAndRatio = () => {
   const userData = useUserData()
-  const { data: beanList } = useBeans(userData.sub)
+  const { data: beanList } = useBeans(userData.sub, userData.accessToken.jwtToken)
 
   const [selectedBlendBeans, setSelectedBlendBeans] = useState([]);
   const [blendRatios, setBlendRatio] = useState({});

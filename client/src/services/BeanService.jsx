@@ -7,8 +7,8 @@ import toastOnBottomCenter from '../utils/customToast';
 
 const BeanService = () => {
   const userData = useUserData();
-  const addBean = useAddBean(userData.sub);
-  const editBean = useEditBean(userData.sub);
+  const addBean = useAddBean(userData.sub, userData.accessToken.jwtToken);
+  const editBean = useEditBean(userData.sub, userData.accessToken.jwtToken);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {modal, closeModal, modalModeSelection} = useContext(ModalStateContext);
 

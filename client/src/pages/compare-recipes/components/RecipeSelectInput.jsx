@@ -5,7 +5,7 @@ import useRecipes from '../../../hooks/useRecipes';
 
 const RecipeSelectInput = ({ beanId, value, onChange }) => {
   const userData = useUserData();
-  const { data: recipeList, isLoading } = useRecipes(userData.sub, beanId);
+  const { data: recipeList, isLoading } = useRecipes(userData.sub, beanId, userData.accessToken.jwtToken);
  
   if (isLoading) {
     return 'Loading...'

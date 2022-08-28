@@ -150,13 +150,14 @@ module.exports = (app) => {
         req.params.beanid          // $2
       ]);
 
-      await db.query('COMMIT');
-
       res.status(200).json(insertionResult.rows);
 
     } catch (error) {
+      db.query('ROLLBACK');
       next(error);
     }
+
+    await db.query('COMMIT');
   }); 
   
   // update a recipe of beans
@@ -277,13 +278,14 @@ module.exports = (app) => {
         req.params.recipeno
       ]);
 
-      await db.query('COMMIT');
-
       res.status(200).json(results.rows);
 
     } catch (error) {
+      db.query('ROLLBACK');
       next(error);
     }
+
+    await db.query('COMMIT');
   });
 
   // delete a recipe
@@ -317,13 +319,13 @@ module.exports = (app) => {
             }
           }
       }
-
-      await db.query('COMMIT');
-
       res.status(200).json(results.rows);
 
     } catch (error) {
+      db.query('ROLLBACK');
       next(error);
     }
+
+    await db.query('COMMIT');
   });
 }

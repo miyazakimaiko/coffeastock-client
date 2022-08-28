@@ -28,8 +28,8 @@ const GROUPBY = {
 
 const ViewBeansList = () => {
   const userData = useUserData()
-  const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub)
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub)
+  const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub, userData.accessToken.jwtToken)
+  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub, userData.accessToken.jwtToken)
 
   const [showState, setShowState] = useState(SHOW.ALL)
   const [groupState, setGroupState] = useState(GROUPBY.ROASTER)

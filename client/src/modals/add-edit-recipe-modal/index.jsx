@@ -53,10 +53,10 @@ import PalateSelectionInput from './components/PalateSelectionInput';
 const AddEditRecipeModal = ({recipeId = null}) => {
 
   const userData = useUserData();
-  const addRange = useAddRange(userData.sub);
-  const { data: targetRecipe, isLoading: recipeIsLoading } = useRecipe(userData.sub, recipeId)
-  const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub);
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub);
+  const addRange = useAddRange(userData.sub, userData.accessToken.jwtToken);
+  const { data: targetRecipe, isLoading: recipeIsLoading } = useRecipe(userData.sub, recipeId, userData.accessToken.jwtToken)
+  const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub, userData.accessToken.jwtToken);
+  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub, userData.accessToken.jwtToken);
   const { modal, closeModal, modalModeSelection } = useContext(ModalStateContext);
 
   const [recipe, setRecipe, onSubmit, isSubmitting] = RecipeService();

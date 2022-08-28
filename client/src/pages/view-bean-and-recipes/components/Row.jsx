@@ -14,7 +14,7 @@ import useRanges from '../../../hooks/useRanges'
 const Row = ({recipe, onEditClick, onDeleteClick}) => {
 
   const userData = useUserData();
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub);
+  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub, userData.accessToken.jwtToken);
   
   const [openDetails, setOpenDetails] = useState(false);
 
