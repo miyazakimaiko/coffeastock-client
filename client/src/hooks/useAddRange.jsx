@@ -11,7 +11,6 @@ export default function useAddRange(userid, token) {
     {
       enabled: Boolean(userid),
       onSuccess: async (_, variables) => {
-        await queryClient.invalidateQueries("ranges")
         await queryClient.invalidateQueries([
           "range",
           `${variables.rangeName}_range`,

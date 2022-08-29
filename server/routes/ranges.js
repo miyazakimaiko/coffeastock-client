@@ -63,6 +63,7 @@ module.exports = (app) => {
     }
   });
 
+  // check if user already exists
   app.get(endpoint + "/user/:userid", async (req, res, next) => {
     try {
       const result = await db.query(`SELECT user_id FROM users WHERE user_id = $1`, [req.params.userid]);
@@ -185,8 +186,8 @@ module.exports = (app) => {
       db.query('ROLLBACK')
       next(error);
     }
+    db.query('COMMIT')
 
-    await db.query('COMMIT')
   }); 
 
   // Edit an entry in a specified range 

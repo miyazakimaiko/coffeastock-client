@@ -38,6 +38,7 @@ import TabStateModel from './models/TabStateModel';
 import useSelectedBeansAndRatio from './hooks/useSelectedBeansAndRatio';
 import BeanService from '../../services/BeanService';
 import { ModalStateContext } from '../../context/ModalStateContext';
+import { useQueryClient } from 'react-query';
 
 const AddEditBeanModal = ({targetBean = null}) => {
   const userData = useUserData()
@@ -47,6 +48,7 @@ const AddEditBeanModal = ({targetBean = null}) => {
   const addRange = useAddRange(userData.sub, userData.accessToken.jwtToken)
   const [tabState, setTabState] = TabStateModel();
   const { modal, closeModal, modalModeSelection } = useContext(ModalStateContext);
+  const queryClient = useQueryClient();
 
 
   const [selectedOrigin, setSelectedOrigin] = useState([]);
@@ -265,9 +267,10 @@ const AddEditBeanModal = ({targetBean = null}) => {
 
       for await (const entry of entries) {
         const body = { label: entry.label, def: "" }
-        await addRange.mutate({ rangeName,body })
+        await addRange.mutateAsync({ rangeName,body })
       }
     }
+    queryClient.invalidateQueries("ranges")
   }
 
 
