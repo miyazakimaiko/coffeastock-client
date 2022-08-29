@@ -34,7 +34,6 @@ const Register = () => {
       } else {
         try {
           setCognitoUser(data.user);
-          console.log({data})
           setShowVerificationModal(true);
         } catch (error) {
           toastOnBottomCenter('error', error.message)
