@@ -12,10 +12,13 @@ import ViewBeanAndRecipes from './pages/view-bean-and-recipes';
 import ViewMyCoffees from './pages/view-beans-list';
 import ViewRanges from './pages/view-ranges';
 import CompareRecipes from './pages/compare-recipes';
-import { useGetSession, useSetUserData, useAuthenticated, useSetAuthenticated } from './context/AccountContext';
+import ManageAccount from './pages/manage-account';
+import { useGetSession, 
+        useSetUserData, 
+        useAuthenticated, 
+        useSetAuthenticated } from './context/AccountContext';
 import NavStateProvider from './context/NavStateContext';
 import ScrollBackButton from './elements/ScrollBackButton';
-import ConfirmUser from './pages/confirm-user';
 
 const App = () => {
   const mainRef = createRef();
@@ -61,11 +64,11 @@ const App = () => {
                 <Route exact path="/settings/palate" element={<ViewRanges parentCat={'Recipes'} cat={'palate'} />} />
                 <Route exact path="/settings/water" element={<ViewRanges parentCat={'Recipes'} cat={'water'} />} />
                 <Route path='/' element={<Dashboard />} />
+                <Route path='account' element={<ManageAccount />} />
               </Routes>
               :
               <Routes>
                 <Route exact path='/register' element={<Register />} />
-                <Route exact path='/confirm' element={<ConfirmUser/>} />
                 <Route exact path='/login' element={<Login />} />
                 <Route path='/' element={<Login />} />
               </Routes>

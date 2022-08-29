@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useContext } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { MenuAlt2Icon, PlusIcon, XIcon } from '@heroicons/react/outline'
-
 import toastOnTopRight from '../../utils/customToast';
 import { NavStateContext } from '../../context/NavStateContext';
-import { useUserData, useSetAuthenticated, useSignout } from '../../context/AccountContext';
+import { useUserData, 
+        useSetAuthenticated, 
+        useSignout } from '../../context/AccountContext';
 import imgFace from '../../assets/images/face.jpg'
 import AddEditBeanModal from '../../modals/add-edit-bean-modal';
 import AddRecipeModal from '../../modals/add-edit-recipe-modal';
-import './header.scss'
 import Dropdown from '../../elements/Dropdown';
 import { ModalStateContext } from '../../context/ModalStateContext';
+import './header.scss'
 
 
 const Header = (props) => {
@@ -21,15 +22,18 @@ const Header = (props) => {
     setNavRef, 
     setPushPinRef, 
     showNavbar, 
-    forceUnpin 
-  } = useContext(NavStateContext);
+    forceUnpin } = useContext(NavStateContext);
  
   const userData = useUserData()
   const setAuthenticated = useSetAuthenticated()
   const signout = useSignout()
   const navigate = useNavigate()
 
-  const {modal, openAddBeanModal, openAddRecipeModal, modalModeSelection} = useContext(ModalStateContext);
+  const {
+    modal, 
+    openAddBeanModal, 
+    openAddRecipeModal, 
+    modalModeSelection } = useContext(ModalStateContext);
 
   const logout = () => {
     forceUnpin();
@@ -78,7 +82,7 @@ const Header = (props) => {
           <div className="mx-3">
             <Dropdown dropdownText={userData.nickname}>
               <div className="dropdown-content" >
-                <NavLink exact="true" to="/my-profile" className="dropdown-item">My Account</NavLink>
+                <NavLink exact="true" to="/account" className="dropdown-item">My Account</NavLink>
                 <div className="dropdown-divider"></div>
                 <button type="button" className="dropdown-item" onClick={logout}>Logout</button>
               </div>
