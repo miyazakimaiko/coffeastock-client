@@ -75,7 +75,7 @@ const App = () => {
             }
           </div>
         </NavStateProvider>
-        <ToastContainer theme="colored" hideProgressBar={true}/>
+        <ToastContainer theme="colored" newestOnTop hideProgressBar={false}/>
         <ScrollBackButton />
       </div>
     </Router>

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react'
-import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js'
+import { CognitoUser, AuthenticationDetails, CognitoUserAttribute } from 'amazon-cognito-identity-js'
 import Pool from '../utils/UserPool'
+import toastOnBottomCenter from '../utils/customToast'
 
 const AccountContext = createContext()
 
@@ -73,6 +74,31 @@ const AccountProvider = (props) => {
     })
   }
 
+  function changeAttribute(name, value) {
+      if (value.length <= 0) {
+        toastOnBottomCenter('error', `Please enter ${name}.`);
+        return false;
+      }
+
+      const attributeList = [];
+      const attribute = new CognitoUserAttribute({Name: name, Value: value});
+      attributeList.push(attribute);
+
+      userData.user.updateAttributes(attributeList, function(err, res) {
+        if (err) {
+          toastOnBottomCenter('error', err.message);
+          return false;
+        }
+        else if (res === 'SUCCESS') {
+          toastOnBottomCenter('success', `Your ${name} has been updated successfully.`);
+          getSession().then((session) => {
+            setUserData(session);
+          });
+        }
+      })
+      return true;
+  }
+
   const signout = () => {
     const user = Pool.getCurrentUser();
     if (user) {
@@ -82,7 +108,7 @@ const AccountProvider = (props) => {
   };
 
   return (
-    <AccountContext.Provider value={{ authenticate, getSession, userData, setUserData, authenticated, setAuthenticated, signout }}>
+    <AccountContext.Provider value={{ authenticate, getSession, userData, setUserData, authenticated, setAuthenticated, changeAttribute, signout }}>
       { props.children }
     </AccountContext.Provider>
   )
@@ -136,6 +162,14 @@ function useSetAuthenticated() {
   return context.setAuthenticated
 }
 
+function useChangeAttribute() {
+  const context = useContext(AccountContext)
+  if (!context) {
+    throw new Error('useChangeAttribute must be used within an AccountProvider')
+  }
+  return context.changeAttribute
+}
+
 function useSignout() {
   const context = useContext(AccountContext)
   if (!context) {
@@ -151,5 +185,6 @@ export { AccountProvider,
         useSetUserData, 
         useAuthenticated, 
         useSetAuthenticated, 
+        useChangeAttribute,
         useSignout,
       }

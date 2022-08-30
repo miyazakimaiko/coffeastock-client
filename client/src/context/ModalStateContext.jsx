@@ -21,6 +21,8 @@ const ModalStateProvider = (props) => {
     addRecipe: 'addRecipe',
     editRecipe: 'editRecipe',
     deleteRecipe: 'deleteRecipe',
+
+    changeNickname: 'changeNickname',
   }
 
   function openAddRangeModal() {
@@ -59,6 +61,10 @@ const ModalStateProvider = (props) => {
     setModal({ mode: modalModeSelection.deleteRecipe, isOpen: true });
   }
 
+  function openChangeNicknameModal() {
+    setModal({ mode: modalModeSelection.changeNickname, isOpen: true });
+  }
+
   function closeModal() {
     setModal({ mode: "", isOpen: false });
   }
@@ -77,6 +83,7 @@ const ModalStateProvider = (props) => {
           openAddRecipeModal,
           openEditRecipeModal,
           openDeleteRecipeModal,
+          openChangeNicknameModal,
           closeModal,
           modalModeSelection,
         }
