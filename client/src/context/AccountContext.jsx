@@ -84,13 +84,21 @@ const AccountProvider = (props) => {
       const attribute = new CognitoUserAttribute({Name: name, Value: value});
       attributeList.push(attribute);
 
+      if (name === 'email') {
+        // this giving me a client attempted to write unauthorized attribute error
+        const emailVerifiedAttr = new CognitoUserAttribute({
+          Name: 'email_verified',
+          Value: false   
+        });
+        attributeList.push(emailVerifiedAttr);
+      }
+
       userData.user.updateAttributes(attributeList, function(err, res) {
         if (err) {
           toastOnBottomCenter('error', err.message);
           return false;
         }
         else if (res === 'SUCCESS') {
-          toastOnBottomCenter('success', `Your ${name} has been updated successfully.`);
           getSession().then((session) => {
             setUserData(session);
           });

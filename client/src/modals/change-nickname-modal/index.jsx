@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useChangeAttribute } from '../../context/AccountContext';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer';
+import toastOnBottomCenter from '../../utils/customToast';
 
 
 const ChangeNicknameModal = () => {
@@ -13,7 +14,10 @@ const ChangeNicknameModal = () => {
     e.preventDefault();
 
     const success = changeAttribute('nickname', nickname);
-    if (success) closeModal();
+    if (success) {
+      toastOnBottomCenter('success', `Your nickname has been updated successfully.`);
+      closeModal();
+    }
   }
 
   return (

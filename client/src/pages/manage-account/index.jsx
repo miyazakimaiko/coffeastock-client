@@ -6,6 +6,7 @@ import ChangeNicknameModal from '../../modals/change-nickname-modal';
 import imgFace from '../../assets/images/face.jpg';
 import './manageAccount.scss';
 import ChangePasswordModal from '../../modals/change-password-modal';
+import ChangeEmailModal from '../../modals/change-email-modal';
 
 
 const ManageAccount = () => {
@@ -13,6 +14,7 @@ const ManageAccount = () => {
   const { modal, 
           openChangeNicknameModal,
           openChangePasswordModal,
+          openChangeEmailModal,
           modalModeSelection } = useContext(ModalStateContext);
 
 
@@ -48,7 +50,11 @@ const ManageAccount = () => {
                 <div className="w-48">Email Address: </div>
                 <div>{userData.email}</div>
                 <div className="ml-6">
-                  <a href="#" className="underline text-blue">
+                  <a
+                    href="#"
+                    className="underline text-blue"
+                    onClick={openChangeEmailModal}
+                  >
                     Edit
                   </a>
                 </div>
@@ -183,6 +189,10 @@ const ManageAccount = () => {
 
       {modal.isOpen && modal.mode === modalModeSelection.changePassword && (
         <ChangePasswordModal currentUserEmail={userData.email} />
+      )}
+
+      {modal.isOpen && modal.mode === modalModeSelection.changeEmail && (
+        <ChangeEmailModal />
       )}
     </>
   );

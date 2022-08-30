@@ -20,20 +20,16 @@ const ConfirmUserModal = ({ email, verificationCode, setVerificationCode, resend
               Confirm your email
             </h3>
             <div className="card-content py-6">
-              <p>
+              <p className="pb-6">
                 Please type the verification code we sent to 
                 <span className="font-medium"> {email}</span>
                 . Didn't receive it? Check your spam folder.
               </p>
-            </div>
-            <div className="w-full">
-              <div className="card-content w-80 mx-auto">
-                <div className="pb-6">
-                  <input type="text" name="code" placeholder="Enter Verification Code" className="blue-outline-transition bg-creme block w-full py-2 px-3 rounded-md text-lg"
-                    value={verificationCode}
-                    onChange={e => setVerificationCode(e.target.value)}
-                  />
-                </div>
+              <div className="pb-6">
+                <input type="text" name="code" placeholder="Enter Verification Code" className="blue-outline-transition bg-creme block w-full py-2 px-3 rounded-md text-lg"
+                  value={verificationCode}
+                  onChange={e => setVerificationCode(e.target.value)}
+                />
               </div>
               <div className="flex items-center justify-end">
                 <div className="resend">

@@ -3,14 +3,18 @@ import { ModalStateContext } from '../../context/ModalStateContext'
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer';
 
 const DeleteModal = ({label, onDeleteSubmit}) => {
-  const {closeModal} = useContext(ModalStateContext);
+  const { modal, modalModeSelection, closeModal } = useContext(ModalStateContext);
 
   // can add all delete functionality here for Bean, Recipe, and Range by using modal.mode
 
   return (
     <ModalWrapperContainer
       onCloseClick={closeModal}
-      title="Delete Recipe"
+      title={
+        modal.mode === modalModeSelection.deleteRange ? 'Delete Range' :
+        modal.mode === modalModeSelection.deleteBean ? 'Delete Bean' :
+        modal.mode === modalModeSelection.deleteRecipe ? 'Delete Recipe' : null
+      }
     >
       {/*body*/}
       <div className="card-content px-3 py-10">
