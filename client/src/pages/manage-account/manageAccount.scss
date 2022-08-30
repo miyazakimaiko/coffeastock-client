@@ -1,0 +1,42 @@
+.btn {
+  font-size: 18px;
+  color: #fff;
+  padding: 20px 50px;
+  display: block;
+  border-radius: 50px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  will-change: transform, filter;
+  transform-style: preserve-3d;
+  transition: all .3s ease-out;
+}
+.btn:hover {
+  transform: scale(0.95);
+}
+.btn::before {
+  content: "";
+  height: 40px;
+  display: inline-block;
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  bottom: -5px;
+  z-index: -1;
+  border-radius: 50px;
+  opacity: .8;
+  filter: blur(15px);
+  transform-style: preserve-3d;
+  transition: all .3s ease-out;
+}
+.btn:hover::before {
+  bottom: 0;
+  filter: blur(8px);
+}
+
+.upgrade-button,
+.upgrade-button::before {
+  background: -moz-linear-gradient(left, #E96D71 0%, #FAD7A1 80%, #FAD7A1 100%);
+  background: -webkit-linear-gradient(left, #E96D71 0%, #FAD7A1 80%, #FAD7A1 100%);
+  background: linear-gradient(to right, #E96D71 0%, #FAD7A1 80%, #FAD7A1 100%);
+}

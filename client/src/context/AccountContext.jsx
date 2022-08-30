@@ -14,11 +14,11 @@ const AccountProvider = (props) => {
 
   const [authenticated, innerSetAuthenticated] = useState(false);
 
-  const setAuthenticated = boolean => {
+  function setAuthenticated(boolean) {
     innerSetAuthenticated(boolean);
   }
 
-  const getSession = async () => {
+  async function getSession() {
     return await new Promise((resolve, reject) => {
       const user = Pool.getCurrentUser();
       if (user) {
@@ -55,7 +55,7 @@ const AccountProvider = (props) => {
     });
   }
 
-  const authenticate = async (Username, Password) => {
+  async function authenticate(Username, Password) {
     return await new Promise((resolve, reject) => {
       const user = new CognitoUser({ Username, Pool });
       const authDetails = new AuthenticationDetails({ Username, Password });
@@ -99,7 +99,7 @@ const AccountProvider = (props) => {
       return true;
   }
 
-  const signout = () => {
+  function signout() {
     const user = Pool.getCurrentUser();
     if (user) {
       user.signOut();

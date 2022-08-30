@@ -1,16 +1,18 @@
 import { BsCheckCircleFill, BsPlus } from 'react-icons/bs';
 import React, { useContext } from 'react';
 import { ModalStateContext } from '../../context/ModalStateContext';
+import { useUserData } from '../../context/AccountContext';
+import ChangeNicknameModal from '../../modals/change-nickname-modal';
 import imgFace from '../../assets/images/face.jpg';
 import './manageAccount.scss';
-import ChangeNicknameModal from '../../modals/change-nickname-modal';
-import { useUserData } from '../../context/AccountContext';
+import ChangePasswordModal from '../../modals/change-password-modal';
 
 
 const ManageAccount = () => {
   const userData = useUserData();
   const { modal, 
-          openChangeNicknameModal, 
+          openChangeNicknameModal,
+          openChangePasswordModal,
           modalModeSelection } = useContext(ModalStateContext);
 
 
@@ -55,7 +57,11 @@ const ManageAccount = () => {
                 <div className="w-48">Password: </div>
                 <div>***********</div>
                 <div className="ml-6">
-                  <a href="#" className="underline text-blue">
+                  <a
+                    href="#"
+                    className="underline text-blue"
+                    onClick={openChangePasswordModal}
+                  >
                     Edit
                   </a>
                 </div>
@@ -173,6 +179,10 @@ const ManageAccount = () => {
 
       {modal.isOpen && modal.mode === modalModeSelection.changeNickname && (
         <ChangeNicknameModal />
+      )}
+
+      {modal.isOpen && modal.mode === modalModeSelection.changePassword && (
+        <ChangePasswordModal currentUserEmail={userData.email} />
       )}
     </>
   );

@@ -1,18 +1,23 @@
 import { LoginIcon } from '@heroicons/react/outline'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import * as api from '../../api/Users';
 import toastOnBottomCenter from '../../utils/customToast';
-import { useAuthenticate, useGetSession, useSetUserData, useSetAuthenticated, useUserData } from '../../context/AccountContext';
+import { useAuthenticate, 
+        useGetSession, 
+        useSetUserData, 
+        useSetAuthenticated } from '../../context/AccountContext';
 import useAddUser from '../../hooks/useAddUser';
-import ForgotPasswordModal from '../../modals/forgot-password-modal';
+import ChangePasswordModal from '../../modals/change-password-modal';
+import { ModalStateContext } from '../../context/ModalStateContext';
 
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [openForgotPasswordModal, setOpenForgotPasswordModal] = useState(false);
-
+  const { modal, 
+        openChangePasswordModal, 
+        modalModeSelection } = useContext(ModalStateContext);
   const setUserData = useSetUserData();
   const authenticate = useAuthenticate();
   const getSession = useGetSession();
@@ -102,7 +107,7 @@ const Login = () => {
                   <span className="ml-1">Login</span>
                   </button>
                 <div className="forgot">
-                  <a onClick={() => setOpenForgotPasswordModal(true)}>Forgot your password?</a>
+                  <a href="#" onClick={openChangePasswordModal}>Forgot your password?</a>
                 </div>
               </div>
             </div>
@@ -110,8 +115,8 @@ const Login = () => {
         </div>
       </div>
 
-      { openForgotPasswordModal && (
-        <ForgotPasswordModal closeModal={() => setOpenForgotPasswordModal(false)} />
+      { modal.isOpen && modal.mode === modalModeSelection.changePassword && (
+        <ChangePasswordModal />
       )}
     </>
   )

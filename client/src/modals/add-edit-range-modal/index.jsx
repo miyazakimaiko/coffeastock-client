@@ -109,6 +109,7 @@ const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
         modal.mode === modalModeSelection.editRange ? `Edit ${capitalize(rangeName)} Range` : null
       }
       onCloseClick={closeModal}
+      maxWidthClass="max-w-6xl"
     >
       <div className="content">
         <form className="w-full">

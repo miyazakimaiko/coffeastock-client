@@ -330,6 +330,7 @@ const AddEditRecipeModal = ({recipeId = null}) => {
   return (
     <ModalWrapperContainer
       onCloseClick={closeModal}
+      maxWidthClass="max-w-6xl"
       title={
         modal.mode === modalModeSelection.addRecipe
           ? "Add New Recipe"

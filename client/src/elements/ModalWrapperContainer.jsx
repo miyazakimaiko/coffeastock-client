@@ -1,7 +1,7 @@
 import { XIcon } from '@heroicons/react/outline'
 import React from 'react'
 
-const ModalWrapperContainer = ({children, title, onCloseClick}) => {
+const ModalWrapperContainer = ({ children, title, onCloseClick, maxWidthClass = "max-w-xl" }) => {
   return (
     <>
       <div
@@ -9,15 +9,15 @@ const ModalWrapperContainer = ({children, title, onCloseClick}) => {
         overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
       >
         <div 
-          className="relative h-fit w-full max-w-6xl md:px-2 md:my-8 mx-auto"
+          className={`relative h-fit w-full md:px-2 md:my-8 mx-auto ${maxWidthClass}`}
         >
           <div 
-            className="w-full border-0 rounded-lg shadow-lg relative pt-4
+            className="w-full border-0 rounded-lg shadow-lg relative py-4 px-6
             flex flex-col bg-white outline-none focus:outline-none"
           >
             {/*header*/}
-            <div className="py-8">
-              <h3 className="md:text-lg font-light text-center">
+            <div className="py-6">
+              <h3 className="md:text-lg font-medium text-center">
                 {title}
               </h3>
               <button

@@ -289,6 +289,7 @@ const AddEditBeanModal = ({targetBean = null}) => {
           : null
       }
       onCloseClick={closeModal}
+      maxWidthClass="max-w-6xl"
     >
       {/*body*/}
       <ul className="flex">
