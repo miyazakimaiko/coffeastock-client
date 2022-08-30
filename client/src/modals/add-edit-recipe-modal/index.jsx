@@ -1,4 +1,5 @@
 import React, { useEffect, useState, createRef, useContext } from 'react'
+import { useQueryClient } from 'react-query';
 import { useUserData } from '../../context/AccountContext';
 import extractNewItems from '../../helpers/ExtractNewItems';
 import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
@@ -50,9 +51,11 @@ import { convertItemListToIdList } from '../../helpers/ListConverter';
 import PalateSelectionInput from './components/PalateSelectionInput';
 
 
+
 const AddEditRecipeModal = ({recipeId = null}) => {
 
   const userData = useUserData();
+  const queryClient = useQueryClient();
   const addRange = useAddRange(userData.sub, userData.accessToken.jwtToken);
   const { data: targetRecipe, isLoading: recipeIsLoading } = useRecipe(userData.sub, recipeId, userData.accessToken.jwtToken)
   const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub, userData.accessToken.jwtToken);
@@ -147,9 +150,10 @@ const AddEditRecipeModal = ({recipeId = null}) => {
     for (const [rangeName, entries] of Object.entries(newRangeList)) {
       for await (const entry of entries) {
         const body = { label: entry.label, def: "" }
-        await addRange.mutate({ rangeName,body })
+        await addRange.mutateAsync({ rangeName,body })
       }
     }
+    queryClient.invalidateQueries("ranges");
   };
 
   const [tabState, setTabState] = useState({
