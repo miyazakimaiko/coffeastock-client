@@ -80,7 +80,7 @@ const ManageAccount = () => {
             <div className="flex justify-between">
               <ul>
                 <li key="name" className="flex pb-4">
-                  <div className="w-48">Unit of solid: </div>
+                  <div className="w-48">Volume weight: </div>
                   <div>gram</div>
                   <div className="ml-6">
                     <a href="#" className="underline text-blue">
@@ -89,7 +89,7 @@ const ManageAccount = () => {
                   </div>
                 </li>
                 <li key="email" className="flex pb-4">
-                  <div className="w-48">Unit of liquid: </div>
+                  <div className="w-48">Fluid wight: </div>
                   <div>litle</div>
                   <div className="ml-6">
                     <a href="#" className="underline text-blue">

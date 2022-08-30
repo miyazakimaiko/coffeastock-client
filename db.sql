@@ -1,5 +1,42 @@
-CREATE TABLE USERS (
+CREATE TABLE unit_solid_weight (
+  id SERIAL,
+  label varchar(60),
+  short_label varchar(10),
+  CONSTRAINT unit_solid_weight_label_unique UNIQUE (label)
+);
+
+CREATE TABLE unit_fluid_weight (
+  id SERIAL,
+  label varchar(60),
+  short_label varchar(10),
+  CONSTRAINT unit_fluid_weight_label_unique UNIQUE (label)
+);
+
+CREATE TABLE unit_temperature (
+  id SERIAL,
+  label varchar(60),
+  short_label varchar(10),
+  CONSTRAINT unit_temperature_label_unique UNIQUE (label)
+);
+
+INSERT INTO unit_solid_weight VALUES ('gram', 'g');
+INSERT INTO unit_solid_weight VALUES ('ounce', 'oz');
+INSERT INTO unit_solid_weight VALUES ('pound', 'lb');
+
+INSERT INTO unit_fluid_weight VALUES ('milliliter', 'ml');
+INSERT INTO unit_fluid_weight VALUES ('gram', 'g');
+INSERT INTO unit_fluid_weight VALUES ('fluid ounce', 'fluid oz');
+
+INSERT INTO unit_temperature VALUES ('fahrenheit', 'ºF');
+INSERT INTO unit_temperature VALUES ('celcius', 'ºC');
+INSERT INTO unit_temperature VALUES ('kelvin', 'K');
+
+
+CREATE TABLE users (
     user_id varchar(255) PRIMARY KEY NOT NULL,
+    unit_solid_weight_id INT NOT NULL,
+    unit_fluid_weight_id INT NOT NULL,
+    unit_temperature_id INT NOT NULL,
     origin_range jsonb,
     farm_range jsonb,
     variety_range jsonb,
@@ -9,7 +46,10 @@ CREATE TABLE USERS (
     grinder_range jsonb,
     water_range jsonb,
     palate_range jsonb,
-    aroma_range jsonb
+    aroma_range jsonb,
+    FOREIGN KEY (unit_solid_weight_id) REFERENCES unit_solid_weight (id),
+    FOREIGN KEY (unit_fluid_weight_id) REFERENCES unit_fluid_weight (id),
+    FOREIGN KEY (unit_temperature_id) REFERENCES unit_temperature (id)
 );
 
 INSERT INTO users (
@@ -206,7 +246,7 @@ VALUES (
   }'
 );
 
-CREATE TABLE BEANS (
+CREATE TABLE beans (
     bean_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id varchar(255) NOT NULL,
     label varchar(60) NOT NULL,
@@ -231,11 +271,11 @@ CREATE TABLE BEANS (
     memo varchar(400),
     recipe_seq INT,
     FOREIGN KEY (user_id) REFERENCES USERS (user_id),
-    FOREIGN KEY (blend_bean_id_1) REFERENCES BEANS (bean_id),
-    FOREIGN KEY (blend_bean_id_2) REFERENCES BEANS (bean_id),
-    FOREIGN KEY (blend_bean_id_3) REFERENCES BEANS (bean_id),
-    FOREIGN KEY (blend_bean_id_4) REFERENCES BEANS (bean_id),
-    FOREIGN KEY (blend_bean_id_5) REFERENCES BEANS (bean_id)
+    FOREIGN KEY (blend_bean_id_1) REFERENCES beans (bean_id),
+    FOREIGN KEY (blend_bean_id_2) REFERENCES beans (bean_id),
+    FOREIGN KEY (blend_bean_id_3) REFERENCES beans (bean_id),
+    FOREIGN KEY (blend_bean_id_4) REFERENCES beans (bean_id),
+    FOREIGN KEY (blend_bean_id_5) REFERENCES beans (bean_id)
 );
 
 INSERT INTO BEANS (
@@ -333,7 +373,7 @@ VALUES (
   'The European languages are members of the same family. Their separate existence is a myth. For science, music, sport, etc, Europe uses the same vocabulary. The languages only differ in their grammar, their pronunciation and their most common words. Everyone realizes why a new common language would be desirable: one could refuse to pay expensive translators. To achieve this, it would be necessary t'
 );
 
-CREATE TABLE RECIPES (
+CREATE TABLE recipes (
     user_id varchar(255) NOT NULL,
     bean_id uuid NOT NULL,
     recipe_no INT NOT NULL,
@@ -352,9 +392,9 @@ CREATE TABLE RECIPES (
     palate_rates jsonb,
     memo text,
     FOREIGN KEY (user_id)
-        REFERENCES USERS (user_id),
+        REFERENCES users (user_id),
     FOREIGN KEY (bean_id)
-        REFERENCES BEANS (bean_id),
+        REFERENCES beans (bean_id),
     PRIMARY KEY (bean_id, recipe_no)
 );
 
