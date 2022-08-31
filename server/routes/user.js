@@ -106,4 +106,22 @@ module.exports = (app) => {
       next(err);
     }
   });
+
+  app.get(endpoint + "/user/:userid/unit-ids", async (req, res, next) => {
+    try {
+      const result = await db.query(`
+        SELECT 
+          unit_solid_weight_id, 
+          unit_fluid_weight_id,
+          unit_temperature_id
+        FROM users WHERE user_id = $1
+        `, 
+        [req.params.userid]
+      );
+      res.status(200).json(result.rows[0]);
+    }
+     catch (err) {
+       next(err);
+     }
+  });
 }

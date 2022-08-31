@@ -9,9 +9,13 @@ export default function useGetUser() {
     async (userid, token) => await api.getUser(userid, token), 
     {
       onSuccess: data => {
-        queryClient.setQueryData(['user', 'unit_solid_weight_id'], data.unit_solid_weight_id);
-        queryClient.setQueryData(['user', 'unit_fluid_weight_id'], data.unit_fluid_weight_id);
-        queryClient.setQueryData(['user', 'unit_temperature_id'], data.unit_temperature_id);
+        queryClient.setQueryData(
+          ['user', 'units'], 
+          {
+            unit_solid_weight_id: data.unit_solid_weight_id,
+            unit_fluid_weight_id: data.unit_fluid_weight_id,
+            unit_temperature_id: data.unit_temperature_id
+          });
         queryClient.setQueryData(['range', 'origin_range'], data.origin_range.items);
         queryClient.setQueryData(['range', 'farm_range'], data.farm_range.items);
         queryClient.setQueryData(['range', 'variety_range'], data.variety_range.items);

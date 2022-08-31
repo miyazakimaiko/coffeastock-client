@@ -6,9 +6,11 @@ import TotalBrews from './TotalBrews'
 import TotalRecipes from './TotalRecipes'
 import { useEffect } from 'react'
 import { useUserData } from '../../context/AccountContext'
+import useUnits from '../../hooks/useUnits'
 
 const Dashboard = () => {
-  const userData = useUserData()
+  const userData = useUserData();
+  const units = useUnits(userData.accessToken.jwtToken);
 
   useEffect(() => {
     window.scroll({ top: 0, behavior: 'smooth' });

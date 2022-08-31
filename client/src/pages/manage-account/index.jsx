@@ -7,10 +7,14 @@ import imgFace from '../../assets/images/face.jpg';
 import './manageAccount.scss';
 import ChangePasswordModal from '../../modals/change-password-modal';
 import ChangeEmailModal from '../../modals/change-email-modal';
+import useUnits from '../../hooks/useUnits';
+import useUserUnitIds from '../../hooks/useUserUnitIds';
 
 
 const ManageAccount = () => {
   const userData = useUserData();
+  const units = useUnits(userData.accessToken.jwtToken);
+  const userUnitIds = useUserUnitIds(userData.sub, userData.accessToken.jwtToken)
   const { modal, 
           openChangeNicknameModal,
           openChangePasswordModal,

@@ -53,6 +53,7 @@ authenticatedRoute.use(function(req, res, next) {
 });
 
 require("./routes/user.js")(app);
+require("./routes/units.js")(app);
 require("./routes/beans.js")(app);
 require("./routes/recipes.js")(app);
 require("./routes/ranges.js")(app);
