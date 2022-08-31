@@ -1,35 +1,35 @@
 CREATE TABLE unit_solid_weight (
-  id SERIAL,
+  id SERIAL PRIMARY KEY,
   label varchar(60),
   short_label varchar(10),
   CONSTRAINT unit_solid_weight_label_unique UNIQUE (label)
 );
 
 CREATE TABLE unit_fluid_weight (
-  id SERIAL,
+  id SERIAL PRIMARY KEY,
   label varchar(60),
   short_label varchar(10),
   CONSTRAINT unit_fluid_weight_label_unique UNIQUE (label)
 );
 
 CREATE TABLE unit_temperature (
-  id SERIAL,
+  id SERIAL PRIMARY KEY,
   label varchar(60),
   short_label varchar(10),
   CONSTRAINT unit_temperature_label_unique UNIQUE (label)
 );
 
-INSERT INTO unit_solid_weight VALUES ('gram', 'g');
-INSERT INTO unit_solid_weight VALUES ('ounce', 'oz');
-INSERT INTO unit_solid_weight VALUES ('pound', 'lb');
+INSERT INTO unit_solid_weight (label, short_label) VALUES ('gram', 'g');
+INSERT INTO unit_solid_weight (label, short_label) VALUES ('ounce', 'oz');
+INSERT INTO unit_solid_weight (label, short_label) VALUES ('pound', 'lb');
 
-INSERT INTO unit_fluid_weight VALUES ('milliliter', 'ml');
-INSERT INTO unit_fluid_weight VALUES ('gram', 'g');
-INSERT INTO unit_fluid_weight VALUES ('fluid ounce', 'fluid oz');
+INSERT INTO unit_fluid_weight (label, short_label) VALUES ('milliliter', 'ml');
+INSERT INTO unit_fluid_weight (label, short_label) VALUES ('gram', 'g');
+INSERT INTO unit_fluid_weight (label, short_label) VALUES ('fluid ounce', 'fluid oz');
 
-INSERT INTO unit_temperature VALUES ('fahrenheit', 'ºF');
-INSERT INTO unit_temperature VALUES ('celcius', 'ºC');
-INSERT INTO unit_temperature VALUES ('kelvin', 'K');
+INSERT INTO unit_temperature (label, short_label) VALUES ('fahrenheit', 'ºF');
+INSERT INTO unit_temperature (label, short_label) VALUES ('celcius', 'ºC');
+INSERT INTO unit_temperature (label, short_label) VALUES ('kelvin', 'K');
 
 
 CREATE TABLE users (

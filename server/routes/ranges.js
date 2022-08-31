@@ -2,7 +2,6 @@ require("dotenv").config();
 const db = require("../db");
 const { validationResult } = require('express-validator');
 const { rangeItemValidator } = require("../utils/validators");
-const { reorderRangeListItems } = require("../helper/reorderRangeItems");
 const { 
   getGetRangeBaseQuery,
   getGetNextIdBaseQuery,
@@ -11,72 +10,11 @@ const {
   getDeleteRangeBaseQuery,
   getFindEntryByIdBaseQuery
 } = require("../utils/baseQueries");
-const { reorderRangeItems } = require("../helper/reorderRangeItems");
+const { attachKeysToRangeListItems, attachKeysToRangeItems } = require("../helper/attachKeysToRangeItems");
 const { CustomException } = require('../utils/customExcetions');
 
 module.exports = (app) => {
   const endpoint = process.env.API_ENDPOINT;
-
-  // Create custom ranges for a user
-  app.post(endpoint + "/user/:userid", async (req, res, next) => {
-    try {
-      const existingUser = await db.query(`SELECT * FROM USERS WHERE user_id = $1`, [req.params.userid])
-      if (existingUser.rows.length !== 0) {
-        CustomException(409, "This user already has a row.")
-      }
-
-      await db.query(`
-        INSERT INTO
-        USERS (
-          user_id,
-          origin_range,
-          farm_range, 
-          variety_range, 
-          process_range, 
-          roaster_range, 
-          method_range, 
-          water_range, 
-          grinder_range,
-          palate_range,
-          aroma_range
-        )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-        RETURNING *`,
-        [
-          req.params.userid,
-          JSON.stringify(req.body.origin_range), 
-          JSON.stringify(req.body.farm_range), 
-          JSON.stringify(req.body.variety_range), 
-          JSON.stringify(req.body.process_range), 
-          JSON.stringify(req.body.roaster_range), 
-          JSON.stringify(req.body.method_range), 
-          JSON.stringify(req.body.water_range), 
-          JSON.stringify(req.body.grinder_range),
-          JSON.stringify(req.body.palate_range),
-          JSON.stringify(req.body.aroma_range)
-        ]
-      );
-      res.status(200).json('User ranges are set.');
-
-    } catch (error) {
-      next(error);
-    }
-  });
-
-  // check if user already exists
-  app.get(endpoint + "/user/:userid", async (req, res, next) => {
-    try {
-      const result = await db.query(`SELECT user_id FROM users WHERE user_id = $1`, [req.params.userid]);
-
-      if (result.rows.length === 0) {
-        res.status(200).json(false);
-      }
-      res.status(200).json(true);
-
-    } catch(err) {
-      next(err);
-    }
-  });
 
   // Get all custom range of a user
   app.get(endpoint + "/user/:userid/ranges", async (req, res, next) => {
@@ -100,7 +38,7 @@ module.exports = (app) => {
         CustomException(404, "User Not Found")
       }
       const rangeItemsList = results.rows[0];
-      const orderedRangeList = reorderRangeListItems(rangeItemsList)
+      const orderedRangeList = attachKeysToRangeListItems(rangeItemsList)
       res.status(200).json(orderedRangeList);
 
     } catch (error) {
@@ -113,7 +51,7 @@ module.exports = (app) => {
     const baseQuery = getGetRangeBaseQuery(req.params.rangename)
     try {
       const results = await db.query(baseQuery, [req.params.userid]);
-      const items = reorderRangeItems(results.rows[0].items);
+      const items = attachKeysToRangeItems(results.rows[0].items);
       res.status(200).json(items);
     } catch (error) { next(error); }
   });
@@ -234,7 +172,7 @@ module.exports = (app) => {
         const result = await db.query(bqInsertRange,[newData, req.params.userid]);
 
         const range = result.rows[0][req.params.rangename + '_range']['items']
-        const reorderedRange = reorderRangeItems(range)
+        const reorderedRange = attachKeysToRangeItems(range)
         res.status(200).json(reorderedRange);
       }
     } catch (error) {

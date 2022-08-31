@@ -10,6 +10,7 @@ import { useAuthenticate,
 import useAddUser from '../../hooks/useAddUser';
 import ChangePasswordModal from '../../modals/change-password-modal';
 import { ModalStateContext } from '../../context/ModalStateContext';
+import useGetUser from '../../hooks/useGetUser';
 
 
 const Login = () => {
@@ -23,6 +24,7 @@ const Login = () => {
   const getSession = useGetSession();
   const setAuthenticated = useSetAuthenticated();
   const addUser = useAddUser();
+  const getUser = useGetUser();
   const navigate = useNavigate();
 
 
@@ -37,7 +39,7 @@ const Login = () => {
         getSession().then((session) => {
           setUserData(session);
           setAuthenticated(true);
-          findOrCreateUser(session);
+          createUserIfNotFound(session);
         });
       })
       .catch(err => {
@@ -46,12 +48,17 @@ const Login = () => {
     }
   };
 
-  async function findOrCreateUser(userData) {
-    if (userData.sub) {
-      const user = await api.findUser(userData.sub, userData.accessToken.jwtToken);
+  
 
-      if (!user) {
+  async function createUserIfNotFound(userData) {
+    if (userData.sub) {
+      const userFound = await api.findUser(userData.sub, userData.accessToken.jwtToken);
+
+      if (!userFound) {
         addUser.mutate(userData);
+      }
+      else {
+        getUser.mutate(userData);
       }
       navigate('/', {replace: true});
       toastOnBottomCenter('success', 'Logged in successfully.');

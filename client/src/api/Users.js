@@ -1,7 +1,11 @@
 import axios from './CustomAxios'
 
 export const findUser = async (userid, token) => {
-  return await axios.get(`/user/${userid}`, { headers: { accesstoken: token } }).then(res => res.data);
+  return await axios.get(`/user`, { headers: { accesstoken: token }, params: { id: userid } }).then(res => res.data);
+}
+
+export const getUser = async (userData) => {
+  return await axios.get(`/user/${userData.sub}`, { headers: { accesstoken: userData.accessToken.jwtToken } }).then(res => res.data);
 }
 
 export const addUser = async (userid, body, token) => {
