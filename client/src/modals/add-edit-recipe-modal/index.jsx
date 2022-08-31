@@ -98,11 +98,11 @@ const AddEditRecipeModal = ({recipeId = null}) => {
       });
 
       setSelectedBean({...beanList[targetRecipe.bean_id], label: unescapeHtml(beanList[targetRecipe.bean_id].label)});
-      setSelectedMethod(targetRecipe.method.map(id => rangeList.method_range[`id-${id}`]));
-      setSelectedGrinder(targetRecipe.grinder.map(id => rangeList.grinder_range[`id-${id}`]));
-      setSelectedWater(targetRecipe.water.map(id => rangeList.water_range[`id-${id}`]));
+      setSelectedMethod(targetRecipe.method.map(id => rangeList.method_range[id]));
+      setSelectedGrinder(targetRecipe.grinder.map(id => rangeList.grinder_range[id]));
+      setSelectedWater(targetRecipe.water.map(id => rangeList.water_range[id]));
       innerSetPalateRate(targetRecipe.palate_rates);
-      setSelectedPalates(Object.keys(targetRecipe.palate_rates).map(id => rangeList.palate_range[`id-${id}`]))
+      setSelectedPalates(Object.keys(targetRecipe.palate_rates).map(id => rangeList.palate_range[id]))
     }
     else if (addMode) {
       setSelectedPalates(
