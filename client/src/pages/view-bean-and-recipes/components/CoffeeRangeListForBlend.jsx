@@ -97,7 +97,7 @@ const CoffeeRangeListForBlend = ({bean}) => {
     const ids = targetBean[category] ? targetBean[category] : [];
     const ranges = rangeList[`${category}_range`];
     let nameListHtml = ids.map((id) => {
-      const range = ranges[`id-${id}`];
+      const range = ranges[id];
       return <span>{range ? range.label : "error"}</span>;
     });
     if (nameListHtml.length === 0) {

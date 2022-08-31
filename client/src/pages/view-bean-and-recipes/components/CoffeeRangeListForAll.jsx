@@ -43,7 +43,7 @@ const CoffeeRangeListForAll = ({bean}) => {
     const result = [];
     if (targetBean[category]) {
       targetBean[category].forEach((id) => {
-        const range = rangeList[`${category}_range`][`id-${id}`];
+        const range = rangeList[`${category}_range`][id];
         const label = unescapeHtml(range ? range.label : "error");
         const info = unescapeHtml(range ? range.def : "error");
         const text = `${info === "" ? "No Info" : info}`;

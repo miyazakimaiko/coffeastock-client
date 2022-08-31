@@ -34,7 +34,7 @@ const CoffeeRangeListForSO = ({bean}) => {
     if (targetBean[category]) {
       const ranges = rangeList[`${category}_range`];
       targetBean[category].forEach((id) => {
-        const range = ranges[`id-${id}`];
+        const range = ranges[id];
         const label = unescapeHtml(range ? range.label : "error");
         const info = unescapeHtml(range ? range.def : "error");
         const text = `${info === "" ? "No Info" : info}`;

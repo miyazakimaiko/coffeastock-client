@@ -93,22 +93,22 @@ const RecipesInfoComparisonSection = ({ selectedRecipeLeftId, selectedRecipeRigh
             <RecipeComparisonListItem
               name="Method"
               leftData={
-                rangeList.method_range[`id-${selectedRecipeLeft?.method[0]}`]
+                rangeList.method_range[selectedRecipeLeft?.method[0]]
                   ?.label
               }
               rightData={
-                rangeList.method_range[`id-${selectedRecipeRight?.method[0]}`]
+                rangeList.method_range[selectedRecipeRight?.method[0]]
                   ?.label
               }
             />
             <RecipeComparisonListItem
               name="Grinder"
               leftData={
-                rangeList.grinder_range[`id-${selectedRecipeLeft?.grinder[0]}`]
+                rangeList.grinder_range[selectedRecipeLeft?.grinder[0]]
                   ?.label
               }
               rightData={
-                rangeList.grinder_range[`id-${selectedRecipeRight?.grinder[0]}`]
+                rangeList.grinder_range[selectedRecipeRight?.grinder[0]]
                   ?.label
               }
             />
@@ -125,11 +125,11 @@ const RecipesInfoComparisonSection = ({ selectedRecipeLeftId, selectedRecipeRigh
             <RecipeComparisonListItem
               name="Water"
               leftData={
-                rangeList.water_range[`id-${selectedRecipeLeft?.water[0]}`]
+                rangeList.water_range[selectedRecipeLeft?.water[0]]
                   ?.label
               }
               rightData={
-                rangeList.water_range[`id-${selectedRecipeRight?.water[0]}`]
+                rangeList.water_range[selectedRecipeRight?.water[0]]
                   ?.label
               }
             />

@@ -53,7 +53,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
             </p>
             <h3 className="text-xl my-2">
               {recipe.method & recipe.method[0]
-                ? rangeList.method_range[`id-${recipe.method[0]}`].label
+                ? rangeList.method_range[recipe.method[0]].label
                 : "-"}
             </h3>
             <div className="flex justify-end">
@@ -76,7 +76,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
               ) : null}
               {recipe.grinder & recipe.grinder[0] ? (
                 <span className="basic-chip">
-                  {rangeList.grinder_range[`id-${recipe.grinder[0]}`].label}
+                  {rangeList.grinder_range[recipe.grinder[0]].label}
                 </span>
               ) : null}
             </div>
@@ -95,7 +95,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
               ) : null}
               {recipe.water && recipe.water[0] ? (
                 <span className="basic-chip">
-                  {rangeList.water_range[`id-${recipe.water[0]}`].label}
+                  {rangeList.water_range[recipe.water[0]].label}
                 </span>
               ) : null}
             </div>
@@ -135,7 +135,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                   <label>Grinder: </label>
                   <p>
                     {recipe.grinder & recipe.grinder[0]
-                      ? rangeList.grinder_range[`id-${recipe.grinder[0]}`].label
+                      ? rangeList.grinder_range[recipe.grinder[0]].label
                       : "-"}
                   </p>
                 </div>
@@ -151,7 +151,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                   <label>Water: </label>
                   <p>
                     {recipe.water & recipe.water[0]
-                      ? rangeList.water_range[`id-${recipe.water[0]}`].label
+                      ? rangeList.water_range[recipe.water[0]].label
                       : "-"}
                   </p>
                 </div>
@@ -184,7 +184,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                 <PalateRadarChartSingle
                   className="w-1/2 px-6 mx-auto"
                   labels={Object.keys(recipe.palate_rates).map(
-                    (id) => rangeList.palate_range[`id-${id}`].label
+                    (id) => rangeList.palate_range[id].label
                   )}
                   rates={Object.values(recipe.palate_rates).map((rate) => rate)}
                 />

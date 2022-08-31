@@ -52,10 +52,10 @@ const Table = ({searchValue, orderBy, orderMethod}) => {
       const aId = a[orderBy][0];
       const bId = b[orderBy][0];
 
-      if (range[`id-${aId}`]?.label < range[`id-${bId}`]?.label) {
+      if (range[aId]?.label < range[bId]?.label) {
         return orderMethod === ORDER_METHOD.ASC ? -1 : 1;
       }
-      else if (range[`id-${aId}`]?.label > range[`id-${bId}`]?.label) {
+      else if (range[aId]?.label > range[bId]?.label) {
         return orderMethod === ORDER_METHOD.ASC ? 1 : -1;
       }
       return 0;
