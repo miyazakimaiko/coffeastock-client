@@ -48,7 +48,7 @@ module.exports = (app) => {
           aroma_range
         )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-        RETURNING *`,
+        `,
         [
           req.params.userid,                        // 1
           1,                                        // 2
@@ -117,6 +117,30 @@ module.exports = (app) => {
         FROM users WHERE user_id = $1
         `, 
         [req.params.userid]
+      );
+      res.status(200).json(result.rows[0]);
+    }
+     catch (err) {
+       next(err);
+     }
+  });
+
+  app.post(endpoint + "/user/:userid/unit-ids", async (req, res, next) => {
+    try {
+      const result = await db.query(`
+        UPDATE users
+        SET 
+          unit_solid_weight_id = $1, 
+          unit_fluid_weight_id = $2,
+          unit_temperature_id = $3
+        WHERE user_id = $4
+        `, 
+        [
+          req.body.unit_solid_weight_id,  // 1
+          req.body.unit_fluid_weight_id,  // 2
+          req.body.unit_temperature_id,   // 3
+          req.params.userid,              // 4
+        ]
       );
       res.status(200).json(result.rows[0]);
     }

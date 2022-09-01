@@ -9,18 +9,29 @@ import ChangePasswordModal from '../../modals/change-password-modal';
 import ChangeEmailModal from '../../modals/change-email-modal';
 import useUnits from '../../hooks/useUnits';
 import useUserUnitIds from '../../hooks/useUserUnitIds';
+import ChangeUnitsModal from '../../modals/change-units-modal';
 
 
 const ManageAccount = () => {
   const userData = useUserData();
-  const units = useUnits(userData.accessToken.jwtToken);
-  const userUnitIds = useUserUnitIds(userData.sub, userData.accessToken.jwtToken)
+  const { data: units, 
+          isLoading: unitsAreLoading
+        } = useUnits(userData.accessToken.jwtToken);
+  const { data: userUnitIds, 
+          isLoading: userUnitIdsAreLoading
+        } = useUserUnitIds(userData.sub, userData.accessToken.jwtToken);
+  
   const { modal, 
           openChangeNicknameModal,
           openChangePasswordModal,
           openChangeEmailModal,
-          modalModeSelection } = useContext(ModalStateContext);
+          openChangeUnitsModal,
+          modalModeSelection 
+        } = useContext(ModalStateContext);
 
+  if (unitsAreLoading || userUnitIdsAreLoading) {
+    return 'loading...'
+  }
 
   return (
     <>
@@ -80,34 +91,60 @@ const ManageAccount = () => {
           </div>
 
           <div className="bg-white shadow-sm rounded w-full max-w-lg mx-auto py-6 p-10 mb-6">
-            <h3 className="text-xl font-medium pb-6">Cofee / Recipe Units</h3>
+            <div className="flex justify-between">
+              <h3 className="text-xl font-medium pb-6">Cofee / Recipe Units</h3>
+              <div className="ml-6">
+                <a
+                  href="#"
+                  onClick={openChangeUnitsModal}
+                  className="underline text-blue"
+                >
+                  Edit
+                </a>
+              </div>
+            </div>
             <div className="flex justify-between">
               <ul>
                 <li key="name" className="flex pb-4">
                   <div className="w-48">Volume weight: </div>
-                  <div>gram</div>
-                  <div className="ml-6">
-                    <a href="#" className="underline text-blue">
-                      Edit
-                    </a>
+                  <div>
+                    {units["solid" + userUnitIds.unit_solid_weight_id].label}
+                  </div>
+                  <div className="ml-2">
+                    (
+                    {
+                      units["solid" + userUnitIds.unit_solid_weight_id]
+                        .short_label
+                    }
+                    )
                   </div>
                 </li>
                 <li key="email" className="flex pb-4">
                   <div className="w-48">Fluid wight: </div>
-                  <div>litle</div>
-                  <div className="ml-6">
-                    <a href="#" className="underline text-blue">
-                      Edit
-                    </a>
+                  <div>
+                    {units["fluid" + userUnitIds.unit_fluid_weight_id].label}
+                  </div>
+                  <div className="ml-2">
+                    (
+                    {
+                      units["fluid" + userUnitIds.unit_fluid_weight_id]
+                        .short_label
+                    }
+                    )
                   </div>
                 </li>
                 <li key="password" className="flex pb-4">
                   <div className="w-48">Water Temperature: </div>
-                  <div>celcius</div>
-                  <div className="ml-6">
-                    <a href="#" className="underline text-blue">
-                      Edit
-                    </a>
+                  <div>
+                    {units["temp" + userUnitIds.unit_temperature_id].label}
+                  </div>
+                  <div className="ml-2">
+                    (
+                    {
+                      units["temp" + userUnitIds.unit_temperature_id]
+                        .short_label
+                    }
+                    )
                   </div>
                 </li>
               </ul>
@@ -197,6 +234,10 @@ const ManageAccount = () => {
 
       {modal.isOpen && modal.mode === modalModeSelection.changeEmail && (
         <ChangeEmailModal />
+      )}
+
+      {modal.isOpen && modal.mode === modalModeSelection.changeUnits && (
+        <ChangeUnitsModal />
       )}
     </>
   );

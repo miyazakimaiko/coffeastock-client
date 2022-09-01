@@ -12,6 +12,10 @@ export const getUserUnitIds = async (userid, token) => {
   return await axios.get(`/user/${userid}/unit-ids`, { headers: { accesstoken: token } }).then(res => res.data);
 }
 
+export const editUserUnitIds = async (userid, body, token) => {
+  return await axios.post(`/user/${userid}/unit-ids`, body, { headers: { accesstoken: token } }).then(res => res.data);
+}
+
 export const addUser = async (userid, body, token) => {
   return await axios.post(`/user/${userid}`, body, { headers: { accesstoken: token } }).then(res => res.data)
 }
