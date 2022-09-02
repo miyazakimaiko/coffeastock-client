@@ -56,10 +56,10 @@ const AddEditRecipeModal = ({recipeId = null}) => {
 
   const userData = useUserData();
   const queryClient = useQueryClient();
-  const addRange = useAddRange(userData.sub, userData.accessToken.jwtToken);
-  const { data: targetRecipe, isLoading: recipeIsLoading } = useRecipe(userData.sub, recipeId, userData.accessToken.jwtToken)
+  const addRange = useAddRange();
+  const { data: targetRecipe, isLoading: recipeIsLoading } = useRecipe(recipeId);
   const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub, userData.accessToken.jwtToken);
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub, userData.accessToken.jwtToken);
+  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges();
   const { modal, closeModal, modalModeSelection } = useContext(ModalStateContext);
 
   const [recipe, setRecipe, onSubmit, isSubmitting] = RecipeService();
@@ -124,12 +124,17 @@ const AddEditRecipeModal = ({recipeId = null}) => {
     }) 
 
     // remove removed palate rates that are removed from palate selection
-    const finalPalateRate = {};
-    const palateIdList = convertItemListToIdList(selectedPalates, rangeList.palate_range);
-
-    for (const id of palateIdList) {
-      finalPalateRate[id] = palateRate[id]
+    function makeFinalPalateRate() {
+      const finalPalateRateObj = {};
+      const palateIdList = convertItemListToIdList(selectedPalates, rangeList.palate_range);
+  
+      for (const id of palateIdList) {
+        finalPalateRateObj[id] = palateRate[id];
+      }
+      return finalPalateRateObj;
     }
+
+    const finalPalateRate = makeFinalPalateRate();
     
     setRecipe({...recipe, 
       bean_id: selectedBean.bean_id,

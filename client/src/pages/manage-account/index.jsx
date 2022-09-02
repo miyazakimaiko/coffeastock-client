@@ -16,10 +16,10 @@ const ManageAccount = () => {
   const userData = useUserData();
   const { data: units, 
           isLoading: unitsAreLoading
-        } = useUnits(userData.accessToken.jwtToken);
+        } = useUnits();
   const { data: userUnitIds, 
           isLoading: userUnitIdsAreLoading
-        } = useUserUnitIds(userData.sub, userData.accessToken.jwtToken);
+        } = useUserUnitIds();
   
   const { modal, 
           openChangeNicknameModal,

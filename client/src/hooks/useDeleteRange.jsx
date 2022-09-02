@@ -1,14 +1,21 @@
 import { useMutation, useQueryClient } from 'react-query'
-import * as api from '../api/Ranges'
+import { useUserData } from '../context/AccountContext';
 import toastOnBottomCenter from '../utils/customToast'
+import * as api from '../api/Ranges'
 
-export default function useDeleteRange(userid, token) {
+export default function useDeleteRange() {
+  const user = useUserData();
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (data) => await api.deleteRange(userid, data.rangeName, data.body, token),
+    async (data) => await api.deleteRange(
+      user.sub, 
+      data.rangeName, 
+      data.body, 
+      user.accessToken.jwtToken
+    ),
     {
-      enabled: userid && token ? true : false,
+      enabled: user ? true : false,
       onSuccess: async (_, variables) => {
         await queryClient.invalidateQueries([
           "range",

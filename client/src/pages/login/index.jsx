@@ -55,10 +55,10 @@ const Login = () => {
       const userFound = await api.findUser(userData.sub, userData.accessToken.jwtToken);
 
       if (!userFound) {
-        addUser.mutate(userData);
+        addUser.mutate();
       }
       else {
-        getUser.mutate(userData);
+        getUser.mutate();
       }
       navigate('/', {replace: true});
       toastOnBottomCenter('success', 'Logged in successfully.');

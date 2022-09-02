@@ -1,15 +1,22 @@
 import { useMutation, useQueryClient } from 'react-query'
+import { useUserData } from '../context/AccountContext';
 import * as api from '../api/Ranges'
 
-export default function useAddRange(userid, token) {
+export default function useAddRange() {
+  const userData = useUserData();
   const queryClient = useQueryClient();
 
   return useMutation(
     async (data) => {
-      await api.addRange(userid, data.rangeName, data.body, token);
+      await api.addRange(
+        userData.sub, 
+        data.rangeName, 
+        data.body, 
+        userData.accessToken.jwtToken
+      );
     },
     {
-      enabled: Boolean(userid),
+      enabled: userData ? true : false,
       onSuccess: async (_, variables) => {
         await queryClient.invalidateQueries([
           "range",

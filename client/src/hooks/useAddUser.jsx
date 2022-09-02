@@ -1,61 +1,10 @@
 import { useMutation } from 'react-query'
-import * as api from '../api/Users'
+import { useUserData } from '../context/AccountContext'
 import toastOnBottomCenter from '../utils/customToast'
+import * as api from '../api/Users'
 
 export default function useAddUser() {
-
-  const body = {
-    "origin_range": {
-      "nextId": 121,
-      "items": {
-      }
-    },
-    "farm_range": {
-      "nextId": 1,
-      "items": {
-      }
-    },
-    "variety_range": {
-      "nextId": 1,
-      "items": {
-      }
-    },
-    "process_range": {
-      "nextId": 1,
-      "items": {
-      }
-    },
-    "roaster_range": {
-      "nextId": 1,
-      "items": {
-      }
-    },
-    "method_range": {
-      "nextId": 1,
-        "items": {
-      }
-    },
-    "water_range": {
-      "nextId": 1,
-      "items": {
-      }
-    },
-    "grinder_range": {
-      "nextId": 1,
-      "items": {
-      }
-    },
-    "palate_range": {
-      "nextId": 1,
-      "items": {
-      }
-    },
-    "aroma_range": {
-      "nextId": 1,
-      "items": {
-      }
-    }
-  }
+  const user = useUserData();
 
   // 28.1kb for 40 entries.
   //
@@ -69,10 +18,63 @@ export default function useAddUser() {
 
   }
   return useMutation(
-    async (userData) => await api.addUser(userData.sub, body, userData.accessToken.jwtToken),
+    async () => await api.addUser(user.sub, body, user.accessToken.jwtToken),
     {
       onSuccess: () => toastOnBottomCenter('success', 'Welcome to Coffee Journal!'),
       onError: error => toastOnBottomCenter('error', error.message)
     }
   )
+}
+
+const body = {
+  "origin_range": {
+    "nextId": 121,
+    "items": {
+    }
+  },
+  "farm_range": {
+    "nextId": 1,
+    "items": {
+    }
+  },
+  "variety_range": {
+    "nextId": 1,
+    "items": {
+    }
+  },
+  "process_range": {
+    "nextId": 1,
+    "items": {
+    }
+  },
+  "roaster_range": {
+    "nextId": 1,
+    "items": {
+    }
+  },
+  "method_range": {
+    "nextId": 1,
+      "items": {
+    }
+  },
+  "water_range": {
+    "nextId": 1,
+    "items": {
+    }
+  },
+  "grinder_range": {
+    "nextId": 1,
+    "items": {
+    }
+  },
+  "palate_range": {
+    "nextId": 1,
+    "items": {
+    }
+  },
+  "aroma_range": {
+    "nextId": 1,
+    "items": {
+    }
+  }
 }

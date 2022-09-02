@@ -1,14 +1,16 @@
 import { useQuery, useQueryClient } from 'react-query'
+import { useUserData } from '../context/AccountContext';
 import * as api from '../api/Ranges'
 
-const useRanges = (userid, token) => {
+const useRanges = () => {
+  const user = useUserData();
   const queryClient = useQueryClient();
 
   return useQuery(
     'ranges', 
-    () => api.getRanges(userid, token),
+    () => api.getRanges(user.sub, user.accessToken.jwtToken),
     {
-      enabled: Boolean(userid),
+      enabled: user ? true : false,
       onSuccess: ranges => {
         Object.keys(ranges).forEach(range => {
           queryClient.setQueryData(['range', range], ranges[range])

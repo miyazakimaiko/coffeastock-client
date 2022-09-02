@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
 import toastOnBottomCenter from '../../utils/customToast'
-import { useUserData } from '../../context/AccountContext'
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer'
 import RedOutlineButton from '../../elements/RedOutlineButton'
 import BlueButton from '../../elements/BlueButton'
@@ -13,9 +12,8 @@ import { ModalStateContext } from '../../context/ModalStateContext'
 
 
 const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
-  const userData = useUserData()
-  const editRange = useEditRange(userData.sub, rangeName, userData.accessToken.jwtToken)
-  const addRange = useAddRange(userData.sub, userData.accessToken.jwtToken)
+  const editRange = useEditRange(rangeName)
+  const addRange = useAddRange()
   const {modal, closeModal, modalModeSelection} = useContext(ModalStateContext);
 
 

@@ -7,14 +7,13 @@ import PalateRadarChartSingle from '../../../elements/PalateRadarChartSignle'
 import convertIntervalObjToString from '../../../helpers/ConvertIntervalObjToString.js'
 import { generateStarIconList } from '../../../helpers/GenerateIconList'
 import Dropdown from '../../../elements/Dropdown'
-import { useUserData } from '../../../context/AccountContext'
 import useRanges from '../../../hooks/useRanges'
 
 
 const Row = ({recipe, onEditClick, onDeleteClick}) => {
-
-  const userData = useUserData();
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub, userData.accessToken.jwtToken);
+  const { data: rangeList, 
+          isLoading: rangeListIsLoading
+        } = useRanges();
   
   const [openDetails, setOpenDetails] = useState(false);
 

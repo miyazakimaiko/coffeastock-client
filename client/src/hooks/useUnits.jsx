@@ -1,14 +1,16 @@
 import { useQuery, useQueryClient } from 'react-query';
+import { useUserData } from '../context/AccountContext';
 import * as api from '../api/Units'
 
-export default function useUnits(token) {
+export default function useUnits() {
+  const user = useUserData();
   const queryClient = useQueryClient();
 
   return useQuery(
     ['units'],
-    () => api.getUnits(token), 
+    () => api.getUnits(user.accessToken.jwtToken), 
     {
-      enabled: token ? true : false,
+      enabled: user ? true : false,
       initialData: () => { 
         return queryClient.getQueryData('units');
       },

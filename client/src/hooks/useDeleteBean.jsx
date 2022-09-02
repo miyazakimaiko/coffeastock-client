@@ -1,14 +1,16 @@
 import { useMutation, useQueryClient } from 'react-query'
-import * as api from '../api/Beans'
+import { useUserData } from '../context/AccountContext';
 import toastOnBottomCenter from '../utils/customToast'
+import * as api from '../api/Beans'
 
-export default function useDeleteBean(userid, token) {
+export default function useDeleteBean() {
+  const user = useUserData();
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (body) => await api.deleteBean(userid, body, token),
+    async (body) => await api.deleteBean(user.sub, body, user.accessToken.jwtToken),
     {
-      enabled: Boolean(userid),
+      enabled: user ? true : false,
       onSuccess: async () => {
         await queryClient.invalidateQueries('beans')
         await queryClient.invalidateQueries('ranges')

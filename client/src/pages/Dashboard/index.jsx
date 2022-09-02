@@ -9,8 +9,7 @@ import { useUserData } from '../../context/AccountContext'
 import useUnits from '../../hooks/useUnits'
 
 const Dashboard = () => {
-  const userData = useUserData();
-  const units = useUnits(userData.accessToken.jwtToken);
+  const units = useUnits();
 
   useEffect(() => {
     window.scroll({ top: 0, behavior: 'smooth' });

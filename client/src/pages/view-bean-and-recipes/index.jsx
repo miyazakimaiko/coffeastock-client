@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { HiOutlineChevronRight } from 'react-icons/hi'
 import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
 import { unescapeHtml } from '../../helpers/HtmlConverter'
-import { useUserData } from '../../context/AccountContext';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import useBean from '../../hooks/useBean';
 import useDeleteBean from '../../hooks/useDeleteBean';
@@ -20,9 +19,8 @@ import './ViewBeanAndRecipes.scss'
 
 const ViewBeanAndRecipes = () => {
   const { id } = useParams();
-  const userData = useUserData()
-  const { data: targetBean, isLoading: targetBeanIsLoading } = useBean(userData.sub, id, userData.accessToken.jwtToken)
-  const deleteBean = useDeleteBean(userData.sub, userData.accessToken.jwtToken)
+  const { data: targetBean, isLoading: targetBeanIsLoading } = useBean(id)
+  const deleteBean = useDeleteBean()
 
   const navigate = useNavigate()
 

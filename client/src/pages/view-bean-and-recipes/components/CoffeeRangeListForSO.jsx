@@ -7,8 +7,9 @@ import useRanges from '../../../hooks/useRanges';
 import CoffeeRangeListItem from './CoffeeRangeListItem';
 
 const CoffeeRangeListForSO = ({bean}) => {
-  const userData = useUserData()
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub, userData.accessToken.jwtToken)
+  const { data: rangeList, 
+          isLoading: rangeListIsLoading 
+        } = useRanges();
 
   const [beanAttrNames, setBeanAttrNames] = useState({
     origin: null,

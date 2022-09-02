@@ -9,7 +9,9 @@ import CoffeeRangeListItem from './CoffeeRangeListItem'
 
 const CoffeeRangeListForBlend = ({bean}) => {
   const userData = useUserData()
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub, userData.accessToken.jwtToken)
+  const { data: rangeList, 
+          isLoading: rangeListIsLoading
+        } = useRanges();
   const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub, userData.accessToken.jwtToken)
   const [blendRatio, setBlendRatio] = useState([]);
 

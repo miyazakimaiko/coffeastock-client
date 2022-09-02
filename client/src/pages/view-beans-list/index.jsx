@@ -29,7 +29,9 @@ const GROUPBY = {
 const ViewBeansList = () => {
   const userData = useUserData()
   const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub, userData.accessToken.jwtToken)
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub, userData.accessToken.jwtToken)
+  const { data: rangeList, 
+          isLoading: rangeListIsLoading
+        } = useRanges();
 
   const [showState, setShowState] = useState(SHOW.ALL)
   const [groupState, setGroupState] = useState(GROUPBY.ROASTER)
@@ -171,8 +173,8 @@ const ViewBeansList = () => {
           ?
           Object.keys(sortedCoffeesHtmlDictionary).map(attrId => {
             if (Object.keys(sortedCoffeesHtmlDictionary[attrId]).length > 0) {
-              const title = rangeList[groupState + '_range']['id-' + attrId] ?
-                rangeList[groupState + '_range']['id-' + attrId]['label'] : attrId
+              const title = rangeList[groupState + '_range'][attrId] ?
+                rangeList[groupState + '_range'][attrId].label : attrId
               return (
                 <CoffeeGroupSection title={title} key={title} >
                   {sortedCoffeesHtmlDictionary[attrId]

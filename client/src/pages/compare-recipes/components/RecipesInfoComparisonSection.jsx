@@ -12,18 +12,18 @@ import RecipeComparisonListItem from './RecipeComparisonListItem';
 
 const RecipesInfoComparisonSection = ({ selectedRecipeLeftId, selectedRecipeRightId }) => {
   const userData = useUserData();
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub, userData.accessToken.jwtToken);
+  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges();
   const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub, userData.accessToken.jwtToken);
 
   const { 
     data: selectedRecipeRight, 
     isLoading: recipeRightIsLoading 
-  } = useRecipe(userData.sub, selectedRecipeRightId, userData.accessToken.jwtToken);
+  } = useRecipe(selectedRecipeRightId);
 
   const { 
     data: selectedRecipeLeft, 
     isLoading: recipeLeftIsLoading 
-  } = useRecipe(userData.sub, selectedRecipeLeftId, userData.accessToken.jwtToken);
+  } = useRecipe(selectedRecipeLeftId);
 
   const {
     modal,

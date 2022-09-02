@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useUserData } from '../../../context/AccountContext'
 import { ModalStateContext } from '../../../context/ModalStateContext'
 import useDeleteRecipe from '../../../hooks/useDeleteRecipe'
 import AddEditRecipeModal from '../../../modals/add-edit-recipe-modal'
@@ -8,9 +7,8 @@ import DeleteModal from '../../../modals/delete-modal'
 import Row from './Row'
 
 const Rows = ({data}) => {
-  const userData = useUserData();
   const { id: beanId } = useParams();
-  const deleteRecipe = useDeleteRecipe(userData.sub, beanId, userData.accessToken.jwtToken);
+  const deleteRecipe = useDeleteRecipe(beanId);
   const {
     modal,
     openEditRecipeModal,

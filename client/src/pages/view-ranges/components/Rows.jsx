@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react'
-import { useUserData } from '../../../context/AccountContext';
 import { ModalStateContext } from '../../../context/ModalStateContext'
 import { unescapeHtml } from '../../../helpers/HtmlConverter';
 import useDeleteRange from '../../../hooks/useDeleteRange';
@@ -8,10 +7,13 @@ import DeleteModal from '../../../modals/delete-modal';
 import Row from './Row'
 
 const Rows = ({data, rangeName}) => {
-
-  const userData = useUserData();
-  const deleteRange = useDeleteRange(userData.sub, userData.accessToken.jwtToken);
-  const {modal, openEditRangeModal, openDeleteRangeModal, closeModal, modalModeSelection} = useContext(ModalStateContext);
+  const deleteRange = useDeleteRange();
+  const { modal, 
+          openEditRangeModal, 
+          openDeleteRangeModal, 
+          closeModal, 
+          modalModeSelection
+        } = useContext(ModalStateContext);
   const [rangeItem, setRangeItem] = useState({ value: "", label: "", def: "" });
 
 

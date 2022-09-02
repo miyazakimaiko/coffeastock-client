@@ -42,10 +42,10 @@ import { useQueryClient } from 'react-query';
 
 const AddEditBeanModal = ({targetBean = null}) => {
   const userData = useUserData()
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges(userData.sub, userData.accessToken.jwtToken)
+  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges();
   const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub, userData.accessToken.jwtToken)
   const [bean, setBean, onSubmit, isSubmitting] = BeanService();
-  const addRange = useAddRange(userData.sub, userData.accessToken.jwtToken)
+  const addRange = useAddRange()
   const [tabState, setTabState] = TabStateModel();
   const { modal, closeModal, modalModeSelection } = useContext(ModalStateContext);
   const queryClient = useQueryClient();

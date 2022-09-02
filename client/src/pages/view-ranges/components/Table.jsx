@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { useUserData } from '../../../context/AccountContext';
 import useRange from '../../../hooks/useRange';
 import Rows from './Rows';
 
 const Table = ({searchValue, rangeName}) => {
-  const userData = useUserData();
   const [pageNumber, setPageNumber] = useState(0);
-  const { data: items, isLoading, isFetching } = useRange(userData.sub, rangeName, userData.accessToken.jwtToken);
+  const { data: items, isLoading, isFetching } = useRange(rangeName);
   const [filteredItems, setFilteredItems] = useState([])
   const itemsCountToDisplay = 10;
 

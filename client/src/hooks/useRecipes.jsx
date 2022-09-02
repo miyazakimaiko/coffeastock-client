@@ -1,15 +1,21 @@
 import { useQuery, useQueryClient } from 'react-query'
-import * as apiRecipes from '../api/Recipes'
+import { useUserData } from '../context/AccountContext';
 import extractRecipeNoFromRecipeId from '../helpers/ExtractRecipeNoFromRecipeId';
+import * as apiRecipes from '../api/Recipes'
 
-export default function useRecipes(userid, beanid, token) {
+export default function useRecipes(beanid) {
+  const user = useUserData();
   const queryClient = useQueryClient();
 
   return useQuery(
     ['bean', beanid, 'recipes'], 
-    () => apiRecipes.getRecipes(userid, beanid, token),
+    () => apiRecipes.getRecipes(
+      user.sub, 
+      beanid, 
+      user.accessToken.jwtToken
+    ),
     {
-      enabled: Boolean(userid, beanid),
+      enabled: user ? true : false,
       onSuccess: recipes => {
         recipes.forEach(recipe => {
           queryClient.setQueryData(

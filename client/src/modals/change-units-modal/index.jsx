@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useUserData } from '../../context/AccountContext';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer';
 import FormMultiSelect from '../../elements/FormMultiSelect';
@@ -10,14 +9,13 @@ import useUserUnitIds from '../../hooks/useUserUnitIds';
 
 const ChangeUnitsModal = () => {
   const { closeModal } = useContext(ModalStateContext);
-  const userData = useUserData();
-  const editUserUnitIds = useEditUserUnitIds(userData.sub, userData.accessToken.jwtToken);
+  const editUserUnitIds = useEditUserUnitIds();
   const { data: units, 
           isLoading: unitsAreLoading 
-        } = useUnits(userData.accessToken.jwtToken);
+        } = useUnits();
   const { data: userUnitIds, 
           isLoading: userUnitIdsAreLoading 
-        } = useUserUnitIds(userData.sub, userData.accessToken.jwtToken);
+        } = useUserUnitIds();
 
   const [solidWeightUnit, setSolidWeightUnit] = useState({});
   const [fluidWeightUnit, setFluidWeightUnit] = useState({});

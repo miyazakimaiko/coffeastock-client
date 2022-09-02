@@ -1,14 +1,16 @@
 import { useQuery, useQueryClient } from 'react-query';
+import { useUserData } from '../context/AccountContext';
 import * as api from '../api/Ranges'
 
-export default function useRange(userid, rangeName, token) {
+export default function useRange(rangeName) {
+  const user = useUserData();
   const queryClient = useQueryClient();
 
   return useQuery(
     ['range', `${rangeName}_range`],
-    () => api.getRange(userid, rangeName, token), 
+    () => api.getRange(user.sub, rangeName, user.accessToken.jwtToken), 
     {
-      enabled: Boolean(userid) && Boolean(rangeName),
+      enabled: user ? true : false,
       keepPreviousData: true,
       initialData: () => { 
         return queryClient.getQueryData(['range', `${rangeName}_range`])

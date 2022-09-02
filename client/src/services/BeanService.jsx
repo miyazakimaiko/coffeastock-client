@@ -1,14 +1,12 @@
 import { useContext, useEffect, useState } from 'react'
-import { useUserData } from '../context/AccountContext';
 import { ModalStateContext } from '../context/ModalStateContext';
 import useAddBean from '../hooks/useAddBean';
 import useEditBean from '../hooks/useEditBean';
 import toastOnBottomCenter from '../utils/customToast';
 
 const BeanService = () => {
-  const userData = useUserData();
-  const addBean = useAddBean(userData.sub, userData.accessToken.jwtToken);
-  const editBean = useEditBean(userData.sub, userData.accessToken.jwtToken);
+  const addBean = useAddBean();
+  const editBean = useEditBean();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {modal, closeModal, modalModeSelection} = useContext(ModalStateContext);
 

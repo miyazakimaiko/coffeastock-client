@@ -4,8 +4,7 @@ import FormMultiSelect from '../../../elements/FormMultiSelect';
 import useRecipes from '../../../hooks/useRecipes';
 
 const RecipeSelectInput = ({ beanId, value, onChange }) => {
-  const userData = useUserData();
-  const { data: recipeList, isLoading } = useRecipes(userData.sub, beanId, userData.accessToken.jwtToken);
+  const { data: recipeList, isLoading } = useRecipes(beanId);
  
   if (isLoading) {
     return 'Loading...'

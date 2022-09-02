@@ -1,13 +1,11 @@
 import { useContext, useEffect, useState } from 'react'
-import { useUserData } from '../context/AccountContext';
 import { ModalStateContext } from '../context/ModalStateContext';
 import useAddRecipe from '../hooks/useAddRecipe';
 import useEditRecipe from '../hooks/useEditRecipe';
 
 const RecipeService = () => {
-  const userData = useUserData();
-  const addRecipe = useAddRecipe(userData.sub, userData.accessToken.jwtToken);
-  const editRecipe = useEditRecipe(userData.sub, userData.accessToken.jwtToken);
+  const addRecipe = useAddRecipe();
+  const editRecipe = useEditRecipe();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { modal, closeModal, modalModeSelection } = useContext(ModalStateContext);
 

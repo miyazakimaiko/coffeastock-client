@@ -1,14 +1,21 @@
 import { useMutation, useQueryClient } from 'react-query'
-import * as api from '../api/Recipes'
+import { useUserData } from '../context/AccountContext';
 import toastOnBottomCenter from '../utils/customToast'
+import * as api from '../api/Recipes'
 
-export default function useAddRecipe(userid, token) {
+export default function useAddRecipe() {
+  const user = useUserData(); 
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (body) => await api.addRecipe(userid, body.bean_id, body, token),
+    async (body) => await api.addRecipe(
+      user.sub, 
+      body.bean_id, 
+      body, 
+      user.accessToken.jwtToken
+    ),
     {
-      enabled: Boolean(userid),
+      enabled: user ? true : false,
       onSuccess: (variables) => {
         queryClient.invalidateQueries(['bean', variables[0].bean_id, 'recipes'])
         queryClient.invalidateQueries('ranges')
