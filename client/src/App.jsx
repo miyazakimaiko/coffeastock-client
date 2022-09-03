@@ -13,6 +13,7 @@ import ViewMyCoffees from './pages/view-beans-list';
 import ViewRanges from './pages/view-ranges';
 import CompareRecipes from './pages/compare-recipes';
 import ManageAccount from './pages/manage-account';
+import PageNotFound from './pages/page-not-found';
 import { useGetSession, 
         useSetUserData, 
         useAuthenticated, 
@@ -40,12 +41,11 @@ const App = () => {
 
   return <>
     <Router>
-      <div className="relative flex flex-col min-h-screen bg-creme font-sans text-xs md:text-sm text-burnt-sienna">
+      <div className="relative flex flex-col w-full min-h-screen bg-creme font-sans text-xs md:text-sm text-burnt-sienna">
         <NavStateProvider>
           {authenticated ? <Nav navRef={navRef} mainRef={mainRef} headerRef={headerRef} pushpinRef={pushpinRef}/>: ""}
-          <div ref={mainRef} className={"main w-full box-border"}>
-            {authenticated ? <Header mainRef={mainRef} navRef={navRef} pushpinRef={pushpinRef}/>: ""}
-
+          {authenticated ? <Header mainRef={mainRef} navRef={navRef} pushpinRef={pushpinRef}/>: ""}
+          <div ref={mainRef} className={"relative main min-h-screen box-border header-top-pd"}>
             { authenticated ? 
               <Routes>
                 <Route exact path="/coffees" element={<ViewMyCoffees />} />
@@ -63,8 +63,9 @@ const App = () => {
                 <Route exact path="/settings/method" element={<ViewRanges parentCat={'Recipes'} cat={'method'} />} />
                 <Route exact path="/settings/palate" element={<ViewRanges parentCat={'Recipes'} cat={'palate'} />} />
                 <Route exact path="/settings/water" element={<ViewRanges parentCat={'Recipes'} cat={'water'} />} />
-                <Route path='/' element={<Dashboard />} />
-                <Route path='account' element={<ManageAccount />} />
+                <Route path="/" element={<Dashboard />} />
+                <Route path="account" element={<ManageAccount />} />
+                <Route path="*" element={<PageNotFound />} />
               </Routes>
               :
               <Routes>
