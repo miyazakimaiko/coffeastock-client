@@ -51,7 +51,7 @@ const Header = (props) => {
 
   return (
     <>
-    <div className="header h-16 w-full px-4 items-center header-border">
+    <div className={`header z-10 w-full pr-4 items-center border-b border-burnt-sienna border-opacity-20 ${openNav ? 'header-pd' : 'pl-4'}`}>
       <div className="flex">
         <div className="flex items-center cursor-pointer" onClick={showNavbar}>
           {openNav ? <XIcon className="h-8 w-8 opacity-80 hover:opacity-100 ease-linear transition-all duration-150" /> 
@@ -94,7 +94,7 @@ const Header = (props) => {
         </div>
       </div>
     </div>
-    <div className="w-hull border-b border-burnt-sienna border-opacity-20 "></div>
+    <div className="w-full border-b border-burnt-sienna border-opacity-20 "></div>
 
     {modal.mode === modalModeSelection.addBean && modal.isOpen ?  <AddEditBeanModal /> : null}
     {modal.mode === modalModeSelection.addRecipe && modal.isOpen ?  <AddRecipeModal /> : null}

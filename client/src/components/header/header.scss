@@ -2,6 +2,7 @@
 
 .header {
   width: 100%;
+  height: var(--header-height);
   position: fixed;
   top: 0;
   left: 0;
@@ -9,9 +10,7 @@
   align-items: center;
   justify-content: space-between;
   transition: .5s;  
-}
-.header-border {
-  position: relative;
+  background-color: var(--creme);
 }
 
 .button-section {
@@ -21,3 +20,14 @@
   }
 }
 
+.header-pd {
+  margin-left: calc(var(--nav-width) +  16px);
+
+  @include sm() {
+    margin-left: calc(var(--nav-width-sm) +  16px);
+  }
+  @include lg() {
+    margin-left: 0;
+    padding-left: calc(var(--nav-width-sm) +  16px);
+  }
+}

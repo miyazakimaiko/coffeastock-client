@@ -36,6 +36,9 @@ body {
   }
 }
 
+.header-top-pd {
+  padding-top: var(--header-height);
+}
 
 :root {
   --burnt-sienna: #66615B;
@@ -59,6 +62,7 @@ body {
   --toastify-font-family: 'system-ui';
   --nav-width: 70vw;
   --nav-width-sm: 240px;
+  --header-height: 54px;
 }
 
 ::-webkit-scrollbar {
