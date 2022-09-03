@@ -1,10 +1,8 @@
 import { useMutation } from 'react-query'
-import { useUserData } from '../context/AccountContext'
 import toastOnBottomCenter from '../utils/customToast'
 import * as api from '../api/Users'
 
 export default function useAddUser() {
-  const user = useUserData();
 
   // 28.1kb for 40 entries.
   //
@@ -18,7 +16,7 @@ export default function useAddUser() {
 
   }
   return useMutation(
-    async () => await api.addUser(user.sub, body, user.accessToken.jwtToken),
+    async (user) => await api.addUser(user.sub, body, user.accessToken.jwtToken),
     {
       onSuccess: () => toastOnBottomCenter('success', 'Welcome to Coffee Journal!'),
       onError: error => toastOnBottomCenter('error', error.message)

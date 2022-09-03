@@ -1,14 +1,12 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { useUserData } from '../context/AccountContext';
 import toastOnBottomCenter from '../utils/customToast';
 import * as api from '../api/Users'
 
 export default function useGetUser() {
-  const user = useUserData();
   const queryClient = useQueryClient();
 
   return useMutation(
-    async () => await api.getUser(user.sub, user.accessToken.jwtToken), 
+    async (user) => await api.getUser(user.sub, user.accessToken.jwtToken), 
     {
       onSuccess: data => {
         queryClient.setQueryData(
