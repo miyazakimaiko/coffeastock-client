@@ -24,6 +24,7 @@ export default function useRecipe(recipeId) {
         return queryClient.getQueryData(['bean', beanId, 'recipe', recipeNo])
       },
       initialStale: true,
+      refetchOnWindowFocus: false,
     }
   )
 }

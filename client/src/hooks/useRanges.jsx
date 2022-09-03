@@ -15,7 +15,8 @@ const useRanges = () => {
         Object.keys(ranges).forEach(range => {
           queryClient.setQueryData(['range', range], ranges[range])
         })
-      }
+      },
+      refetchOnWindowFocus: false,
     }
   )
 }

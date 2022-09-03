@@ -10,11 +10,12 @@ export default function useUnits() {
     ['units'],
     () => api.getUnits(user.accessToken.jwtToken), 
     {
-      enabled: user ? true : false,
+      enabled: !!user,
       initialData: () => { 
         return queryClient.getQueryData('units');
       },
-      initialStale: true
+      initialStale: true,
+      refetchOnWindowFocus: false,
     }
   )
 }

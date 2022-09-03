@@ -16,6 +16,7 @@ export default function useRange(rangeName) {
         return queryClient.getQueryData(['range', `${rangeName}_range`])
       },
       initialStale: true,
+      refetchOnWindowFocus: false,
     }
   )
 }

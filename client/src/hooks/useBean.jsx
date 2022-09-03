@@ -14,7 +14,8 @@ export default function useBean(beanId) {
       initialData: () => { 
         return queryClient.getQueryData('beans')?.find(d => d.bean_id == beanId)
       },
-      initialStale: true
+      initialStale: true,
+      refetchOnWindowFocus: false,
     }
   )
 }

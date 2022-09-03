@@ -28,7 +28,8 @@ export default function useRecipes(beanid) {
             recipe
           );
         });
-      }
+      },
+      refetchOnWindowFocus: false,
     }
   );
 }

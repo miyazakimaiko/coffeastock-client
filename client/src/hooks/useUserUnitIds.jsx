@@ -14,7 +14,8 @@ export default function useUserUnitIds() {
       initialData: () => { 
         return queryClient.getQueryData(['user', 'units']);
       },
-      initialStale: true
+      initialStale: true,
+      refetchOnWindowFocus: false,
     }
   )
 }

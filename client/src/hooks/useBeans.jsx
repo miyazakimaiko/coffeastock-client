@@ -15,7 +15,8 @@ export default function useBeans() {
         Object.values(beans).forEach(bean => {
           queryClient.setQueryData(['bean', bean.bean_id], bean)
         });
-      }
+      },
+      refetchOnWindowFocus: false,
     }
   )
 }
