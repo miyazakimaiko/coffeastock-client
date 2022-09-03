@@ -3,14 +3,14 @@ import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import * as api from '../../api/Users';
 import toastOnBottomCenter from '../../utils/customToast';
+import { ModalStateContext } from '../../context/ModalStateContext';
 import { useAuthenticate, 
         useGetSession, 
         useSetUserData, 
         useSetAuthenticated } from '../../context/AccountContext';
 import useAddUser from '../../hooks/useAddUser';
-import ChangePasswordModal from '../../modals/change-password-modal';
-import { ModalStateContext } from '../../context/ModalStateContext';
 import useGetUser from '../../hooks/useGetUser';
+import ChangePasswordModal from '../../modals/change-password-modal';
 
 
 const Login = () => {
@@ -55,14 +55,23 @@ const Login = () => {
       const userFound = await api.findUser(userData.sub, userData.accessToken.jwtToken);
 
       if (!userFound) {
-        addUser.mutate();
+        addUser.mutate(userData, {
+          onSuccess: () => navigateToDashboard()
+        });
       }
       else {
-        getUser.mutate();
+        console.log({userData})
+        getUser.mutate(userData, {
+          onSuccess: () => navigateToDashboard()
+        });
       }
-      navigate('/', {replace: true});
-      toastOnBottomCenter('success', 'Logged in successfully.');
+
     }
+  }
+
+  function navigateToDashboard() {
+    navigate('/', {replace: true});
+    toastOnBottomCenter('success', 'Logged in successfully.');
   }
 
   return (
