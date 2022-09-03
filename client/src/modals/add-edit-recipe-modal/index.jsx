@@ -1,6 +1,5 @@
 import React, { useEffect, useState, createRef, useContext } from 'react'
 import { useQueryClient } from 'react-query';
-import { useUserData } from '../../context/AccountContext';
 import extractNewItems from '../../helpers/ExtractNewItems';
 import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
 import useRecipe from '../../hooks/useRecipe';
@@ -54,11 +53,10 @@ import PalateSelectionInput from './components/PalateSelectionInput';
 
 const AddEditRecipeModal = ({recipeId = null}) => {
 
-  const userData = useUserData();
   const queryClient = useQueryClient();
   const addRange = useAddRange();
   const { data: targetRecipe, isLoading: recipeIsLoading } = useRecipe(recipeId);
-  const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub, userData.accessToken.jwtToken);
+  const { data: beanList, isLoading: beanListIsLoading } = useBeans();
   const { data: rangeList, isLoading: rangeListIsLoading } = useRanges();
   const { modal, closeModal, modalModeSelection } = useContext(ModalStateContext);
 
@@ -86,12 +84,14 @@ const AddEditRecipeModal = ({recipeId = null}) => {
     const addMode  = Boolean(beanList) && Boolean(!targetRecipe);
 
     if (editMode) {
+      let brewDate = new Date(targetRecipe.brew_date);
+      const offset = brewDate.getTimezoneOffset();
+      brewDate = new Date(brewDate.getTime() - (offset*60*1000));
+
       setRecipe({
         ...recipe,
         ...targetRecipe,
-        brew_date: targetRecipe.brew_date
-          ? targetRecipe.brew_date.split("T")[0]
-          : undefined,
+        brew_date: brewDate.toISOString().split('T')[0],
         extraction_time: formatExtractionTimeInputValue(
           targetRecipe.extraction_time
         ),

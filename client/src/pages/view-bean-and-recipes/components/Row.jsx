@@ -56,7 +56,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
         <div className="flex">
           <div className="flex flex-col justify-between w-1/4 h-auto px-4 border-r">
             <p>
-              {recipe.brew_date ? recipe.brew_date.split("T")[0] : "No date"}
+              {recipe.brew_date ? new Date(recipe.brew_date).toDateString() : "No date"}
             </p>
             <h3 className="text-xl my-2">
               {recipe.method & recipe.method[0]

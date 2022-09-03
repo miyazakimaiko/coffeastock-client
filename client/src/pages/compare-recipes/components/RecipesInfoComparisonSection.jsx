@@ -101,8 +101,8 @@ const RecipesInfoComparisonSection = ({ selectedRecipeLeftId, selectedRecipeRigh
             />
             <RecipeComparisonListItem
               name="Brew Date"
-              leftData={selectedRecipeLeft?.brew_date}
-              rightData={selectedRecipeRight?.brew_date}
+              leftData={selectedRecipeLeft?.brew_date ? new Date(selectedRecipeLeft?.brew_date)?.toDateString() : null}
+              rightData={selectedRecipeRight?.brew_date ? new Date(selectedRecipeRight?.brew_date)?.toDateString() : null}
             />
             <RecipeComparisonListItem
               name="Total Rate"
