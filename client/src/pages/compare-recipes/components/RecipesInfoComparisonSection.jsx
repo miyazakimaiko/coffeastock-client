@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react'
-import { useUserData } from '../../../context/AccountContext';
 import { ModalStateContext } from '../../../context/ModalStateContext';
 import BlueButton from '../../../elements/BlueButton';
 import PalateRadarChartDouble from '../../../elements/PalateRadarChartDouble';
@@ -7,13 +6,21 @@ import convertIntervalObjToString from '../../../helpers/ConvertIntervalObjToStr
 import useBeans from '../../../hooks/useBeans';
 import useRanges from '../../../hooks/useRanges';
 import useRecipe from '../../../hooks/useRecipe'
+import useUnits from '../../../hooks/useUnits';
+import useUserUnitIds from '../../../hooks/useUserUnitIds';
 import AddEditRecipeModal from '../../../modals/add-edit-recipe-modal';
 import RecipeComparisonListItem from './RecipeComparisonListItem';
 
 const RecipesInfoComparisonSection = ({ selectedRecipeLeftId, selectedRecipeRightId }) => {
-  const userData = useUserData();
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges();
-  const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub, userData.accessToken.jwtToken);
+  const { 
+    data: rangeList, 
+    isLoading: rangeListIsLoading 
+  } = useRanges();
+  
+  const { 
+    data: beanList, 
+    isLoading: beanListIsLoading 
+  } = useBeans();
 
   const { 
     data: selectedRecipeRight, 
@@ -24,6 +31,16 @@ const RecipesInfoComparisonSection = ({ selectedRecipeLeftId, selectedRecipeRigh
     data: selectedRecipeLeft, 
     isLoading: recipeLeftIsLoading 
   } = useRecipe(selectedRecipeLeftId);
+
+  const { 
+    data: units, 
+    isLoading: unitsAreLoading 
+  } = useUnits();
+
+  const { 
+    data: unitIds, 
+    isLoading: unitIdsAreLoading 
+  } = useUserUnitIds();
 
   const {
     modal,
@@ -47,6 +64,8 @@ const RecipesInfoComparisonSection = ({ selectedRecipeLeftId, selectedRecipeRigh
     || recipeRightIsLoading 
     || rangeListIsLoading 
     || beanListIsLoading
+    || unitsAreLoading
+    || unitIdsAreLoading
   ) {
     return 'Loading...'
   }
@@ -113,38 +132,32 @@ const RecipesInfoComparisonSection = ({ selectedRecipeLeftId, selectedRecipeRigh
               }
             />
             <RecipeComparisonListItem
-              name="Grind Size"
+              name={`Grind Size (${units['solid' + unitIds['unit_solid_weight_id']].short_label})`}
               leftData={selectedRecipeLeft?.grind_size}
               rightData={selectedRecipeRight?.grind_size}
             />
             <RecipeComparisonListItem
-              name="Grounds Weight"
+              name={`Grounds Weight (${units['solid' + unitIds['unit_solid_weight_id']].short_label})`}
               leftData={selectedRecipeLeft?.grounds_weight}
               rightData={selectedRecipeRight?.grounds_weight}
             />
             <RecipeComparisonListItem
               name="Water"
-              leftData={
-                rangeList.water_range[selectedRecipeLeft?.water[0]]
-                  ?.label
-              }
-              rightData={
-                rangeList.water_range[selectedRecipeRight?.water[0]]
-                  ?.label
-              }
+              leftData={rangeList.water_range[selectedRecipeLeft?.water[0]]?.label}
+              rightData={rangeList.water_range[selectedRecipeRight?.water[0]]?.label}
             />
             <RecipeComparisonListItem
-              name="Water Weight"
+              name={`Water Weight (${units['fluid' + unitIds['unit_fluid_weight_id']].short_label})`}
               leftData={selectedRecipeLeft?.water_weight}
               rightData={selectedRecipeRight?.water_weight}
             />
             <RecipeComparisonListItem
-              name="Water Temperature"
+              name={`Water Temperature (${units['temp' + unitIds['unit_temperature_id']].short_label})`}
               leftData={selectedRecipeLeft?.water_temp}
               rightData={selectedRecipeRight?.water_temp}
             />
             <RecipeComparisonListItem
-              name="Yield Weight"
+              name={`Yield Weight (${units['solid' + unitIds['unit_solid_weight_id']].short_label})`}
               leftData={selectedRecipeLeft?.yield_weight}
               rightData={selectedRecipeRight?.yield_weight}
             />

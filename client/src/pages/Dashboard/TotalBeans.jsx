@@ -1,7 +1,7 @@
 import React from 'react'
 import imgBeans from '../../assets/images/beans.png'
 
-const TotalBeans = () => {
+const TotalBeans = ({unit}) => {
   return (
     <div className="px-3 mb-4 md:mb-0">
       <div
@@ -22,7 +22,7 @@ const TotalBeans = () => {
           </h3>
           <div className="flex items-end place-content-end">
             <span className="text-3xl">2.5</span>
-            <span className="ml-1">kg</span>
+            <span className="ml-1">{unit}</span>
           </div>
         </div>
       </div>

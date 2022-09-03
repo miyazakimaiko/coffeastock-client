@@ -8,18 +8,26 @@ import convertIntervalObjToString from '../../../helpers/ConvertIntervalObjToStr
 import { generateStarIconList } from '../../../helpers/GenerateIconList'
 import Dropdown from '../../../elements/Dropdown'
 import useRanges from '../../../hooks/useRanges'
+import useUnits from '../../../hooks/useUnits'
+import useUserUnitIds from '../../../hooks/useUserUnitIds'
 
 
 const Row = ({recipe, onEditClick, onDeleteClick}) => {
   const { data: rangeList, 
           isLoading: rangeListIsLoading
         } = useRanges();
+  const { data: units, 
+          isLoading: unitsAreLoading
+        } = useUnits();
+  const { data: unitIds, 
+          isLoading: unitIdsAreLoading
+        } = useUserUnitIds();
   
   const [openDetails, setOpenDetails] = useState(false);
 
-  if (rangeListIsLoading) {
+  if (rangeListIsLoading ||unitsAreLoading || unitIdsAreLoading) {
     return "Loading...."
-  }
+  };
 
   return (
     <>
@@ -65,38 +73,38 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
             <div className="flex justify-between">
               <GiCoffeeBeans className="w-5 h-5 opacity-40" />
               <p className="text-right mb-4">
-                <span className="text-2xl">{recipe.grounds_weight ?? "-"}</span>{" "}
-                g
+                <span className="text-2xl mr-1">{recipe.grounds_weight ?? "-"}</span>
+                {units['solid' + unitIds['unit_solid_weight_id']].short_label}
               </p>
             </div>
             <div className="flex justify-end flex-wrap">
-              {recipe.grind_size ? (
+              {recipe.grind_size && (
                 <span className="basic-chip">{recipe.grind_size}</span>
-              ) : null}
-              {recipe.grinder & recipe.grinder[0] ? (
+              )}
+              {recipe.grinder & recipe.grinder[0] && (
                 <span className="basic-chip">
                   {rangeList.grinder_range[recipe.grinder[0]].label}
                 </span>
-              ) : null}
+              )}
             </div>
           </div>
           <div className="flex flex-col justify-between relative w-1/4 h-auto px-4 border-r">
             <div className="flex justify-between">
               <MdWaterDrop className="w-5 h-5 opacity-40" />
               <p className="text-right mb-4">
-                <span className="text-2xl">{recipe.water_weight ?? "-"}</span>{" "}
-                ml
+                <span className="text-2xl mr-1">{recipe.water_weight ?? "-"}</span>
+                {units['fluid' + unitIds['unit_fluid_weight_id']].short_label}
               </p>
             </div>
             <div className="flex justify-end flex-wrap">
-              {recipe.water_temp ? (
+              {recipe.water_temp && (
                 <span className="basic-chip">{recipe.water_temp}</span>
-              ) : null}
-              {recipe.water && recipe.water[0] ? (
+              )}
+              {recipe.water && recipe.water[0] && (
                 <span className="basic-chip">
                   {rangeList.water_range[recipe.water[0]].label}
                 </span>
-              ) : null}
+              )}
             </div>
           </div>
           <div className="flex flex-col justify-between relative w-1/4 h-auto px-4">
@@ -104,7 +112,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
               <FaCoffee className="w-5 h-5 opacity-40" />
               <p className="text-right mb-4">
                 <span className="text-2xl">{recipe.yield_weight ?? "-"}</span>{" "}
-                ml
+                {units['fluid' + unitIds['unit_fluid_weight_id']].short_label}
               </p>
             </div>
             <div className="flex justify-end flex-wrap">
@@ -144,7 +152,12 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                 </div>
                 <div className="coffee-detail-section">
                   <label>Grounds Weight: </label>
-                  <p>{recipe.grounds_weight ?? "-"}</p>
+                  <p>
+                    {recipe.grounds_weight ?? "-"}
+                    <span className="ml-1">
+                      {units['solid' + unitIds['unit_solid_weight_id']].short_label}
+                    </span>
+                  </p>
                 </div>
                 <div className="coffee-detail-section">
                   <label>Water: </label>
@@ -156,11 +169,21 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                 </div>
                 <div className="coffee-detail-section">
                   <label>Water Weight: </label>
-                  <p>{recipe.water_weight ?? "-"}</p>
+                  <p>
+                    {recipe.water_weight ?? "-"}
+                    <span className="ml-1">
+                      {units['fluid' + unitIds['unit_fluid_weight_id']].short_label}
+                    </span>
+                  </p>
                 </div>
                 <div className="coffee-detail-section">
                   <label>Water Temperature: </label>
-                  <p>{recipe.water_temp ?? "-"}</p>
+                  <p>
+                    {recipe.water_temp ?? "-"}
+                    <span className="ml-1">
+                      {units['temp' + unitIds['unit_temperature_id']].short_label}
+                    </span>
+                  </p>
                 </div>
                 <div className="coffee-detail-section">
                   <label>Extraction Time: </label>
@@ -172,7 +195,12 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                 </div>
                 <div className="coffee-detail-section">
                   <label>Yield Weight: </label>
-                  <p>{recipe.yield_weight ?? "-"}</p>
+                  <p>
+                    {recipe.yield_weight ?? "-"}
+                    <span className="ml-1">
+                      {units['fluid' + unitIds['unit_fluid_weight_id']].short_label}
+                    </span>
+                  </p>
                 </div>
                 <div className="coffee-detail-section">
                   <label>TDS: </label>
