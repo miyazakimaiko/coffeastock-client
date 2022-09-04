@@ -64,21 +64,19 @@ export const options = {
   }
 };
 
-const labels = ['Waltz Blend', 'Tropical Blend', 'Su Nolag', 'April', 'Ethopian heirloom', 'June', 'July'];
+const ChartBarBeans = ({labels, beansData}) => {
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Grade (0 - 100)',
+        data: beansData,
+        borderColor: 'rgba(243,187,69, 0.5)',
+        backgroundColor: 'rgba(243,187,69, 0.5)',
+      }
+    ],
+  };
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Coffee Beans (kg)',
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      borderColor: 'rgba(243,187,69, 0.5)',
-      backgroundColor: 'rgba(243,187,69, 0.5)',
-    }
-  ],
-};
-
-const ChartBarBeans = () => {
   return (
     <div className="px-3 mb-4 md:mb-0">
       <div
