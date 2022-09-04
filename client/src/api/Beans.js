@@ -8,6 +8,10 @@ export const getBeans = async (userid, token) => {
   return await axios.get(`/user/${userid}/beans`, { headers: { accesstoken: token } }).then(res => res.data)
 }
 
+export const getBeansSummary = async (userid, token) => {
+  return await axios.get(`/user/${userid}/beans-summary`, { headers: { accesstoken: token } }).then(res => res.data)
+}
+
 export const addBean = async (userid, body, token) => {
   return await axios.post(`/user/${userid}/bean`, body, { headers: { accesstoken: token } }).then(res => res.data)
 }

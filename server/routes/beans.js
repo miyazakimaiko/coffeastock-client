@@ -46,6 +46,20 @@ module.exports = (app) => {
     }
   });
 
+    // Get users beans summary
+    app.get(endpoint + "/user/:userid/beans-summary", async (req, res, next) => {
+      try {
+        const rateRankingResult = await db.query(`
+        SELECT bean_id, label, grade FROM beans WHERE user_id = $1 ORDER BY grade DESC LIMIT 5`, 
+        [req.params.userid]);
+  
+        console.log(rateRankingResult.rows)
+        res.status(200).json({graderanking: rateRankingResult.rows});
+      } catch (error) {
+        next(error)
+      }
+    });
+
   // create a bean of a user
   app.post(endpoint + "/user/:userid/bean", 
     beanValidator,
