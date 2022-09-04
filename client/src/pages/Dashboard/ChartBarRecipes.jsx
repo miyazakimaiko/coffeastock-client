@@ -9,7 +9,6 @@ import {
   Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import faker from 'faker';
 
 ChartJS.register(
   CategoryScale,
@@ -27,15 +26,20 @@ export const options = {
       borderWidth: 2,
     },
   },
+  maintainAspectRatio: false,
   responsive: true,
+  scale: {
+    min: 0,
+    max: 100,
+  },
   plugins: {
     legend: {
       position: 'top',
       labels: {
         font: {
           family: "system-ui" // Add your font here to change the font of your legend label
-        }
-      }
+        },
+      },
     },
     tooltip: {
       bodyFont: {
@@ -52,44 +56,41 @@ export const options = {
         font: {
           family: "system-ui" // Add your font here to change the font of your legend label
         }
-      }
+      },
     },
     xAxes: {
       ticks: {
         font: {
           family: "system-ui" // Add your font here to change the font of your legend label
         }
-      }
+      },
     }
   }
 };
 
-const labels = ['Waltz Blend', 'Tropical Blend', 'Su Nolag', 'April', 'Ethopian heirloom', 'June', 'July'];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Dataset 1',
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      borderColor: 'rgba(122, 194, 154, 0.5)',
-      backgroundColor: 'rgba(122, 194, 154, 0.5)',
-    }
-  ],
-};
-
-const ChartBarRecipes = () => {
+const ChartBarRecipes = ({labels, recipesData}) => {
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Overall Rate',
+        data: recipesData,
+        borderColor: 'rgba(122, 194, 154, 0.5)',
+        backgroundColor: 'rgba(122, 194, 154, 0.5)',
+      }
+    ],
+  }
   return (
     <div className="px-3 mb-4 md:mb-0">
       <div
-        className="
-          w-full p-4
-          bg-white shadow-sm rounded-md"
-    >
+        className="w-full p-4 bg-white shadow-sm rounded-md"
+      >
         <h3 className="font-light text-lg text-center pb-2">
-          <strong>Recipes</strong> Overall Rate TOP 10
+          <strong>Recipes</strong> Overall Rate TOP 5
         </h3>
-        <Bar options={options} data={data} />
+        <div className="h-80">
+          <Bar options={options} data={data} />
+        </div>
       </div>
     </div>
   )
