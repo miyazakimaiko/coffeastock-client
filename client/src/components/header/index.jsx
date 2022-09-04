@@ -7,7 +7,6 @@ import { NavStateContext } from '../../context/NavStateContext';
 import { useUserData, 
         useSetAuthenticated, 
         useSignout } from '../../context/AccountContext';
-import imgFace from '../../assets/images/face.jpg'
 import AddEditBeanModal from '../../modals/add-edit-bean-modal';
 import AddRecipeModal from '../../modals/add-edit-recipe-modal';
 import Dropdown from '../../elements/Dropdown';
@@ -38,8 +37,6 @@ const Header = (props) => {
   const logout = () => {
     forceUnpin();
     signout();
-    setAuthenticated(false);
-    navigate('/login', {replace: true})
     toastOnTopRight('success', 'Logged out successfully.')
   }
 
@@ -87,9 +84,6 @@ const Header = (props) => {
                 <button type="button" className="dropdown-item" onClick={logout}>Logout</button>
               </div>
             </Dropdown>
-          </div>
-          <div className="h-9 w-9 flex-shrink-0">
-            <img src={imgFace} className="h-full w-full rounded-3xl"/>
           </div>
         </div>
       </div>
