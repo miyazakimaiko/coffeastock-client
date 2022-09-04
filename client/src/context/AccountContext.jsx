@@ -111,7 +111,8 @@ const AccountProvider = (props) => {
     const user = Pool.getCurrentUser();
     if (user) {
       user.signOut();
-      innerSetUserData({})
+      innerSetUserData({});
+      setAuthenticated(false);
     };
   };
 
@@ -139,7 +140,7 @@ function useGetSession() {
 }
 
 function useUserData() {
-  const context = useContext(AccountContext)
+  const context = useContext(AccountContext);
   if (!context) {
     throw new Error('useUserData must be used within an AccountProvider')
   }

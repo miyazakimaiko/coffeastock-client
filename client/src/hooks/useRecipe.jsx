@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from 'react-query';
-import { useUserData } from '../context/AccountContext';
+import { useNavigate } from 'react-router-dom';
+import { useSignout, useUserData } from '../context/AccountContext';
 import extractBeanIdFromRecipeId from '../helpers/ExtractBeanIdFromRecipeId';
 import extractRecipeNoFromRecipeId from '../helpers/ExtractRecipeNoFromRecipeId';
 import * as api from '../api/Recipes'
@@ -9,6 +10,8 @@ export default function useRecipe(recipeId) {
   const queryClient = useQueryClient();
   const beanId = extractBeanIdFromRecipeId(recipeId);
   const recipeNo = extractRecipeNoFromRecipeId(recipeId);
+  const signout = useSignout();
+  const navigate = useNavigate();
 
   return useQuery(
     ['bean', beanId, 'recipe', recipeNo],
@@ -22,6 +25,13 @@ export default function useRecipe(recipeId) {
       enabled: user && beanId && recipeNo ? true : false,
       initialData: () => { 
         return queryClient.getQueryData(['bean', beanId, 'recipe', recipeNo])
+      },
+      onError: err => {
+        console.log({err})
+        if (err.message === 'Not authorized') {
+          signout();
+          navigate('/login', { replace: true } );
+        }
       },
       initialStale: true,
       refetchOnWindowFocus: false,

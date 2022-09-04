@@ -39,15 +39,7 @@ const ManageAccount = () => {
         <div className="py-5 px-3">
           <div className="bg-white shadow-sm rounded w-full max-w-lg mx-auto py-6 p-10 mb-6">
             <h3 className="text-xl font-medium pb-6">Account Details</h3>
-            <div className="relative h-40 w-40 mx-auto mb-8">
-              <div className="flex-shrink-0">
-                <img src={imgFace} className="h-full w-full rounded-full" />
-              </div>
-              <button className="absolute right-3 bottom-1">
-                <BsPlus className="w-8 h-8 bg-orange rounded-full p-1 text-white" />
-              </button>
-            </div>
-            <ul className="pt-4">
+            <ul>
               <li key="name" className="flex pb-4">
                 <div className="w-48">Nickname: </div>
                 <div>{userData.nickname}</div>
