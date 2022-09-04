@@ -1,6 +1,7 @@
-import React, { useEffect }  from 'react'
+import React, { useEffect, useState }  from 'react'
 import useRecipesSummary from '../../hooks/useRecipesSummary'
 import useUnits from '../../hooks/useUnits'
+import useBeans from '../../hooks/useBeans'
 import useUserUnitIds from '../../hooks/useUserUnitIds'
 import ChartBarBeans from './ChartBarBeans'
 import ChartBarRecipes from './ChartBarRecipes'
@@ -9,6 +10,7 @@ import TotalBrews from './TotalBrews'
 import TotalRecipes from './TotalRecipes'
 
 const Dashboard = () => {
+  const [recipesBarChart, setRecipesBarChart] = useState(null);
   const { 
     data: units, 
     isLoading: unitsAreLoading 
@@ -24,11 +26,47 @@ const Dashboard = () => {
     isLoading: recipesSummaryIsLoading 
   } = useRecipesSummary();
 
+  const {
+    data: beansList,
+    isLoading: beansListIsLoading
+  } = useBeans();
+
+  useEffect(() => {
+    if (recipesSummary) {
+      // react-chart-js does not wrap labels text and no out-of-box solution for this.
+      // for now we break up the label into half and set as a list
+      // so that the chart can show the elements of the list next to each other
+      const wrappedLabelsList = recipesSummary.totalrateranking.map(recipe => {
+        if (beansList[recipe.bean_id].label.length > 30) {
+          const s = beansList[recipe.bean_id].label
+          var middle = Math.floor(s.length / 2);
+          var before = s.lastIndexOf(' ', middle);
+          var after = s.indexOf(' ', middle + 1);
+
+          if (middle - before < after - middle) {
+              middle = before;
+          } else {
+              middle = after;
+          }
+          return [s.substr(0, middle), s.substr(middle + 1), `(Recipe ${recipe.recipe_no})`] 
+        }
+        return [beansList[recipe.bean_id].label, `(Recipe ${recipe.recipe_no})`] 
+      });
+
+      setRecipesBarChart(
+        <ChartBarRecipes
+          labels={wrappedLabelsList}
+          recipesData={recipesSummary.totalrateranking.map(recipe => (recipe.total_rate))}
+        />
+      );
+    }
+  }, [recipesSummary]);
+
   useEffect(() => {
     window.scroll({ top: 0, behavior: 'smooth' });
   }, []);
 
-  if (unitsAreLoading || unitIdsAreLoading || recipesSummaryIsLoading) {
+  if (unitsAreLoading || unitIdsAreLoading || recipesSummaryIsLoading || beansListIsLoading) {
     return 'Loading...'
   }
   
@@ -50,7 +88,7 @@ const Dashboard = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 md:mb-6">
           <ChartBarBeans />
-          <ChartBarRecipes />
+          {recipesBarChart}
         </div>
       </div>
     </>
