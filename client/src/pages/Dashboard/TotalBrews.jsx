@@ -21,7 +21,7 @@ const TotalBrews = ({amount, unit}) => {
             Total Brew
           </h3>
           <div className="flex items-end place-content-end">
-            <span className="text-3xl">{amount}</span>
+            <span className="text-3xl">{amount ?? 0}</span>
             <span className="ml-1">{unit}</span>
           </div>
         </div>
