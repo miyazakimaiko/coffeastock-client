@@ -73,7 +73,7 @@ const ChartBarRecipes = ({labels, recipesData}) => {
     labels,
     datasets: [
       {
-        label: 'Overall Rate',
+        label: 'Total Rate (0 - 100)',
         data: recipesData,
         borderColor: 'rgba(122, 194, 154, 0.5)',
         backgroundColor: 'rgba(122, 194, 154, 0.5)',
@@ -86,7 +86,7 @@ const ChartBarRecipes = ({labels, recipesData}) => {
         className="w-full p-4 bg-white shadow-sm rounded-md"
       >
         <h3 className="font-light text-lg text-center pb-2">
-          <strong>Recipes</strong> Overall Rate TOP 5
+          <strong>Recipes</strong> Total Rate TOP 5
         </h3>
         <div className="h-80">
           <Bar options={options} data={data} />
