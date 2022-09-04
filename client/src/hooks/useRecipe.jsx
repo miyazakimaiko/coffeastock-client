@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import toastOnBottomCenter from '../utils/customToast';
 import { useSignout, useUserData } from '../context/AccountContext';
 import extractBeanIdFromRecipeId from '../helpers/ExtractBeanIdFromRecipeId';
 import extractRecipeNoFromRecipeId from '../helpers/ExtractRecipeNoFromRecipeId';
@@ -27,11 +28,11 @@ export default function useRecipe(recipeId) {
         return queryClient.getQueryData(['bean', beanId, 'recipe', recipeNo])
       },
       onError: err => {
-        console.log({err})
         if (err.message === 'Not authorized') {
           signout();
           navigate('/login', { replace: true } );
         }
+        else toastOnBottomCenter('error', err.message ? err.message : 'An unknown error has ocurred.');
       },
       initialStale: true,
       refetchOnWindowFocus: false,

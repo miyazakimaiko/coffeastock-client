@@ -1,11 +1,14 @@
 import { useMutation, useQueryClient } from 'react-query'
-import { useUserData } from '../context/AccountContext';
+import { useNavigate } from 'react-router-dom';
+import { useSignout, useUserData } from '../context/AccountContext';
 import toastOnBottomCenter from '../utils/customToast'
 import * as api from '../api/Recipes'
 
 export default function useEditRecipe() {
   const user = useUserData();
   const queryClient = useQueryClient();
+  const signout = useSignout();
+  const navigate = useNavigate();
 
   return useMutation(
     async (body) => await api.editRecipe(
@@ -21,9 +24,14 @@ export default function useEditRecipe() {
         await queryClient.invalidateQueries('ranges')
         toastOnBottomCenter('success', 'Recipe is edited successfully.')
       },
-      onError: error => {
-        toastOnBottomCenter('error', error.message ?? 'An unknown error has ocurred.')
-      }
+      onError: err => {
+        if (err.message === 'Not authorized') {
+          signout();
+          navigate('/login', { replace: true } );
+          toastOnBottomCenter('error', 'Not authorized. Please login and try again.');
+        }
+        else toastOnBottomCenter('error', err.message ? err.message : 'An unknown error has ocurred.');
+      },
     }
   )
 }

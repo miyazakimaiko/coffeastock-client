@@ -1,9 +1,12 @@
 import { useMutation } from 'react-query'
+import { useNavigate } from 'react-router-dom';
 import toastOnBottomCenter from '../utils/customToast'
+import { useSignout } from '../context/AccountContext'
 import * as api from '../api/Users'
 
 export default function useAddUser() {
-
+  const signout = useSignout();
+  const navigate = useNavigate();
   // 28.1kb for 40 entries.
   //
   for (let i=0; i<40; i++) {
@@ -19,7 +22,14 @@ export default function useAddUser() {
     async (user) => await api.addUser(user.sub, body, user.accessToken.jwtToken),
     {
       onSuccess: () => toastOnBottomCenter('success', 'Welcome to Coffee Journal!'),
-      onError: error => toastOnBottomCenter('error', error.message)
+      onError: err => {
+        if (err.message === 'Not authorized') {
+          signout();
+          navigate('/login', { replace: true } );
+          toastOnBottomCenter('error', 'Not authorized. Please login and try again.');
+        }
+        else toastOnBottomCenter('error', err.message ? err.message : 'An unknown error has ocurred.');
+      }
     }
   )
 }

@@ -1,9 +1,13 @@
 import { useMutation, useQueryClient } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 import toastOnBottomCenter from '../utils/customToast';
+import { useSignout } from '../context/AccountContext';
 import * as api from '../api/Users'
 
 export default function useGetUser() {
   const queryClient = useQueryClient();
+  const signout = useSignout();
+  const navigate = useNavigate();
 
   return useMutation(
     async (user) => await api.getUser(user.sub, user.accessToken.jwtToken), 
@@ -27,7 +31,14 @@ export default function useGetUser() {
         queryClient.setQueryData(['range', 'palate_range'], data.palate_range.items);
         queryClient.setQueryData(['range', 'aroma_range'], data.aroma_range.items);
       },
-      onError: error => toastOnBottomCenter('error', error.message)
+      onError: err => {
+        if (err.message === 'Not authorized') {
+          signout();
+          navigate('/login', { replace: true } );
+          toastOnBottomCenter('error', 'Not authorized. Please login and try again.');
+        }
+        else toastOnBottomCenter('error', err.message ? err.message : 'An unknown error has ocurred.');
+      },
     }
   )
 }
