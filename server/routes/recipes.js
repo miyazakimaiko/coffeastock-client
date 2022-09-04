@@ -51,14 +51,22 @@ module.exports = (app) => {
       }
     });
 
-    // Get total amount of total-yields-weight and number of recipes
+    // Get recipes summary
     app.get(endpoint + "/user/:userid/recipes-summary", async (req, res, next) => {
       try {
-        const result = await db.query(`
+        // total amount of total-yields-weight and number of recipes
+        const summaryResult = await db.query(`
         SELECT SUM(yield_weight) AS yieldsWeight, SUM(grounds_weight) AS groundsWeight, COUNT(*) FROM recipes WHERE user_id = $1`, 
         [req.params.userid]);
+
+        // get recipes with the top 5 of toralRate
+        const rateRankingResult = await db.query(`
+        SELECT bean_id, recipe_no, total_rate FROM recipes WHERE user_id = $1 ORDER BY total_rate DESC LIMIT 5`, 
+        [req.params.userid]);
+
+        summaryResult.rows[0].totalrateranking = rateRankingResult.rows;
   
-        res.status(200).json(result.rows[0]);
+        res.status(200).json(summaryResult.rows[0]);
       } catch (error) {
         next(error)
       }
