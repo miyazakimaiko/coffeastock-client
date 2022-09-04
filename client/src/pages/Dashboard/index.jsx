@@ -37,13 +37,14 @@ const Dashboard = () => {
       <div className="px-4 pt-8">
         <div className="grid grid-cols-1 md:grid-cols-3 md:mb-6">
           <TotalBrews
-            amount={recipesSummary.sum}
+            amount={recipesSummary.yieldsweight}
             unit={units['fluid' + unitIds['unit_fluid_weight_id']].short_label}
           />
           <TotalRecipes
             amount={recipesSummary.count}
           />
           <TotalBeans
+            amount={recipesSummary.groundsweight}
             unit={units['solid' + unitIds['unit_solid_weight_id']].short_label}
           />
         </div>

@@ -55,7 +55,7 @@ module.exports = (app) => {
     app.get(endpoint + "/user/:userid/recipes-summary", async (req, res, next) => {
       try {
         const result = await db.query(`
-        SELECT SUM(yield_weight), COUNT(*) FROM recipes WHERE user_id = $1`, 
+        SELECT SUM(yield_weight) AS yieldsWeight, SUM(grounds_weight) AS groundsWeight, COUNT(*) FROM recipes WHERE user_id = $1`, 
         [req.params.userid]);
   
         res.status(200).json(result.rows[0]);
