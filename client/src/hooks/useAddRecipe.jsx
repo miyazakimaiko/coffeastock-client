@@ -19,10 +19,11 @@ export default function useAddRecipe() {
     ),
     {
       enabled: user ? true : false,
-      onSuccess: (variables) => {
-        queryClient.invalidateQueries(['bean', variables[0].bean_id, 'recipes'])
-        queryClient.invalidateQueries('ranges')
-        toastOnBottomCenter('success', 'Recipe is added successfully.')
+      onSuccess: async (variables) => {
+        await queryClient.invalidateQueries(['bean', variables[0].bean_id, 'recipes']);
+        await queryClient.invalidateQueries('ranges');
+        await queryClient.invalidateQueries(['recipes', 'summary']);
+        toastOnBottomCenter('success', 'Recipe is added successfully.');
       },
       onError: err => {
         if (err.message === 'Not authorized') {

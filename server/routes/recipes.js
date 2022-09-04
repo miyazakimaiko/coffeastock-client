@@ -51,6 +51,19 @@ module.exports = (app) => {
       }
     });
 
+    // Get total amount of total-yields-weight and number of recipes
+    app.get(endpoint + "/user/:userid/recipes-summary", async (req, res, next) => {
+      try {
+        const result = await db.query(`
+        SELECT SUM(yield_weight), COUNT(*) FROM recipes WHERE user_id = $1`, 
+        [req.params.userid]);
+  
+        res.status(200).json(result.rows[0]);
+      } catch (error) {
+        next(error)
+      }
+    });
+
   // Create a recipe of beans
   app.post(endpoint + "/user/:userid/bean/:beanid/recipe", 
   recipeValidator,

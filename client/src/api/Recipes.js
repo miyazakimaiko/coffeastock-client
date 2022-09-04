@@ -8,6 +8,10 @@ export const getRecipe = async (userid, beanid, recipeNo, token) => {
   return await axios.get(`/user/${userid}/bean/${beanid}/recipe/${recipeNo}`, { headers: { accesstoken: token } }).then(res => res.data)
 }
 
+export const getRecipesSummary = async (userid, token) => {
+  return await axios.get(`/user/${userid}/recipes-summary`, { headers: { accesstoken: token } }).then(res => res.data)
+}
+
 export const addRecipe = async (userid, beanid, body, token) => {
   return await axios.post(`/user/${userid}/bean/${beanid}/recipe`, body, { headers: { accesstoken: token } }).then(res => res.data)
 }

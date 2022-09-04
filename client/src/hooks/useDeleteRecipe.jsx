@@ -17,7 +17,8 @@ export default function useDeleteRecipe(beanid) {
       enabled: user && beanid ? true : false,
       onSuccess: async () => {
         await queryClient.refetchQueries(["bean", beanid, "recipes"])
-        await queryClient.invalidateQueries('ranges')
+        await queryClient.invalidateQueries('ranges');
+        await queryClient.invalidateQueries(['recipes', 'summary']);
         toastOnBottomCenter('success', 'Recipe is deleted successfully.')
       },
       onError: err => {

@@ -55,9 +55,9 @@ const AddEditRecipeModal = ({recipeId = null}) => {
 
   const queryClient = useQueryClient();
   const addRange = useAddRange();
+  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges();
   const { data: targetRecipe, isLoading: recipeIsLoading } = useRecipe(recipeId);
   const { data: beanList, isLoading: beanListIsLoading } = useBeans();
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges();
   const { modal, closeModal, modalModeSelection } = useContext(ModalStateContext);
 
   const [recipe, setRecipe, onSubmit, isSubmitting] = RecipeService();
@@ -80,8 +80,8 @@ const AddEditRecipeModal = ({recipeId = null}) => {
   };
 
   useEffect(() => {
-    const editMode  = Boolean(beanList) && Boolean(targetRecipe);
-    const addMode  = Boolean(beanList) && Boolean(!targetRecipe);
+    const editMode  = Boolean(beanList) && Boolean(rangeList) && Boolean(targetRecipe);
+    const addMode  = Boolean(beanList) && Boolean(rangeList) && Boolean(!targetRecipe);
 
     if (editMode) {
       let brewDate = new Date(targetRecipe.brew_date);

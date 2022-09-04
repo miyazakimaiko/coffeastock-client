@@ -1,7 +1,7 @@
 import React from 'react'
 import imgGrinder from '../../assets/images/grinder.png'
 
-const TotalRecipes = () => {
+const TotalRecipes = ({amount}) => {
   return (
     <div className="px-3 mb-4 md:mb-0">
       <div
@@ -21,7 +21,7 @@ const TotalRecipes = () => {
             Total Recipes
           </h3>
           <div className="flex items-end place-content-end">
-            <span className="text-3xl">50</span>
+            <span className="text-3xl">{amount}</span>
             <span className="ml-1">recipes</span>
           </div>
         </div>
