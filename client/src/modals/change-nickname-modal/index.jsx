@@ -12,12 +12,12 @@ const ChangeNicknameModal = () => {
 
   function changeNickname(e) {
     e.preventDefault();
+    changeAttribute('nickname', nickname, onChangeAttributeSuccess);
+  }
 
-    const success = changeAttribute('nickname', nickname);
-    if (success) {
-      toastOnBottomCenter('success', `Your nickname has been updated successfully.`);
-      closeModal();
-    }
+  function onChangeAttributeSuccess() {
+    toastOnBottomCenter('success', `Your nickname has been updated successfully.`);
+    closeModal();
   }
 
   return (

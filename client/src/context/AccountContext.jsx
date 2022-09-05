@@ -74,37 +74,41 @@ const AccountProvider = (props) => {
     })
   }
 
-  function changeAttribute(name, value) {
+  function changeAttribute(name, value, callBack) {
       if (value.length <= 0) {
         toastOnBottomCenter('error', `Please enter ${name}.`);
-        return false;
       }
 
       const attributeList = [];
       const attribute = new CognitoUserAttribute({Name: name, Value: value});
       attributeList.push(attribute);
 
-      if (name === 'email') {
-        // this giving me a client attempted to write unauthorized attribute error
-        const emailVerifiedAttr = new CognitoUserAttribute({
-          Name: 'email_verified',
-          Value: false   
-        });
-        attributeList.push(emailVerifiedAttr);
-      }
-
       userData.user.updateAttributes(attributeList, function(err, res) {
         if (err) {
           toastOnBottomCenter('error', err.message);
-          return false;
         }
         else if (res === 'SUCCESS') {
           getSession().then((session) => {
             setUserData(session);
           });
+          callBack();
         }
       })
-      return true;
+  }
+
+  async function verifyAttribute(attrName, verificationCode, callback) {
+    userData.user.verifyAttribute(attrName, verificationCode, {
+      onSuccess: function(result) {
+         getSession().then((session) => {
+          setUserData(session);
+          callback();
+        });
+        toastOnBottomCenter('success', `Your ${attrName} is updated successfully.`);
+      },
+      onFailure: function(err) {
+        alert(err.message || JSON.stringify(err));
+      },
+    });
   }
 
   function signout() {
@@ -117,7 +121,20 @@ const AccountProvider = (props) => {
   };
 
   return (
-    <AccountContext.Provider value={{ authenticate, getSession, userData, setUserData, authenticated, setAuthenticated, changeAttribute, signout }}>
+    <AccountContext.Provider 
+      value={ 
+        { authenticate, 
+          getSession, 
+          userData, 
+          setUserData, 
+          authenticated, 
+          setAuthenticated, 
+          changeAttribute, 
+          verifyAttribute, 
+          signout
+        }
+      }
+    >
       { props.children }
     </AccountContext.Provider>
   )
@@ -179,6 +196,14 @@ function useChangeAttribute() {
   return context.changeAttribute
 }
 
+function useVerifyAttribute() {
+  const context = useContext(AccountContext)
+  if (!context) {
+    throw new Error('useVerifyAttribute must be used within an AccountProvider')
+  }
+  return context.verifyAttribute
+}
+
 function useSignout() {
   const context = useContext(AccountContext)
   if (!context) {
@@ -195,5 +220,6 @@ export { AccountProvider,
         useAuthenticated, 
         useSetAuthenticated, 
         useChangeAttribute,
+        useVerifyAttribute,
         useSignout,
       }

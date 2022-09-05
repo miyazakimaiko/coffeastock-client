@@ -88,7 +88,9 @@ const ChartBarRecipes = ({labels, recipesData}) => {
         <h3 className="font-light text-lg text-center pb-2">
           <strong>Recipes</strong> Total Rate TOP 5
         </h3>
-        <div className="h-80">
+        <div style={{
+           height: `calc(50px + 60px * ${labels.length})`,
+          }}>
           <Bar options={options} data={data} />
         </div>
       </div>

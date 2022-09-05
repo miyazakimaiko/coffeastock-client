@@ -9,7 +9,6 @@ import {
   Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import faker from 'faker';
 
 ChartJS.register(
   CategoryScale,
@@ -27,6 +26,7 @@ export const options = {
       borderWidth: 2,
     },
   },
+  maintainAspectRatio: false,
   responsive: true,
   plugins: {
     legend: {
@@ -85,9 +85,13 @@ const ChartBarBeans = ({labels, beansData}) => {
           bg-white shadow-sm rounded-md"
     >
         <h3 className="font-light text-lg text-center pb-2">
-          <strong>Beans</strong> Overall Rate TOP 10
+          <strong>Beans</strong> Overall Rate TOP 5
         </h3>
-        <Bar options={options} data={data} className="font-sans" />
+        <div style={{
+           height: `calc(50px + 60px * ${labels.length})`,
+          }}>
+          <Bar options={options} data={data} className="font-sans" />
+        </div>
       </div>
     </div>
   )

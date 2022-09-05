@@ -1,47 +1,30 @@
 import React, { useContext, useState } from 'react';
-import { useChangeAttribute, useUserData } from '../../context/AccountContext';
+import { useChangeAttribute, useUserData, useVerifyAttribute } from '../../context/AccountContext';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer';
 import toastOnBottomCenter from '../../utils/customToast';
 
 
 const ChangeEmailModal = () => {
-  const userData = useUserData();
   const { closeModal } = useContext(ModalStateContext);
   const [stage, setStage] = useState(1); // 1 = email, 2 = code stage
   const [email, setEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const changeAttribute = useChangeAttribute();
+  const verifyAttribute = useVerifyAttribute();
 
   function sendVerificationCode(e) {
     e.preventDefault();
+    changeAttribute('email', email, setStageTwo);
+  }
 
-    const success = changeAttribute('email', email);
-    if (success) {
-      userData.user.getAttributeVerificationCode('email', {
-        onSuccess: function(result) {
-          console.log('call result: ' + result);
-        },
-        onFailure: function(err) {
-          alert(err.message || JSON.stringify(err));
-        },
-        inputVerificationCode: function() {
-          setStage(2);
-        },
-      });
-    }
+  function setStageTwo() {
+    setStage(2);
   }
 
   function verifyCode(e) {
     e.preventDefault();
-    userData.user.verifyAttribute('email', verificationCode, {
-      onSuccess: function(result) {
-        toastOnBottomCenter('success', 'Your email is updated successfully.')
-      },
-      onFailure: function(err) {
-        alert(err.message || JSON.stringify(err));
-      },
-    });
+    verifyAttribute('email', verificationCode, closeModal);
   }
 
   return (
