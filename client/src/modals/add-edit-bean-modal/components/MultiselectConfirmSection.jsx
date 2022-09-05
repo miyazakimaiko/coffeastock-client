@@ -3,8 +3,8 @@ import React from 'react'
 const MultiselectConfirmSection = ({title, content}) => {
   return (
     <div className="confirm-section">
-      <label className=" mr-4">{title}</label>
-      <div className="font-medium flex flex-wrap">
+      <label className="w-1/4">{title}</label>
+      <div className="font-medium flex flex-wrap w-3/4">
         {
           Array.isArray(content)
             ?

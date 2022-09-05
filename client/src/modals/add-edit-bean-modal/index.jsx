@@ -571,8 +571,8 @@ const AddEditBeanModal = ({targetBean = null}) => {
                         content={selectedAroma}
                       />
                       <div className="confirm-section">
-                        <label className=" mr-4">Blend Ratio</label>
-                        <div className="font-medium">
+                        <label className="w-1/4">Blend Ratio</label>
+                        <div className="font-medium w-3/4">
                           {selectedBlendBeans !== null
                             ? selectedBlendBeans.map((entry) => (
                                 <span className="basic-chip">
