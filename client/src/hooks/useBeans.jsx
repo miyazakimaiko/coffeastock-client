@@ -12,7 +12,7 @@ export default function useBeans() {
 
   return useQuery(
     'beans', 
-    () => api.getBeans(user.sub, user.accessToken.jwtToken),
+    async () => await api.getBeans(user.sub, user.accessToken.jwtToken),
     {
       enabled: user ? true : false,
       onSuccess: beans => {

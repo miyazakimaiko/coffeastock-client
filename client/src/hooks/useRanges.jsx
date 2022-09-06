@@ -12,7 +12,7 @@ const useRanges = () => {
 
   return useQuery(
     'ranges', 
-    () => api.getRanges(user.sub, user.accessToken.jwtToken),
+    async () => await api.getRanges(user.sub, user.accessToken.jwtToken),
     {
       enabled: user ? true : false,
       onSuccess: ranges => {

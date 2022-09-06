@@ -12,7 +12,7 @@ export default function useRange(rangeName) {
 
   return useQuery(
     ['range', `${rangeName}_range`],
-    () => api.getRange(user.sub, rangeName, user.accessToken.jwtToken), 
+    async () => await api.getRange(user.sub, rangeName, user.accessToken.jwtToken), 
     {
       enabled: user ? true : false,
       keepPreviousData: true,

@@ -55,9 +55,9 @@ const AddEditRecipeModal = ({recipeId = null}) => {
 
   const queryClient = useQueryClient();
   const addRange = useAddRange();
+  const { data: beanList, isLoading: beanListIsLoading } = useBeans();
   const { data: rangeList, isLoading: rangeListIsLoading } = useRanges();
   const { data: targetRecipe, isLoading: recipeIsLoading } = useRecipe(recipeId);
-  const { data: beanList, isLoading: beanListIsLoading } = useBeans();
   const { modal, closeModal, modalModeSelection } = useContext(ModalStateContext);
 
   const [recipe, setRecipe, onSubmit, isSubmitting] = RecipeService();
@@ -80,36 +80,47 @@ const AddEditRecipeModal = ({recipeId = null}) => {
   };
 
   useEffect(() => {
-    const editMode  = Boolean(beanList) && Boolean(rangeList) && Boolean(targetRecipe);
-    const addMode  = Boolean(beanList) && Boolean(rangeList) && Boolean(!targetRecipe);
-
-    if (editMode) {
-      let brewDate = new Date(targetRecipe.brew_date);
-      const offset = brewDate.getTimezoneOffset();
-      brewDate = new Date(brewDate.getTime() - (offset*60*1000));
-
-      setRecipe({
-        ...recipe,
-        ...targetRecipe,
-        brew_date: brewDate.toISOString().split('T')[0],
-        extraction_time: formatExtractionTimeInputValue(
-          targetRecipe.extraction_time
-        ),
-      });
-
-      setSelectedBean({...beanList[targetRecipe.bean_id], label: unescapeHtml(beanList[targetRecipe.bean_id].label)});
-      setSelectedMethod(targetRecipe.method.map(id => rangeList.method_range[id]));
-      setSelectedGrinder(targetRecipe.grinder.map(id => rangeList.grinder_range[id]));
-      setSelectedWater(targetRecipe.water.map(id => rangeList.water_range[id]));
-      innerSetPalateRate(targetRecipe.palate_rates);
-      setSelectedPalates(Object.keys(targetRecipe.palate_rates).map(id => rangeList.palate_range[id]))
+    async function dataAreReady() {
+      let result = false;
+      const beanListIsReady = Boolean(await beanList);
+      const rangeListIsReady = Boolean(await rangeList);
+      const recipeIsReady = Boolean(await targetRecipe);
+      if (beanListIsReady && rangeListIsReady) {
+        if (recipeId === null) result = true;
+        else if (recipeIsReady) result = true;
+      }
+      return result;
     }
-    else if (addMode) {
-      setSelectedPalates(
-        Object.values(rangeList.palate_range).map(val => val)
-      )
-    }
-  }, [beanListIsLoading]);
+
+    dataAreReady().then(dataReady => {
+      if (recipeId && dataReady) {
+        let brewDate = new Date(targetRecipe.brew_date);
+        const offset = brewDate.getTimezoneOffset();
+        brewDate = new Date(brewDate.getTime() - (offset*60*1000));
+  
+        setRecipe({
+          ...recipe,
+          ...targetRecipe,
+          brew_date: brewDate.toISOString().split('T')[0],
+          extraction_time: formatExtractionTimeInputValue(
+            targetRecipe.extraction_time
+          ),
+        });
+  
+        setSelectedBean({...beanList[targetRecipe.bean_id], label: unescapeHtml(beanList[targetRecipe.bean_id].label)});
+        setSelectedMethod(targetRecipe.method.map(id => rangeList.method_range[id]));
+        setSelectedGrinder(targetRecipe.grinder.map(id => rangeList.grinder_range[id]));
+        setSelectedWater(targetRecipe.water.map(id => rangeList.water_range[id]));
+        innerSetPalateRate(targetRecipe.palate_rates);
+        setSelectedPalates(Object.keys(targetRecipe.palate_rates).map(id => rangeList.palate_range[id]))
+      }
+      else if (!recipeId && dataReady) {
+        setSelectedPalates(
+          Object.values(rangeList.palate_range).map(val => val)
+        )
+      }
+    });
+  }, [beanList, targetRecipe]);
 
 
   const finalizeRecipe = () => {
@@ -135,6 +146,8 @@ const AddEditRecipeModal = ({recipeId = null}) => {
     }
 
     const finalPalateRate = makeFinalPalateRate();
+
+    console.log({selectedGrinder})
     
     setRecipe({...recipe, 
       bean_id: selectedBean.bean_id,
@@ -146,6 +159,7 @@ const AddEditRecipeModal = ({recipeId = null}) => {
   }
 
   const insertNewRangeList = async () => {
+    console.log({selectedGrinder})
     let newRangeList = {
       method: extractNewItems(selectedMethod),
       grinder: extractNewItems(selectedGrinder),

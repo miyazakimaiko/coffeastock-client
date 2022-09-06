@@ -12,7 +12,7 @@ export default function useUnits() {
 
   return useQuery(
     ['units'],
-    () => api.getUnits(user.accessToken.jwtToken), 
+    async () => await api.getUnits(user.accessToken.jwtToken), 
     {
       enabled: !!user,
       initialData: () => { 

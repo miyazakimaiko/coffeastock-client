@@ -16,7 +16,7 @@ export default function useRecipe(recipeId) {
 
   return useQuery(
     ['bean', beanId, 'recipe', recipeNo],
-    () => api.getRecipe(
+    async () => await api.getRecipe(
       user.sub, 
       beanId, 
       recipeNo, 

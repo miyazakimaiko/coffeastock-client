@@ -12,7 +12,7 @@ export default function useRecipesSummary() {
 
   return useQuery(
     ['recipes', 'summary'],
-    () => api.getRecipesSummary(user.sub, user.accessToken.jwtToken), 
+    async () => await api.getRecipesSummary(user.sub, user.accessToken.jwtToken), 
     {
       enabled: user ? true : false,
       initialData: () => { 

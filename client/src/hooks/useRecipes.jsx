@@ -13,7 +13,7 @@ export default function useRecipes(beanid) {
 
   return useQuery(
     ['bean', beanid, 'recipes'], 
-    () => apiRecipes.getRecipes(
+    async () => await apiRecipes.getRecipes(
       user.sub, 
       beanid, 
       user.accessToken.jwtToken
