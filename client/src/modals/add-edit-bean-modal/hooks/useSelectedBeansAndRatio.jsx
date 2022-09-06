@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useUserData } from '../../../context/AccountContext';
 import useBeans from '../../../hooks/useBeans';
 import BlendRatioInput from '../components/BlendRatioInput';
 
 const useSelectedBeansAndRatio = () => {
-  const userData = useUserData()
-  const { data: beanList } = useBeans(userData.sub, userData.accessToken.jwtToken)
+  const { data: beanList } = useBeans()
 
   const [selectedBlendBeans, setSelectedBlendBeans] = useState([]);
   const [blendRatios, setBlendRatio] = useState({});

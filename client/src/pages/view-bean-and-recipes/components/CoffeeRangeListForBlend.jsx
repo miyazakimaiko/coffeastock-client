@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { FaInfoCircle } from 'react-icons/fa'
-import { useUserData } from '../../../context/AccountContext'
 import TooltipLeft from '../../../elements/TooltipLeft'
 import { unescapeHtml } from '../../../helpers/HtmlConverter'
 import useBeans from '../../../hooks/useBeans'
@@ -8,11 +7,10 @@ import useRanges from '../../../hooks/useRanges'
 import CoffeeRangeListItem from './CoffeeRangeListItem'
 
 const CoffeeRangeListForBlend = ({bean}) => {
-  const userData = useUserData()
   const { data: rangeList, 
           isLoading: rangeListIsLoading
         } = useRanges();
-  const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub, userData.accessToken.jwtToken)
+  const { data: beanList, isLoading: beanListIsLoading } = useBeans()
   const [blendRatio, setBlendRatio] = useState([]);
 
   useEffect(() => {

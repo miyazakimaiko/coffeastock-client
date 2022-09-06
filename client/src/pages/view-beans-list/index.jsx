@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
-import { useUserData } from '../../context/AccountContext';
 import ToolBar from '../../components/toolbar';
 import ToolbarDropdown from '../../components/toolbar/ToolBarDropdown';
 import ToolbarDropdownButton from '../../components/toolbar/ToolbarDropdownButton';
@@ -27,8 +26,10 @@ const GROUPBY = {
 }
 
 const ViewBeansList = () => {
-  const userData = useUserData()
-  const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub, userData.accessToken.jwtToken)
+  const { data: beanList, 
+          isLoading: beanListIsLoading 
+        } = useBeans();
+
   const { data: rangeList, 
           isLoading: rangeListIsLoading
         } = useRanges();

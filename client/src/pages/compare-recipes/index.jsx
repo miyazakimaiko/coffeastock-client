@@ -1,5 +1,4 @@
 import React, {  useEffect, useState } from 'react'
-import { useUserData } from '../../context/AccountContext'
 import FormMultiSelect from '../../elements/FormMultiSelect'
 import useBeans from '../../hooks/useBeans'
 import RecipeSelectInput from './components/RecipeSelectInput'
@@ -7,8 +6,7 @@ import './compareRecipes.scss'
 import RecipesInfoComparisonSection from './components/RecipesInfoComparisonSection'
 
 const CompareRecipes = () => {
-  const userData = useUserData();
-  const { data: beanList, isLoading } = useBeans(userData.sub, userData.accessToken.jwtToken);
+  const { data: beanList, isLoading } = useBeans();
 
   const [selectedBeanLeft, setSelectedBeanLeft] = useState(null);
   const [selectedBeanRight, setSelectedBeanRight] = useState(null);
