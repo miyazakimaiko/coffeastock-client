@@ -27,6 +27,7 @@ export default function useUnits() {
       },
       initialStale: true,
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
   )
 }

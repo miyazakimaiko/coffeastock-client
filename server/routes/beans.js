@@ -165,7 +165,7 @@ module.exports = (app) => {
       try {
         await db.query('BEGIN')
 
-        let result = await db.query(
+        const selectResult = await db.query(
           `SELECT * FROM beans
             WHERE user_id = $1 AND bean_id = $2
           `, [
@@ -173,11 +173,11 @@ module.exports = (app) => {
             req.params.beanid
           ]);
   
-        if(result.rows.length === 0) {
+        if(selectResult.rows.length === 0) {
           CustomException(404, 'Not Found')
         }
 
-        const currentBeanData = result.rows[0]
+        const currentBeanData = selectResult.rows[0]
 
         for (const rangeKey of beanRangeKeys) {
           if(req.body[rangeKey]) {
@@ -188,23 +188,15 @@ module.exports = (app) => {
             const addedRangeIdList = getUniqueItemInFirstArgArray(newRangeIdList, currentRangeIdList)
   
             if (removedRangeIdList.length > 0) {
-              for (const removedRangeId of removedRangeIdList) {
+              for await (const removedRangeId of removedRangeIdList) {
                 const baseQuery = getDecrementCountInUseBaseQuery(rangeKey, removedRangeId);
-                try {
-                  await db.query(baseQuery, [req.params.userid])
-                } catch (error) {
-                  next(error)
-                }
+                await db.query(baseQuery, [req.params.userid])
               }
             }
             if (addedRangeIdList.length > 0) {
-              for (const addeddRangeId of addedRangeIdList) {
+              for await (const addeddRangeId of addedRangeIdList) {
                 const baseQuery = getIncrementCountInUseBaseQuery(rangeKey, addeddRangeId);
-                try {
-                  await db.query(baseQuery, [req.params.userid])
-                } catch (error) {
-                  next(error)
-                }
+                await db.query(baseQuery, [req.params.userid])
               }
             }
           }
@@ -217,7 +209,7 @@ module.exports = (app) => {
         const blendBeanId4 = blendBeanIdList[3] ? blendBeanIdList[3] : null;
         const blendBeanId5 = blendBeanIdList[4] ? blendBeanIdList[4] : null;
 
-        result = await db.query(
+        const updateResult = await db.query(
           `UPDATE beans 
             SET 
               label = $1, 
@@ -266,7 +258,7 @@ module.exports = (app) => {
             req.params.beanid          // $21
           ]
         );
-        res.status(200).json(result.rows);
+        res.status(200).json(updateResult.rows);
 
       } catch (error) {
         db.query('ROLLBACK')

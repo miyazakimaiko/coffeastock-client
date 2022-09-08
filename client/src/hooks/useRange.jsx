@@ -28,6 +28,7 @@ export default function useRange(rangeName) {
       },
       initialStale: true,
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
   )
 }

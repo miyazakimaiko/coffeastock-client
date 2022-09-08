@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { FaInfoCircle } from 'react-icons/fa';
-import { useUserData } from '../../../context/AccountContext';
+import { useParams } from 'react-router-dom';
 import TooltipLeft from '../../../elements/TooltipLeft';
 import { unescapeHtml } from '../../../helpers/HtmlConverter';
+import useBean from '../../../hooks/useBean';
 import useRanges from '../../../hooks/useRanges';
 import CoffeeRangeListItem from './CoffeeRangeListItem';
 
-const CoffeeRangeListForSO = ({bean}) => {
+const CoffeeRangeListForSO = () => {
+  const { id } = useParams();
+
+  const { data: bean,
+          isLoading: targetBeanIsLoading,
+          isError: targetBeanHasError,
+         } = useBean(id);
+
   const { data: rangeList, 
           isLoading: rangeListIsLoading 
         } = useRanges();
@@ -19,7 +27,7 @@ const CoffeeRangeListForSO = ({bean}) => {
   })
 
   useEffect(() => {
-    if (!rangeListIsLoading) {
+    if (bean && rangeList) {
       setBeanAttrNames({
         ...beanAttrNames,
         origin: makeHtmlTags(bean, "origin"),
@@ -28,7 +36,7 @@ const CoffeeRangeListForSO = ({bean}) => {
         farm: makeHtmlTags(bean, "farm"),
       });
     }
-  }, [rangeList]);
+  }, [bean, rangeList]);
 
   const makeHtmlTags = (targetBean, category) => {
     const result = [];
@@ -60,7 +68,7 @@ const CoffeeRangeListForSO = ({bean}) => {
     return result;
   };
 
-  if (rangeListIsLoading) {
+  if (targetBeanIsLoading || rangeListIsLoading) {
     return "Loading...";
   }
   return (

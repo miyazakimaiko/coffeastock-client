@@ -1,20 +1,31 @@
 import React, { useEffect, useState } from 'react'
 import { FaInfoCircle } from 'react-icons/fa'
+import { useParams } from 'react-router-dom'
 import TooltipLeft from '../../../elements/TooltipLeft'
 import { unescapeHtml } from '../../../helpers/HtmlConverter'
+import useBean from '../../../hooks/useBean'
 import useBeans from '../../../hooks/useBeans'
 import useRanges from '../../../hooks/useRanges'
 import CoffeeRangeListItem from './CoffeeRangeListItem'
 
-const CoffeeRangeListForBlend = ({bean}) => {
+const CoffeeRangeListForBlend = () => {
+  const { id } = useParams();
+
+  const { data: bean,
+          isLoading: targetBeanIsLoading,
+          isError: targetBeanHasError,
+         } = useBean(id);
+
   const { data: rangeList, 
           isLoading: rangeListIsLoading
         } = useRanges();
-  const { data: beanList, isLoading: beanListIsLoading } = useBeans()
+
+  const { data: beanList, isLoading: beanListIsLoading } = useBeans();
+
   const [blendRatio, setBlendRatio] = useState([]);
 
   useEffect(() => {
-    if (rangeList && beanList) {
+    if (bean && rangeList && beanList) {
       setBlendRatio(makeBlendRatioHtmlTags(bean));
     }
   },[bean, rangeList, beanList]);
@@ -106,7 +117,7 @@ const CoffeeRangeListForBlend = ({bean}) => {
     return nameListHtml;
   };
 
-  if (rangeListIsLoading || beanListIsLoading) {
+  if (targetBeanIsLoading || rangeListIsLoading || beanListIsLoading) {
     return "Loading...";
   }
 

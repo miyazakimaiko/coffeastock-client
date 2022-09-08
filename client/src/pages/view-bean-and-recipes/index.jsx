@@ -10,6 +10,7 @@ import ToolBar from '../../components/toolbar';
 import Dropdown from '../../elements/Dropdown';
 import DeleteModal from '../../modals/delete-modal';
 import AddEditBeanModal from '../../modals/add-edit-bean-modal'
+import ErrorPage from '../error';
 import RecipeSection from './components/RecipeSection';
 import CoffeeRangeListForBlend from './components/CoffeeRangeListForBlend';
 import CoffeeRangeListForSO from './components/CoffeeRangeListForSO';
@@ -19,7 +20,11 @@ import './ViewBeanAndRecipes.scss'
 
 const ViewBeanAndRecipes = () => {
   const { id } = useParams();
-  const { data: targetBean, isLoading: targetBeanIsLoading } = useBean(id)
+  const { data: targetBean,
+          isLoading: targetBeanIsLoading,
+          isError: targetBeanHasError,
+         } = useBean(id);
+
   const deleteBean = useDeleteBean()
 
   const navigate = useNavigate()
@@ -28,7 +33,8 @@ const ViewBeanAndRecipes = () => {
           openEditBeanModal, 
           openDeleteBeanModal, 
           closeModal, 
-          modalModeSelection} = useContext(ModalStateContext);
+          modalModeSelection
+        } = useContext(ModalStateContext);
 
   const onDeleteSubmit = () => {
     deleteBean.mutate(targetBean, {
@@ -44,6 +50,10 @@ const ViewBeanAndRecipes = () => {
 
   if (targetBeanIsLoading) {
     return "Loading...";
+  }
+
+  if (targetBeanHasError) {
+    return (<ErrorPage />)
   }
 
   return (
@@ -85,13 +95,13 @@ const ViewBeanAndRecipes = () => {
             </div>
             <div className="flex flex-wrap justify-center mt-16">
               <div className="w-full md:w-1/2 my-4 md:px-4">
-                { <CoffeeRangeListForAll bean={targetBean} /> }
+                <CoffeeRangeListForAll />
               </div>
 
               <div className="w-full md:w-1/2 my-4 md:px-4">
                 { targetBean.single_origin 
-                  ? <CoffeeRangeListForSO bean={targetBean} /> 
-                  : <CoffeeRangeListForBlend bean={targetBean} /> }
+                  ? <CoffeeRangeListForSO /> 
+                  : <CoffeeRangeListForBlend /> }
               </div>
             </div>
 

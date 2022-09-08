@@ -27,6 +27,7 @@ export default function useRecipesSummary() {
       },
       initialStale: true,
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
   )
 }

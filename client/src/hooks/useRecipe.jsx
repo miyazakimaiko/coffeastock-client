@@ -36,6 +36,7 @@ export default function useRecipe(recipeId) {
       },
       initialStale: true,
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
   )
 }

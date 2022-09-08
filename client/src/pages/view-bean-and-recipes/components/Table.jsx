@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import { useUserData } from '../../../context/AccountContext';
 import useRanges from '../../../hooks/useRanges';
 import useRecipes from '../../../hooks/useRecipes';
 import { ORDER_BY, ORDER_METHOD } from '../utils/RecipeOrderConstants';
@@ -8,12 +7,15 @@ import Rows from './Rows';
 
 const Table = ({searchValue, orderBy, orderMethod}) => {
   const { id } = useParams();
+
   const { data: ranges, 
           isLoading: rangesAreLoading 
         } = useRanges();
+
   const { data: recipes, 
           isLoading: recipesAreLoading
         } = useRecipes(id);
+        
   const [sortedRecipes, setSortedRecipes] = useState(recipes)
 
   useEffect(() => {

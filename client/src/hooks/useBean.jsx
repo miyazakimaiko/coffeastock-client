@@ -25,8 +25,8 @@ export default function useBean(beanId) {
         }
         else toastOnBottomCenter('error', err.message ? err.message : 'An unknown error has ocurred.');
       },
-      initialStale: true,
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
   )
 }

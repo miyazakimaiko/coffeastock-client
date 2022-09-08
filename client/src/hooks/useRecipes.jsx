@@ -41,6 +41,7 @@ export default function useRecipes(beanid) {
         else toastOnBottomCenter('error', err.message ? err.message : 'An unknown error has ocurred.');
       },
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
   );
 }

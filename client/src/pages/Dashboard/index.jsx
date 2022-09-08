@@ -41,7 +41,7 @@ const Dashboard = () => {
 
 
   useEffect(() => {
-    if (beansSummary) {
+    if (beansSummary && beansList) {
       setBeansBarChart(
         <ChartBarBeans
           labels={makeWrappedLabelsList(beansSummary.graderanking, 'beans')}
@@ -49,7 +49,7 @@ const Dashboard = () => {
         />
       );
     }
-  }, [beansSummary]);
+  }, [beansSummary, beansList]);
 
   useEffect(() => {
     if (recipesSummary) {
