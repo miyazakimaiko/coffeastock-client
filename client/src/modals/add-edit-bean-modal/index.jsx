@@ -1,5 +1,4 @@
 import React, { useEffect, useState, createRef, useContext } from 'react'
-import { useUserData } from '../../context/AccountContext';
 import { convertIdListToItemList, convertItemListToIdList } from '../../helpers/ListConverter';
 import extractNewItems from '../../helpers/ExtractNewItems';
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer';
@@ -41,9 +40,8 @@ import { ModalStateContext } from '../../context/ModalStateContext';
 import { useQueryClient } from 'react-query';
 
 const AddEditBeanModal = ({targetBean = null}) => {
-  const userData = useUserData()
   const { data: rangeList, isLoading: rangeListIsLoading } = useRanges();
-  const { data: beanList, isLoading: beanListIsLoading } = useBeans(userData.sub, userData.accessToken.jwtToken)
+  const { data: beanList, isLoading: beanListIsLoading } = useBeans()
   const [bean, setBean, onSubmit, isSubmitting] = BeanService();
   const addRange = useAddRange()
   const [tabState, setTabState] = TabStateModel();

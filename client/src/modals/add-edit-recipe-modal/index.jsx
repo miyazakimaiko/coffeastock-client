@@ -146,8 +146,6 @@ const AddEditRecipeModal = ({recipeId = null}) => {
     }
 
     const finalPalateRate = makeFinalPalateRate();
-
-    console.log({selectedGrinder})
     
     setRecipe({...recipe, 
       bean_id: selectedBean.bean_id,

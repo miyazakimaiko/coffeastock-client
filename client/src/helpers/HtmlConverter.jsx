@@ -1,4 +1,5 @@
 export const unescapeHtml = (input) => {
+  if (!Boolean(input)) return null;
   var doc = new DOMParser().parseFromString(input, "text/html");
   return doc.documentElement.textContent;
 }

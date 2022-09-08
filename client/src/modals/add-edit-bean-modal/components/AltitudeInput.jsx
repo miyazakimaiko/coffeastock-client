@@ -14,10 +14,11 @@ const AltitudeInput = ({bean, setBean}) => {
     if (bean.altitude) {
       setCounter(escapeHtml(bean.altitude).length)
     }
+    setAltitude(bean.altitude);
   }, [bean.altitude])
 
   const setAltitude = (altitude) => {
-    if (altitude.length === 0) {
+    if (!Boolean(altitude) || altitude.length === 0) {
       setBean(bean => ({...bean, altitude: ""}));
       clearWarning();
     }
