@@ -1,19 +1,22 @@
 import React, { useState } from 'react'
-import { ImSpinner } from 'react-icons/im'
 import FormInput from '../../../elements/FormInput'
+import Spinner from '../../../elements/Spinner';
 import useUnits from '../../../hooks/useUnits';
 import useUserUnitIds from '../../../hooks/useUserUnitIds';
+import ErrorPage from '../../../pages/error';
 import { checkValueIsNumber, checkWaterWeightIsInRange } from '../helpers/InputValidators';
 
 const WaterWeightInput = ({recipe, setRecipe}) => {
   const { 
     data: units, 
-    isLoading: unitsAreLoading 
+    isLoading: unitsAreLoading,
+    isError: unitsHaveError,
   } = useUnits();
 
   const { 
     data: unitIds, 
-    isLoading: unitIdsAreLoading 
+    isLoading: unitIdsAreLoading,
+    isError: unitIdsHaveError,
   } = useUserUnitIds();
 
   const [warning, setWarning] = useState({
@@ -70,7 +73,11 @@ const WaterWeightInput = ({recipe, setRecipe}) => {
   }
 
   if (unitsAreLoading || unitIdsAreLoading) {
-    return <ImSpinner className="spnner"/>
+    return <Spinner />
+  }
+
+  if (unitsHaveError || unitIdsHaveError) {
+    return <ErrorPage />
   }
 
   return (

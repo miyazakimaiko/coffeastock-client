@@ -1,7 +1,23 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput'
+import Spinner from '../../../elements/Spinner';
+import useUnits from '../../../hooks/useUnits';
+import useUserUnitIds from '../../../hooks/useUserUnitIds';
+import ErrorPage from '../../../pages/error';
 
 const WaterTempInput = ({recipe, setRecipe}) => {
+  const { 
+    data: units, 
+    isLoading: unitsAreLoading,
+    isError: unitsHaveError,
+  } = useUnits();
+
+  const { 
+    data: unitIds, 
+    isLoading: unitIdsAreLoading,
+    isError: unitIdsHaveError,
+  } = useUserUnitIds();
+
   const [warning, setWarning] = useState({
     invalid: false,
     message: "",
@@ -64,9 +80,17 @@ const WaterTempInput = ({recipe, setRecipe}) => {
     });
   }
 
+  if (unitsAreLoading || unitIdsAreLoading) {
+    return <Spinner />
+  }
+
+  if (unitsHaveError || unitIdsHaveError) {
+    return <ErrorPage />
+  }
+
   return (
     <FormInput
-      title="Water Temperature (Celsius)"
+      title={`Water Temperature (${units['temp' + unitIds['unit_temperature_id']].short_label})`}
       type="text" 
       name="watertemp"
       autoComplete="off"
