@@ -8,6 +8,7 @@ import useBean from '../../hooks/useBean';
 import useDeleteBean from '../../hooks/useDeleteBean';
 import ToolBar from '../../components/toolbar';
 import Dropdown from '../../elements/Dropdown';
+import Spinner from '../../elements/Spinner';
 import DeleteModal from '../../modals/delete-modal';
 import AddEditBeanModal from '../../modals/add-edit-bean-modal'
 import ErrorPage from '../error';
@@ -49,11 +50,11 @@ const ViewBeanAndRecipes = () => {
 
 
   if (targetBeanIsLoading) {
-    return "Loading...";
+    return <Spinner />
   }
 
   if (targetBeanHasError) {
-    return (<ErrorPage />)
+    return <ErrorPage />
   }
 
   return (

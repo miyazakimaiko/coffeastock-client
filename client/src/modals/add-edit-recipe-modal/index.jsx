@@ -1,5 +1,10 @@
+import PalateRadarChartSingle from '../../elements/PalateRadarChartSignle';
 import React, { useEffect, useState, createRef, useContext } from 'react'
 import { useQueryClient } from 'react-query';
+import { ModalStateContext } from '../../context/ModalStateContext';
+import RecipeService from '../../services/RecipeService';
+import { convertItemListToIdList } from '../../helpers/ListConverter';
+import { unescapeHtml } from "../../helpers/HtmlConverter"
 import extractNewItems from '../../helpers/ExtractNewItems';
 import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
 import useRecipe from '../../hooks/useRecipe';
@@ -10,6 +15,8 @@ import ModalWrapperContainer from '../../elements/ModalWrapperContainer';
 import RedOutlineButton from '../../elements/RedOutlineButton';
 import BlueButton from '../../elements/BlueButton';
 import PencilAltIconButton from '../../elements/PencilAltIconButton';
+import Spinner from '../../elements/Spinner';
+import ErrorPage from '../../pages/error';
 import StepsTab from './components/StepsTab';
 import GrindSizeInput from './components/GrindSizeInput';
 import GroundsWeightInput from './components/GroundsWeightInput';
@@ -23,12 +30,13 @@ import PalateRateInput from './components/PalateRateInput';
 import MemoTextarea from './components/MemoTextarea';
 import InputConfirmSection from './components/InputConfirmSection';
 import MultiselectConfirmSection from './components/MultiselectConfirmSection';
-import BeanInput from './components/BeanInput';
+import PalateSelectionInput from './components/PalateSelectionInput';
 import BrewingDateInput from './components/BrewingDateInput';
 import MethodInput from './components/MethodInput.jsx';
 import GrinderInput from './components/GrinderInput';
 import WaterInput from './components/WaterInput';
-import '../modals.scss'
+import BeanInput from './components/BeanInput';
+import { formatExtractionTimeInputValue } from "./helpers/formatters"
 import {
   checkExtractionTimeIsInVaildForm,
   checkGrindSizeIsInRange,
@@ -41,13 +49,7 @@ import {
   checkWaterWeightIsInRange,
   checkYieldWeightIsInRange,
 } from "./helpers/InputValidators";
-import { formatExtractionTimeInputValue } from "./helpers/formatters"
-import { unescapeHtml } from "../../helpers/HtmlConverter"
-import PalateRadarChartSingle from '../../elements/PalateRadarChartSignle';
-import RecipeService from '../../services/RecipeService';
-import { ModalStateContext } from '../../context/ModalStateContext';
-import { convertItemListToIdList } from '../../helpers/ListConverter';
-import PalateSelectionInput from './components/PalateSelectionInput';
+import '../modals.scss'
 
 
 
@@ -55,9 +57,22 @@ const AddEditRecipeModal = ({recipeId = null}) => {
 
   const queryClient = useQueryClient();
   const addRange = useAddRange();
-  const { data: beanList, isLoading: beanListIsLoading } = useBeans();
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges();
-  const { data: targetRecipe, isLoading: recipeIsLoading } = useRecipe(recipeId);
+
+  const { data: beanList, 
+          isLoading: beanListIsLoading,
+          isError: beanListHasError,
+        } = useBeans();
+
+  const { data: rangeList, 
+          isLoading: rangeListIsLoading,
+          isError: rangeListHasError,
+        } = useRanges();
+
+  const { data: targetRecipe, 
+          isLoading: recipeIsLoading,
+          isError: recipeHasError,
+        } = useRecipe(recipeId);
+
   const { modal, closeModal, modalModeSelection } = useContext(ModalStateContext);
 
   const [recipe, setRecipe, onSubmit, isSubmitting] = RecipeService();
@@ -344,8 +359,18 @@ const AddEditRecipeModal = ({recipeId = null}) => {
   ]);
 
 
-  if (recipeIsLoading || beanListIsLoading || rangeListIsLoading) {
-    return 'Loading...'
+  if (recipeIsLoading 
+    || beanListIsLoading
+    || rangeListIsLoading)
+  {
+    return <Spinner />
+  }
+
+  if (beanListHasError 
+    || rangeListHasError 
+    || recipeHasError)
+  {
+    return <ErrorPage />
   }
 
   return (

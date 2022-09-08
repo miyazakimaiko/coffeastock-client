@@ -2,19 +2,25 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer';
 import FormMultiSelect from '../../elements/FormMultiSelect';
+import Spinner from '../../elements/Spinner';
 import useEditUserUnitIds from '../../hooks/useEditUserUnitIds';
 import useUnits from '../../hooks/useUnits';
 import useUserUnitIds from '../../hooks/useUserUnitIds';
+import ErrorPage from '../../pages/error';
 
 
 const ChangeUnitsModal = () => {
   const { closeModal } = useContext(ModalStateContext);
   const editUserUnitIds = useEditUserUnitIds();
+
   const { data: units, 
-          isLoading: unitsAreLoading 
+          isLoading: unitsAreLoading,
+          isError: unitsHaveError,
         } = useUnits();
+
   const { data: userUnitIds, 
-          isLoading: userUnitIdsAreLoading 
+          isLoading: userUnitIdsAreLoading,
+          isError: userUnitIdsHaveError,
         } = useUserUnitIds();
 
   const [solidWeightUnit, setSolidWeightUnit] = useState({});
@@ -45,7 +51,11 @@ const ChangeUnitsModal = () => {
   }
 
   if (unitsAreLoading || userUnitIdsAreLoading) {
-    return 'Loading...';
+    return <Spinner />
+  }
+
+  if (unitsHaveError || userUnitIdsHaveError) {
+    return <ErrorPage />
   }
 
   return (

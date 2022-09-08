@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { FaInfoCircle } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
+import Spinner from '../../../elements/Spinner';
 import TooltipLeft from '../../../elements/TooltipLeft';
 import { generateFireIconList, generateStarIconList } from '../../../helpers/GenerateIconList';
 import { unescapeHtml } from '../../../helpers/HtmlConverter';
 import useBean from '../../../hooks/useBean';
 import useRanges from '../../../hooks/useRanges';
+import ErrorPage from '../../error';
 import CoffeeRangeListItem from './CoffeeRangeListItem';
 
 const CoffeeRangeListForAll = () => {
@@ -17,7 +19,8 @@ const CoffeeRangeListForAll = () => {
          } = useBean(id);
 
   const { data: rangeList, 
-          isLoading: rangeListIsLoading 
+          isLoading: rangeListIsLoading,
+          isError: rangeListHasError,
         } = useRanges();
 
   const [beanAttrIcons, setBeanAttrIcons] = useState({
@@ -78,7 +81,11 @@ const CoffeeRangeListForAll = () => {
   };
 
   if (targetBeanIsLoading || rangeListIsLoading) {
-    return "Loading...";
+    return <Spinner />
+  }
+
+  if(targetBeanHasError || rangeListHasError) {
+    return <ErrorPage />
   }
 
   return (

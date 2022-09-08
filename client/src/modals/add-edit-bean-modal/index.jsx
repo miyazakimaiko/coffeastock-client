@@ -1,5 +1,9 @@
 import React, { useEffect, useState, createRef, useContext } from 'react'
+import { useQueryClient } from 'react-query';
+import { ModalStateContext } from '../../context/ModalStateContext';
+import BeanService from '../../services/BeanService';
 import { convertIdListToItemList, convertItemListToIdList } from '../../helpers/ListConverter';
+import { escapeHtml, unescapeHtml } from '../../helpers/HtmlConverter';
 import extractNewItems from '../../helpers/ExtractNewItems';
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer';
 import FormInput from '../../elements/FormInput';
@@ -7,6 +11,7 @@ import FormRadio from '../../elements/FormRadio';
 import FormMultiSelect from '../../elements/FormMultiSelect';
 import RedOutlineButton from '../../elements/RedOutlineButton';
 import BlueButton from '../../elements/BlueButton';
+import Spinner from '../../elements/Spinner';
 import StepsTab from './components/StepsTab';
 import InputConfirmSection from './components/InputConfirmSection';
 import MultiselectConfirmSection from './components/MultiselectConfirmSection';
@@ -20,10 +25,11 @@ import MemoTextarea from './components/MemoTextarea';
 import useBeans from '../../hooks/useBeans';
 import useRanges from '../../hooks/useRanges';
 import useAddRange from '../../hooks/useAddRange';
+import ErrorPage from '../../pages/error';
 import '../modals.scss'
-import { escapeHtml, unescapeHtml } from '../../helpers/HtmlConverter';
 import OriginInput from './components/OriginInput';
 import BlendBeanInput from './components/BlendBeanInput';
+import useSelectedBeansAndRatio from './hooks/useSelectedBeansAndRatio';
 import {
   checkAltitudeIsInRange,
   checkBlendBeansCountInRange,
@@ -34,14 +40,18 @@ import {
   checkValueIsNumber,
 } from "./helpers/InputValidators";
 import TabStateModel from './models/TabStateModel';
-import useSelectedBeansAndRatio from './hooks/useSelectedBeansAndRatio';
-import BeanService from '../../services/BeanService';
-import { ModalStateContext } from '../../context/ModalStateContext';
-import { useQueryClient } from 'react-query';
 
 const AddEditBeanModal = ({targetBean = null}) => {
-  const { data: rangeList, isLoading: rangeListIsLoading } = useRanges();
-  const { data: beanList, isLoading: beanListIsLoading } = useBeans()
+  const { data: rangeList, 
+          isLoading: rangeListIsLoading,
+          isError: rangeListHasError,
+        } = useRanges();
+
+  const { data: beanList, 
+          isLoading: beanListIsLoading,
+          isError: beanListHasError,
+        } = useBeans()
+
   const [bean, setBean, onSubmit, isSubmitting] = BeanService();
   const addRange = useAddRange()
   const [tabState, setTabState] = TabStateModel();
@@ -273,7 +283,11 @@ const AddEditBeanModal = ({targetBean = null}) => {
 
 
   if (rangeListIsLoading || beanListIsLoading) {
-    return 'loading...'
+    return <Spinner />
+  }
+
+  if (rangeListHasError || beanListHasError) {
+    return <ErrorPage />
   }
 
 

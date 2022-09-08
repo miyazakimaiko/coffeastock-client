@@ -10,7 +10,8 @@ import {
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import useRange from '../hooks/useRange';
-import { useUserData } from '../context/AccountContext';
+import Spinner from './Spinner';
+import ErrorPage from '../pages/error';
 
 
 ChartJS.register(
@@ -24,7 +25,8 @@ ChartJS.register(
 
 const PalateRadarChartDouble = ({ className, redTitle, blueTitle, redRatesObj, blueRatesObj }) => {
   const { data: palateRange, 
-          isLoading: palateRangeIsLoading 
+          isLoading: palateRangeIsLoading,
+          isError: palateRangeHasError
         } = useRange('palate')
 
   const [labels, setLabels] = useState([]);
@@ -134,7 +136,11 @@ const PalateRadarChartDouble = ({ className, redTitle, blueTitle, redRatesObj, b
   }
 
   if (palateRangeIsLoading) {
-    return 'Loading...'
+    return <Spinner />
+  }
+
+  if (palateRangeHasError) {
+    return <ErrorPage />
   }
 
   return (

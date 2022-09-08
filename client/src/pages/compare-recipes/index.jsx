@@ -1,12 +1,17 @@
 import React, {  useEffect, useState } from 'react'
 import FormMultiSelect from '../../elements/FormMultiSelect'
+import Spinner from '../../elements/Spinner'
 import useBeans from '../../hooks/useBeans'
+import ErrorPage from '../error'
 import RecipeSelectInput from './components/RecipeSelectInput'
 import './compareRecipes.scss'
 import RecipesInfoComparisonSection from './components/RecipesInfoComparisonSection'
 
 const CompareRecipes = () => {
-  const { data: beanList, isLoading } = useBeans();
+  const { data: beanList,
+          isLoading,
+          isError,
+      } = useBeans();
 
   const [selectedBeanLeft, setSelectedBeanLeft] = useState(null);
   const [selectedBeanRight, setSelectedBeanRight] = useState(null);
@@ -23,8 +28,10 @@ const CompareRecipes = () => {
   }, [selectedBeanRight])
 
   if (isLoading) {
-    return 'Loading...'
+    return <Spinner />
   }
+
+  if (isError) return <ErrorPage />
 
   return (
     <>

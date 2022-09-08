@@ -3,31 +3,42 @@ import { GiCoffeeBeans } from 'react-icons/gi'
 import { MdWaterDrop } from 'react-icons/md'
 import { FaCoffee } from 'react-icons/fa'
 import { HiOutlineChevronDown, HiOutlineChevronUp } from 'react-icons/hi'
-import PalateRadarChartSingle from '../../../elements/PalateRadarChartSignle'
 import convertIntervalObjToString from '../../../helpers/ConvertIntervalObjToString.js'
 import { generateStarIconList } from '../../../helpers/GenerateIconList'
+import PalateRadarChartSingle from '../../../elements/PalateRadarChartSignle'
 import Dropdown from '../../../elements/Dropdown'
+import Spinner from '../../../elements/Spinner'
 import useRanges from '../../../hooks/useRanges'
 import useUnits from '../../../hooks/useUnits'
 import useUserUnitIds from '../../../hooks/useUserUnitIds'
+import ErrorPage from '../../error/index.jsx'
 
 
 const Row = ({recipe, onEditClick, onDeleteClick}) => {
   const { data: rangeList, 
-          isLoading: rangeListIsLoading
+          isLoading: rangeListIsLoading,
+          isError: RangeListHasError,
         } = useRanges();
+
   const { data: units, 
-          isLoading: unitsAreLoading
+          isLoading: unitsAreLoading,
+          isError: unitsHaveError,
         } = useUnits();
+
   const { data: unitIds, 
-          isLoading: unitIdsAreLoading
+          isLoading: unitIdsAreLoading,
+          isError: unitIdsHaveError,
         } = useUserUnitIds();
   
   const [openDetails, setOpenDetails] = useState(false);
 
   if (rangeListIsLoading ||unitsAreLoading || unitIdsAreLoading) {
-    return "Loading...."
+    return <Spinner />
   };
+
+  if (RangeListHasError || unitsHaveError || unitIdsHaveError) {
+    return <ErrorPage />
+  }
 
   return (
     <>

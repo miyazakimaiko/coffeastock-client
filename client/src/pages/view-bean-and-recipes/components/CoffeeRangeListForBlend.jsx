@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { FaInfoCircle } from 'react-icons/fa'
 import { useParams } from 'react-router-dom'
+import Spinner from '../../../elements/Spinner'
 import TooltipLeft from '../../../elements/TooltipLeft'
 import { unescapeHtml } from '../../../helpers/HtmlConverter'
 import useBean from '../../../hooks/useBean'
 import useBeans from '../../../hooks/useBeans'
 import useRanges from '../../../hooks/useRanges'
+import ErrorPage from '../../error'
 import CoffeeRangeListItem from './CoffeeRangeListItem'
 
 const CoffeeRangeListForBlend = () => {
@@ -17,10 +19,14 @@ const CoffeeRangeListForBlend = () => {
          } = useBean(id);
 
   const { data: rangeList, 
-          isLoading: rangeListIsLoading
+          isLoading: rangeListIsLoading,
+          isError: rangeListHasError,
         } = useRanges();
 
-  const { data: beanList, isLoading: beanListIsLoading } = useBeans();
+  const { data: beanList, 
+          isLoading: beanListIsLoading,
+          isError: beanListHasError,
+        } = useBeans();
 
   const [blendRatio, setBlendRatio] = useState([]);
 
@@ -117,8 +123,18 @@ const CoffeeRangeListForBlend = () => {
     return nameListHtml;
   };
 
-  if (targetBeanIsLoading || rangeListIsLoading || beanListIsLoading) {
-    return "Loading...";
+  if (targetBeanIsLoading
+    || rangeListIsLoading
+    || beanListIsLoading
+  ) {
+    return <Spinner />
+  }
+
+  if (targetBeanHasError
+    || rangeListHasError
+    || beanListHasError
+  ){
+    return <ErrorPage />
   }
 
   return (

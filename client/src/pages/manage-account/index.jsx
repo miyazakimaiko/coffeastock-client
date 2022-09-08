@@ -1,24 +1,28 @@
-import { BsCheckCircleFill, BsPlus } from 'react-icons/bs';
+import { BsCheckCircleFill } from 'react-icons/bs';
 import React, { useContext } from 'react';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import { useUserData } from '../../context/AccountContext';
+import Spinner from '../../elements/Spinner';
+import useUserUnitIds from '../../hooks/useUserUnitIds';
+import useUnits from '../../hooks/useUnits';
 import ChangeNicknameModal from '../../modals/change-nickname-modal';
-import imgFace from '../../assets/images/face.jpg';
-import './manageAccount.scss';
 import ChangePasswordModal from '../../modals/change-password-modal';
 import ChangeEmailModal from '../../modals/change-email-modal';
-import useUnits from '../../hooks/useUnits';
-import useUserUnitIds from '../../hooks/useUserUnitIds';
 import ChangeUnitsModal from '../../modals/change-units-modal';
+import './manageAccount.scss';
+import ErrorPage from '../error';
 
 
 const ManageAccount = () => {
   const userData = useUserData();
   const { data: units, 
-          isLoading: unitsAreLoading
+          isLoading: unitsAreLoading,
+          isError: unitsHaveError,
         } = useUnits();
+
   const { data: userUnitIds, 
-          isLoading: userUnitIdsAreLoading
+          isLoading: userUnitIdsAreLoading,
+          isError: userUnitIdsHaveError,
         } = useUserUnitIds();
   
   const { modal, 
@@ -30,7 +34,11 @@ const ManageAccount = () => {
         } = useContext(ModalStateContext);
 
   if (unitsAreLoading || userUnitIdsAreLoading) {
-    return 'loading...'
+    return <Spinner />
+  }
+
+  if(unitsHaveError || userUnitIdsHaveError) {
+    return <ErrorPage />
   }
 
   return (

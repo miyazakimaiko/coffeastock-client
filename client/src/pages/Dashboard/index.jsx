@@ -9,34 +9,40 @@ import TotalBeans from './TotalBeans'
 import TotalBrews from './TotalBrews'
 import TotalRecipes from './TotalRecipes'
 import useBeansSummary from '../../hooks/useBeansSummary'
+import Spinner from '../../elements/Spinner'
+import ErrorPage from '../error'
 
 const Dashboard = () => {
   const [beansBarChart, setBeansBarChart] = useState(null);
   const [recipesBarChart, setRecipesBarChart] = useState(null);
   const { 
     data: units, 
-    isLoading: unitsAreLoading 
+    isLoading: unitsAreLoading,
+    isError: unitsHaveError,
   } = useUnits();
 
   const { 
     data: unitIds, 
-    isLoading: unitIdsAreLoading 
+    isLoading: unitIdsAreLoading,
+    isError: unitIdsHaveError,
   } = useUserUnitIds();
-
   
   const {
     data: beansList,
-    isLoading: beansListIsLoading
+    isLoading: beansListIsLoading,
+    isError: beansHaveError,
   } = useBeans();
 
   const { 
     data: beansSummary, 
-    isLoading: beansSummaryIsLoading 
+    isLoading: beansSummaryIsLoading,
+    isError: beansSummaryHasError,
   } = useBeansSummary();
   
   const { 
     data: recipesSummary, 
-    isLoading: recipesSummaryIsLoading 
+    isLoading: recipesSummaryIsLoading,
+    isError: recipesSummaryHasError,
   } = useRecipesSummary();
 
 
@@ -52,7 +58,7 @@ const Dashboard = () => {
   }, [beansSummary, beansList]);
 
   useEffect(() => {
-    if (recipesSummary) {
+    if (recipesSummary && beansList) {
       setRecipesBarChart(
         <ChartBarRecipes
           labels={makeWrappedLabelsList(recipesSummary.totalrateranking, 'recipes')}
@@ -60,7 +66,7 @@ const Dashboard = () => {
         />
       );
     }
-  }, [recipesSummary]);
+  }, [recipesSummary, beansList]);
 
   function makeWrappedLabelsList(orderedItemsObj, type) {
     // react-chart-js does not wrap labels text and no out-of-box solution for this.
@@ -105,7 +111,15 @@ const Dashboard = () => {
     || recipesSummaryIsLoading 
     || beansListIsLoading) 
   {
-    return 'Loading...'
+    return <Spinner />
+  }
+
+  if (beansHaveError 
+    || unitsHaveError
+    || unitIdsHaveError
+    || beansSummaryHasError
+    || recipesSummaryHasError) {
+    return <ErrorPage />
   }
   
   return (

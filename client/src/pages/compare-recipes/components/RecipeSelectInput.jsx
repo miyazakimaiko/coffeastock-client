@@ -1,14 +1,20 @@
 import React from 'react'
-import { useUserData } from '../../../context/AccountContext';
 import FormMultiSelect from '../../../elements/FormMultiSelect';
+import Spinner from '../../../elements/Spinner';
 import useRecipes from '../../../hooks/useRecipes';
+import ErrorPage from '../../error';
 
 const RecipeSelectInput = ({ beanId, value, onChange }) => {
-  const { data: recipeList, isLoading } = useRecipes(beanId);
+  const { data: recipeList,
+          isLoading,
+          isError,
+        } = useRecipes(beanId);
  
   if (isLoading) {
-    return 'Loading...'
+    return <Spinner />
   }
+
+  if (isError) return <ErrorPage />
 
   return (
     <FormMultiSelect

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
+import Spinner from '../../../elements/Spinner';
 import useRanges from '../../../hooks/useRanges';
 import useRecipes from '../../../hooks/useRecipes';
+import ErrorPage from '../../error';
 import { ORDER_BY, ORDER_METHOD } from '../utils/RecipeOrderConstants';
 import Rows from './Rows';
 
@@ -9,11 +11,13 @@ const Table = ({searchValue, orderBy, orderMethod}) => {
   const { id } = useParams();
 
   const { data: ranges, 
-          isLoading: rangesAreLoading 
+          isLoading: rangesAreLoading,
+          isError: rangesHaveError,
         } = useRanges();
 
   const { data: recipes, 
-          isLoading: recipesAreLoading
+          isLoading: recipesAreLoading,
+          isError: recipesHaveError,
         } = useRecipes(id);
         
   const [sortedRecipes, setSortedRecipes] = useState(recipes)
@@ -79,7 +83,11 @@ const Table = ({searchValue, orderBy, orderMethod}) => {
   }
 
   if (rangesAreLoading || recipesAreLoading) {
-    return "Loading....";
+    return <Spinner />
+  }
+
+  if (rangesHaveError || recipesHaveError) {
+    return <ErrorPage />
   }
 
   return (

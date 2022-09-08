@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import { ModalStateContext } from '../../../context/ModalStateContext';
 import BlueButton from '../../../elements/BlueButton';
 import PalateRadarChartDouble from '../../../elements/PalateRadarChartDouble';
+import Spinner from '../../../elements/Spinner';
 import convertIntervalObjToString from '../../../helpers/ConvertIntervalObjToString';
 import useBeans from '../../../hooks/useBeans';
 import useRanges from '../../../hooks/useRanges';
@@ -9,37 +10,44 @@ import useRecipe from '../../../hooks/useRecipe'
 import useUnits from '../../../hooks/useUnits';
 import useUserUnitIds from '../../../hooks/useUserUnitIds';
 import AddEditRecipeModal from '../../../modals/add-edit-recipe-modal';
+import ErrorPage from '../../error';
 import RecipeComparisonListItem from './RecipeComparisonListItem';
 
 const RecipesInfoComparisonSection = ({ selectedRecipeLeftId, selectedRecipeRightId }) => {
   const { 
     data: rangeList, 
-    isLoading: rangeListIsLoading 
+    isLoading: rangeListIsLoading,
+    isError: rangeListHasError,
   } = useRanges();
   
   const { 
     data: beanList, 
-    isLoading: beanListIsLoading 
+    isLoading: beanListIsLoading,
+    isError: beanListHasError,
   } = useBeans();
 
   const { 
     data: selectedRecipeRight, 
-    isLoading: recipeRightIsLoading 
+    isLoading: recipeRightIsLoading,
+    isError: recipeRightHasError,
   } = useRecipe(selectedRecipeRightId);
 
   const { 
     data: selectedRecipeLeft, 
-    isLoading: recipeLeftIsLoading 
+    isLoading: recipeLeftIsLoading,
+    isError: recipeLeftHasError,
   } = useRecipe(selectedRecipeLeftId);
 
   const { 
     data: units, 
-    isLoading: unitsAreLoading 
+    isLoading: unitsAreLoading,
+    isError: unitsHaveError, 
   } = useUnits();
 
   const { 
     data: unitIds, 
-    isLoading: unitIdsAreLoading 
+    isLoading: unitIdsAreLoading,
+    isError: unitIdsHaveError,
   } = useUserUnitIds();
 
   const {
@@ -65,9 +73,19 @@ const RecipesInfoComparisonSection = ({ selectedRecipeLeftId, selectedRecipeRigh
     || rangeListIsLoading 
     || beanListIsLoading
     || unitsAreLoading
-    || unitIdsAreLoading
-  ) {
-    return 'Loading...'
+    || unitIdsAreLoading)
+  {
+    return <Spinner />
+  }
+
+  if (rangeListHasError
+    || beanListHasError
+    || recipeRightHasError
+    || recipeLeftHasError
+    || unitsHaveError
+    || unitIdsHaveError)
+  {
+    return <ErrorPage />
   }
 
   return (
