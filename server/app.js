@@ -59,7 +59,6 @@ require("./routes/recipes.js")(app);
 require("./routes/ranges.js")(app);
 
 app.use((req, res, next) => {
-  // Todo: redirect to 404 page...
   const err = new Error('Not Found');
   err.status = 404;
   next(err);

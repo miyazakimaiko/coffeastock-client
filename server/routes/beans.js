@@ -64,12 +64,12 @@ module.exports = (app) => {
   app.post(endpoint + "/user/:userid/bean", 
     beanValidator,
     async (req, res, next) => {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        CustomException(422, errors.array()[0]['msg'])
-      }
-
       try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          CustomException(422, errors.array()[0]['msg'])
+        }
+
         await db.query('BEGIN')
 
         for await (const rangeKey of beanRangeKeys) {
@@ -157,12 +157,12 @@ module.exports = (app) => {
     beanValidator,
     async (req, res, next) => {
 
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        CustomException(422, errors.array()[0]['msg'])
-      }
-      
       try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          CustomException(422, errors.array()[0]['msg'])
+        }
+        
         await db.query('BEGIN')
 
         const selectResult = await db.query(
