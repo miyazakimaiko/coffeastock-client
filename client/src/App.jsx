@@ -13,7 +13,7 @@ import ViewMyCoffees from './pages/view-beans-list';
 import ViewRanges from './pages/view-ranges';
 import CompareRecipes from './pages/compare-recipes';
 import ManageAccount from './pages/manage-account';
-import PageNotFound from './pages/page-not-found';
+import ErrorPage from './pages/error';
 import { useGetSession, 
         useSetUserData, 
         useAuthenticated, 
@@ -65,7 +65,7 @@ const App = () => {
                 <Route exact path="/settings/water" element={<ViewRanges parentCat={'Recipes'} cat={'water'} />} />
                 <Route path="/" element={<Dashboard />} />
                 <Route path="account" element={<ManageAccount />} />
-                <Route path="*" element={<PageNotFound />} />
+                <Route path="*" element={<ErrorPage />} />
               </Routes>
               :
               <Routes>

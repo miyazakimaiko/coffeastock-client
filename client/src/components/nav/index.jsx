@@ -69,7 +69,7 @@ const Nav = (props) => {
           bg-burnt-sienna border-r text-white">
         <div 
           className="h-16 px-6 flex justify-between items-center">
-          <h1 className=" text-lg">Coffee Journal</h1>
+          <h1 className=" text-lg">Coffeastock</h1>
           <button 
             type="button" 
             ref={el => { props.pushpinRef.current = el; }} 
