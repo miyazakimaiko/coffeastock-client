@@ -50,7 +50,11 @@ module.exports = (app) => {
     app.get(endpoint + "/user/:userid/beans-summary", async (req, res, next) => {
       try {
         const rateRankingResult = await db.query(`
-        SELECT bean_id, label, grade FROM beans WHERE user_id = $1 ORDER BY grade DESC LIMIT 5`, 
+        SELECT bean_id, label, grade 
+        FROM beans 
+        WHERE user_id = $1 
+              AND grade IS NOT NULL
+        ORDER BY grade DESC LIMIT 5`, 
         [req.params.userid]);
   
         console.log(rateRankingResult.rows)

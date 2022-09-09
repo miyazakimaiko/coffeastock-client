@@ -61,7 +61,11 @@ module.exports = (app) => {
 
         // get recipes with the top 5 of toralRate
         const rateRankingResult = await db.query(`
-        SELECT bean_id, recipe_no, total_rate FROM recipes WHERE user_id = $1 ORDER BY total_rate DESC LIMIT 5`, 
+        SELECT bean_id, recipe_no, total_rate 
+        FROM recipes 
+        WHERE user_id = $1
+              AND total_rate IS NOT NULL 
+        ORDER BY total_rate DESC LIMIT 5`, 
         [req.params.userid]);
 
         summaryResult.rows[0].totalrateranking = rateRankingResult.rows;
