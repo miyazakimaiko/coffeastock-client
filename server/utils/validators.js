@@ -8,7 +8,7 @@ const rangeItemValidator = [
 ]
 
 const beanValidator = [
-  body('label', 'Invalid Name').not().isEmpty().escape().isLength({ max: 60 }),
+  body('label', 'Invalid Name').not().isEmpty().escape().isLength({ max: 40 }),
   body('single_origin', 'Invalid Single Origin').not().isEmpty().isBoolean(),
   body('blend_ratio', 'Invalid Blend Ratio').isObject().optional({ checkFalsy: true }),
   body('origin', 'Invalid Origin').isObject({ strict: false }).optional({ checkFalsy: true }),
