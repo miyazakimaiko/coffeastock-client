@@ -48,7 +48,7 @@ const Header = (props) => {
 
   return (
     <>
-    <div className={`header z-10 w-full pr-4 items-center border-b border-burnt-sienna border-opacity-20 ${openNav ? 'header-pd' : 'pl-4'}`}>
+    <div className={`header z-20 w-full pr-4 items-center border-b border-burnt-sienna border-opacity-20 ${openNav ? 'header-pd' : 'pl-4'}`}>
       <div className="flex">
         <div className="flex items-center cursor-pointer" onClick={showNavbar}>
           {openNav ? <XIcon className="h-8 w-8 opacity-80 hover:opacity-100 ease-linear transition-all duration-150" /> 

@@ -138,7 +138,7 @@ const Dashboard = () => {
             unit={units['solid' + unitIds['unit_solid_weight_id']].short_label}
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 md:mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 lg:mb-6">
           {beansBarChart}
           {recipesBarChart}
         </div>

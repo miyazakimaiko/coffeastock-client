@@ -1,5 +1,5 @@
 import React from 'react'
-import imgGrinder from '../../assets/images/grinder.png'
+import { GiNotebook } from 'react-icons/gi'
 
 const TotalRecipes = ({amount}) => {
   return (
@@ -9,22 +9,19 @@ const TotalRecipes = ({amount}) => {
           w-full p-4 flex justify-between
           bg-white shadow-sm rounded-md"
       >
-        <div>
-          <img 
-            src={imgGrinder}
-            alt="Coffee mill"
-            className="w-20 h-20 mr-4"
-          />
-        </div>
         <div className="flex flex-col justify-between">
-          <h3 className="font-light text-lg">
+          <h3 className="font-normal text-md opacity-60 mb-4">
             Total Recipes
           </h3>
-          <div className="flex items-end place-content-end">
-            <span className="text-3xl">{amount}</span>
-            <span className="ml-1">recipes</span>
+          <div className="flex items-center">
+            <div className="flex items-end">
+              <span className="text-3xl font-medium">{amount ?? 0}</span>
+              <span className="ml-1">recipes</span>
+            </div>
+            <div className="font-medium text-base ml-6 text-red">+15%</div>
           </div>
         </div>
+        <GiNotebook className="w-8 h-8 opacity-40" />
       </div>
     </div>
   )

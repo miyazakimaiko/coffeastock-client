@@ -24,14 +24,18 @@ export const options = {
   elements: {
     bar: {
       borderWidth: 2,
+      borderRadius: 20,
     },
   },
   maintainAspectRatio: false,
   responsive: true,
+  barThickness: 20,
   plugins: {
     legend: {
       position: 'top',
       labels: {
+        usePointStyle: true,
+        boxWidth: 6,
         font: {
           family: "system-ui" // Add your font here to change the font of your legend label
         }
@@ -50,14 +54,15 @@ export const options = {
     yAxes: {
       ticks: {
         font: {
-          family: "system-ui" // Add your font here to change the font of your legend label
+          family: "system-ui", // Add your font here to change the font of your legend label
+          size: 11
         }
       }
     },
     xAxes: {
       ticks: {
         font: {
-          family: "system-ui" // Add your font here to change the font of your legend label
+          family: "system-ui", // Add your font here to change the font of your legend label
         }
       }
     }
@@ -69,7 +74,7 @@ const ChartBarBeans = ({labels, beansData}) => {
     labels,
     datasets: [
       {
-        label: 'Grade (0 - 100)',
+        label: 'Grade (0-100)',
         data: beansData,
         borderColor: 'rgba(243,187,69, 0.5)',
         backgroundColor: 'rgba(243,187,69, 0.5)',
@@ -78,14 +83,14 @@ const ChartBarBeans = ({labels, beansData}) => {
   };
 
   return (
-    <div className="px-3 mb-4 md:mb-0">
+    <div className="px-3 mb-4 lg:mb-0">
       <div
         className="
           w-full p-4
           bg-white shadow-sm rounded-md"
     >
-        <h3 className="font-light text-lg text-center pb-2">
-          <strong>Beans</strong> Overall Rate TOP 5
+        <h3 className="font-medium text-md opacity-60 text-center pb-2">
+           Beans Grade Top 5
         </h3>
         <div style={{
            height: `calc(50px + 60px * ${labels.length})`,
