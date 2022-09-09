@@ -27,12 +27,12 @@ const NameInput = ({bean, setBean}) => {
         message: <span className="text-red">* Required</span>
       })
     } 
-    else if (escapedValue.length > 60) {
+    else if (escapedValue.length > 40) {
       setWarning({
         ...warning,
         invalid: true,
         message: <span className="text-red">
-          Please enter less than 60 characters.
+          Please enter less than 40 characters.
         </span>
       })
     } 
@@ -55,7 +55,7 @@ const NameInput = ({bean, setBean}) => {
       invalid={warning.invalid}
       onChange={e => setName(e.target.value)}
       warningText={warning.message}
-      counterText={`${counter}/60`}
+      counterText={`${counter}/40`}
     />
   )
 }

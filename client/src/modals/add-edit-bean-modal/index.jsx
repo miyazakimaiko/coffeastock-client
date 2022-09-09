@@ -130,7 +130,7 @@ const AddEditBeanModal = ({targetBean = null}) => {
   const setDetailsTabState = () => {
     
     const esacapedLabel = escapeHtml(bean.label ? bean.label : '');
-    const lebelIsValid = esacapedLabel.length > 0 && esacapedLabel.length <= 60;
+    const lebelIsValid = esacapedLabel.length > 0 && esacapedLabel.length <= 40;
     const gradeIsValid = checkValueIsNumber(bean.grade) && checkGradeIsInRange(bean.grade);
     const roastLevelIsValid = checkValueIsNumber(bean.roast_level) && checkRoastLevelIsInRange(bean.roast_level);
 
