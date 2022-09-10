@@ -27,7 +27,7 @@ const PalateRadarChartDouble = ({ className, redTitle, blueTitle, redRatesObj, b
   const { data: palateRange, 
           isLoading: palateRangeIsLoading,
           isError: palateRangeHasError
-        } = useRange('palate')
+        } = useRange('palate');
 
   const [labels, setLabels] = useState([]);
   const [redRates, setRedRates] = useState([]);
@@ -48,25 +48,27 @@ const PalateRadarChartDouble = ({ className, redTitle, blueTitle, redRatesObj, b
   }, [blueRatesObj])
 
   useEffect(() => {
-    if (redRatesObj && !blueRatesObj) {
-      setRedRates(Object.values(redRatesObj));
-      setLabels(Object.keys(redRatesObj).map(id => palateRange[id].label))
+    if (palateRange) {
+      if (redRatesObj && !blueRatesObj) {
+        setRedRates(Object.values(redRatesObj));
+        setLabels(Object.keys(redRatesObj).map(id => palateRange[id].label))
+      }
+      else if (!redRatesObj && blueRatesObj) {
+        setBlueRates(Object.values(blueRatesObj));
+        setLabels(Object.keys(blueRatesObj).map(id => palateRange[id].label))
+      }
+      else if (redRatesObj && blueRatesObj) {
+        const rateCountObj = makeRateCountObj(redRatesObj, blueRatesObj);
+        const idsSortedByCount = makeSortedRateIdsByCount(rateCountObj);
+        const [redRates, blueRates] = 
+          makeSortedRatesByCount(idsSortedByCount, redRatesObj, blueRatesObj)
+  
+        setRedRates(redRates);
+        setBlueRates(blueRates);
+        setLabels(idsSortedByCount.map(id => palateRange[id].label))
+      }
     }
-    else if (!redRatesObj && blueRatesObj) {
-      setBlueRates(Object.values(blueRatesObj));
-      setLabels(Object.keys(blueRatesObj).map(id => palateRange[id].label))
-    }
-    else if (redRatesObj && blueRatesObj) {
-      const rateCountObj = makeRateCountObj(redRatesObj, blueRatesObj);
-      const idsSortedByCount = makeSortedRateIdsByCount(rateCountObj);
-      const [redRates, blueRates] = 
-        makeSortedRatesByCount(idsSortedByCount, redRatesObj, blueRatesObj)
-
-      setRedRates(redRates);
-      setBlueRates(blueRates);
-      setLabels(idsSortedByCount.map(id => palateRange[id].label))
-    }
-  }, [redRatesObj, blueRatesObj]);
+  }, [redRatesObj, blueRatesObj, palateRange]);
 
   function makeRateCountObj(redRatesObj, blueRatesObj) {
     const rateCountObj = {};

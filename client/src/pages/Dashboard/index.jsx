@@ -11,6 +11,7 @@ import TotalRecipes from './TotalRecipes'
 import useBeansSummary from '../../hooks/useBeansSummary'
 import Spinner from '../../elements/Spinner'
 import ErrorPage from '../error'
+import RecentRecipes from './RecentRecipes'
 
 const Dashboard = () => {
   const [beansBarChart, setBeansBarChart] = useState(null);
@@ -51,7 +52,8 @@ const Dashboard = () => {
       setBeansBarChart(
         <ChartBarBeans
           labels={makeWrappedLabelsList(beansSummary.graderanking, 'beans')}
-          beansData={beansSummary.graderanking.map(bean => (bean.grade))}
+          grades={beansSummary.graderanking.map(bean => (bean.grade))}
+          avgRecipeRate={beansSummary.graderanking.map(bean => (bean.avg_recipe_rate))}
         />
       );
     }
@@ -62,7 +64,8 @@ const Dashboard = () => {
       setRecipesBarChart(
         <ChartBarRecipes
           labels={makeWrappedLabelsList(recipesSummary.totalrateranking, 'recipes')}
-          recipesData={recipesSummary.totalrateranking.map(recipe => (recipe.total_rate))}
+          totalRates={recipesSummary.totalrateranking.map(recipe => (recipe.total_rate))}
+          grades={recipesSummary.totalrateranking.map(recipe => (recipe.grade))}
         />
       );
     }
@@ -138,9 +141,14 @@ const Dashboard = () => {
             unit={units['solid' + unitIds['unit_solid_weight_id']].short_label}
           />
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 lg:mb-6">
-          {beansBarChart}
-          {recipesBarChart}
+        <div className="flex lg:mb-6">
+          <div className="w-2/5">
+            <RecentRecipes/>
+          </div>
+          <div className="w-3/5">
+            {beansBarChart}
+            {recipesBarChart}
+          </div>
         </div>
       </div>
     </>

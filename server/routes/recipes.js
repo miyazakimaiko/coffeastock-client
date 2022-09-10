@@ -56,19 +56,31 @@ module.exports = (app) => {
       try {
         // total amount of total-yields-weight and number of recipes
         const summaryResult = await db.query(`
-        SELECT SUM(yield_weight) AS yieldsWeight, SUM(grounds_weight) AS groundsWeight, COUNT(*) FROM recipes WHERE user_id = $1`, 
+        SELECT SUM(yield_weight) AS yieldsWeight, SUM(grounds_weight) AS groundsWeight, COUNT(*) 
+        FROM recipes 
+        WHERE user_id = $1`, 
         [req.params.userid]);
 
         // get recipes with the top 5 of toralRate
         const rateRankingResult = await db.query(`
-        SELECT bean_id, recipe_no, total_rate 
-        FROM recipes 
-        WHERE user_id = $1
+        SELECT r.bean_id, recipe_no, total_rate, b.grade
+        FROM recipes r
+             LEFT JOIN beans b
+                    ON r.bean_id = b.bean_id
+        WHERE r.user_id = $1
               AND total_rate IS NOT NULL 
         ORDER BY total_rate DESC LIMIT 5`, 
         [req.params.userid]);
 
+        const recentTwoRecipesResult = await db.query(`
+        SELECT *
+        FROM recipes
+        WHERE user_id = $1
+        ORDER BY created_at DESC LIMIT 2`, 
+        [req.params.userid]);
+
         summaryResult.rows[0].totalrateranking = rateRankingResult.rows;
+        summaryResult.rows[0].recentRecipes = recentTwoRecipesResult.rows;
   
         res.status(200).json(summaryResult.rows[0]);
       } catch (error) {
