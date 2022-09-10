@@ -16,7 +16,7 @@ export default function useBean(beanId) {
     {
       enabled: user && beanId ? true : false,
       initialData: () => { 
-        return queryClient.getQueryData('beans')?.find(d => d.bean_id == beanId)
+        return queryClient.getQueryData(['bean', beanId]);
       },
       onError: err => {
         if (err.message === 'Not authorized') {
