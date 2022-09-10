@@ -29,7 +29,11 @@ export const options = {
   },
   maintainAspectRatio: false,
   responsive: true,
-  barThickness: 20,
+  barThickness: 15,
+  scale: {
+    min: 0,
+    max: 100,
+  },
   plugins: {
     legend: {
       position: 'top',
@@ -69,21 +73,27 @@ export const options = {
   }
 };
 
-const ChartBarBeans = ({labels, beansData}) => {
+const ChartBarBeans = ({labels, grades, avgRecipeRate}) => {
   const data = {
     labels,
     datasets: [
       {
-        label: 'Grade (0-100)',
-        data: beansData,
-        borderColor: 'rgba(243,187,69, 0.5)',
-        backgroundColor: 'rgba(243,187,69, 0.5)',
+        label: 'Grade',
+        data: grades,
+        backgroundColor: 'rgba(255, 99, 132, 0.4)',
+        borderColor: 'rgba(255, 99, 132, 0)',
+      },
+      {
+        label: 'Average Recipe Rate',
+        data: avgRecipeRate,
+        backgroundColor: 'rgba(243,187,69, 0.4)',
+        borderColor: 'rgba(243,187,69, 0)',
       }
     ],
   };
 
   return (
-    <div className="px-3 mb-4 lg:mb-0">
+    <div className="px-3 mb-4 lg:mb-6">
       <div
         className="
           w-full p-4

@@ -50,14 +50,16 @@ module.exports = (app) => {
     app.get(endpoint + "/user/:userid/beans-summary", async (req, res, next) => {
       try {
         const rateRankingResult = await db.query(`
-        SELECT bean_id, label, grade 
-        FROM beans 
-        WHERE user_id = $1 
-              AND grade IS NOT NULL
+          SELECT b.bean_id, label, grade, TRUNC(AVG(r.total_rate), 1) avg_recipe_rate
+            FROM beans b
+                 LEFT JOIN recipes r
+                        ON b.bean_id = r.bean_id
+                 AND b.user_id = $1 
+                 WHERE grade IS NOT NULL
+          GROUP BY b.bean_id
         ORDER BY grade DESC LIMIT 5`, 
         [req.params.userid]);
   
-        console.log(rateRankingResult.rows)
         res.status(200).json({graderanking: rateRankingResult.rows});
       } catch (error) {
         next(error)
