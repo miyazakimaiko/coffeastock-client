@@ -29,7 +29,7 @@ export const options = {
   },
   maintainAspectRatio: false,
   responsive: true,
-  barThickness: 20,
+  barThickness: 15,
   scale: {
     min: 0,
     max: 100,
@@ -73,20 +73,26 @@ export const options = {
   }
 };
 
-const ChartBarRecipes = ({labels, recipesData}) => {
+const ChartBarRecipes = ({labels, totalRates, grades}) => {
   const data = {
     labels,
     datasets: [
       {
-        label: 'Total Rate (0-100)',
-        data: recipesData,
-        borderColor: 'rgba(122, 194, 154, 0.5)',
+        label: 'Total Rate',
+        data: totalRates,
+        borderColor: 'rgba(122, 194, 154, 0)',
         backgroundColor: 'rgba(122, 194, 154, 0.5)',
+      },
+      {
+        label: 'Bean\'s grade',
+        data: grades,
+        borderColor: 'rgba(54, 162, 235, 0)',
+        backgroundColor: 'rgba(54, 162, 235, 0.3)',
       }
     ],
   }
   return (
-    <div className="px-3 mb-4 lg:mb-0">
+    <div className="px-3 mb-4 lg:mb-6">
       <div
         className="w-full p-4 bg-white shadow-sm rounded-md"
       >
