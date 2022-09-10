@@ -9,9 +9,27 @@ import NameInput from './components/NameInput'
 import DetailsTextarea from './components/DetailsTextarea'
 import { capitalize } from '../../helpers/HtmlConverter'
 import { ModalStateContext } from '../../context/ModalStateContext'
+import { useGetSession, useSignout } from '../../context/AccountContext'
+import { useNavigate } from 'react-router-dom'
 
 
 const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
+
+  const getSession = useGetSession();
+  const signout = useSignout();
+  const navigate = useNavigate();
+
+  // prevent from filling form while token is expired
+  // (This prevents warning user to login again after filling the form)
+  useEffect(() => {
+    getSession((err, _) => {
+      if (err) {
+        signout();
+        navigate('/login', { replace: true } );
+      }
+    });
+  }, []);
+
   const editRange = useEditRange(rangeName)
   const addRange = useAddRange()
   const {modal, closeModal, modalModeSelection} = useContext(ModalStateContext);

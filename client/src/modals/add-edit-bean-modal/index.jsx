@@ -40,8 +40,26 @@ import {
   checkValueIsNumber,
 } from "./helpers/InputValidators";
 import TabStateModel from './models/TabStateModel';
+import { useGetSession, useSignout } from '../../context/AccountContext';
+import { useNavigate } from 'react-router-dom';
 
 const AddEditBeanModal = ({targetBean = null}) => {
+
+  const getSession = useGetSession();
+  const signout = useSignout();
+  const navigate = useNavigate();
+  
+  // prevent from filling form while token is expired
+  // (This prevents warning user to login again after filling the form)
+  useEffect(() => {
+    getSession((err, _) => {
+      if (err) {
+        signout();
+        navigate('/login', { replace: true } );
+      }
+    });
+  }, []);
+
   const { data: rangeList, 
           isLoading: rangeListIsLoading,
           isError: rangeListHasError,

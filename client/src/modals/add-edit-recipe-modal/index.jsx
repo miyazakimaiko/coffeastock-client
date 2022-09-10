@@ -50,10 +50,27 @@ import {
   checkYieldWeightIsInRange,
 } from "./helpers/InputValidators";
 import '../modals.scss'
+import { useGetSession, useSignout } from '../../context/AccountContext';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const AddEditRecipeModal = ({recipeId = null}) => {
+
+  const getSession = useGetSession();
+  const signout = useSignout();
+  const navigate = useNavigate();
+
+  // prevent from filling form while token is expired
+  // (This prevents warning user to login again after filling the form)
+  useEffect(() => {
+    getSession((err, _) => {
+      if (err) {
+        signout();
+        navigate('/login', { replace: true } );
+      }
+    });
+  }, []);
 
   const queryClient = useQueryClient();
   const addRange = useAddRange();
