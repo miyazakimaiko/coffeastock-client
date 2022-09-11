@@ -56,14 +56,20 @@ export const options = {
   },
   scales: {
     yAxes: {
+      grid: {
+        display: false
+      },
       ticks: {
         font: {
           family: "system-ui", // Add your font here to change the font of your legend label
           size: 11
         }
-      }
+      },
     },
     xAxes: {
+      grid: {
+        display: false
+      },
       ticks: {
         font: {
           family: "system-ui", // Add your font here to change the font of your legend label
