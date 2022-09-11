@@ -10,7 +10,7 @@ const BeanInput = ({ mode, beanList, selectedBean, setSelectedBean }) => {
   const setBeanList = (selectedItemsList) => {
     setSelectedBean(selectedItemsList);
 
-    if (selectedItemsList.length === 0) {
+    if (!Boolean(selectedItemsList) || selectedItemsList.length === 0) {
       setWarning({
         ...warning,
         invalid: true,
@@ -21,7 +21,7 @@ const BeanInput = ({ mode, beanList, selectedBean, setSelectedBean }) => {
       setWarning({
         ...warning,
         invalid: false,
-        message: "* Required",
+        message: "",
       });
     }
   };
@@ -35,6 +35,7 @@ const BeanInput = ({ mode, beanList, selectedBean, setSelectedBean }) => {
     onChange={setBeanList}
     isCreatable={false}
     isMulti={false}
+    invalid={warning.invalid}
     warningText={warning.message}
   />
   );

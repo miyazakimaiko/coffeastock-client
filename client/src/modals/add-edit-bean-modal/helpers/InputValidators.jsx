@@ -36,5 +36,5 @@ export {
   checkHarvestPeriodIsInRange,
   checkAltitudeIsInRange,
   checkMemoIsInRange,
-  checkBlendBeansCountInRange
+  checkBlendBeansCountInRange,
 };

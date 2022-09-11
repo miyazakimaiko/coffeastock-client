@@ -4,7 +4,7 @@ export const convertItemListToIdList = (selectedRange, rangeItems) => {
   const idList = [];
   selectedRange.forEach(range => {
     for (const entry of Object.values(rangeItems)) {
-      if (unescapeHtml(entry.label) === range.label) {
+      if (Boolean(entry && range) && unescapeHtml(entry.label) === range.label) {
         idList.push(parseInt(entry['value']));
       }
     }

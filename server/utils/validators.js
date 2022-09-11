@@ -2,8 +2,7 @@ const { body } = require('express-validator');
 const { CustomException } = require('./customExcetions');
 
 const rangeItemValidator = [
-  body('label', 'Invalid Name').escape().isLength({ max: 60 })
-    .optional({ nullable: false }),
+  body('label', 'Invalid Name').escape().isLength({ max: 30 }).optional({ nullable: false }),
   body('def', 'Invalid Details').escape().isLength({ max: 600 }).optional({ checkFalsy: true })
 ]
 

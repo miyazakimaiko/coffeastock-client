@@ -25,8 +25,7 @@ const RecentRecipes = () => {
     if (recipesSummary.recentRecipes && beanList) {
       const recipeLeft = recipesSummary.recentRecipes[1];
       const recipeRight = recipesSummary.recentRecipes[0];
-      console.log({recipeLeft})
-      console.log({recipeRight})
+
       setChartContent(
         <>
           <PalateRadarChartDouble

@@ -28,24 +28,20 @@ const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
         navigate('/login', { replace: true } );
       }
     });
+    if (targetRangeItem && modal.mode === modalModeSelection.editRange) {
+      setRangeItem(targetRangeItem);
+    }
   }, []);
 
   const editRange = useEditRange(rangeName)
   const addRange = useAddRange()
   const {modal, closeModal, modalModeSelection} = useContext(ModalStateContext);
 
-
   const [rangeItem, setRangeItem] = useState({ value: '', label: '', def: '' });
   const [rangeItemIsValid, setRangeItemIsValid] = useState(false);
 
   useEffect(() => {
-    if (targetRangeItem && modal.mode === modalModeSelection.editRange) {
-      setRangeItem(targetRangeItem);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (rangeItem.label.length < 1 || rangeItem.label.length > 60 || rangeItem.def.length > 600) {
+    if (Boolean(rangeItem) && (rangeItem.label.length < 1 || rangeItem.label.length > 30 || rangeItem.def?.length > 600)) {
       setRangeItemIsValid(false);
     }
     else {
@@ -55,13 +51,14 @@ const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
 
   const onAddSubmit = async (event) => {
     event.preventDefault();
+  
     if (rangeItem.label.length === 0) {
       toastOnBottomCenter('error', 'Name field is required.')
     }
     else {
       const body = { 
         label: rangeItem.label, 
-        def: rangeItem.def.replace(/(\r\n|\n|\r)/gm, " "),
+        def: rangeItem.def?.replace(/(\r\n|\n|\r)/gm, " "),
       }
       addRange.mutate(
         {
@@ -95,7 +92,7 @@ const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
     }
     const decodedRangeItem = {
       ...rangeItem, 
-      "def": rangeItem.def.replace(/(\r\n|\n|\r)/gm, " ")
+      "def": rangeItem.def?.replace(/(\r\n|\n|\r)/gm, " ")
     }
     editRange.mutate({
       rangeName: rangeName, 

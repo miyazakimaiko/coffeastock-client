@@ -9,7 +9,7 @@ const MultiselectConfirmSection = ({title, content}) => {
           Array.isArray(content)
             ?
           content.map((c) => (
-            <span className="basic-chip">{c.label}</span>
+            <span className="basic-chip">{c?.label}</span>
           ))
             :
             <p>-</p> 

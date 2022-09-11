@@ -74,7 +74,6 @@ const ChangeUnitsModal = () => {
                     if (unit.type === 'solid') {
                       // create value attr with unique id which is required for multiselect
                       unit.value = unit.type + unit.id;
-                      console.log({unit})
                       return unit;
                     };
                   })}

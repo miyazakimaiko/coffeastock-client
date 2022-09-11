@@ -51,11 +51,11 @@ const PalateRadarChartDouble = ({ className, redTitle, blueTitle, redRatesObj, b
     if (palateRange) {
       if (redRatesObj && !blueRatesObj) {
         setRedRates(Object.values(redRatesObj));
-        setLabels(Object.keys(redRatesObj).map(id => palateRange[id].label))
+        setLabels(Object.keys(redRatesObj).map(id => [palateRange[id].label.slice(0, 15), palateRange[id].label.slice(15)]))
       }
       else if (!redRatesObj && blueRatesObj) {
         setBlueRates(Object.values(blueRatesObj));
-        setLabels(Object.keys(blueRatesObj).map(id => palateRange[id].label))
+        setLabels(Object.keys(blueRatesObj).map(id => [palateRange[id].label.slice(0, 15), palateRange[id].label.slice(15)]))
       }
       else if (redRatesObj && blueRatesObj) {
         const rateCountObj = makeRateCountObj(redRatesObj, blueRatesObj);
@@ -65,7 +65,7 @@ const PalateRadarChartDouble = ({ className, redTitle, blueTitle, redRatesObj, b
   
         setRedRates(redRates);
         setBlueRates(blueRates);
-        setLabels(idsSortedByCount.map(id => palateRange[id].label))
+        setLabels(idsSortedByCount.map(id => [palateRange[id].label.slice(0, 15), palateRange[id].label.slice(15)]))
       }
     }
   }, [redRatesObj, blueRatesObj, palateRange]);

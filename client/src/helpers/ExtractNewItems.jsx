@@ -1,6 +1,7 @@
 const extractNewItems = (Items) => {
-  if (Items !== null && Items.length > 0) {
-    return Items.filter((x) => "__isNew__" in x);
+  if (Boolean(Items) && Items.length > 0) {
+    console.log({Items})
+    return Items.filter((x) => Boolean(x) && "__isNew__" in x);
   }
   return [];
 }

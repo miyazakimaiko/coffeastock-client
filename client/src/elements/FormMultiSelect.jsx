@@ -1,6 +1,6 @@
-import React from 'react'
-import CreatableSelect from 'react-select/creatable';
+import React, { useEffect, useState } from 'react'
 import Select from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 import { unescapeHtml } from '../helpers/HtmlConverter';
 
 const FormMultiSelect = ({
@@ -15,45 +15,98 @@ const FormMultiSelect = ({
   warningText,
   counterText,
 }) => {
+  const [decodedOptions, setDecodedOptions] = useState([]);
+  
+  useEffect(() => {
+    const decoded = options.map((option) => {
+      return {
+        ...option,
+        label: unescapeHtml(option.label),
+      };
+    });
+    setDecodedOptions(decoded);
+  }, [options])
+  
+  const [valid, setValid] = useState(!invalid);
 
-  const decodedOptions = options.map((option) => {
-    return {
-      ...option,
-      label: unescapeHtml(option.label),
-    };
-  });
+  useEffect(() => {
+    setValid(!invalid);
+  }, [invalid])
+
+  const [warning, setWarning] = useState(warningText);
+
+  useEffect(() => {
+    setWarning(warningText);
+  }, [warningText]);
+  
+  function validateCharLength(val) {
+    if (val.length > 30) {
+      setValid(false);
+      setWarning('The name must be 30 letters or shorter.')
+    }
+    else if (val) {
+      setValid(true);
+      setWarning(warningText)
+    }
+  }
+
+  useEffect(() => {
+    if (Array.isArray(value)) {
+      validateItemListLabelLength(value);
+    }
+  }, [value])
+
+  function validateItemListLabelLength(itemList) {
+    let labelTooLong = false;
+    for (const item of itemList) {
+      if (item?.label.length > 30) {
+        labelTooLong = true;
+      }
+    }
+    if (labelTooLong) {
+      setValid(false);
+      setWarning('Selected item\'s name exceeded the max number of letters. It must be 30 letters or shorter.')
+    }
+    else {
+      setValid(!invalid);
+      setWarning(warningText);
+    }
+  }
 
   const customStyle = {
     control: base => ({
       ...base,
-      border: invalid ? 0 : "1px solid lightgrey",
+      border: valid ? "1px solid lightgrey" : 0,
       // This line disable the blue border
-      boxShadow: invalid ? "0 0 0 2pt #EB5E28" : "none"
+      boxShadow: valid ? "none" : "0 0 0 2pt #EB5E28"
     })
   };
 
   return (
     <div className="form-section">
-      {title || warningText ? (
+      {title || warning ? (
         <div className="mb-1">
           <label className="font-medium">{title}</label>
-          <span className="text-xs ml-2">{warningText}</span>
+          <span className="text-xs ml-2 text-red">{warning}</span>
         </div>
         ) : null
       }
       {isCreatable ? (
         <CreatableSelect
           isMulti={isMulti}
+          isClearable={true}
           isDisabled={isDisabled}
           styles={customStyle}
           options={decodedOptions}
           defaultValue={value}
           value={value}
           onChange={onChange}
+          onInputChange={validateCharLength}
         />
       ) : (
         <Select
           isMulti={isMulti}
+          isClearable={true}
           isDisabled={isDisabled}
           styles={customStyle}
           options={decodedOptions}

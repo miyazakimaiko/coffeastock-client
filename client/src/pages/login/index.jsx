@@ -60,7 +60,6 @@ const Login = () => {
         });
       }
       else {
-        console.log({userData})
         getUser.mutate(userData, {
           onSuccess: () => navigateToDashboard()
         });

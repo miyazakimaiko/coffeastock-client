@@ -27,8 +27,6 @@ const RecipeService = () => {
     memo: null,
   });
 
-  console.log({recipe})
-
   const [processAddSubmit, setProcessAddSubmit] = useState(false);
   const [processEditSubmit, setProcessEditSubmit] = useState(false);
 

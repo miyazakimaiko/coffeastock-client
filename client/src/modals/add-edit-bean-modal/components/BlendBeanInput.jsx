@@ -28,7 +28,7 @@ const BlendBeanInput = ({ targetBean, beanList, selectedBlendBeans, setSelectedB
       setWarning({
         ...warning,
         invalid: false,
-        message: "* Required",
+        message: "",
       });
     }
   };

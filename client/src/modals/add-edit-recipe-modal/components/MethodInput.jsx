@@ -13,7 +13,7 @@ const MethodInput = ({ rangeList, selectedMethod, setSelectedMethod }) => {
   const setMethod = (selectedItem) => {
     setSelectedMethod(() => [selectedItem]);
 
-    if (selectedItem.length === 0) {
+    if (!Boolean(selectedItem) || selectedItem.length === 0) {
       setWarning({
         ...warning,
         invalid: true,
@@ -24,7 +24,7 @@ const MethodInput = ({ rangeList, selectedMethod, setSelectedMethod }) => {
       setWarning({
         ...warning,
         invalid: false,
-        message: "* Required",
+        message: "",
       });
     }
   };
@@ -37,6 +37,7 @@ const MethodInput = ({ rangeList, selectedMethod, setSelectedMethod }) => {
       onChange={setMethod}
       isCreatable={options.length > 150 ? false : true}
       isMulti={false}
+      invalid={warning.invalid}
       warningText={warning.message}
     />
   );

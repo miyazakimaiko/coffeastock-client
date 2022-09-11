@@ -42,6 +42,7 @@ import {
 import TabStateModel from './models/TabStateModel';
 import { useGetSession, useSignout } from '../../context/AccountContext';
 import { useNavigate } from 'react-router-dom';
+import { checkItemsLabelLessThanMax } from '../../helpers/InputValidators';
 
 const AddEditBeanModal = ({targetBean = null}) => {
 
@@ -129,7 +130,13 @@ const AddEditBeanModal = ({targetBean = null}) => {
   
   useEffect(() => {
     setDetailsTabState();
-  }, [bean.label, bean.grade, bean.roast_level]);
+  }, [
+      bean.label, 
+      bean.grade, 
+      bean.roast_level, 
+      selectedRoaster
+    ]
+  );
 
 
   useEffect(() => {
@@ -140,8 +147,12 @@ const AddEditBeanModal = ({targetBean = null}) => {
     bean.harvest_period,
     bean.altitude,
     bean.memo,
-    selectedOrigin,
     selectedBlendBeans,
+    selectedOrigin,
+    selectedFarm,
+    selectedVariety,
+    selectedProcess,
+    selectedAroma
   ]);
 
 
@@ -151,8 +162,9 @@ const AddEditBeanModal = ({targetBean = null}) => {
     const lebelIsValid = esacapedLabel.length > 0 && esacapedLabel.length <= 40;
     const gradeIsValid = checkValueIsNumber(bean.grade) && checkGradeIsInRange(bean.grade);
     const roastLevelIsValid = checkValueIsNumber(bean.roast_level) && checkRoastLevelIsInRange(bean.roast_level);
+    const roastersAreValid = checkItemsLabelLessThanMax(selectedRoaster);
 
-    if (lebelIsValid && gradeIsValid && roastLevelIsValid) {
+    if (lebelIsValid && gradeIsValid && roastLevelIsValid && roastersAreValid) {
       setTabState(tabState => ({ ...tabState, canOpenDetailsTab: true }));
     }
     else {
@@ -164,7 +176,6 @@ const AddEditBeanModal = ({targetBean = null}) => {
     }
   }
 
-
   const setConfirmationTabState = () => {
 
     if (bean.single_origin) {
@@ -172,13 +183,24 @@ const AddEditBeanModal = ({targetBean = null}) => {
       const altitudeIsInRange = checkAltitudeIsInRange(bean.altitude);
       const harvestPeriodIsInRange = checkHarvestPeriodIsInRange(bean.harvest_period);
       const memoIsInRange = checkMemoIsInRange(bean.memo);
+      const originsAreValid = checkItemsLabelLessThanMax(selectedOrigin);
+      const farmsAreValid = checkItemsLabelLessThanMax(selectedFarm);
+      const varietalsAreValid = checkItemsLabelLessThanMax(selectedVariety);
+      const processesAreValid = checkItemsLabelLessThanMax(selectedProcess);
+      const aromasAreValid = checkItemsLabelLessThanMax(selectedAroma);
+
 
       if (
         tabState.canOpenDetailsTab,
         originIsSelected &&
         altitudeIsInRange &&
         harvestPeriodIsInRange &&
-        memoIsInRange
+        memoIsInRange &&
+        originsAreValid &&
+        farmsAreValid &&
+        varietalsAreValid &&
+        processesAreValid && 
+        aromasAreValid
       ) {
         setTabState((tabState) => ({ ...tabState, canOpenConfirmation: true }));
       }

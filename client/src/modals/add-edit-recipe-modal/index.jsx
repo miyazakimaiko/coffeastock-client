@@ -52,6 +52,7 @@ import {
 import '../modals.scss'
 import { useGetSession, useSignout } from '../../context/AccountContext';
 import { useNavigate } from 'react-router-dom';
+import { checkItemsLabelLessThanMax } from '../../helpers/InputValidators';
 
 
 
@@ -189,7 +190,6 @@ const AddEditRecipeModal = ({recipeId = null}) => {
   }
 
   const insertNewRangeList = async () => {
-    console.log({selectedGrinder})
     let newRangeList = {
       method: extractNewItems(selectedMethod),
       grinder: extractNewItems(selectedGrinder),
@@ -294,9 +294,18 @@ const AddEditRecipeModal = ({recipeId = null}) => {
     const setWaterYieldTabState = () => {
       const grindSizeIsValid = checkGrindSizeIsInRange(recipe.grind_size);
       const groundsWeightIsValid = checkGroundsWeightIsInRange(recipe.grounds_weight);
+      const methodIsValid = checkItemsLabelLessThanMax(selectedMethod);
+      const grinderIsValid = checkItemsLabelLessThanMax(selectedGrinder);
+      const waterIsValid = checkItemsLabelLessThanMax(selectedWater);
   
-      if (selectedBean && selectedMethod && 
-      grindSizeIsValid && groundsWeightIsValid) {
+      if (selectedBean 
+        && methodIsValid
+        && grindSizeIsValid 
+        && groundsWeightIsValid
+        && methodIsValid
+        && grinderIsValid
+        && waterIsValid
+        ) {
         setTabState(tabState => ({
           ...tabState,
           canOpenWaterYieldTab: true
@@ -310,7 +319,14 @@ const AddEditRecipeModal = ({recipeId = null}) => {
       }
     }
     setWaterYieldTabState();
-  }, [selectedBean, selectedMethod, recipe.grounds_weight, recipe.grind_size]);
+  }, [
+    selectedBean, 
+    selectedMethod, 
+    recipe.grounds_weight, 
+    recipe.grind_size,
+    selectedGrinder,
+    selectedWater
+  ]);
 
 
   useEffect(() => {
@@ -321,9 +337,17 @@ const AddEditRecipeModal = ({recipeId = null}) => {
       const extractionTimeIsValid = checkExtractionTimeIsInVaildForm(recipe.extraction_time);
       const tdsIsValid = checkTdsIsInRange(recipe.tds);
       const totalRateIsValid = checkTotalRateIsInRange(recipe.total_rate);
+      const palatesAreValid = checkItemsLabelLessThanMax(selectedPalates);
   
-      if ( waterWeightIsValid && waterTempIsValid && yieldWeightIsValid &&
-      extractionTimeIsValid && tdsIsValid && totalRateIsValid && tabState.canOpenWaterYieldTab ) {
+      if ( waterWeightIsValid 
+        && waterTempIsValid 
+        && yieldWeightIsValid 
+        && extractionTimeIsValid 
+        && tdsIsValid 
+        && totalRateIsValid 
+        && tabState.canOpenWaterYieldTab 
+        && palatesAreValid 
+      ) {
         setTabState((tabState) => ({
           ...tabState,
           canOpenPalatesTab: true,
@@ -345,6 +369,7 @@ const AddEditRecipeModal = ({recipeId = null}) => {
     recipe.extraction_time,
     recipe.tds,
     recipe.total_rate,
+    selectedPalates,
   ]);
 
 

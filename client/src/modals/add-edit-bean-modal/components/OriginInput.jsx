@@ -24,7 +24,7 @@ const OriginInput = ({ rangeList, selectedOrigin, setSelectedOrigin }) => {
       setWarning({
         ...warning,
         invalid: false,
-        message: "* Required",
+        message: "",
       });
     }
   };

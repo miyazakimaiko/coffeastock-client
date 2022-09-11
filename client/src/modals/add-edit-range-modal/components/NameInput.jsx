@@ -20,11 +20,11 @@ const NameInput = ({rangeName, rangeItem, setRangeItem}) => {
         message: '* This field is required.',
       });
     }
-    else if (encodedValue.length > 60) {
+    else if (encodedValue.length > 30) {
       setWarning({ 
         ...warning, 
         invalid: true,
-        message: '* Please enter less than 60 letters.',
+        message: '* Please enter less than 30 letters.',
       });
     }
     else {
@@ -53,7 +53,7 @@ const NameInput = ({rangeName, rangeItem, setRangeItem}) => {
         onChange={(e) => setName(e.target.value)}
       />
       <div className='w-full mt-1 text-right'>
-        <span>{counter}/60</span>
+        <span>{counter}/30</span>
       </div>
     </div>
   )
