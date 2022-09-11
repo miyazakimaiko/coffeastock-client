@@ -12,6 +12,7 @@ import useBeansSummary from '../../hooks/useBeansSummary'
 import Spinner from '../../elements/Spinner'
 import ErrorPage from '../error'
 import RecentRecipes from './RecentRecipes'
+import RssFeed from './RssFeed'
 
 const Dashboard = () => {
   const [beansBarChart, setBeansBarChart] = useState(null);
@@ -51,7 +52,7 @@ const Dashboard = () => {
     if (beansSummary && beansList) {
       setBeansBarChart(
         <ChartBarBeans
-          labels={makeWrappedLabelsList(beansSummary.graderanking, 'beans')}
+          labels={beansSummary.graderanking.map(bean => (bean.label))}
           grades={beansSummary.graderanking.map(bean => (bean.grade))}
           avgRecipeRate={beansSummary.graderanking.map(bean => (bean.avg_recipe_rate))}
         />
@@ -63,46 +64,13 @@ const Dashboard = () => {
     if (recipesSummary && beansList) {
       setRecipesBarChart(
         <ChartBarRecipes
-          labels={makeWrappedLabelsList(recipesSummary.totalrateranking, 'recipes')}
+          labels={recipesSummary.totalrateranking.map(recipe => ([beansList[recipe.bean_id].label, `(Recipe ${recipe.recipe_no})`]))}
           totalRates={recipesSummary.totalrateranking.map(recipe => (recipe.total_rate))}
           grades={recipesSummary.totalrateranking.map(recipe => (recipe.grade))}
         />
       );
     }
   }, [recipesSummary, beansList]);
-
-  function makeWrappedLabelsList(orderedItemsObj, type) {
-    // react-chart-js does not wrap labels text and no out-of-box solution for this.
-    // for now we break up the label into half and set as a list
-    // so that the chart can show the elements of the list next to each other
-    const wrappedLabelsList = orderedItemsObj.map(recipe => {
-      const singleLabel = [];
-      if (beansList[recipe.bean_id].label.length > 30) {
-        const s = beansList[recipe.bean_id].label
-        var middle = Math.floor(s.length / 2);
-        var before = s.lastIndexOf(' ', middle);
-        var after = s.indexOf(' ', middle + 1);
-
-        if (middle - before < after - middle) {
-            middle = before;
-        } else {
-            middle = after;
-        }
-        singleLabel.push(s.substr(0, middle));
-        singleLabel.push(s.substr(middle + 1));
-        if (type === 'recipes') {
-          singleLabel.push(`(Recipe ${recipe.recipe_no})`);
-        }
-        return singleLabel;
-      }
-      singleLabel.push(beansList[recipe.bean_id].label);
-      if (type === 'recipes') {
-        singleLabel.push(`(Recipe ${recipe.recipe_no})`);
-      }
-      return singleLabel;
-    });
-    return wrappedLabelsList;
-  }
 
   useEffect(() => {
     window.scroll({ top: 0, behavior: 'smooth' });
@@ -142,12 +110,15 @@ const Dashboard = () => {
           />
         </div>
         <div className="flex lg:mb-6">
-          <div className="w-2/5">
+          <div className="w-4/12">
             <RecentRecipes/>
           </div>
-          <div className="w-3/5">
+          <div className="w-5/12">
             {beansBarChart}
             {recipesBarChart}
+          </div>
+          <div className="w-3/12">
+            <RssFeed />
           </div>
         </div>
       </div>
