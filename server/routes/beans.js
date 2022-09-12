@@ -54,8 +54,8 @@ module.exports = (app) => {
             FROM beans b
                  LEFT JOIN recipes r
                         ON b.bean_id = r.bean_id
-                 AND b.user_id = $1 
-                 WHERE grade IS NOT NULL
+                 WHERE b.user_id = $1 
+                 AND grade IS NOT NULL
           GROUP BY b.bean_id
         ORDER BY grade DESC LIMIT 5`, 
         [req.params.userid]);
