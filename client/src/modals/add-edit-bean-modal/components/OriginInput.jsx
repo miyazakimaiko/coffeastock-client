@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
+import { useUserData } from '../../../context/AccountContext';
 import FormMultiSelect from '../../../elements/FormMultiSelect';
+import { MAX_COUNT, USER_TYPE_KEY } from '../../../utils/Constants';
 
 const OriginInput = ({ rangeList, selectedOrigin, setSelectedOrigin }) => {
+
+  const user = useUserData();
   
   const options = Object.values(rangeList.origin_range);
 
@@ -36,7 +40,7 @@ const OriginInput = ({ rangeList, selectedOrigin, setSelectedOrigin }) => {
       value={selectedOrigin}
       invalid={warning.invalid}
       onChange={setOriginList}
-      isCreatable={options.length > 150 ? false : true}
+      isCreatable={options.length < MAX_COUNT.RANGES[user[USER_TYPE_KEY]]}
       warningText={warning.message}
     />
   );

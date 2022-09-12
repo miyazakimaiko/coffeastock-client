@@ -1,0 +1,56 @@
+/* 
+* if changing any of its value, update on server side as well
+*/
+
+const MAX_LENGTH = {
+  BEANS_LABEL: 40,
+  BEANS_ALTITUDE: 60,
+  BEANS_HARVEST_PERIOD: 60,
+  RANGES_LABEL: 30,
+  RANGES_DEFINITION: 400,
+  COMMON_MEMO: 400,
+}
+
+const MAX_NUMBER = {
+  BEANS_ROAST_LEVEL: 100.0,
+  BEANS_GRADE: 100.0,
+  RECIPES_GRIND_SIZE: 100.0,
+  RECIPES_WATER_WEIGHT: 10000.0,
+  RECIPES_GROUNDS_WEIGHT: 10000.0,
+  RECIPES_YIELD_WEIGHT: 10000.0,
+  RECIPES_TOTAL_RATE: 100.0,
+  RECIPES_TDS: 20.0,
+  PARATES_RATE: 10.0,
+}
+
+const MAX_TEMP = {
+  CELCIUS: 100.0,
+  FAHRENHEIT: 212.0,
+  KELVIN: 373.15
+}
+
+const MAX_COUNT = {
+  RANGES: {
+    TRIAL: 3,
+    BASIC: 10,
+    PREMIUM: 150
+  },
+  BLEND_BEANS: 5,
+}
+
+const USER_TYPE = {
+  TRIAL: 'TRIAL',
+  BASIC: 'BASIC',
+  PREMIUM: 'PREMIUM'
+}
+
+const USER_TYPE_KEY = 'custom:user_type';
+
+export {
+  MAX_LENGTH,
+  MAX_NUMBER,
+  MAX_TEMP,
+  MAX_COUNT,
+  USER_TYPE,
+  USER_TYPE_KEY
+}

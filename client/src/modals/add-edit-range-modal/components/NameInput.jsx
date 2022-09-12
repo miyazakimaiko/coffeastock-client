@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { capitalize, escapeHtml } from '../../../helpers/HtmlConverter'
+import { MAX_LENGTH } from '../../../utils/Constants';
 
 const NameInput = ({rangeName, rangeItem, setRangeItem}) => {
   const [counter, setCounter] = useState(0);
@@ -20,11 +21,11 @@ const NameInput = ({rangeName, rangeItem, setRangeItem}) => {
         message: '* This field is required.',
       });
     }
-    else if (encodedValue.length > 30) {
+    else if (encodedValue.length > MAX_LENGTH.RANGES_LABEL) {
       setWarning({ 
         ...warning, 
         invalid: true,
-        message: '* Please enter less than 30 letters.',
+        message: `* Please enter less than ${MAX_LENGTH.RANGES_LABEL} letters.`,
       });
     }
     else {
@@ -53,7 +54,7 @@ const NameInput = ({rangeName, rangeItem, setRangeItem}) => {
         onChange={(e) => setName(e.target.value)}
       />
       <div className='w-full mt-1 text-right'>
-        <span>{counter}/30</span>
+        <span>{counter}/{MAX_LENGTH.RANGES_LABEL}</span>
       </div>
     </div>
   )

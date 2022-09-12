@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput'
+import { MAX_NUMBER } from '../../../utils/Constants';
 import { checkRoastLevelIsInRange, checkValueIsNumber } from '../helpers/InputValidators';
 
 const RoastLevelInput = ({bean, setBean}) => {
@@ -35,7 +36,7 @@ const RoastLevelInput = ({bean, setBean}) => {
             ...warning,
             invalid: true,
             message: <span className="text-red">
-              Please enter a number between 0.0 and 10.0.
+              Please enter a number between 0.0 and {MAX_NUMBER.BEANS_ROAST_LEVEL}.
             </span> 
           });
         }
@@ -56,7 +57,7 @@ const RoastLevelInput = ({bean, setBean}) => {
 
   return (
     <FormInput
-      title="Roast Level (0.0 - 10.0)"
+      title={`Roast Level (0.0-${MAX_NUMBER.BEANS_ROAST_LEVEL})`}
       type="text" 
       name="roastlevel"
       autoComplete="off"

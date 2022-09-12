@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import FormMultiSelect from '../../../elements/FormMultiSelect';
+import { MAX_COUNT, MAX_LENGTH } from '../../../utils/Constants';
 
 const BlendBeanInput = ({ targetBean, beanList, selectedBlendBeans, setSelectedBlendBeans }) => {
   const [warning, setWarning] = useState({
@@ -17,7 +18,7 @@ const BlendBeanInput = ({ targetBean, beanList, selectedBlendBeans, setSelectedB
         message: <span className="text-red">* At least one bean must be selected.</span>,
       });
     } 
-    else if (selectedItems.length > 5) {
+    else if (selectedItems.length > MAX_COUNT.BLEND_BEANS) {
       setWarning({
         ...warning,
         invalid: true,
@@ -48,6 +49,7 @@ const BlendBeanInput = ({ targetBean, beanList, selectedBlendBeans, setSelectedB
       onChange={setBlendBeanList}
       isCreatable={false}
       warningText={warning.message}
+      maxLabelLength={MAX_LENGTH.BEANS_LABEL}
     />
   );
 };

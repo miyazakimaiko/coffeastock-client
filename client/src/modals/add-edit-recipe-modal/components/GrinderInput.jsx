@@ -1,7 +1,11 @@
 import React from 'react'
+import { useUserData } from '../../../context/AccountContext';
 import FormMultiSelect from '../../../elements/FormMultiSelect';
+import { MAX_COUNT, USER_TYPE_KEY } from '../../../utils/Constants';
 
 const GrinderInput = ({ rangeList, selectedGrinder, setSelectedGrinder }) => {
+
+  const user = useUserData();
 
   const options = Object.values(rangeList.grinder_range);
 
@@ -15,7 +19,7 @@ const GrinderInput = ({ rangeList, selectedGrinder, setSelectedGrinder }) => {
       options={options}
       value={selectedGrinder}
       onChange={setGrinder}
-      isCreatable={options.length > 150 ? false : true}
+      isCreatable={options.length < MAX_COUNT.RANGES[user[USER_TYPE_KEY]]}
       isMulti={false}
     />
   );

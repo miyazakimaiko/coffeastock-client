@@ -4,6 +4,7 @@ import Spinner from '../../../elements/Spinner';
 import useUnits from '../../../hooks/useUnits';
 import useUserUnitIds from '../../../hooks/useUserUnitIds';
 import ErrorPage from '../../../pages/error';
+import { MAX_NUMBER } from '../../../utils/Constants';
 import { checkGroundsWeightIsInRange, checkValueIsNumber } from '../helpers/InputValidators';
 
 const GroundsWeightInput = ({recipe, setRecipe}) => {
@@ -53,7 +54,7 @@ const GroundsWeightInput = ({recipe, setRecipe}) => {
             ...warning,
             invalid: true,
             message: <span className="text-red">
-              Please enter a number between 0.0 and 1000.0.
+              Please enter a number between 0.0 and {MAX_NUMBER.RECIPES_GROUNDS_WEIGHT}.
             </span> 
           });
         }

@@ -4,6 +4,7 @@ import Spinner from '../../../elements/Spinner';
 import useUnits from '../../../hooks/useUnits';
 import useUserUnitIds from '../../../hooks/useUserUnitIds';
 import ErrorPage from '../../../pages/error';
+import { MAX_NUMBER } from '../../../utils/Constants';
 import { checkValueIsNumber, checkWaterWeightIsInRange } from '../helpers/InputValidators';
 
 const WaterWeightInput = ({recipe, setRecipe}) => {
@@ -53,7 +54,7 @@ const WaterWeightInput = ({recipe, setRecipe}) => {
             ...warning,
             invalid: true,
             message: <span className="text-red">
-              Please enter a number between 0.0 and 10000.0.
+              Please enter a number between 0.0 and {MAX_NUMBER.RECIPES_WATER_WEIGHT}.
             </span> 
           });
         }

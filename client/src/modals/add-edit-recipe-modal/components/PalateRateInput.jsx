@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { MAX_NUMBER } from '../../../utils/Constants';
 
 const PalateRateInput = ({title, parateId, palateRate, setPalateRate}) => {
 
@@ -26,7 +27,7 @@ const PalateRateInput = ({title, parateId, palateRate, setPalateRate}) => {
         <label className="font-medium">{title} : {palateRate}</label>
         <input 
           type="range"
-          min="0" max="10"
+          min="0" max={MAX_NUMBER.PARATES_RATE}
           step="0.1"
           name={title}
           className="block w-full py-2 mx-auto"

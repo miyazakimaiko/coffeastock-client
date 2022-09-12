@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { capitalize } from '../../../helpers/HtmlConverter'
+import { MAX_LENGTH } from '../../../utils/Constants';
 
 const DetailsTextarea = ({rangeName, rangeItem, setRangeItem}) => {
   const [counter, setCounter] = useState(0)
@@ -12,11 +13,11 @@ const DetailsTextarea = ({rangeName, rangeItem, setRangeItem}) => {
     setRangeItem({...rangeItem, def: e.target.value});
     setCounter(e.target.value.length);
 
-    if (e.target.value.length > 600) {
+    if (e.target.value.length > MAX_LENGTH.RANGES_DEFINITION) {
       setWarning({ 
         ...warning, 
         invalid: true,
-        message: '* Please enter less than 600 letters.',
+        message: `* Please enter less than ${MAX_LENGTH.RANGES_DEFINITION} letters.`,
       });
     }
     else {
@@ -45,7 +46,7 @@ const DetailsTextarea = ({rangeName, rangeItem, setRangeItem}) => {
         onChange={setDetails}
       />
       <div className='w-full mt-1 text-right'>
-        <span>{counter}/600</span>
+        <span>{counter}/{MAX_LENGTH.RANGES_DEFINITION}</span>
       </div>
     </div>
   )

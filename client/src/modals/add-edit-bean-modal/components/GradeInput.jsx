@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput';
+import { MAX_NUMBER } from '../../../utils/Constants';
 import { checkGradeIsInRange, checkValueIsNumber } from '../helpers/InputValidators';
 
 const GradeInput = ({bean, setBean}) => {
@@ -37,7 +38,7 @@ const GradeInput = ({bean, setBean}) => {
             ...warning,
             invalid: true,
             message: <span className="text-red">
-              Please enter a number between 0.0 and 100.0.
+              Please enter a number between 0.0 and {MAX_NUMBER.BEANS_GRADE}.
             </span> 
           });
         }
@@ -58,7 +59,7 @@ const GradeInput = ({bean, setBean}) => {
 
   return (
     <FormInput
-      title="Grade (0.0 - 100.0)"
+      title={`Grade (0.0-${MAX_NUMBER.BEANS_GRADE})`}
       type="text"
       name="grade"
       placeholder="e.g. 85.5"

@@ -11,6 +11,7 @@ import { capitalize } from '../../helpers/HtmlConverter'
 import { ModalStateContext } from '../../context/ModalStateContext'
 import { useGetSession, useSignout } from '../../context/AccountContext'
 import { useNavigate } from 'react-router-dom'
+import { MAX_LENGTH } from '../../utils/Constants'
 
 
 const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
@@ -41,7 +42,11 @@ const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
   const [rangeItemIsValid, setRangeItemIsValid] = useState(false);
 
   useEffect(() => {
-    if (Boolean(rangeItem) && (rangeItem.label.length < 1 || rangeItem.label.length > 30 || rangeItem.def?.length > 600)) {
+    if (Boolean(rangeItem) 
+      && (rangeItem.label.length < 1 
+          || rangeItem.label.length > MAX_LENGTH.RANGES_LABEL
+          || rangeItem.def?.length > MAX_LENGTH.RANGES_DEFINITION)
+    ) {
       setRangeItemIsValid(false);
     }
     else {

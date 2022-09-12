@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput';
+import { MAX_NUMBER } from '../../../utils/Constants';
 
 const TotalRateInput = ({recipe, setRecipe}) => {
   const [warning, setWarning] = useState({
@@ -36,7 +37,7 @@ const TotalRateInput = ({recipe, setRecipe}) => {
             ...warning,
             invalid: true,
             message: <span className="text-red">
-              Please enter a number between 0.0 and 100.0.
+              Please enter a number between 0.0 and {MAX_NUMBER.RECIPES_TOTAL_RATE}.
             </span> 
           });
         }
@@ -53,7 +54,7 @@ const TotalRateInput = ({recipe, setRecipe}) => {
   }
 
   const checkNumberIsInRange = (rate) => {
-    return rate >= 0.0 && rate <= 100.0;
+    return rate >= 0.0 && rate <= MAX_NUMBER.RECIPES_TOTAL_RATE;
   }
 
   const resetWarning = () => {
@@ -66,7 +67,7 @@ const TotalRateInput = ({recipe, setRecipe}) => {
 
   return (
     <FormInput
-      title="Total Rate (0.0 - 100.0)"
+      title={`Total Rate (0.0-${MAX_NUMBER.RECIPES_TOTAL_RATE})`}
       type="text"
       name="totalRate"
       placeholder="e.g. 85.5"

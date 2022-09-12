@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import { unescapeHtml } from '../helpers/HtmlConverter';
+import { MAX_LENGTH } from '../utils/Constants';
 
 const FormMultiSelect = ({
   title = null,
@@ -14,7 +15,9 @@ const FormMultiSelect = ({
   isMulti = true,
   warningText,
   counterText,
+  maxLabelLength = MAX_LENGTH.RANGES_LABEL,
 }) => {
+  
   const [decodedOptions, setDecodedOptions] = useState([]);
   
   useEffect(() => {
@@ -40,9 +43,9 @@ const FormMultiSelect = ({
   }, [warningText]);
   
   function validateCharLength(val) {
-    if (val.length > 30) {
+    if (val.length > maxLabelLength) {
       setValid(false);
-      setWarning('The name must be 30 letters or shorter.')
+      setWarning(`The name must be ${maxLabelLength} letters or shorter.`)
     }
     else if (val) {
       setValid(true);
@@ -59,13 +62,14 @@ const FormMultiSelect = ({
   function validateItemListLabelLength(itemList) {
     let labelTooLong = false;
     for (const item of itemList) {
-      if (item?.label.length > 30) {
+      if (item?.label.length > maxLabelLength) {
         labelTooLong = true;
       }
     }
     if (labelTooLong) {
       setValid(false);
-      setWarning('Selected item\'s name exceeded the max number of letters. It must be 30 letters or shorter.')
+      setWarning(`Selected item\'s name exceeded the max number of letters. 
+        It must be ${maxLabelLength} letters or shorter.`)
     }
     else {
       setValid(!invalid);

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput'
+import { MAX_NUMBER } from '../../../utils/Constants';
 
 const TdsInput = ({recipe, setRecipe}) => {
   const [warning, setWarning] = useState({
@@ -36,7 +37,7 @@ const TdsInput = ({recipe, setRecipe}) => {
             ...warning,
             invalid: true,
             message: <span className="text-red">
-              Please enter a number between 0.0 and 20.0.
+              Please enter a number between 0.0 and {MAX_NUMBER.RECIPES_TDS}.
             </span> 
           });
         }
@@ -53,7 +54,7 @@ const TdsInput = ({recipe, setRecipe}) => {
   }
 
   const checkNumberIsInRange = (rate) => {
-    return rate >= 0.0 && rate <= 20.0;
+    return rate >= 0.0 && rate <= MAX_NUMBER.RECIPES_TDS;
   }
 
   const resetWarning = () => {
@@ -66,7 +67,7 @@ const TdsInput = ({recipe, setRecipe}) => {
 
   return (
     <FormInput
-      title="TDS"
+      title={`TDS (0.0-${MAX_NUMBER.RECIPES_TDS})`}
       type="text" 
       name="tds"
       autoComplete="off"

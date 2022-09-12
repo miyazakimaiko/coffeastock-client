@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import FormInput from '../../../elements/FormInput';
 import { escapeHtml } from '../../../helpers/HtmlConverter';
+import { MAX_LENGTH } from '../../../utils/Constants';
 
 const NameInput = ({bean, setBean}) => {
   const [counter, setCounter] = useState(0);
@@ -27,12 +28,12 @@ const NameInput = ({bean, setBean}) => {
         message: <span className="text-red">* Required</span>
       })
     } 
-    else if (escapedValue.length > 40) {
+    else if (escapedValue.length > MAX_LENGTH.BEANS_LABEL) {
       setWarning({
         ...warning,
         invalid: true,
         message: <span className="text-red">
-          Please enter less than 40 characters.
+          Please enter less than {MAX_LENGTH.BEANS_LABEL} characters.
         </span>
       })
     } 
@@ -55,7 +56,7 @@ const NameInput = ({bean, setBean}) => {
       invalid={warning.invalid}
       onChange={e => setName(e.target.value)}
       warningText={warning.message}
-      counterText={`${counter}/40`}
+      counterText={`${counter}/${MAX_LENGTH.BEANS_LABEL}`}
     />
   )
 }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput'
+import { MAX_NUMBER } from '../../../utils/Constants';
 import { checkGrindSizeIsInRange, checkValueIsNumber } from '../helpers/InputValidators';
 
 const GrindSizeInput = ({recipe, setRecipe}) => {
@@ -37,7 +38,7 @@ const GrindSizeInput = ({recipe, setRecipe}) => {
             ...warning,
             invalid: true,
             message: <span className="text-red">
-              Please enter a number between 0.0 and 100.0.
+              Please enter a number between 0.0 and {MAX_NUMBER.RECIPES_GRIND_SIZE}.
             </span> 
           });
         }

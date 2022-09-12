@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import FormInput from '../../../elements/FormInput'
 import Spinner from '../../../elements/Spinner';
 import useUnits from '../../../hooks/useUnits';
 import useUserUnitIds from '../../../hooks/useUserUnitIds';
 import ErrorPage from '../../../pages/error';
+import { MAX_TEMP } from '../../../utils/Constants';
 
 const WaterTempInput = ({recipe, setRecipe}) => {
   const { 
@@ -17,6 +18,11 @@ const WaterTempInput = ({recipe, setRecipe}) => {
     isLoading: unitIdsAreLoading,
     isError: unitIdsHaveError,
   } = useUserUnitIds();
+
+  const unitLabel = useMemo(() => {
+    if (Boolean(units) && Boolean(unitIds))
+      return units['temp' + unitIds['unit_temperature_id']].label.toUpperCase();
+  }, [units, unitIds])
 
   const [warning, setWarning] = useState({
     invalid: false,
@@ -52,7 +58,7 @@ const WaterTempInput = ({recipe, setRecipe}) => {
             ...warning,
             invalid: true,
             message: <span className="text-red">
-              Please enter a number between 0.0 and 212.0.
+              Please enter a number between 0.0 and {MAX_TEMP[unitLabel]}.
             </span> 
           });
         }
@@ -69,7 +75,7 @@ const WaterTempInput = ({recipe, setRecipe}) => {
   }
 
   const checkNumberIsInRange = (number) => {
-    return number >= 0.0 && number <= 212.0;
+    return number >= 0.0 && number <= MAX_TEMP[unitLabel];
   }
 
   const resetWarning = () => {
@@ -94,7 +100,7 @@ const WaterTempInput = ({recipe, setRecipe}) => {
       type="text" 
       name="watertemp"
       autoComplete="off"
-      placeholder="e.g. 90.5"
+      placeholder={`e.g. ${(MAX_TEMP[unitLabel] * 0.972).toFixed(1)}`}
       value={recipe.water_temp}
       invalid={warning.invalid}
       onChange={e => setTemp(e.target.value)}
