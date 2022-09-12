@@ -22,6 +22,7 @@ export default function useEditRange(rangeName) {
     {
       enabled: user ? true : false,
       onSuccess: async () => {
+        await queryClient.invalidateQueries(["ranges"]);
         await queryClient.invalidateQueries(["range", `${rangeName}_range`]);
       },
       onError: err => {
