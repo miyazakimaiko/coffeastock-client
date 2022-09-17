@@ -7,6 +7,7 @@ import { generateFireIconList, generateStarIconList } from '../../../helpers/Gen
 import { unescapeHtml } from '../../../helpers/HtmlConverter';
 import useBean from '../../../hooks/useBean';
 import useRanges from '../../../hooks/useRanges';
+import { MAX_NUMBER } from '../../../utils/Constants';
 import ErrorPage from '../../error';
 import CoffeeRangeListItem from './CoffeeRangeListItem';
 
@@ -110,7 +111,7 @@ const CoffeeRangeListForAll = () => {
               {bean.grade !== null &&
               bean.grade !== undefined &&
               bean.grade !== ""
-                ? `(${bean.grade}/100)`
+                ? `(${bean.grade}/${MAX_NUMBER.BEANS_GRADE})`
                 : "-"}
             </span>
           </div>
@@ -126,7 +127,7 @@ const CoffeeRangeListForAll = () => {
               {bean.roast_level !== null &&
               bean.roast_level !== undefined &&
               bean.roast_level !== ""
-                ? `(${bean.roast_level}/10)`
+                ? `(${bean.roast_level}/${MAX_NUMBER.BEANS_ROAST_LEVEL})`
                 : "-"}
             </span>
           </div>
