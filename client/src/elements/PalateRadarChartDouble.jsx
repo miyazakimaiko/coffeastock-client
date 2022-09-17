@@ -48,7 +48,7 @@ const PalateRadarChartDouble = ({ className, redTitle, blueTitle, redRatesObj, b
   }, [blueRatesObj])
 
   useEffect(() => {
-    if (palateRange) {
+    if (Boolean(palateRange)) {
       if (redRatesObj && !blueRatesObj) {
         setRedRates(Object.values(redRatesObj));
         setLabels(Object.keys(redRatesObj).map(id => [palateRange[id].label.slice(0, 15), palateRange[id].label.slice(15)]))
