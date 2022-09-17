@@ -46,7 +46,7 @@ module.exports = (app) => {
     }
   });
 
-  // Get specified range
+  // Get specific range
   app.get(endpoint + "/user/:userid/range/:rangename", async (req, res, next) => {
     const baseQuery = getGetRangeBaseQuery(req.params.rangename)
     try {
@@ -56,7 +56,8 @@ module.exports = (app) => {
     } catch (error) { next(error); }
   });
 
-  // Find a specified entry
+
+  // Find a specific entry
   app.get(endpoint + "/user/:userid/range/:rangename/:id", async (req, res, next) => {
     let found = false;
     const baseQuery = getFindEntryByIdBaseQuery(req.params.rangename);
@@ -80,7 +81,7 @@ module.exports = (app) => {
       if (!errors.isEmpty()) {
         CustomException(422, errors.array()[0]['msg'])
       }
-  
+
       const baseQuery = getGetRangeBaseQuery(req.params.rangename);
       const range = await db.query(baseQuery, [req.params.userid]);
       const rangeItems = range.rows[0].items;
@@ -96,36 +97,35 @@ module.exports = (app) => {
       if (!uniqueName) {
         CustomException(422, 'An entry with the same name already exists.')
       } 
-      else {
-        await db.query('BEGIN')
 
-        // get the ID of the last entry to create new ID
-        const bqGetNextId = getGetNextIdBaseQuery(req.params.rangename)
-        const idResult = await db.query(bqGetNextId, [req.params.userid]);
-        const newid = idResult.rows[0].nextid;
+      await db.query('BEGIN')
 
-        if (parseInt(newid) > 150) {
-          CustomException(422, 'Failed to add due to the maximum number of entries.')
-        }
+      const userType = await db.query(`
+        SELECT user_type FROM users WHERE user_id = $1
+      `, [req.params.userid]);
 
-        // Update the next_id
-        const bqUpdateNextId = getUpdateNextIdBaseQuery(req.params.rangename)
-        await db.query(bqUpdateNextId, [newid + 1, req.params.userid]);
+      // get the ID of the last entry to create new ID
+      const bqGetNextId = getGetNextIdBaseQuery(req.params.rangename)
+      const idResult = await db.query(bqGetNextId, [req.params.userid]);
+      const newid = idResult.rows[0].nextid;
 
-        // Insert new entry
-        const newData = {}
-        newData[newid] = {...req.body, value: newid, inUse: 0}
-        const bqInsertRange = getInsertRangeBaseQuery(req.params.rangename)
-        const result = await db.query(bqInsertRange,[newData, req.params.userid]);
+      // Update the next_id
+      const bqUpdateNextId = getUpdateNextIdBaseQuery(req.params.rangename)
+      await db.query(bqUpdateNextId, [newid + 1, req.params.userid]);
 
-        res.status(200).json(result.rows[0][req.params.rangename + '_range']['items']);
-      }
+      // Insert new entry
+      const newData = {}
+      newData[newid] = {...req.body, value: newid, inUse: 0}
+      const bqInsertRange = getInsertRangeBaseQuery(req.params.rangename)
+      const result = await db.query(bqInsertRange,[newData, req.params.userid]);
+
+      res.status(200).json(result.rows[0][req.params.rangename + '_range']['items']);
+
     } catch (error) {
       db.query('ROLLBACK')
       next(error);
     }
     db.query('COMMIT')
-
   }); 
 
   // Edit an entry in a specified range 

@@ -1,5 +1,5 @@
 /* 
-* if changing any of its value, update on server side as well
+* if changing any of its value, update on clinet side as well
 */
 
 const MAX_LENGTH = {
@@ -62,7 +62,7 @@ const USER_TYPE = {
   }
 }
 
-export {
+module.exports = {
   MAX_LENGTH,
   MAX_NUMBER,
   MAX_TEMP,
