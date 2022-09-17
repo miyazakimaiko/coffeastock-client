@@ -7,6 +7,7 @@ import './nav.scss'
 import AddEditBeanModal from '../../modals/add-edit-bean-modal'
 import AddEditRecipeModal from '../../modals/add-edit-recipe-modal'
 import { ModalStateContext } from '../../context/ModalStateContext'
+import Logo from '../../assets/images/logo9.png'
 
 
 const Nav = (props) => {
@@ -68,8 +69,10 @@ const Nav = (props) => {
         className="l-nav z-20 top-0 bottom-0 overflow-auto
           bg-burnt-sienna border-r text-white">
         <div 
-          className="h-16 px-6 flex justify-between items-center">
-          <h1 className=" text-lg">Coffeastock</h1>
+          className="p-6 flex justify-between items-center">
+          <h1 className=" text-lg">
+            <img src={Logo} alt="" className="w-10/12" />
+          </h1>
           <button 
             type="button" 
             ref={el => { props.pushpinRef.current = el; }} 
