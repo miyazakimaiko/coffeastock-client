@@ -139,16 +139,14 @@ const AddEditRecipeModal = ({recipeId = null}) => {
       let result = false;
       const beanListIsReady = Boolean(await beanList);
       const rangeListIsReady = Boolean(await rangeList);
-      const recipeIsReady = Boolean(await targetRecipe);
       if (beanListIsReady && rangeListIsReady) {
-        if (recipeId === null) result = true;
-        else if (recipeIsReady) result = true;
+        result = true;
       }
       return result;
     }
 
     dataAreReady().then(dataReady => {
-      if (recipeId && dataReady) {
+      if (Boolean(recipeId) && dataReady) {
         let brewDate = new Date(targetRecipe.brew_date);
         const offset = brewDate.getTimezoneOffset();
         brewDate = new Date(brewDate.getTime() - (offset*60*1000));
@@ -169,9 +167,9 @@ const AddEditRecipeModal = ({recipeId = null}) => {
         innerSetPalateRate(targetRecipe.palate_rates);
         setSelectedPalates(Object.keys(targetRecipe.palate_rates).map(id => rangeList.palate_range[id]))
       }
-      else if (!recipeId && dataReady) {
+      if (!Boolean(recipeId) && dataReady) {
         setSelectedPalates(
-          Object.values(rangeList.palate_range).map(val => val)
+          Object.values(rangeList.palate_range).map(val => val).slice(0, 5)
         )
       }
     });
@@ -226,7 +224,6 @@ const AddEditRecipeModal = ({recipeId = null}) => {
         await addRange.mutateAsync({ rangeName,body })
       }
     }
-    queryClient.invalidateQueries("ranges");
   };
 
   const [tabState, setTabState] = useState({
@@ -316,6 +313,7 @@ const AddEditRecipeModal = ({recipeId = null}) => {
 
   useEffect(() => {
     const setWaterYieldTabState = () => {
+      const methodIsSelected = selectedMethod.length === 1  && Boolean(selectedMethod[0]); // beacuse it can be [null]
       const grindSizeIsValid = checkGrindSizeIsInRange(recipe.grind_size);
       const groundsWeightIsValid = checkGroundsWeightIsInRange(recipe.grounds_weight);
       const methodIsValid = checkItemsLabelLessThanMax(selectedMethod);
@@ -323,6 +321,7 @@ const AddEditRecipeModal = ({recipeId = null}) => {
       const waterIsValid = checkItemsLabelLessThanMax(selectedWater);
   
       if (selectedBean 
+        && methodIsSelected
         && methodIsValid
         && grindSizeIsValid 
         && groundsWeightIsValid
@@ -385,11 +384,12 @@ const AddEditRecipeModal = ({recipeId = null}) => {
         }));
       }
     }
-    if (units) {
+    if (units && userInfo) {
       setPalatesTabState();
     }
   }, [
     units,
+    userInfo,
     tabState.canOpenWaterYieldTab,
     recipe.water_weight,
     recipe.water_temp,
@@ -440,8 +440,8 @@ const AddEditRecipeModal = ({recipeId = null}) => {
     || rangeListIsLoading
     || unitsAreLoading
     || userInfoAreLoading
-    || totalUsedMbIsLoading)
-  {
+    || totalUsedMbIsLoading
+  ) {
     return <Spinner />
   }
 
@@ -450,8 +450,8 @@ const AddEditRecipeModal = ({recipeId = null}) => {
     || recipeHasError
     || unitsHaveError
     || userInfoHaveError
-    || totalUsedMbHasError)
-  {
+    || totalUsedMbHasError
+  ) {
     return <ErrorPage />
   }
 
