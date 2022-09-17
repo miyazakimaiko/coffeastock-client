@@ -5,6 +5,7 @@ const TabStateModel = () => {
     baseInfoTabIsOpen: true,
     detailsTabIsOpen: false,
     confirmationTabIsOpen: false,
+    canOpenBaseInfoTab: true,
     canOpenDetailsTab: false,
     canOpenConfirmation: false
   });
