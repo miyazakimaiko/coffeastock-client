@@ -1,8 +1,8 @@
 import { unescapeHtml } from "./HtmlConverter";
 
-export const convertItemListToIdList = (selectedRange, rangeItems) => {
+export const convertItemListToIdList = async (selectedRange, rangeItems) => {
   const idList = [];
-  selectedRange.forEach(range => {
+  await selectedRange.forEach(range => {
     for (const entry of Object.values(rangeItems)) {
       if (Boolean(entry && range) && unescapeHtml(entry.label) === range.label) {
         idList.push(parseInt(entry['value']));
