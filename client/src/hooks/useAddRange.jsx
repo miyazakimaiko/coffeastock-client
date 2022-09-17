@@ -5,7 +5,7 @@ import { useSignout, useUserData } from '../context/AccountContext';
 import * as api from '../api/Ranges'
 
 export default function useAddRange() {
-  const userData = useUserData();
+  const user = useUserData();
   const queryClient = useQueryClient();
   const signout = useSignout();
   const navigate = useNavigate();
@@ -13,19 +13,17 @@ export default function useAddRange() {
   return useMutation(
     async (data) => {
       await api.addRange(
-        userData.sub, 
+        user.sub, 
         data.rangeName, 
         data.body, 
-        userData.accessToken.jwtToken
+        user.accessToken.jwtToken
       );
     },
     {
-      enabled: userData ? true : false,
+      enabled: user ? true : false,
       onSuccess: async (_, variables) => {
-        await queryClient.invalidateQueries([
-          "range",
-          `${variables.rangeName}_range`,
-        ]);
+        await queryClient.invalidateQueries(['range', `${variables.rangeName}_range`]);
+        await queryClient.invalidateQueries(['user', user.sub, 'totalUsedMb']);
       },
       onError: err => {
         if (err.message === 'Not authorized') {

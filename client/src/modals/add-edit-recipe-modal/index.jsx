@@ -1,16 +1,23 @@
-import PalateRadarChartSingle from '../../elements/PalateRadarChartSignle';
 import React, { useEffect, useState, createRef, useContext } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from 'react-query';
+import { useGetSession, useSignout } from '../../context/AccountContext';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import RecipeService from '../../services/RecipeService';
+import { MAX_TEMP, USER_TYPE } from '../../utils/Constants';
+import { checkItemsLabelLessThanMax } from '../../helpers/InputValidators';
 import { convertItemListToIdList } from '../../helpers/ListConverter';
 import { unescapeHtml } from "../../helpers/HtmlConverter"
 import extractNewItems from '../../helpers/ExtractNewItems';
 import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
+import useUserTotalUsedMb from '../../hooks/useUserTotalUsedMb';
 import useRecipe from '../../hooks/useRecipe';
 import useBeans from '../../hooks/useBeans';
 import useRanges from '../../hooks/useRanges';
 import useAddRange from '../../hooks/useAddRange';
+import useUserInfo from '../../hooks/useUserInfo';
+import useUnits from '../../hooks/useUnits';
+import PalateRadarChartSingle from '../../elements/PalateRadarChartSignle';
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer';
 import RedOutlineButton from '../../elements/RedOutlineButton';
 import BlueButton from '../../elements/BlueButton';
@@ -50,9 +57,7 @@ import {
   checkYieldWeightIsInRange,
 } from "./helpers/InputValidators";
 import '../modals.scss'
-import { useGetSession, useSignout } from '../../context/AccountContext';
-import { useNavigate } from 'react-router-dom';
-import { checkItemsLabelLessThanMax } from '../../helpers/InputValidators';
+
 
 
 
@@ -90,6 +95,21 @@ const AddEditRecipeModal = ({recipeId = null}) => {
           isLoading: recipeIsLoading,
           isError: recipeHasError,
         } = useRecipe(recipeId);
+
+  const { data: units, 
+          isLoading: unitsAreLoading,
+          isError: unitsHaveError,
+        } = useUnits();
+
+  const { data: totalUsedMb, 
+          isLoading: totalUsedMbIsLoading,
+          isError: totalUsedMbHasError,
+        } = useUserTotalUsedMb();
+
+  const { data: userInfo, 
+          isLoading: userInfoAreLoading,
+          isError: userInfoHaveError, 
+        } = useUserInfo();
 
   const { modal, closeModal, modalModeSelection } = useContext(ModalStateContext);
 
@@ -331,8 +351,9 @@ const AddEditRecipeModal = ({recipeId = null}) => {
 
   useEffect(() => {
     const setPalatesTabState = () => {
+      const temperatureUnit = units['temp' + userInfo.unit_temperature_id].label.toUpperCase();
+      const waterTempIsValid = checkWaterTempIsInRange(recipe.water_temp, MAX_TEMP[temperatureUnit]);
       const waterWeightIsValid = checkWaterWeightIsInRange(recipe.water_weight);
-      const waterTempIsValid = checkWaterTempIsInRange(recipe.water_temp);
       const yieldWeightIsValid = checkYieldWeightIsInRange(recipe.yield_weight);
       const extractionTimeIsValid = checkExtractionTimeIsInVaildForm(recipe.extraction_time);
       const tdsIsValid = checkTdsIsInRange(recipe.tds);
@@ -360,8 +381,11 @@ const AddEditRecipeModal = ({recipeId = null}) => {
         }));
       }
     }
-    setPalatesTabState();
+    if (units) {
+      setPalatesTabState();
+    }
   }, [
+    units,
     tabState.canOpenWaterYieldTab,
     recipe.water_weight,
     recipe.water_temp,
@@ -403,16 +427,36 @@ const AddEditRecipeModal = ({recipeId = null}) => {
 
   if (recipeIsLoading 
     || beanListIsLoading
-    || rangeListIsLoading)
+    || rangeListIsLoading
+    || unitsAreLoading
+    || userInfoAreLoading
+    || totalUsedMbIsLoading)
   {
     return <Spinner />
   }
 
   if (beanListHasError 
     || rangeListHasError 
-    || recipeHasError)
+    || recipeHasError
+    || unitsHaveError
+    || userInfoHaveError
+    || totalUsedMbHasError)
   {
     return <ErrorPage />
+  }
+
+  if (modal.mode === modalModeSelection.addRecipe 
+    && totalUsedMb > USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB
+  ) {
+    return (
+      <ModalWrapperContainer
+        title="Your data usage has reached to the max limit"
+        onCloseClick={closeModal}
+        maxWidthClass="max-w-6xl"
+      >
+        <p>Upgrade Plan</p>
+      </ModalWrapperContainer>
+    )
   }
 
   return (
@@ -491,6 +535,7 @@ const AddEditRecipeModal = ({recipeId = null}) => {
                     rangeList={rangeList}
                     selectedMethod={selectedMethod}
                     setSelectedMethod={setSelectedMethod}
+                    isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
                   />
                 </div>
 
@@ -499,6 +544,7 @@ const AddEditRecipeModal = ({recipeId = null}) => {
                     rangeList={rangeList}
                     selectedGrinder={selectedGrinder}
                     setSelectedGrinder={setSelectedGrinder}
+                    isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
                   />
                   <GrindSizeInput recipe={recipe} setRecipe={setRecipe} />
                   <GroundsWeightInput recipe={recipe} setRecipe={setRecipe} />
@@ -524,6 +570,7 @@ const AddEditRecipeModal = ({recipeId = null}) => {
                     rangeList={rangeList}
                     selectedWater={selectedWater}
                     setSelectedWater={setSelectedWater}
+                    isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
                   />
                   <WaterWeightInput recipe={recipe} setRecipe={setRecipe} />
                   <WaterTempInput recipe={recipe} setRecipe={setRecipe} />
@@ -572,6 +619,7 @@ const AddEditRecipeModal = ({recipeId = null}) => {
                     rangeList={rangeList}
                     selectedPalates={selectedPalates}
                     setSelectedPalates={setSelectedPalates}
+                    isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
                   />
                   {Object.values(selectedPalates).map((palate) => (
                     <PalateRateInput

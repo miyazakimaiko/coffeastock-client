@@ -5,7 +5,7 @@ import FormMultiSelect from '../../elements/FormMultiSelect';
 import Spinner from '../../elements/Spinner';
 import useEditUserUnitIds from '../../hooks/useEditUserUnitIds';
 import useUnits from '../../hooks/useUnits';
-import useUserUnitIds from '../../hooks/useUserUnitIds';
+import useUserInfo from '../../hooks/useUserInfo';
 import ErrorPage from '../../pages/error';
 
 
@@ -21,7 +21,7 @@ const ChangeUnitsModal = () => {
   const { data: userUnitIds, 
           isLoading: userUnitIdsAreLoading,
           isError: userUnitIdsHaveError,
-        } = useUserUnitIds();
+        } = useUserInfo();
 
   const [solidWeightUnit, setSolidWeightUnit] = useState({});
   const [fluidWeightUnit, setFluidWeightUnit] = useState({});

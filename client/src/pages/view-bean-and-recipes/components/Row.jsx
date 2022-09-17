@@ -10,7 +10,7 @@ import Dropdown from '../../../elements/Dropdown'
 import Spinner from '../../../elements/Spinner'
 import useRanges from '../../../hooks/useRanges'
 import useUnits from '../../../hooks/useUnits'
-import useUserUnitIds from '../../../hooks/useUserUnitIds'
+import useUserInfo from '../../../hooks/useUserInfo'
 import ErrorPage from '../../error/index.jsx'
 
 
@@ -25,18 +25,18 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
           isError: unitsHaveError,
         } = useUnits();
 
-  const { data: unitIds, 
-          isLoading: unitIdsAreLoading,
-          isError: unitIdsHaveError,
-        } = useUserUnitIds();
+  const { data: userInfo, 
+          isLoading: userInfoAreLoading,
+          isError: userInfoHaveError,
+        } = useUserInfo();
   
   const [openDetails, setOpenDetails] = useState(false);
 
-  if (rangeListIsLoading ||unitsAreLoading || unitIdsAreLoading) {
+  if (rangeListIsLoading ||unitsAreLoading || userInfoAreLoading) {
     return <Spinner />
   };
 
-  if (RangeListHasError || unitsHaveError || unitIdsHaveError) {
+  if (RangeListHasError || unitsHaveError || userInfoHaveError) {
     return <ErrorPage />
   }
 
@@ -85,7 +85,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
               <GiCoffeeBeans className="w-5 h-5 opacity-40" />
               <p className="text-right mb-4">
                 <span className="text-2xl mr-1">{recipe.grounds_weight ?? "-"}</span>
-                {units['solid' + unitIds['unit_solid_weight_id']].short_label}
+                {units['solid' + userInfo.unit_solid_weight_id].short_label}
               </p>
             </div>
             <div className="flex justify-end flex-wrap">
@@ -104,7 +104,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
               <MdWaterDrop className="w-5 h-5 opacity-40" />
               <p className="text-right mb-4">
                 <span className="text-2xl mr-1">{recipe.water_weight ?? "-"}</span>
-                {units['fluid' + unitIds['unit_fluid_weight_id']].short_label}
+                {units['fluid' + userInfo.unit_fluid_weight_id].short_label}
               </p>
             </div>
             <div className="flex justify-end flex-wrap">
@@ -123,7 +123,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
               <FaCoffee className="w-5 h-5 opacity-40" />
               <p className="text-right mb-4">
                 <span className="text-2xl">{recipe.yield_weight ?? "-"}</span>{" "}
-                {units['fluid' + unitIds['unit_fluid_weight_id']].short_label}
+                {units['fluid' + userInfo.unit_fluid_weight_id].short_label}
               </p>
             </div>
             <div className="flex justify-end flex-wrap">
@@ -166,7 +166,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                   <p>
                     {recipe.grounds_weight ?? "-"}
                     <span className="ml-1">
-                      {units['solid' + unitIds['unit_solid_weight_id']].short_label}
+                      {units['solid' + userInfo.unit_solid_weight_id].short_label}
                     </span>
                   </p>
                 </div>
@@ -183,7 +183,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                   <p>
                     {recipe.water_weight ?? "-"}
                     <span className="ml-1">
-                      {units['fluid' + unitIds['unit_fluid_weight_id']].short_label}
+                      {units['fluid' + userInfo.unit_fluid_weight_id].short_label}
                     </span>
                   </p>
                 </div>
@@ -192,7 +192,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                   <p>
                     {recipe.water_temp ?? "-"}
                     <span className="ml-1">
-                      {units['temp' + unitIds['unit_temperature_id']].short_label}
+                      {units['temp' + userInfo.unit_temperature_id].short_label}
                     </span>
                   </p>
                 </div>
@@ -209,7 +209,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                   <p>
                     {recipe.yield_weight ?? "-"}
                     <span className="ml-1">
-                      {units['fluid' + unitIds['unit_fluid_weight_id']].short_label}
+                      {units['fluid' + userInfo.unit_fluid_weight_id].short_label}
                     </span>
                   </p>
                 </div>

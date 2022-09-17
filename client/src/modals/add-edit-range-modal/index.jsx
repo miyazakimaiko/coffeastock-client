@@ -1,5 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useGetSession, useSignout } from '../../context/AccountContext'
+import { ModalStateContext } from '../../context/ModalStateContext'
 import toastOnBottomCenter from '../../utils/customToast'
+import { MAX_LENGTH, USER_TYPE } from '../../utils/Constants'
+import { capitalize } from '../../helpers/HtmlConverter'
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer'
 import RedOutlineButton from '../../elements/RedOutlineButton'
 import BlueButton from '../../elements/BlueButton'
@@ -7,11 +12,10 @@ import useAddRange from '../../hooks/useAddRange'
 import useEditRange from '../../hooks/useEditRange'
 import NameInput from './components/NameInput'
 import DetailsTextarea from './components/DetailsTextarea'
-import { capitalize } from '../../helpers/HtmlConverter'
-import { ModalStateContext } from '../../context/ModalStateContext'
-import { useGetSession, useSignout } from '../../context/AccountContext'
-import { useNavigate } from 'react-router-dom'
-import { MAX_LENGTH } from '../../utils/Constants'
+import useUserTotalUsedMb from '../../hooks/useUserTotalUsedMb'
+import useUserInfo from '../../hooks/useUserInfo'
+import Spinner from '../../elements/Spinner'
+import ErrorPage from '../../pages/error'
 
 
 const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
@@ -34,9 +38,23 @@ const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
     }
   }, []);
 
-  const editRange = useEditRange(rangeName)
-  const addRange = useAddRange()
-  const {modal, closeModal, modalModeSelection} = useContext(ModalStateContext);
+  const { modal, 
+          closeModal, 
+          modalModeSelection
+        } = useContext(ModalStateContext);
+
+  const { data: totalUsedMb, 
+          isLoading: totalUsedMbIsLoading,
+          isError: totalUsedMbHasError,
+        } = useUserTotalUsedMb();
+
+  const { data: userInfo, 
+          isLoading: userInfoIsLoading,
+          isError: userInfoHasError,
+        } = useUserInfo();
+
+  const editRange = useEditRange(rangeName);
+  const addRange = useAddRange();
 
   const [rangeItem, setRangeItem] = useState({ value: '', label: '', def: '' });
   const [rangeItemIsValid, setRangeItemIsValid] = useState(false);
@@ -57,7 +75,7 @@ const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
   const onAddSubmit = async (event) => {
     event.preventDefault();
   
-    if (rangeItem.label.length === 0) {
+    if (!Boolean(rangeItem.label) || rangeItem.label.length === 0) {
       toastOnBottomCenter('error', 'Name field is required.')
     }
     else {
@@ -66,10 +84,7 @@ const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
         def: rangeItem.def?.replace(/(\r\n|\n|\r)/gm, " "),
       }
       addRange.mutate(
-        {
-          rangeName: rangeName,
-          body: body,
-        },
+        { rangeName, body },
         {
           onSuccess: () => {
             closeModal();
@@ -91,7 +106,7 @@ const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
 
   const onEditSubmit = (event) => {
     event.preventDefault();
-    if (rangeItem.label.length === 0) {
+    if (!Boolean(rangeItem.label) || rangeItem.label.length === 0) {
       toastOnBottomCenter('error', 'Name cannot be empty.')
       return
     }
@@ -99,25 +114,46 @@ const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
       ...rangeItem, 
       "def": rangeItem.def?.replace(/(\r\n|\n|\r)/gm, " ")
     }
-    editRange.mutate({
-      rangeName: rangeName, 
-      body: decodedRangeItem
-    },
-    {
-      onSuccess: () => {
-        closeModal();
-        toastOnBottomCenter(
-          "success",
-          `Entry is edited successfully.`
-        );
-      },
-      onError: (error) => {
-        toastOnBottomCenter(
-          "error",
-          error.message ?? "An unknown error has ocurred."
-        )
+    editRange.mutate(
+      { rangeName, body: decodedRangeItem },
+      {
+        onSuccess: () => {
+          closeModal();
+          toastOnBottomCenter(
+            "success",
+            `Entry is edited successfully.`
+          );
+        },
+        onError: (error) => {
+          toastOnBottomCenter(
+            "error",
+            error.message ?? "An unknown error has ocurred."
+          )
+        }
       }
-    })
+    )
+  }
+
+  if (userInfoIsLoading || totalUsedMbIsLoading) {
+    return <Spinner />
+  }
+
+  if (userInfoHasError || totalUsedMbHasError) {
+    return <ErrorPage />
+  }
+
+  if (modal.mode === modalModeSelection.addRange 
+    && totalUsedMb > USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB
+  ) {
+    return (
+      <ModalWrapperContainer
+        title="Your data usage has reached to the max limit"
+        onCloseClick={closeModal}
+        maxWidthClass="max-w-6xl"
+      >
+        <p>Upgrade Plan</p>
+      </ModalWrapperContainer>
+    )
   }
 
   return (

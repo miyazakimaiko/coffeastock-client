@@ -24,6 +24,7 @@ export default function useAddRecipe() {
         await queryClient.invalidateQueries('ranges');
         await queryClient.invalidateQueries(['recipes', 'summary']);
         await queryClient.invalidateQueries(['beans', 'summary']);
+        await queryClient.invalidateQueries(['user', user.sub, 'totalUsedMb']);
         toastOnBottomCenter('success', 'Recipe is added successfully.');
       },
       onError: err => {

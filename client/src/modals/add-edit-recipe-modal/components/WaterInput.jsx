@@ -1,11 +1,7 @@
 import React from 'react'
-import { useUserData } from '../../../context/AccountContext';
 import FormMultiSelect from '../../../elements/FormMultiSelect';
-import { MAX_COUNT, USER_TYPE_KEY } from '../../../utils/Constants';
 
-const WaterInput = ({ rangeList, selectedWater, setSelectedWater }) => {
-
-  const user = useUserData();
+const WaterInput = ({ rangeList, selectedWater, setSelectedWater, isCreatable }) => {
 
   const options = Object.values(rangeList.water_range);
 
@@ -19,8 +15,8 @@ const WaterInput = ({ rangeList, selectedWater, setSelectedWater }) => {
       options={options}
       value={selectedWater}
       onChange={setWater}
-      isCreatable={options.length < MAX_COUNT.RANGES[user[USER_TYPE_KEY]]}
       isMulti={false}
+      isCreatable={isCreatable}
     />
   );
 };

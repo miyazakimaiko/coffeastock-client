@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react'
 import FormInput from '../../../elements/FormInput'
 import Spinner from '../../../elements/Spinner';
 import useUnits from '../../../hooks/useUnits';
-import useUserUnitIds from '../../../hooks/useUserUnitIds';
+import useUserInfo from '../../../hooks/useUserInfo';
 import ErrorPage from '../../../pages/error';
 import { MAX_TEMP } from '../../../utils/Constants';
 
@@ -14,15 +14,15 @@ const WaterTempInput = ({recipe, setRecipe}) => {
   } = useUnits();
 
   const { 
-    data: unitIds, 
-    isLoading: unitIdsAreLoading,
-    isError: unitIdsHaveError,
-  } = useUserUnitIds();
+    data: userInfo, 
+    isLoading: userInfoAreLoading,
+    isError: userInfoHaveError,
+  } = useUserInfo();
 
   const unitLabel = useMemo(() => {
-    if (Boolean(units) && Boolean(unitIds))
-      return units['temp' + unitIds['unit_temperature_id']].label.toUpperCase();
-  }, [units, unitIds])
+    if (Boolean(units) && Boolean(userInfo))
+      return units['temp' + userInfo.unit_temperature_id].label.toUpperCase();
+  }, [units, userInfo])
 
   const [warning, setWarning] = useState({
     invalid: false,
@@ -86,17 +86,17 @@ const WaterTempInput = ({recipe, setRecipe}) => {
     });
   }
 
-  if (unitsAreLoading || unitIdsAreLoading) {
+  if (unitsAreLoading || userInfoAreLoading) {
     return <Spinner />
   }
 
-  if (unitsHaveError || unitIdsHaveError) {
+  if (unitsHaveError || userInfoHaveError) {
     return <ErrorPage />
   }
 
   return (
     <FormInput
-      title={`Water Temperature (${units['temp' + unitIds['unit_temperature_id']].short_label})`}
+      title={`Water Temperature (${units['temp' + userInfo.unit_temperature_id].short_label})`}
       type="text" 
       name="watertemp"
       autoComplete="off"

@@ -5,18 +5,19 @@ import { useSignout, useUserData } from '../context/AccountContext';
 import * as api from '../api/Beans'
 
 export default function useAddBean() {
-  const userData = useUserData();
+  const user = useUserData();
   const queryClient = useQueryClient();
   const signout = useSignout();
   const navigate = useNavigate();
 
   return useMutation(
-    async (body) => await api.addBean(userData.sub, body, userData.accessToken.jwtToken),
+    async (body) => await api.addBean(user.sub, body, user.accessToken.jwtToken),
     {
-      enabled: userData ? true : false,
+      enabled: user ? true : false,
       onSuccess: async () => {
-        await queryClient.invalidateQueries('beans')
-        await queryClient.invalidateQueries('ranges')
+        await queryClient.invalidateQueries('beans');
+        await queryClient.invalidateQueries('ranges');
+        await queryClient.invalidateQueries(['user', user.sub, 'totalUsedMb']);
         toastOnBottomCenter('success', 'Coffee bean is added successfully.')
       },
       onError: err => {

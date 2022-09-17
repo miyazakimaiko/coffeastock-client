@@ -1,11 +1,7 @@
 import React, { useState } from 'react'
-import { useUserData } from '../../../context/AccountContext';
 import FormMultiSelect from '../../../elements/FormMultiSelect';
-import { MAX_COUNT, USER_TYPE_KEY } from '../../../utils/Constants';
 
-const MethodInput = ({ rangeList, selectedMethod, setSelectedMethod }) => {
-
-  const user = useUserData();
+const MethodInput = ({ rangeList, selectedMethod, setSelectedMethod, isCreatable }) => {
 
   const options = Object.values(rangeList.method_range);
 
@@ -39,10 +35,10 @@ const MethodInput = ({ rangeList, selectedMethod, setSelectedMethod }) => {
       options={options}
       value={selectedMethod}
       onChange={setMethod}
-      isCreatable={options.length < MAX_COUNT.RANGES[user[USER_TYPE_KEY]]}
       isMulti={false}
       invalid={warning.invalid}
       warningText={warning.message}
+      isCreatable={isCreatable}
     />
   );
 };

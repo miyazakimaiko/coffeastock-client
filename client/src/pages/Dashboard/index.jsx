@@ -2,7 +2,7 @@ import React, { useEffect, useState }  from 'react'
 import useRecipesSummary from '../../hooks/useRecipesSummary'
 import useUnits from '../../hooks/useUnits'
 import useBeans from '../../hooks/useBeans'
-import useUserUnitIds from '../../hooks/useUserUnitIds'
+import useUserInfo from '../../hooks/useUserInfo'
 import ChartBarBeans from './ChartBarBeans'
 import ChartBarRecipes from './ChartBarRecipes'
 import TotalBeans from './TotalBeans'
@@ -13,6 +13,7 @@ import Spinner from '../../elements/Spinner'
 import ErrorPage from '../error'
 import RecentRecipes from './RecentRecipes'
 import RssFeed from './RssFeed'
+import useUserTotalUsedMb from '../../hooks/useUserTotalUsedMb'
 
 const Dashboard = () => {
   const [beansBarChart, setBeansBarChart] = useState(null);
@@ -24,10 +25,10 @@ const Dashboard = () => {
   } = useUnits();
 
   const { 
-    data: unitIds, 
-    isLoading: unitIdsAreLoading,
-    isError: unitIdsHaveError,
-  } = useUserUnitIds();
+    data: userInfo, 
+    isLoading: userInfoAreLoading,
+    isError: userInfoHaveError,
+  } = useUserInfo();
   
   const {
     data: beansList,
@@ -47,6 +48,13 @@ const Dashboard = () => {
     isError: recipesSummaryHasError,
   } = useRecipesSummary();
 
+  const { 
+    data: totalUsedMb, 
+    isLoading: totalUsedMbIsLoading,
+    isError: totalUsedMbHasError,
+  } = useUserTotalUsedMb();
+
+  console.log({totalUsedMb})
 
   useEffect(() => {
     if (beansSummary && beansList) {
@@ -77,19 +85,21 @@ const Dashboard = () => {
   }, []);
 
   if (unitsAreLoading 
-    || unitIdsAreLoading 
+    || userInfoAreLoading 
     || beansSummaryIsLoading 
     || recipesSummaryIsLoading 
-    || beansListIsLoading) 
+    || beansListIsLoading
+    || totalUsedMbIsLoading) 
   {
     return <Spinner />
   }
 
   if (beansHaveError 
     || unitsHaveError
-    || unitIdsHaveError
+    || userInfoHaveError
     || beansSummaryHasError
-    || recipesSummaryHasError) {
+    || recipesSummaryHasError
+    || totalUsedMbHasError) {
     return <ErrorPage />
   }
   
@@ -99,14 +109,14 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 md:mb-6">
           <TotalBrews
             amount={recipesSummary.yieldsweight}
-            unit={units['fluid' + unitIds['unit_fluid_weight_id']].short_label}
+            unit={units['fluid' + userInfo.unit_fluid_weight_id].short_label}
           />
           <TotalRecipes
             amount={recipesSummary.count}
           />
           <TotalBeans
             amount={recipesSummary.groundsweight}
-            unit={units['solid' + unitIds['unit_solid_weight_id']].short_label}
+            unit={units['solid' + userInfo.unit_solid_weight_id].short_label}
           />
         </div>
         <div className="flex lg:mb-6">

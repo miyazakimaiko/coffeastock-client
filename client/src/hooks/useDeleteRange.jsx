@@ -20,10 +20,8 @@ export default function useDeleteRange() {
     {
       enabled: user ? true : false,
       onSuccess: async (_, variables) => {
-        await queryClient.invalidateQueries([
-          "range",
-          `${variables.rangeName}_range`,
-        ]);
+        await queryClient.invalidateQueries(['range', `${variables.rangeName}_range`]);
+        await queryClient.invalidateQueries(['user', user.sub, 'totalUsedMb']);
         toastOnBottomCenter(
           "success",
           "Selected range has been deleted successfully."

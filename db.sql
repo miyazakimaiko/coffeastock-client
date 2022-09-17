@@ -34,6 +34,7 @@ INSERT INTO unit_temperature (label, short_label) VALUES ('kelvin', 'K');
 
 CREATE TABLE users (
     user_id varchar(255) PRIMARY KEY NOT NULL,
+    user_type varchar(20) NOT NULL, 
     unit_solid_weight_id INT NOT NULL,
     unit_fluid_weight_id INT NOT NULL,
     unit_temperature_id INT NOT NULL,
@@ -49,7 +50,12 @@ CREATE TABLE users (
     aroma_range jsonb,
     FOREIGN KEY (unit_solid_weight_id) REFERENCES unit_solid_weight (id),
     FOREIGN KEY (unit_fluid_weight_id) REFERENCES unit_fluid_weight (id),
-    FOREIGN KEY (unit_temperature_id) REFERENCES unit_temperature (id)
+    FOREIGN KEY (unit_temperature_id) REFERENCES unit_temperature (id),
+    CONSTRAINT check_user_type 
+      CHECK (user_type = 'TRIAL' 
+          OR user_type = 'BASIC'
+          OR user_type = 'PREMIUM'
+      )
 );
 
 INSERT INTO users (
@@ -400,10 +406,6 @@ CREATE TABLE recipes (
     PRIMARY KEY (bean_id, recipe_no)
 );
 
--- How to manage palate rates?
--- Can user delete palate somehow?
--- Wouldn't each palate be used for every recipes?
-
 
 INSERT INTO RECIPES (
   user_id,
@@ -447,3 +449,7 @@ VALUES (
 DROP TABLE RECIPES;
 DROP TABLE BEANS;
 DROP TABLE USERS;
+
+DROP TABLE IF EXISTS query_out;
+CREATE TEMPORARY TABLE query_out AS SELECT * FROM users WHERE user_id = 'bacf220f-5ecf-470e-a078-244e56a66f3b';
+SELECT pg_size_pretty(pg_total_relation_size('query_out'));

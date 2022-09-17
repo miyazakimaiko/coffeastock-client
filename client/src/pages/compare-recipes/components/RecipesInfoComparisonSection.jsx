@@ -8,7 +8,7 @@ import useBeans from '../../../hooks/useBeans';
 import useRanges from '../../../hooks/useRanges';
 import useRecipe from '../../../hooks/useRecipe'
 import useUnits from '../../../hooks/useUnits';
-import useUserUnitIds from '../../../hooks/useUserUnitIds';
+import useUserInfo from '../../../hooks/useUserInfo';
 import AddEditRecipeModal from '../../../modals/add-edit-recipe-modal';
 import ErrorPage from '../../error';
 import RecipeComparisonListItem from './RecipeComparisonListItem';
@@ -45,10 +45,10 @@ const RecipesInfoComparisonSection = ({ selectedRecipeLeftId, selectedRecipeRigh
   } = useUnits();
 
   const { 
-    data: unitIds, 
-    isLoading: unitIdsAreLoading,
-    isError: unitIdsHaveError,
-  } = useUserUnitIds();
+    data: userInfo, 
+    isLoading: userInfoAreLoading,
+    isError: userInfoHaveError,
+  } = useUserInfo();
 
   const {
     modal,
@@ -73,7 +73,7 @@ const RecipesInfoComparisonSection = ({ selectedRecipeLeftId, selectedRecipeRigh
     || rangeListIsLoading 
     || beanListIsLoading
     || unitsAreLoading
-    || unitIdsAreLoading)
+    || userInfoAreLoading)
   {
     return <Spinner />
   }
@@ -83,7 +83,7 @@ const RecipesInfoComparisonSection = ({ selectedRecipeLeftId, selectedRecipeRigh
     || recipeRightHasError
     || recipeLeftHasError
     || unitsHaveError
-    || unitIdsHaveError)
+    || userInfoHaveError)
   {
     return <ErrorPage />
   }
@@ -150,12 +150,12 @@ const RecipesInfoComparisonSection = ({ selectedRecipeLeftId, selectedRecipeRigh
               }
             />
             <RecipeComparisonListItem
-              name={`Grind Size (${units['solid' + unitIds['unit_solid_weight_id']].short_label})`}
+              name={`Grind Size (${units['solid' + userInfo.unit_solid_weight_id].short_label})`}
               leftData={selectedRecipeLeft?.grind_size}
               rightData={selectedRecipeRight?.grind_size}
             />
             <RecipeComparisonListItem
-              name={`Grounds Weight (${units['solid' + unitIds['unit_solid_weight_id']].short_label})`}
+              name={`Grounds Weight (${units['solid' + userInfo.unit_solid_weight_id].short_label})`}
               leftData={selectedRecipeLeft?.grounds_weight}
               rightData={selectedRecipeRight?.grounds_weight}
             />
@@ -165,17 +165,17 @@ const RecipesInfoComparisonSection = ({ selectedRecipeLeftId, selectedRecipeRigh
               rightData={rangeList.water_range[selectedRecipeRight?.water[0]]?.label}
             />
             <RecipeComparisonListItem
-              name={`Water Weight (${units['fluid' + unitIds['unit_fluid_weight_id']].short_label})`}
+              name={`Water Weight (${units['fluid' + userInfo.unit_fluid_weight_id].short_label})`}
               leftData={selectedRecipeLeft?.water_weight}
               rightData={selectedRecipeRight?.water_weight}
             />
             <RecipeComparisonListItem
-              name={`Water Temperature (${units['temp' + unitIds['unit_temperature_id']].short_label})`}
+              name={`Water Temperature (${units['temp' + userInfo.unit_temperature_id].short_label})`}
               leftData={selectedRecipeLeft?.water_temp}
               rightData={selectedRecipeRight?.water_temp}
             />
             <RecipeComparisonListItem
-              name={`Yield Weight (${units['solid' + unitIds['unit_solid_weight_id']].short_label})`}
+              name={`Yield Weight (${units['solid' + userInfo.unit_solid_weight_id].short_label})`}
               leftData={selectedRecipeLeft?.yield_weight}
               rightData={selectedRecipeRight?.yield_weight}
             />

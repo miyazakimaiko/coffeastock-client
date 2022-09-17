@@ -15,8 +15,9 @@ export default function useDeleteBean() {
     {
       enabled: user ? true : false,
       onSuccess: async () => {
-        await queryClient.invalidateQueries('beans')
-        await queryClient.invalidateQueries('ranges')
+        await queryClient.invalidateQueries('beans');
+        await queryClient.invalidateQueries('ranges');
+        await queryClient.invalidateQueries(['user', user.sub, 'totalUsedMb']);
         toastOnBottomCenter('success', 'Coffee bean is deleted successfully.')
       },
       onError: err => {

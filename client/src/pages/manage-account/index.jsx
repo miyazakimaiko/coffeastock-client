@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import { useUserData } from '../../context/AccountContext';
 import Spinner from '../../elements/Spinner';
-import useUserUnitIds from '../../hooks/useUserUnitIds';
+import useUserInfo from '../../hooks/useUserInfo';
 import useUnits from '../../hooks/useUnits';
 import ChangeNicknameModal from '../../modals/change-nickname-modal';
 import ChangePasswordModal from '../../modals/change-password-modal';
@@ -23,7 +23,7 @@ const ManageAccount = () => {
   const { data: userUnitIds, 
           isLoading: userUnitIdsAreLoading,
           isError: userUnitIdsHaveError,
-        } = useUserUnitIds();
+        } = useUserInfo();
   
   const { modal, 
           openChangeNicknameModal,

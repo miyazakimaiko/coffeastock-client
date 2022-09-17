@@ -25,13 +25,8 @@ const Register = () => {
       Name: 'nickname',
       Value: nickname
     }
-    const userTypeData = {
-      Name: 'custom:user_type',
-      Value: 'TRIAL'
-    }
 
     attributes.push(new CognitoUserAttribute(nicknameData));
-    attributes.push(new CognitoUserAttribute(userTypeData));
 
     UserPool.signUp(email, password, attributes, null, (err, data) => {
       if (err) {

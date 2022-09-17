@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import FormInput from '../../../elements/FormInput'
 import Spinner from '../../../elements/Spinner';
 import useUnits from '../../../hooks/useUnits';
-import useUserUnitIds from '../../../hooks/useUserUnitIds';
+import useUserInfo from '../../../hooks/useUserInfo';
 import ErrorPage from '../../../pages/error';
 import { MAX_NUMBER } from '../../../utils/Constants';
 import { checkValueIsNumber, checkWaterWeightIsInRange } from '../helpers/InputValidators';
@@ -15,10 +15,10 @@ const WaterWeightInput = ({recipe, setRecipe}) => {
   } = useUnits();
 
   const { 
-    data: unitIds, 
-    isLoading: unitIdsAreLoading,
-    isError: unitIdsHaveError,
-  } = useUserUnitIds();
+    data: userInfo, 
+    isLoading: userInfoAreLoading,
+    isError: userInfoHaveError,
+  } = useUserInfo();
 
   const [warning, setWarning] = useState({
     invalid: false,
@@ -73,17 +73,17 @@ const WaterWeightInput = ({recipe, setRecipe}) => {
     });
   }
 
-  if (unitsAreLoading || unitIdsAreLoading) {
+  if (unitsAreLoading || userInfoAreLoading) {
     return <Spinner />
   }
 
-  if (unitsHaveError || unitIdsHaveError) {
+  if (unitsHaveError || userInfoHaveError) {
     return <ErrorPage />
   }
 
   return (
     <FormInput
-      title={`Water Weight (${units['fluid' + unitIds['unit_fluid_weight_id']].short_label})`}
+      title={`Water Weight (${units['fluid' + userInfo.unit_fluid_weight_id].short_label})`}
       type="text" 
       name="waterweight"
       autoComplete="off"

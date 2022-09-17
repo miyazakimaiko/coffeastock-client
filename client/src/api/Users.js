@@ -8,8 +8,12 @@ export const getUser = async (userid, token) => {
   return await axios.get(`/user/${userid}`, { headers: { accesstoken: token } }).then(res => res.data);
 }
 
-export const getUserUnitIds = async (userid, token) => {
-  return await axios.get(`/user/${userid}/unit-ids`, { headers: { accesstoken: token } }).then(res => res.data);
+export const getUserTotalUsedMb = async (userid, token) => {
+  return await axios.get(`/user/${userid}/total-used-mb`, { headers: { accesstoken: token } }).then(res => res.data);
+}
+
+export const getUserInfo = async (userid, token) => {
+  return await axios.get(`/user/${userid}/info`, { headers: { accesstoken: token } }).then(res => res.data);
 }
 
 export const editUserUnitIds = async (userid, body, token) => {

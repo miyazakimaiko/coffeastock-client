@@ -1,9 +1,9 @@
 import React, { useEffect, useState, createRef, useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from 'react-query';
-import { useGetSession, useSignout, useUserData } from '../../context/AccountContext';
+import { useGetSession, useSignout } from '../../context/AccountContext';
 import { ModalStateContext } from '../../context/ModalStateContext';
-import { MAX_COUNT, MAX_LENGTH, USER_TYPE_KEY } from '../../utils/Constants';
+import { MAX_LENGTH, USER_TYPE } from '../../utils/Constants';
 import BeanService from '../../services/BeanService';
 import { convertIdListToItemList, convertItemListToIdList } from '../../helpers/ListConverter';
 import { escapeHtml, unescapeHtml } from '../../helpers/HtmlConverter';
@@ -44,6 +44,8 @@ import {
   checkRoastLevelIsInRange,
   checkValueIsNumber,
 } from "./helpers/InputValidators";
+import useUserTotalUsedMb from '../../hooks/useUserTotalUsedMb';
+import useUserInfo from '../../hooks/useUserInfo';
 
 const AddEditBeanModal = ({targetBean = null}) => {
 
@@ -51,7 +53,6 @@ const AddEditBeanModal = ({targetBean = null}) => {
   const getSession = useGetSession();
   const signout = useSignout();
   const navigate = useNavigate();
-  const user = useUserData();
 
   // prevent from filling form while token is expired
   // (This prevents warning user to login again after filling the form)
@@ -73,6 +74,16 @@ const AddEditBeanModal = ({targetBean = null}) => {
           isLoading: beanListIsLoading,
           isError: beanListHasError,
         } = useBeans()
+
+  const { data: totalUsedMb, 
+          isLoading: totalUsedMbIsLoading,
+          isError: totalUsedMbHasError,
+        } = useUserTotalUsedMb();
+
+  const { data: userInfo, 
+          isLoading: userInfoIsLoading,
+          isError: userInfoHasError,
+        } = useUserInfo();
 
   const [bean, setBean, onSubmit, isSubmitting] = BeanService();
   const addRange = useAddRange()
@@ -325,14 +336,33 @@ const AddEditBeanModal = ({targetBean = null}) => {
   }
 
 
-  if (rangeListIsLoading || beanListIsLoading) {
+  if (rangeListIsLoading 
+      || beanListIsLoading
+      || totalUsedMbIsLoading
+      || userInfoIsLoading) {
     return <Spinner />
   }
 
-  if (rangeListHasError || beanListHasError) {
+  if (rangeListHasError 
+      || beanListHasError
+      || totalUsedMbHasError
+      || userInfoHasError) {
     return <ErrorPage />
   }
 
+  if (modal.mode === modalModeSelection.addBean 
+    && totalUsedMb > USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB
+  ) {
+    return (
+      <ModalWrapperContainer
+        title="Your data usage has reached to the max limit"
+        onCloseClick={closeModal}
+        maxWidthClass="max-w-6xl"
+      >
+        <p>Upgrade Plan</p>
+      </ModalWrapperContainer>
+    )
+  }
 
   return (
     <ModalWrapperContainer
@@ -418,7 +448,7 @@ const AddEditBeanModal = ({targetBean = null}) => {
                 options={Object.values(rangeList.roaster_range)}
                 value={selectedRoaster}
                 onChange={setSelectedRoaster}
-                isCreatable={Object.values(rangeList.roaster_range).length < MAX_COUNT.RANGES[user[USER_TYPE_KEY]]}
+                isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
               />
               <FormInput
                 title="Roast Date"
@@ -472,8 +502,8 @@ const AddEditBeanModal = ({targetBean = null}) => {
                 title="Aroma"
                 options={Object.values(rangeList.aroma_range)}
                 value={selectedAroma}
-                isCreatable={Object.values(rangeList.aroma_range).length < MAX_COUNT.RANGES[user[USER_TYPE_KEY]]}
                 onChange={setSelectedAroma}
+                isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
               />
               <MemoTextarea bean={bean} setBean={setBean} />
             </div>
@@ -489,20 +519,21 @@ const AddEditBeanModal = ({targetBean = null}) => {
                 rangeList={rangeList}
                 selectedOrigin={selectedOrigin}
                 setSelectedOrigin={setSelectedOrigin}
+                isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
               />
               <FormMultiSelect
                 title="Farm"
                 options={Object.values(rangeList.farm_range)}
                 value={selectedFarm}
                 onChange={setSelectedFarm}
-                isCreatable={Object.values(rangeList.farm_range).length < MAX_COUNT.RANGES[user[USER_TYPE_KEY]]}
+                isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
               />
               <FormMultiSelect
                 title="Variety"
                 options={Object.values(rangeList.variety_range)}
                 value={selectedVariety}
                 onChange={setSelectedVariety}
-                isCreatable={Object.values(rangeList.variety_range).length < MAX_COUNT.RANGES[user[USER_TYPE_KEY]]}
+                isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
               />
               <HarvestPeriodInput bean={bean} setBean={setBean} />
               <AltitudeInput bean={bean} setBean={setBean} />
@@ -514,14 +545,14 @@ const AddEditBeanModal = ({targetBean = null}) => {
                 options={Object.values(rangeList.process_range)}
                 value={selectedProcess}
                 onChange={setSelectedProcess}
-                isCreatable={Object.values(rangeList.process_range).length < MAX_COUNT.RANGES[user[USER_TYPE_KEY]]}
+                isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
               />
               <FormMultiSelect
                 title="Aroma"
                 options={Object.values(rangeList.aroma_range)}
                 value={selectedAroma}
                 onChange={setSelectedAroma}
-                isCreatable={Object.values(rangeList.aroma_range).length < MAX_COUNT.RANGES[user[USER_TYPE_KEY]]}
+                isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
               />
               <MemoTextarea bean={bean} setBean={setBean} />
             </div>
