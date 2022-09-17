@@ -4,19 +4,19 @@ import toastOnBottomCenter from '../utils/customToast';
 import { useSignout, useUserData } from '../context/AccountContext';
 import * as api from '../api/Users'
 
-export default function useUserUnitIds() {
+export default function useUserInfo() {
   const user = useUserData();
   const queryClient = useQueryClient();
   const signout = useSignout();
   const navigate = useNavigate();
 
   return useQuery(
-    ['user', 'units'],
-    async () => await api.getUserUnitIds(user.sub, user.accessToken.jwtToken), 
+    ['user', 'info'],
+    async () => await api.getUserInfo(user.sub, user.accessToken.jwtToken), 
     {
       enabled: user ? true : false,
       initialData: () => { 
-        return queryClient.getQueryData(['user', 'units']);
+        return queryClient.getQueryData(['user', 'info']);
       },
       onError: err => {
         if (err.message === 'Not authorized') {
