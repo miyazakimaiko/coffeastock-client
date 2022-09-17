@@ -22,6 +22,7 @@ export default function useAddRange() {
     {
       enabled: user ? true : false,
       onSuccess: async (_, variables) => {
+        await queryClient.invalidateQueries(['ranges']);
         await queryClient.invalidateQueries(['range', `${variables.rangeName}_range`]);
         await queryClient.invalidateQueries(['user', user.sub, 'totalUsedMb']);
       },
