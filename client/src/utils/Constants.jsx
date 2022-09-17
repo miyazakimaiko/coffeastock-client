@@ -32,17 +32,14 @@ const MAX_TEMP = {
 const MAX_COUNT = {
   BEANS: {
     BLEND: 5,
-    ROASTER: 10, 
-    ORIGIN: 10,
-    VARIETY: 10,
-    FARM: 10,
-    PROCESS: 10,
-    AROMA: 10,
+    ROASTER: 5, 
+    ORIGIN: 5,
+    VARIETY: 5,
+    FARM: 5,
+    PROCESS: 5,
+    AROMA: 20,
   },
   RECIPE: {
-    METHOD: 10,
-    GRINDER: 10,
-    WATER: 10,
     PALATE: 20,
   }
 }

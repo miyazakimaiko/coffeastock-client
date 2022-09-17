@@ -1,4 +1,4 @@
-import { MAX_LENGTH, MAX_NUMBER } from "../../../utils/Constants";
+import { MAX_COUNT, MAX_LENGTH, MAX_NUMBER } from "../../../utils/Constants";
 
 const checkValueIsNumber = (value) => {
   const includesForbiddenChar = ["e", "E", "+", "-"].includes(value);
@@ -51,6 +51,10 @@ const checkPalateRatesAreInRange = (palateRate) => {
   return inRange;
 }
 
+const checkPalatesCountInRange = (palates) => {
+  return palates.length <= MAX_COUNT.RECIPE.PALATE;
+}
+
 const checkMemoIsInRange = (memo) => {
   if (memo === null) return true;
   
@@ -71,5 +75,6 @@ export {
   checkTdsIsInRange,
   checkTotalRateIsInRange,
   checkPalateRatesAreInRange,
+  checkPalatesCountInRange,
   checkMemoIsInRange
 }

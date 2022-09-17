@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import FormMultiSelect from '../../../elements/FormMultiSelect';
+import { MAX_COUNT } from '../../../utils/Constants';
 
 const OriginInput = ({ rangeList, selectedOrigin, setSelectedOrigin, isCreatable }) => {
 
@@ -20,8 +21,15 @@ const OriginInput = ({ rangeList, selectedOrigin, setSelectedOrigin, isCreatable
         invalid: true,
         message: <span className="text-red">At least one origin must be selected.</span>,
       });
-
-    } else {
+    }
+    else if (originList.length > MAX_COUNT.BEANS.ORIGIN) {
+      setWarning({
+        ...warning,
+        invalid: true,
+        message: <span className="text-red">* Cannot select more than {MAX_COUNT.BEANS.ORIGIN} origins.</span>,
+      });
+    } 
+    else {
       setWarning({
         ...warning,
         invalid: false,

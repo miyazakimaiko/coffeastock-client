@@ -12,7 +12,6 @@ import extractNewItems from '../../helpers/ExtractNewItems';
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer';
 import FormInput from '../../elements/FormInput';
 import FormRadio from '../../elements/FormRadio';
-import FormMultiSelect from '../../elements/FormMultiSelect';
 import PencilAltIconButton from '../../elements/PencilAltIconButton';
 import RedOutlineButton from '../../elements/RedOutlineButton';
 import BlueButton from '../../elements/BlueButton';
@@ -37,15 +36,26 @@ import StepsTab from './components/StepsTab';
 import TabStateModel from './models/TabStateModel';
 import {
   checkAltitudeIsInRange,
+  checkAromasCountInRange,
   checkBlendBeansCountInRange,
+  checkFarmsCountInRange,
   checkGradeIsInRange,
   checkHarvestPeriodIsInRange,
   checkMemoIsInRange,
+  checkOriginsCountInRange,
+  checkProcessesCountInRange,
+  checkRoastersCountInRange,
   checkRoastLevelIsInRange,
   checkValueIsNumber,
+  checkVarietalsCountInRange,
 } from "./helpers/InputValidators";
 import useUserTotalUsedMb from '../../hooks/useUserTotalUsedMb';
 import useUserInfo from '../../hooks/useUserInfo';
+import FarmInput from './components/FarmInput';
+import RoasterInput from './components/RoasterInput';
+import VarietyInput from './components/VarietyInput';
+import ProcessInput from './components/ProcessInput';
+import AromaInput from './components/AromaInput';
 
 const AddEditBeanModal = ({targetBean = null}) => {
 
@@ -141,6 +151,26 @@ const AddEditBeanModal = ({targetBean = null}) => {
     }
   }, [bean])
 
+
+  useEffect(() => {
+    // Without this, aroma selsction may show warning message
+    // even though it's not applicable.
+    setBaseInfoTabState();
+  }, [selectedAroma])
+
+  const setBaseInfoTabState = () => {
+    const aromasCountIsInRange = checkAromasCountInRange(selectedAroma);
+
+    if (aromasCountIsInRange) {
+    setTabState(tabState => ({ ...tabState, canOpenBaseInfoTab: true }));
+  }
+  else {
+    setTabState(tabState => ({
+      ...tabState,
+      canOpenBaseInfoTab: false,
+    }));    
+  }
+  }
   
   useEffect(() => {
     setDetailsTabState();
@@ -152,6 +182,31 @@ const AddEditBeanModal = ({targetBean = null}) => {
     ]
   );
 
+  const setDetailsTabState = () => {
+    
+    const esacapedLabel = escapeHtml(bean.label ? bean.label : '');
+    const lebelIsValid = esacapedLabel.length > 0 && esacapedLabel.length <= MAX_LENGTH.BEANS_LABEL;
+    const gradeIsValid = checkValueIsNumber(bean.grade) && checkGradeIsInRange(bean.grade);
+    const roastLevelIsValid = checkValueIsNumber(bean.roast_level) && checkRoastLevelIsInRange(bean.roast_level);
+    const roastersCountIsInRange = checkRoastersCountInRange(selectedRoaster);
+    const roastersAreValid = checkItemsLabelLessThanMax(selectedRoaster);
+
+    if (lebelIsValid 
+        && gradeIsValid 
+        && roastLevelIsValid 
+        && roastersCountIsInRange
+        && roastersAreValid
+      ) {
+      setTabState(tabState => ({ ...tabState, canOpenDetailsTab: true }));
+    }
+    else {
+      setTabState(tabState => ({
+        ...tabState,
+        canOpenDetailsTab: false,
+        canOpenConfirmation: false,
+      }));    
+    }
+  }
 
   useEffect(() => {
     setConfirmationTabState();
@@ -169,31 +224,14 @@ const AddEditBeanModal = ({targetBean = null}) => {
     selectedAroma
   ]);
 
-
-  const setDetailsTabState = () => {
-    
-    const esacapedLabel = escapeHtml(bean.label ? bean.label : '');
-    const lebelIsValid = esacapedLabel.length > 0 && esacapedLabel.length <= MAX_LENGTH.BEANS_LABEL;
-    const gradeIsValid = checkValueIsNumber(bean.grade) && checkGradeIsInRange(bean.grade);
-    const roastLevelIsValid = checkValueIsNumber(bean.roast_level) && checkRoastLevelIsInRange(bean.roast_level);
-    const roastersAreValid = checkItemsLabelLessThanMax(selectedRoaster);
-
-    if (lebelIsValid && gradeIsValid && roastLevelIsValid && roastersAreValid) {
-      setTabState(tabState => ({ ...tabState, canOpenDetailsTab: true }));
-    }
-    else {
-      setTabState(tabState => ({
-        ...tabState,
-        canOpenDetailsTab: false,
-        canOpenConfirmation: false,
-      }));    
-    }
-  }
-
   const setConfirmationTabState = () => {
 
     if (bean.single_origin) {
-      const originIsSelected = selectedOrigin.length > 0;
+      const originsCountIsInRange = checkOriginsCountInRange(selectedOrigin);
+      const farmsCountIsInRange = checkFarmsCountInRange(selectedFarm);
+      const varietalsCountIsInRange = checkVarietalsCountInRange(selectedVariety);
+      const processesCountIsInRange = checkProcessesCountInRange(selectedProcess);
+      const aromasCountIsInRange = checkAromasCountInRange(selectedAroma);
       const altitudeIsInRange = checkAltitudeIsInRange(bean.altitude);
       const harvestPeriodIsInRange = checkHarvestPeriodIsInRange(bean.harvest_period);
       const memoIsInRange = checkMemoIsInRange(bean.memo);
@@ -203,18 +241,21 @@ const AddEditBeanModal = ({targetBean = null}) => {
       const processesAreValid = checkItemsLabelLessThanMax(selectedProcess);
       const aromasAreValid = checkItemsLabelLessThanMax(selectedAroma);
 
-
       if (
-        tabState.canOpenDetailsTab,
-        originIsSelected &&
-        altitudeIsInRange &&
-        harvestPeriodIsInRange &&
-        memoIsInRange &&
-        originsAreValid &&
-        farmsAreValid &&
-        varietalsAreValid &&
-        processesAreValid && 
-        aromasAreValid
+        tabState.canOpenDetailsTab
+        && originsCountIsInRange
+        && farmsCountIsInRange
+        && varietalsCountIsInRange
+        && processesCountIsInRange
+        && aromasCountIsInRange
+        && altitudeIsInRange
+        && harvestPeriodIsInRange
+        && memoIsInRange
+        && originsAreValid
+        && farmsAreValid
+        && varietalsAreValid
+        && processesAreValid
+        && aromasAreValid
       ) {
         setTabState((tabState) => ({ ...tabState, canOpenConfirmation: true }));
       }
@@ -225,9 +266,12 @@ const AddEditBeanModal = ({targetBean = null}) => {
     else if (!bean.single_origin) {
 
       const blendBeanCountIsInRange = checkBlendBeansCountInRange(selectedBlendBeans);
+      const aromasCountIsInRange = checkAromasCountInRange(selectedAroma);
       const memoIsInRange = checkMemoIsInRange(bean.memo);
 
-      if (blendBeanCountIsInRange && memoIsInRange) {
+      if (blendBeanCountIsInRange 
+          && memoIsInRange
+          && aromasCountIsInRange) {
         setTabState(tabState => ({ ...tabState, canOpenConfirmation: true }));
       }
       else {
@@ -298,21 +342,22 @@ const AddEditBeanModal = ({targetBean = null}) => {
   };
 
 
-  const finalizeBean = () => {
-    const roaster = convertItemListToIdList(selectedRoaster, rangeList.roaster_range);
-    const aroma = convertItemListToIdList(selectedAroma, rangeList.aroma_range);
+  const finalizeBean = async () => {
+    const roaster = await convertItemListToIdList(selectedRoaster, rangeList.roaster_range);
+    const aroma = await convertItemListToIdList(selectedAroma, rangeList.aroma_range);
 
     if (bean.single_origin) {
-      const origin = convertItemListToIdList(selectedOrigin, rangeList.origin_range);
-      const farm = convertItemListToIdList(selectedFarm, rangeList.farm_range);
-      const variety = convertItemListToIdList(selectedVariety, rangeList.variety_range);
-      const process = convertItemListToIdList(selectedProcess, rangeList.process_range);
+      const origin = await convertItemListToIdList(selectedOrigin, rangeList.origin_range);
+      const farm = await convertItemListToIdList(selectedFarm, rangeList.farm_range);
+      const variety = await convertItemListToIdList(selectedVariety, rangeList.variety_range);
+      const process = await convertItemListToIdList(selectedProcess, rangeList.process_range);
       
       setBean(bean => ({ ...bean, roaster, aroma, origin, farm, variety, process }));
     }
     else {
       setBean(bean => ({ ...bean, roaster, aroma, blend_ratio: blendRatios }));
     }
+    return;
   }
 
   const insertNewRangeList = async () => {
@@ -381,6 +426,7 @@ const AddEditBeanModal = ({targetBean = null}) => {
         <StepsTab
           key="base-info"
           title="1. Base Info"
+          disabled={!tabState.canOpenBaseInfoTab}
           tabState={tabState.baseInfoTabIsOpen}
           onClick={setOpenBaseInfoTab}
         />
@@ -443,11 +489,10 @@ const AddEditBeanModal = ({targetBean = null}) => {
                   />
                 </div>
               </div>
-              <FormMultiSelect
-                title="Roaster"
-                options={Object.values(rangeList.roaster_range)}
-                value={selectedRoaster}
-                onChange={setSelectedRoaster}
+              <RoasterInput
+                rangeList={rangeList}
+                selectedRoaster={selectedRoaster}
+                setSelectedRoaster={setSelectedRoaster}
                 isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
               />
               <FormInput
@@ -498,11 +543,10 @@ const AddEditBeanModal = ({targetBean = null}) => {
             </div>
 
             <div className="md:w-1/2">
-              <FormMultiSelect
-                title="Aroma"
-                options={Object.values(rangeList.aroma_range)}
-                value={selectedAroma}
-                onChange={setSelectedAroma}
+              <AromaInput
+                rangeList={rangeList}
+                selectedAroma={selectedAroma}
+                setSelectedAroma={setSelectedAroma}
                 isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
               />
               <MemoTextarea bean={bean} setBean={setBean} />
@@ -521,18 +565,16 @@ const AddEditBeanModal = ({targetBean = null}) => {
                 setSelectedOrigin={setSelectedOrigin}
                 isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
               />
-              <FormMultiSelect
-                title="Farm"
-                options={Object.values(rangeList.farm_range)}
-                value={selectedFarm}
-                onChange={setSelectedFarm}
+              <FarmInput
+                rangeList={rangeList}
+                selectedFarm={selectedFarm}
+                setSelectedFarm={setSelectedFarm}
                 isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
               />
-              <FormMultiSelect
-                title="Variety"
-                options={Object.values(rangeList.variety_range)}
-                value={selectedVariety}
-                onChange={setSelectedVariety}
+              <VarietyInput
+                rangeList={rangeList}
+                selectedVariety={selectedVariety}
+                setSelectedVariety={setSelectedVariety}
                 isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
               />
               <HarvestPeriodInput bean={bean} setBean={setBean} />
@@ -540,18 +582,16 @@ const AddEditBeanModal = ({targetBean = null}) => {
             </div>
 
             <div className="md:w-1/2">
-              <FormMultiSelect
-                title="Process"
-                options={Object.values(rangeList.process_range)}
-                value={selectedProcess}
-                onChange={setSelectedProcess}
+              <ProcessInput
+                rangeList={rangeList}
+                selectedProcess={selectedProcess}
+                setSelectedProcess={setSelectedProcess}
                 isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
               />
-              <FormMultiSelect
-                title="Aroma"
-                options={Object.values(rangeList.aroma_range)}
-                value={selectedAroma}
-                onChange={setSelectedAroma}
+              <AromaInput
+                rangeList={rangeList}
+                selectedAroma={selectedAroma}
+                setSelectedAroma={setSelectedAroma}
                 isCreatable={totalUsedMb < USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB}
               />
               <MemoTextarea bean={bean} setBean={setBean} />
@@ -559,7 +599,11 @@ const AddEditBeanModal = ({targetBean = null}) => {
           </div>
 
           <div className="flex items-center justify-between px-2 md:px-8 pb-8">
-            <RedOutlineButton text="Go Back" onClick={setOpenBaseInfoTab} />
+            <RedOutlineButton 
+              text="Go Back" 
+              onClick={setOpenBaseInfoTab}
+              disabled={!tabState.canOpenBaseInfoTab}
+            />
             <BlueButton
               text="Next"
               disabled={!tabState.canOpenConfirmation}
@@ -691,14 +735,14 @@ const AddEditBeanModal = ({targetBean = null}) => {
             <RedOutlineButton text="Go Back" onClick={setOpenDetailsTab} />
             <BlueButton
               text={
+                addRange.isLoading ? "Preparing..." :
                 isSubmitting ? "Submitting..." : "Submit"
               }
               disabled={
-                !tabState.canOpenConfirmation || isSubmitting
+                !tabState.canOpenConfirmation || addRange.isLoading || isSubmitting
               }
               onClick={() => {
-                finalizeBean();
-                onSubmit();
+                finalizeBean().then(() => onSubmit())
               }}
             />
           </div>

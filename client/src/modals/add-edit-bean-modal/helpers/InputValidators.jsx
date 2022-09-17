@@ -15,19 +15,43 @@ const checkRoastLevelIsInRange = (number) => {
 }
 
 const checkHarvestPeriodIsInRange = (period) => {
-  return period === null || escapeHtml(period).length <= MAX_LENGTH.BEANS_HARVEST_PERIOD
+  return period === null || escapeHtml(period).length <= MAX_LENGTH.BEANS_HARVEST_PERIOD;
 }
 
 const checkAltitudeIsInRange = (altitude) => {
-  return altitude === null || escapeHtml(altitude).length <= MAX_LENGTH.BEANS_ALTITUDE
+  return altitude === null || escapeHtml(altitude).length <= MAX_LENGTH.BEANS_ALTITUDE;
 }
 
 const checkMemoIsInRange = (memo) => {
-  return memo === null || escapeHtml(memo).length <= MAX_LENGTH.COMMON_MEMO
+  return memo === null || escapeHtml(memo).length <= MAX_LENGTH.COMMON_MEMO;
 }
 
 const checkBlendBeansCountInRange = (blendBeans) => {
-  return blendBeans.length > 0 && blendBeans.length <= MAX_COUNT.BLEND_BEANS
+  return blendBeans.length > 0 && blendBeans.length <= MAX_COUNT.BEANS.BLEND;
+}
+
+const checkOriginsCountInRange = (origins) => {
+  return origins.length > 0 && origins.length <= MAX_COUNT.BEANS.ORIGIN;
+}
+
+const checkFarmsCountInRange = (farms) => {
+  return farms.length <= MAX_COUNT.BEANS.FARM;
+}
+
+const checkRoastersCountInRange = (roasters) => {
+  return roasters.length <= MAX_COUNT.BEANS.ROASTER;
+}
+
+const checkVarietalsCountInRange = (varietals) => {
+  return varietals.length <= MAX_COUNT.BEANS.VARIETY;
+}
+
+const checkProcessesCountInRange = (processes) => {
+  return processes.length <= MAX_COUNT.BEANS.PROCESS;
+}
+
+const checkAromasCountInRange = (aromas) => {
+  return aromas.length <= MAX_COUNT.BEANS.AROMA;
 }
 
 export { 
@@ -38,4 +62,10 @@ export {
   checkAltitudeIsInRange,
   checkMemoIsInRange,
   checkBlendBeansCountInRange,
+  checkOriginsCountInRange,
+  checkFarmsCountInRange,
+  checkRoastersCountInRange,
+  checkVarietalsCountInRange,
+  checkProcessesCountInRange,
+  checkAromasCountInRange,
 };

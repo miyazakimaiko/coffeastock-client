@@ -18,11 +18,11 @@ const BlendBeanInput = ({ targetBean, beanList, selectedBlendBeans, setSelectedB
         message: <span className="text-red">* At least one bean must be selected.</span>,
       });
     } 
-    else if (selectedItems.length > MAX_COUNT.BLEND_BEANS) {
+    else if (selectedItems.length > MAX_COUNT.BEANS.BLEND) {
       setWarning({
         ...warning,
         invalid: true,
-        message: <span className="text-red">* Cannot select more than five beans.</span>,
+        message: <span className="text-red">* Cannot select more than {MAX_COUNT.BEANS.BLEND} beans.</span>,
       });
     }
     else {

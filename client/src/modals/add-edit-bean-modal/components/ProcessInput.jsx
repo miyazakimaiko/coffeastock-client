@@ -2,24 +2,23 @@ import React, { useState } from 'react'
 import FormMultiSelect from '../../../elements/FormMultiSelect';
 import { MAX_COUNT } from '../../../utils/Constants';
 
-const PalateSelectionInput = ({ rangeList, selectedPalates, setSelectedPalates, isCreatable }) => {
+const ProcessInput = ({ rangeList, selectedProcess, setSelectedProcess, isCreatable }) => {
 
-
-  const options = Object.values(rangeList.palate_range);
+  const options = Object.values(rangeList.process_range);
 
   const [warning, setWarning] = useState({
     invalid: false,
     message: "",
   });
 
-  const setPalates = (palateList) => {
-    setSelectedPalates(palateList);
+  const setProcessList = (processList) => {
+    setSelectedProcess(processList);
 
-    if (palateList.length > MAX_COUNT.RECIPE.PALATE) {
+    if (processList.length > MAX_COUNT.BEANS.PROCESS) {
       setWarning({
         ...warning,
         invalid: true,
-        message: <span className="text-red">* Cannot select more than {MAX_COUNT.RECIPE.PALATE} items.</span>,
+        message: <span className="text-red">* Cannot select more than {MAX_COUNT.BEANS.PROCESS} items.</span>,
       });
     } 
     else {
@@ -33,16 +32,15 @@ const PalateSelectionInput = ({ rangeList, selectedPalates, setSelectedPalates, 
 
   return (
     <FormMultiSelect
-      title="Palates"
+      title="Process"
       options={options}
-      value={selectedPalates}
-      onChange={setPalates}
-      isMulti={true}
+      value={selectedProcess}
       invalid={warning.invalid}
+      onChange={setProcessList}
       warningText={warning.message}
       isCreatable={isCreatable}
     />
   );
 };
 
-export default PalateSelectionInput
+export default ProcessInput

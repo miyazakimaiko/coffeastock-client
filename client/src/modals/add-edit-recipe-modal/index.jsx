@@ -50,6 +50,7 @@ import {
   checkGroundsWeightIsInRange,
   checkMemoIsInRange,
   checkPalateRatesAreInRange,
+  checkPalatesCountInRange,
   checkTdsIsInRange,
   checkTotalRateIsInRange,
   checkWaterTempIsInRange,
@@ -79,6 +80,7 @@ const AddEditRecipeModal = ({recipeId = null}) => {
   }, []);
 
   const queryClient = useQueryClient();
+
   const addRange = useAddRange();
 
   const { data: beanList, 
@@ -176,11 +178,11 @@ const AddEditRecipeModal = ({recipeId = null}) => {
   }, [beanList, targetRecipe]);
 
 
-  const finalizeRecipe = () => {
+  const finalizeRecipe = async () => {
 
     extractNewItems(selectedPalates).forEach(newPalate => {
       const label = newPalate.value;
-      const id = Object.values(rangeList.palate_range).find(palate => palate.label === label)?.value;
+      const id = Object.values(rangeList.palate_range).find(palate => palate.label === label).value;
       if (id) {
         palateRate[id] = palateRate[label];
         delete palateRate[label];
@@ -188,9 +190,9 @@ const AddEditRecipeModal = ({recipeId = null}) => {
     }) 
 
     // remove removed palate rates that are removed from palate selection
-    function makeFinalPalateRate() {
+    async function makeFinalPalateRate() {
       const finalPalateRateObj = {};
-      const palateIdList = convertItemListToIdList(selectedPalates, rangeList.palate_range);
+      const palateIdList = await convertItemListToIdList(selectedPalates, rangeList.palate_range);
   
       for (const id of palateIdList) {
         finalPalateRateObj[id] = palateRate[id];
@@ -198,15 +200,17 @@ const AddEditRecipeModal = ({recipeId = null}) => {
       return finalPalateRateObj;
     }
 
-    const finalPalateRate = makeFinalPalateRate();
+    const finalPalateRate = await makeFinalPalateRate();
     
     setRecipe({...recipe, 
       bean_id: selectedBean.bean_id,
-      method: convertItemListToIdList(selectedMethod, rangeList.method_range),
-      grinder: convertItemListToIdList(selectedGrinder, rangeList.grinder_range),
-      water: convertItemListToIdList(selectedWater, rangeList.water_range),
+      method: await convertItemListToIdList(selectedMethod, rangeList.method_range),
+      grinder: await convertItemListToIdList(selectedGrinder, rangeList.grinder_range),
+      water: await convertItemListToIdList(selectedWater, rangeList.water_range),
       palate_rates: finalPalateRate
     });
+
+    return;
   }
 
   const insertNewRangeList = async () => {
@@ -399,11 +403,16 @@ const AddEditRecipeModal = ({recipeId = null}) => {
 
   useEffect(() => {
     const setConfirmationTabState = () => {
+      const palatesCountIsInRange = checkPalatesCountInRange(selectedPalates);
       const palatesAreInRange = checkPalateRatesAreInRange(palateRate);
       const memoIsInRange = checkMemoIsInRange(recipe.memo);
   
-      if (palatesAreInRange && memoIsInRange && 
-      tabState.canOpenWaterYieldTab && tabState.canOpenPalatesTab) {
+      if (palatesCountIsInRange 
+          && palatesAreInRange 
+          && memoIsInRange 
+          && tabState.canOpenWaterYieldTab 
+          && tabState.canOpenPalatesTab
+      ) {
         setTabState((tabState) => ({
           ...tabState,
           canOpenConfirmationTab: true,
@@ -418,6 +427,7 @@ const AddEditRecipeModal = ({recipeId = null}) => {
     }
     setConfirmationTabState();
   }, [
+    selectedPalates,
     tabState.canOpenWaterYieldTab,
     tabState.canOpenPalatesTab,
     palateRate,
@@ -775,11 +785,16 @@ const AddEditRecipeModal = ({recipeId = null}) => {
                   onClick={setOpenWaterYieldTab}
                 />
                 <BlueButton
-                  text={isSubmitting ? "Submitting..." : "Submit"}
-                  disabled={selectedBean === null || isSubmitting}
+                  text={isSubmitting ? "Submitting..." :
+                        addRange.isLoading ? "Preparing..." : "Submit"}
+                  disabled={ selectedBean === null 
+                             || addRange.isLoading 
+                             || isSubmitting
+                            }
                   onClick={() => {
-                    finalizeRecipe();
-                    onSubmit();
+                    finalizeRecipe().then(() => {
+                      onSubmit();
+                    })
                   }}
                 />
               </div>
