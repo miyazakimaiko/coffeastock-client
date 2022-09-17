@@ -17,7 +17,7 @@ export const generateStarIconList = (number) => {
 
 export const generateFireIconList = (number) => {
   const result = []
-  const rounded = Math.ceil(number)/2;
+  const rounded = Math.ceil(number/10)/2;
   for (let i = 1; i <= rounded; i ++) {
     result.push(<FireFullIcon/>)
   }
