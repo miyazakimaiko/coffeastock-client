@@ -26,6 +26,7 @@ const ModalStateProvider = (props) => {
     changePassword: 'changePassword',
     changeEmail: 'changeEmail',
     changeUnits: 'changeUnits',
+    deleteAccount: 'deleteAccount',
   }
 
   function openAddRangeModal() {
@@ -80,6 +81,10 @@ const ModalStateProvider = (props) => {
     setModal({ mode: modalModeSelection.changeUnits, isOpen: true });
   }
 
+  function openDeleteAccountModal() {
+    setModal({ mode: modalModeSelection.deleteAccount, isOpen: true });
+  }
+
   function closeModal() {
     setModal({ mode: "", isOpen: false });
   }
@@ -102,6 +107,7 @@ const ModalStateProvider = (props) => {
           openChangePasswordModal,
           openChangeEmailModal,
           openChangeUnitsModal,
+          openDeleteAccountModal,
           closeModal,
           modalModeSelection,
         }

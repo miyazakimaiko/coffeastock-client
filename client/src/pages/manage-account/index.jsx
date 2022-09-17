@@ -9,6 +9,7 @@ import ChangeNicknameModal from '../../modals/change-nickname-modal';
 import ChangePasswordModal from '../../modals/change-password-modal';
 import ChangeEmailModal from '../../modals/change-email-modal';
 import ChangeUnitsModal from '../../modals/change-units-modal';
+import DeleteAccountModal from '../../modals/delete-account-modal';
 import './manageAccount.scss';
 import ErrorPage from '../error';
 
@@ -30,6 +31,7 @@ const ManageAccount = () => {
           openChangePasswordModal,
           openChangeEmailModal,
           openChangeUnitsModal,
+          openDeleteAccountModal,
           modalModeSelection 
         } = useContext(ModalStateContext);
 
@@ -92,7 +94,7 @@ const ManageAccount = () => {
 
           <div className="bg-white shadow-sm rounded w-full max-w-lg mx-auto py-6 p-10 mb-6">
             <div className="flex justify-between">
-              <h3 className="text-xl font-medium pb-6">Cofee / Recipe Units</h3>
+              <h3 className="text-xl font-medium pb-6">Coffee / Recipe Units</h3>
               <div className="ml-6">
                 <a
                   href="#"
@@ -170,7 +172,13 @@ const ManageAccount = () => {
           <div className="bg-white shadow-sm rounded w-full max-w-lg mx-auto py-6 p-10 mb-6">
             <div className="flex justify-between">
               <div>
-                <button>Delete Account</button>
+                <a
+                  href="#"
+                  onClick={openDeleteAccountModal}
+                  className="underline text-blue"
+                >
+                  Delete Account
+                </a>
               </div>
             </div>
           </div>
@@ -238,6 +246,10 @@ const ManageAccount = () => {
 
       {modal.isOpen && modal.mode === modalModeSelection.changeUnits && (
         <ChangeUnitsModal />
+      )}
+
+      {modal.isOpen && modal.mode === modalModeSelection.deleteAccount && (
+        <DeleteAccountModal email={userData.email} />
       )}
     </>
   );
