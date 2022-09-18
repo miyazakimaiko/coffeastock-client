@@ -27,7 +27,12 @@ const GROUPBY = {
   AROMA: 'aroma',
 }
 
-const ViewBeansList = () => {
+const ViewBeansList = ({setTitle}) => {
+
+  useEffect(() => {
+    setTitle("View All Beans");
+  }, [])
+
   const { data: beanList, 
           isLoading: beanListIsLoading,
           isError: beanListHasError, 
@@ -138,9 +143,6 @@ const ViewBeansList = () => {
   return (
     <>
       <div className="px-4 pt-8 w-full max-w-980px mx-auto">
-        <h3 className="my-5 text-xl text-center">
-          My Coffee Beans
-        </h3>
         <ToolBar>
           <ToolbarDropdown title={`Show ${showState}`}>
             {Object.values(SHOW).map((state) => {

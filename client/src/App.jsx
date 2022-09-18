@@ -1,4 +1,4 @@
-import React, { useEffect, createRef } from 'react';
+import React, { useEffect, createRef, useState } from 'react';
 import {BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -27,10 +27,12 @@ const App = () => {
   const headerRef = createRef();
   const pushpinRef = createRef();
 
-  const getSession = useGetSession()
-  const setUserData = useSetUserData()
-  const authenticated = useAuthenticated()
-  const setAuthenticated = useSetAuthenticated()
+  const getSession = useGetSession();
+  const setUserData = useSetUserData();
+  const authenticated = useAuthenticated();
+  const setAuthenticated = useSetAuthenticated();
+
+  const [title, setTitle] = useState("Dashboard");
 
   useEffect(() => {
     getSession().then((session) => {
@@ -43,38 +45,42 @@ const App = () => {
     <Router>
       <div className="relative flex flex-col w-full min-h-screen bg-creme font-sans text-xs md:text-sm text-burnt-sienna">
         <NavStateProvider>
-          {authenticated ? <Nav navRef={navRef} mainRef={mainRef} headerRef={headerRef} pushpinRef={pushpinRef}/>: ""}
-          {authenticated ? <Header mainRef={mainRef} navRef={navRef} pushpinRef={pushpinRef}/>: ""}
-          <div ref={mainRef} className={"relative main min-h-screen box-border header-top-pd"}>
             { authenticated ? 
-              <Routes>
-                <Route exact path="/coffees" element={<ViewMyCoffees />} />
-                <Route exact path="/coffee/:id" element={<ViewBeanAndRecipes />} />
-                <Route exact path="/compare/recipes" element={<CompareRecipes />} />
+              <>
+                <Nav navRef={navRef} mainRef={mainRef} headerRef={headerRef} pushpinRef={pushpinRef}/>
+                <Header mainRef={mainRef} navRef={navRef} pushpinRef={pushpinRef} title={title}/>
+                <div ref={mainRef} className={"relative main min-h-screen box-border header-top-pd"}>
+                  <Routes>
+                    <Route exact path="/coffees" element={<ViewMyCoffees setTitle={setTitle} />} />
+                    <Route exact path="/coffee/:id" element={<ViewBeanAndRecipes setTitle={setTitle} />} />
+                    <Route exact path="/compare/recipes" element={<CompareRecipes setTitle={setTitle} />} />
 
-                <Route exact path="/settings/aroma" element={<ViewRanges parentCat={'Coffee Beans'} cat={'aroma'}/>} />
-                <Route exact path="/settings/farm" element={<ViewRanges parentCat={'Coffee Beans'} cat={'farm'}/>} />
-                <Route exact path="/settings/origin" element={<ViewRanges parentCat={'Coffee Beans'} cat={'origin'}/>} />
-                <Route exact path="/settings/variety" element={<ViewRanges parentCat={'Coffee Beans'} cat={'variety'}/>} />
-                <Route exact path="/settings/process" element={<ViewRanges parentCat={'Coffee Beans'} cat={'process'} />} />
-                <Route exact path="/settings/roaster" element={<ViewRanges parentCat={'Coffee Beans'} cat={'roaster'} />} />
+                    <Route exact path="/settings/aroma" element={<ViewRanges rangeName="aroma" setTitle={setTitle}/>} />
+                    <Route exact path="/settings/farm" element={<ViewRanges rangeName="farm" setTitle={setTitle} />} />
+                    <Route exact path="/settings/origin" element={<ViewRanges rangeName="origin" setTitle={setTitle} />} />
+                    <Route exact path="/settings/variety" element={<ViewRanges rangeName="variety" setTitle={setTitle} />} />
+                    <Route exact path="/settings/process" element={<ViewRanges rangeName="process" setTitle={setTitle} />} />
+                    <Route exact path="/settings/roaster" element={<ViewRanges rangeName="roaster" setTitle={setTitle} />} />
 
-                <Route exact path="/settings/grinder" element={<ViewRanges parentCat={'Recipes'} cat={'grinder'} />} />
-                <Route exact path="/settings/method" element={<ViewRanges parentCat={'Recipes'} cat={'method'} />} />
-                <Route exact path="/settings/palate" element={<ViewRanges parentCat={'Recipes'} cat={'palate'} />} />
-                <Route exact path="/settings/water" element={<ViewRanges parentCat={'Recipes'} cat={'water'} />} />
-                <Route path="/" element={<Dashboard />} />
-                <Route path="account" element={<ManageAccount />} />
-                <Route path="*" element={<ErrorPage />} />
-              </Routes>
+                    <Route exact path="/settings/grinder" element={<ViewRanges rangeName="grinder" setTitle={setTitle} />} />
+                    <Route exact path="/settings/method" element={<ViewRanges rangeName="method" setTitle={setTitle} />} />
+                    <Route exact path="/settings/palate" element={<ViewRanges rangeName="palate" setTitle={setTitle} />} />
+                    <Route exact path="/settings/water" element={<ViewRanges rangeName="water" setTitle={setTitle} />} />
+                    <Route path="/" element={<Dashboard setTitle={setTitle} />} />
+                    <Route path="account" element={<ManageAccount setTitle={setTitle} />} />
+                    <Route path="*" element={<ErrorPage />} />
+                  </Routes>
+                </div>
+              </>
               :
-              <Routes>
-                <Route exact path='/register' element={<Register />} />
-                <Route exact path='/login' element={<Login />} />
-                <Route path='*' element={<Login />} />
-              </Routes>
+              <div className="relative main min-h-screen box-border">
+                <Routes>
+                  <Route exact path='/register' element={<Register />} />
+                  <Route exact path='/login' element={<Login />} />
+                  <Route path='*' element={<Login />} />
+                </Routes>
+              </div>
             }
-          </div>
         </NavStateProvider>
         <ToastContainer theme="colored" newestOnTop hideProgressBar={false}/>
         <ScrollBackButton />

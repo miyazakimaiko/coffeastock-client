@@ -19,7 +19,12 @@ import CoffeeRangeListForAll from './components/CoffeeRangeListForAll';
 import './ViewBeanAndRecipes.scss'
 
 
-const ViewBeanAndRecipes = () => {
+const ViewBeanAndRecipes = ({setTitle}) => {
+
+  useEffect(() => {
+    setTitle("Beans and Recipes");
+  }, [])
+  
   const { id } = useParams();
   const { data: targetBean,
           isLoading: targetBeanIsLoading,

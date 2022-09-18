@@ -21,13 +21,13 @@
 }
 
 .header-pd {
-  margin-left: calc(var(--nav-width) +  16px);
+  margin-left: var(--nav-width);
 
   @include sm() {
-    margin-left: calc(var(--nav-width-sm) +  16px);
+    margin-left: var(--nav-width-sm);
   }
   @include lg() {
     margin-left: 0;
-    padding-left: calc(var(--nav-width-sm) +  16px);
+    padding-left: var(--nav-width-sm);
   }
 }

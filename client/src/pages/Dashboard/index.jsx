@@ -15,7 +15,12 @@ import RecentRecipes from './RecentRecipes'
 import RssFeed from './RssFeed'
 import useUserTotalUsedMb from '../../hooks/useUserTotalUsedMb'
 
-const Dashboard = () => {
+const Dashboard = ({setTitle}) => {
+
+  useEffect(() => {
+    setTitle("Dashboard");
+  }, [])
+
   const [beansBarChart, setBeansBarChart] = useState(null);
   const [recipesBarChart, setRecipesBarChart] = useState(null);
   const { 

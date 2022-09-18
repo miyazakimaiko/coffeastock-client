@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { NavLink } from 'react-router-dom'
-import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, CogIcon, HomeIcon } from '@heroicons/react/outline'
+import { BsPlus } from 'react-icons/bs'
+import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, CogIcon, HomeIcon, PlusIcon } from '@heroicons/react/outline'
 import PushPinIcon from '../../assets/svgs/PushPinIcon'
 import { NavStateContext } from '../../context/NavStateContext'
 import './nav.scss'
@@ -66,13 +67,12 @@ const Nav = (props) => {
     <div>
       <nav
         ref={el => { props.navRef.current = el; }}
-        className="l-nav z-20 top-0 bottom-0 overflow-auto
-          bg-burnt-sienna border-r text-white">
-        <div 
-          className="p-6 flex justify-between items-center">
-          <h1 className=" text-lg">
-            <img src={Logo} alt="" className="w-10/12" />
-          </h1>
+        className="l-nav z-20 top-0 bottom-0 overflow-auto bg-burnt-sienna border-r text-white"
+      >
+        <div className="p-4 lg:py-2 flex justify-between items-center">
+            <div className="w-10/12 mx-auto lg:mx-0">
+              <img src={Logo} alt="Coffeastock" />
+            </div>
           <button 
             type="button" 
             ref={el => { props.pushpinRef.current = el; }} 
@@ -81,12 +81,12 @@ const Nav = (props) => {
           </button>
         </div>
 
-        <div className="my-8 ">
-          <h3 className="mx-6 my-3 text-xs opacity-50">
+        <div className="py-4">
+          <h3 className="mx-6 mb-3 text-xs opacity-50">
             Main
           </h3>
           <ul className="ml-10">
-            <li className="h-12 flex items-center justify-between">
+            <li className="h-10 flex items-center justify-between">
               <NavLink to="/"
                 className={({ isActive }) => "flex items-center" 
                   + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
@@ -96,17 +96,17 @@ const Nav = (props) => {
               </NavLink>
             </li>
 
-            <li className="h-12 flex items-center justify-between">
+            <li className="h-10 flex items-center justify-between">
               <NavLink exact="true" to="coffees"
                 className={({ isActive }) => "flex items-center" 
                 + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                 onClick={pinnedNavbar ? null : showNavbar}>
                 <BookOpenIcon className="h-4 w-4"></BookOpenIcon>
-                <span className="ml-4">View Coffees</span>
+                <span className="ml-4">View All Beans</span>
               </NavLink>
             </li>
 
-            <li className="h-12 flex items-center justify-between">
+            <li className="h-10 flex items-center justify-between">
               <NavLink exact="true" to="compare/recipes"
                 className={({ isActive }) => "flex items-center" 
                 + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
@@ -118,37 +118,43 @@ const Nav = (props) => {
           </ul>
         </div>
 
-        <div className="my-8 ">
-          <h3 className="mx-6 my-3 text-xs opacity-50">
+        <div className="py-4">
+          <h3 className="mx-6 mb-3 text-xs opacity-50">
             Create
           </h3>
-          <ul className="ml-10">
-            <li className="h-12 flex items-center justify-between">
+          <ul className="mx-5">
+            <li className="h-10 w-full mb-2">
               <button type="button"
                 onClick={openAddBeanModal}
-                className="transition-opacity duration-300 ease-out opacity-70 hover:opacity-100">
+                className="w-full flex items-center bg-white bg-opacity-20 rounded-full px-6 py-2 
+                           transition-opacity duration-300 ease-out opacity-70 hover:opacity-100"
+              >
+                <BsPlus className="h-full mr-2" />
                 New Coffee Bean
               </button>
             </li>
 
-            <li className="h-12 flex items-center justify-between">
-            <button type="button"
+            <li className="h-10 w-full">
+              <button type="button"
                 onClick={openAddRecipeModal}
-                className="transition-opacity duration-300 ease-out opacity-70 hover:opacity-100">
+                className="w-full flex items-center bg-white bg-opacity-20 rounded-full px-6 py-2 
+                           transition-opacity duration-300 ease-out opacity-70 hover:opacity-100"
+              >
+                <BsPlus className="h-full mr-2" />
                 New Recipe
               </button>
             </li>
           </ul>
         </div>
 
-        <div className="my-8 ">
-          <h3 className="mx-6 my-3 text-xs opacity-50">
+        <div className="py-4">
+          <h3 className="mx-6 mb-3 text-xs opacity-50">
               Customize Attributes
           </h3>
           <ul className="ml-6">
             <li className="mr-6">
               <div 
-                className="h-12 flex items-center 
+                className="h-10 flex items-center 
                 justify-between transition-opacity duration-300 
                 ease-out opacity-70 hover:opacity-100 cursor-pointer"
                 onClick={() => toggleOpenBeansAccordion()}>
@@ -166,7 +172,7 @@ const Nav = (props) => {
                 <ul 
                   style={{ marginTop: beansMarginTop, opacity: beansOpacity }}
                   className="ease-in-out transition-all duration-500">
-                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink 
                       exact="true" 
                       to="settings/origin"
@@ -177,7 +183,7 @@ const Nav = (props) => {
                       <span>Origin</span>
                     </NavLink>
                   </li>
-                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink 
                       exact="true" 
                       to="settings/farm"
@@ -188,7 +194,7 @@ const Nav = (props) => {
                       <span>Farm</span>
                     </NavLink>
                   </li>
-                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink 
                       exact="true" 
                       to="settings/variety"
@@ -199,7 +205,7 @@ const Nav = (props) => {
                       <span>Variety</span>
                     </NavLink>
                   </li>
-                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink 
                       exact="true" 
                       to="settings/process"
@@ -210,7 +216,7 @@ const Nav = (props) => {
                       <span>Process</span>
                     </NavLink>
                   </li>
-                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink 
                       exact="true" 
                       to="settings/roaster"
@@ -221,7 +227,7 @@ const Nav = (props) => {
                       <span>Roaster</span>
                     </NavLink>
                   </li>
-                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink 
                       exact="true" 
                       to="settings/aroma"
@@ -238,7 +244,7 @@ const Nav = (props) => {
 
             <li className="mr-6">
               <div 
-                className="h-12 flex items-center 
+                className="h-10 flex items-center 
                 justify-between transition-opacity duration-300 
                 ease-out opacity-70 hover:opacity-100 cursor-pointer"
                 onClick={() => toggleOpenRecipesAccordion()} >
@@ -256,7 +262,7 @@ const Nav = (props) => {
                 <ul 
                   style={{ marginTop: recipesMarginTop, opacity: recipesOpacity }}
                   className="ease-in-out transition-all duration-500">
-                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink 
                       exact="true" 
                       to="settings/grinder"
@@ -267,7 +273,7 @@ const Nav = (props) => {
                       <span>Grinder</span>
                     </NavLink>
                   </li>
-                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink 
                       exact="true" 
                       to="settings/method"
@@ -278,7 +284,7 @@ const Nav = (props) => {
                       <span>Method</span>
                     </NavLink>
                   </li>
-                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink 
                       exact="true" 
                       to="settings/water"
@@ -289,7 +295,7 @@ const Nav = (props) => {
                       <span>water</span>
                     </NavLink>
                   </li>
-                  <li className="h-12 ml-8 mr-6 flex items-center justify-between">
+                  <li className="h-10 ml-8 mr-6 flex items-center justify-between">
                     <NavLink 
                       exact="true" 
                       to="settings/palate"

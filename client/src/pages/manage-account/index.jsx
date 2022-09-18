@@ -1,5 +1,5 @@
 import { BsCheckCircleFill } from 'react-icons/bs';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import { useUserData } from '../../context/AccountContext';
 import Spinner from '../../elements/Spinner';
@@ -14,7 +14,12 @@ import './manageAccount.scss';
 import ErrorPage from '../error';
 
 
-const ManageAccount = () => {
+const ManageAccount = ({setTitle}) => {
+
+  useEffect(() => {
+    setTitle("Manage Account");
+  }, [])
+
   const userData = useUserData();
   const { data: units, 
           isLoading: unitsAreLoading,

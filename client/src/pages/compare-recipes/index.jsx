@@ -7,7 +7,12 @@ import RecipeSelectInput from './components/RecipeSelectInput'
 import './compareRecipes.scss'
 import RecipesInfoComparisonSection from './components/RecipesInfoComparisonSection'
 
-const CompareRecipes = () => {
+const CompareRecipes = ({setTitle}) => {
+
+  useEffect(() => {
+    setTitle("Compare Recipes")
+  }, [])
+
   const { data: beanList,
           isLoading,
           isError,
@@ -35,8 +40,7 @@ const CompareRecipes = () => {
 
   return (
     <>
-      <div className="px-4 pt-8 w-full max-w-980px mx-auto">
-        <h3 className="mt-5 mb-10 text-xl text-center">Compare Recipes</h3>
+      <div className="mt-8 px-4 pt-8 w-full max-w-980px mx-auto">
         <div className="flex justify-between md:w-full">
           <div className="md:w-2/5 border border-burnt-sienna border-opacity-20 rounded-md relative py-4 px-2">
             <p className="absolute -top-2.5 left-6 bg-creme px-2">
