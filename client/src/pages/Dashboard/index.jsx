@@ -5,7 +5,7 @@ import useBeans from '../../hooks/useBeans'
 import useUserInfo from '../../hooks/useUserInfo'
 import ChartBarBeans from './ChartBarBeans'
 import ChartBarRecipes from './ChartBarRecipes'
-import TotalBeans from './TotalBeans'
+import TotalBeansBrewed from './TotalBeansBrewed'
 import TotalBrews from './TotalBrews'
 import TotalRecipes from './TotalRecipes'
 import useBeansSummary from '../../hooks/useBeansSummary'
@@ -14,6 +14,7 @@ import ErrorPage from '../error'
 import RecentRecipes from './RecentRecipes'
 import RssFeed from './RssFeed'
 import useUserTotalUsedMb from '../../hooks/useUserTotalUsedMb'
+import TotalCoffeeBags from './TotalCoffeeBags'
 
 const Dashboard = ({setTitle}) => {
 
@@ -23,6 +24,7 @@ const Dashboard = ({setTitle}) => {
 
   const [beansBarChart, setBeansBarChart] = useState(null);
   const [recipesBarChart, setRecipesBarChart] = useState(null);
+
   const { 
     data: units, 
     isLoading: unitsAreLoading,
@@ -58,8 +60,6 @@ const Dashboard = ({setTitle}) => {
     isLoading: totalUsedMbIsLoading,
     isError: totalUsedMbHasError,
   } = useUserTotalUsedMb();
-
-  console.log({totalUsedMb})
 
   useEffect(() => {
     if (beansSummary && beansList) {
@@ -111,17 +111,24 @@ const Dashboard = ({setTitle}) => {
   return (
     <>
       <div className="px-4 pt-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 md:mb-6">
-          <TotalBrews
-            amount={recipesSummary.yieldsweight}
-            unit={units['fluid' + userInfo.unit_fluid_weight_id].short_label}
+        <div className="grid grid-cols-1 md:grid-cols-4 md:mb-6">
+          <TotalCoffeeBags
+            amount={beansSummary.totalBeansCount}
+            beansCountByDayList={beansSummary.beansCountsByDay}
+          />
+          <TotalBeansBrewed
+            amount={recipesSummary.groundsweight}
+            unit={units['solid' + userInfo.unit_solid_weight_id].short_label}
+            groundWeightByDayList={recipesSummary.groundWeightTotalsByDay}
           />
           <TotalRecipes
             amount={recipesSummary.count}
+            recipesCountByDayList={recipesSummary.recipesCountsByDay}
           />
-          <TotalBeans
-            amount={recipesSummary.groundsweight}
-            unit={units['solid' + userInfo.unit_solid_weight_id].short_label}
+          <TotalBrews
+            amount={recipesSummary.yieldsweight}
+            unit={units['fluid' + userInfo.unit_fluid_weight_id].short_label}
+            yieldWeightByDayList={recipesSummary.yieldWeightTotalsByDay}
           />
         </div>
         <div className="flex lg:mb-6">

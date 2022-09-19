@@ -42,9 +42,6 @@ const RssFeed = () => {
   if (isLoading) {
     return <Spinner />
   }
-  else {
-    console.log(sortByPublishDate(articles))
-  }
 
   return (
     <div className="px-3 mb-4 md:mb-0">

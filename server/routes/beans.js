@@ -50,7 +50,10 @@ module.exports = (app) => {
     app.get(endpoint + "/user/:userid/beans-summary", async (req, res, next) => {
       try {
         const rateRankingResult = await db.query(`
-          SELECT b.bean_id, label, grade, TRUNC(AVG(r.total_rate), 1) avg_recipe_rate
+          SELECT b.bean_id, 
+                 label, 
+                 grade, 
+                 TRUNC(AVG(r.total_rate), 1) avg_recipe_rate
             FROM beans b
                  LEFT JOIN recipes r
                         ON b.bean_id = r.bean_id
@@ -59,8 +62,29 @@ module.exports = (app) => {
           GROUP BY b.bean_id
         ORDER BY grade DESC LIMIT 5`, 
         [req.params.userid]);
+
+        const totalBeansEntriesResult = await db.query(`
+          SELECT COUNT(*) FROM beans WHERE user_id = $1;
+        `, [req.params.userid]);
+
+        // for the Metrics background
+        const thirtyDaysSummaryResult = await db.query(`
+            SELECT DATE_TRUNC('day', created_at) date, 
+                   COUNT(*) total
+              FROM beans
+             WHERE user_id = $1
+          GROUP BY DATE_TRUNC('day', created_at)
+          ORDER BY date ASC LIMIT 30`, 
+         [req.params.userid]
+        );
   
-        res.status(200).json({graderanking: rateRankingResult.rows});
+        res.status(200).json(
+          {
+            graderanking: rateRankingResult.rows,
+            totalBeansCount: parseInt(totalBeansEntriesResult.rows[0].count),
+            beansCountsByDay: thirtyDaysSummaryResult.rows,
+          }
+        );
       } catch (error) {
         next(error)
       }
