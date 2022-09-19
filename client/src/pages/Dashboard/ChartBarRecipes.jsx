@@ -24,12 +24,12 @@ export const options = {
   elements: {
     bar: {
       borderWidth: 2,
-      borderRadius: 20,
+      borderRadius: 5,
     },
   },
   maintainAspectRatio: false,
   responsive: true,
-  barThickness: 15,
+  barThickness: 10,
   scale: {
     min: 0,
     max: 100,
@@ -86,14 +86,14 @@ const ChartBarRecipes = ({labels, totalRates, grades}) => {
       {
         label: 'Total Rate',
         data: totalRates,
-        borderColor: 'rgba(122, 194, 154, 0)',
-        backgroundColor: 'rgba(122, 194, 154, 0.5)',
+        backgroundColor: 'rgb(184,216,215, 1)',
+        borderColor: 'rgb(184,216,215, 0)',
       },
       {
         label: 'Bean\'s grade',
         data: grades,
-        borderColor: 'rgba(54, 162, 235, 0)',
-        backgroundColor: 'rgba(54, 162, 235, 0.3)',
+        backgroundColor: 'rgb(214,228,163,1)',
+        borderColor: 'rgb(214,228,163,0)',
       }
     ],
   }
