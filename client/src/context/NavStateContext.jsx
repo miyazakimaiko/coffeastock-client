@@ -14,6 +14,11 @@ const NavStateProvider = (props) => {
     innerSetMainRef(elem);
   }
 
+const [headerRef, innerSetHeaderRef] = useState(null);
+  const setHeaderRef = (elem) => {
+    innerSetHeaderRef(elem);
+  }
+
   const [navRef, innerSetNavRef] = useState(null);
   const setNavRef = (elem) => {
     innerSetNavRef(elem);
@@ -30,6 +35,7 @@ const NavStateProvider = (props) => {
     }
     else {
       mainRef.classList.toggle('main-pd');
+      headerRef.classList.toggle('header-pd');
       navRef.classList.toggle('nav-show');
       innerSetOpenNav(!openNav);
     }
@@ -39,6 +45,7 @@ const NavStateProvider = (props) => {
     innerSetPinnedNavbar(false);
     pushPinRef.classList.remove('pinned');
     mainRef.classList.remove('main-pd');
+    headerRef.classList.remove('header-pd');
     navRef.classList.remove('nav-show');
     innerSetOpenNav(false);
   }
@@ -51,7 +58,21 @@ const NavStateProvider = (props) => {
 
   return (
     <NavStateContext.Provider value={
-      {openNav, setOpenNav, mainRef, setMainRef, navRef, setNavRef, setPushPinRef, showNavbar, pinnedNavbar, setPinnedNavbar, forceUnpin}
+      { 
+        openNav, 
+        setOpenNav, 
+        mainRef, 
+        setMainRef, 
+        headerRef, 
+        setHeaderRef, 
+        navRef, 
+        setNavRef, 
+        setPushPinRef, 
+        showNavbar, 
+        pinnedNavbar, 
+        setPinnedNavbar, 
+        forceUnpin
+      }
       }>
       {props.children}
     </NavStateContext.Provider>

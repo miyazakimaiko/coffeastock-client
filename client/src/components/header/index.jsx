@@ -16,45 +16,47 @@ import './header.scss'
 
 
 const Header = (props) => {
-  const { 
-    openNav, 
-    setMainRef, 
-    setNavRef, 
-    setPushPinRef, 
-    showNavbar, 
-    forceUnpin } = useContext(NavStateContext);
+  const { openNav, 
+          setMainRef, 
+          setHeaderRef,
+          setNavRef, 
+          setPushPinRef, 
+          showNavbar
+        } = useContext(NavStateContext);
  
-  const userData = useUserData()
-  const signout = useSignout()
-  const navigate = useNavigate()
+  const userData = useUserData();
+  const signout = useSignout();
 
-  const {
-    modal, 
-    openAddBeanModal, 
-    openAddRecipeModal, 
-    modalModeSelection } = useContext(ModalStateContext);
+  const { modal, 
+          openAddBeanModal, 
+          openAddRecipeModal, 
+          modalModeSelection
+        } = useContext(ModalStateContext);
 
   const logout = () => {
-    forceUnpin();
     signout();
     toastOnTopRight('success', 'Logged out successfully.')
   }
 
   useEffect(() => {
     setMainRef(props.mainRef.current);
+    setHeaderRef(props.headerRef.current);
     setNavRef(props.navRef.current);
     setPushPinRef(props.pushpinRef.current);
   }, [props.navRef])
 
   return (
     <>
-    <div className={`header z-20 w-full items-center border-b border-burnt-sienna border-opacity-20 ${openNav ? 'header-pd' : ''}`}>
+    <div 
+      ref={el => { props.headerRef.current = el; }}
+      className="header z-30 w-full items-center border-b border-burnt-sienna border-opacity-20"
+    >
       <div className="flex items-center">
         <div className="flex items-center cursor-pointer mx-4" onClick={showNavbar}>
           {openNav ? <XIcon className="h-8 w-8 opacity-80 hover:opacity-100 ease-linear transition-all duration-150" /> 
           : <MenuAlt2Icon className="h-8 w-8 opacity-80 hover:opacity-100 ease-linear transition-all duration-150"/>}
         </div>
-        <h2 className="text-xl font-semibold">{capitalize(props.title)}</h2>
+        <h2 className="text-xl">{capitalize(props.title)}</h2>
       </div>
 
       <div className="flex items-center">

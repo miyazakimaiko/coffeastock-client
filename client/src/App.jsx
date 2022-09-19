@@ -47,8 +47,8 @@ const App = () => {
         <NavStateProvider>
             { authenticated ? 
               <>
-                <Nav navRef={navRef} mainRef={mainRef} headerRef={headerRef} pushpinRef={pushpinRef}/>
-                <Header mainRef={mainRef} navRef={navRef} pushpinRef={pushpinRef} title={title}/>
+                <Nav mainRef={mainRef} navRef={navRef} headerRef={headerRef} pushpinRef={pushpinRef}/>
+                <Header mainRef={mainRef} navRef={navRef} headerRef={headerRef} pushpinRef={pushpinRef} title={title}/>
                 <div ref={mainRef} className={"relative main min-h-screen box-border header-top-pd"}>
                   <Routes>
                     <Route exact path="/coffees" element={<ViewMyCoffees setTitle={setTitle} />} />

@@ -62,7 +62,7 @@ body {
   --toastify-font-family: 'system-ui';
   --nav-width: 70vw;
   --nav-width-sm: 240px;
-  --header-height: 54px;
+  --header-height: 60px;
 }
 
 ::-webkit-scrollbar {
@@ -81,7 +81,7 @@ body {
 }
 
 .spinner {
-  animation: spin infinite 1s linear;
+  animation: spin infinite 0.5s linear;
 }
 
 @keyframes spin {

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from 'react'
 import { CognitoUser, AuthenticationDetails, CognitoUserAttribute } from 'amazon-cognito-identity-js'
 import Pool from '../utils/UserPool'
 import toastOnBottomCenter from '../utils/customToast'
+import { NavStateContext } from './NavStateContext'
 
 const AccountContext = createContext()
 
@@ -111,9 +112,11 @@ const AccountProvider = (props) => {
     });
   }
 
-  function signout() {
+  function Signout() {
+    const { forceUnpin } = useContext(NavStateContext);
     const user = Pool.getCurrentUser();
     if (user) {
+      forceUnpin();
       user.signOut();
       innerSetUserData({});
       setAuthenticated(false);
@@ -131,7 +134,7 @@ const AccountProvider = (props) => {
           setAuthenticated, 
           changeAttribute, 
           verifyAttribute, 
-          signout
+          Signout
         }
       }
     >
@@ -209,7 +212,7 @@ function useSignout() {
   if (!context) {
     throw new Error('useSignout must be used within an AccountProvider')
   }
-  return context.signout
+  return context.Signout
 }
 
 export { AccountProvider, 
