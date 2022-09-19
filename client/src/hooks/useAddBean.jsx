@@ -17,6 +17,8 @@ export default function useAddBean() {
       onSuccess: async () => {
         await queryClient.invalidateQueries('beans');
         await queryClient.invalidateQueries('ranges');
+        await queryClient.invalidateQueries(['recipes', 'summary']);
+        await queryClient.invalidateQueries(['beans', 'summary']);
         await queryClient.invalidateQueries(['user', user.sub, 'totalUsedMb']);
         toastOnBottomCenter('success', 'Coffee bean is added successfully.')
       },

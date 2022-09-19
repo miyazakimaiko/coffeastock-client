@@ -16,6 +16,7 @@ export default function useEditBean() {
       enabled: user ? true : false,
       onSuccess: async (variables) => {
         await queryClient.invalidateQueries(['bean', variables[0].bean_id])
+        await queryClient.invalidateQueries(['recipes', 'summary']);
         await queryClient.invalidateQueries(['beans', 'summary']);
         toastOnBottomCenter('success', 'Coffee bean is edited successfully.')
       },
