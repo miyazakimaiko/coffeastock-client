@@ -117,8 +117,8 @@ const PalateRadarChartDouble = ({ className, redTitle, blueTitle, redRatesObj, b
         {
           label: redTitle,
           data: redRates,
-          backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: 'rgb(255,143,93,0.2)',
+          borderColor: 'rgb(255,143,93)',
           borderWidth: 1,
         },
         {
