@@ -18,10 +18,11 @@ const TotalBrews = ({amount, unit, yieldWeightByDayList}) => {
           </div>
         </div>
         <GiCoffeePot className="w-8 h-8 opacity-40" />
-        <div className="z-10 absolute top-10 -bottom-3 -left-3 -right-1">
+        <div className="z-10 absolute top-10 -bottom-3 -left-3 -right-3">
           <ChartLineBackground 
             data={yieldWeightByDayList} 
-            color="rgb(213,193,171,0.4)" // brown
+            color="rgb(213,193,171,0.5)" // brown
+            max={1000}
           />
         </div>
       </div>

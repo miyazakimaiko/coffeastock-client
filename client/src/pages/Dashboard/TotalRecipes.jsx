@@ -18,10 +18,11 @@ const TotalRecipes = ({amount, recipesCountByDayList}) => {
           </div>
         </div>
         <GiNotebook className="w-8 h-8 opacity-40" />
-        <div className="z-10 absolute top-10 -bottom-3 -left-3 -right-1">
+        <div className="z-10 absolute top-10 -bottom-3 -left-3 -right-3">
           <ChartLineBackground 
             data={recipesCountByDayList} 
-            color="rgb(255,143,93,0.2)" // orange
+            color="rgb(255,143,93,0.3)" // orange
+            max={1000}
           />
         </div>
       </div>

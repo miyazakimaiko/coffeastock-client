@@ -18,10 +18,11 @@ const TotalCoffeeBags = ({amount, beansCountByDayList}) => {
           </div>
         </div>
         <GiPaperBagFolded className="w-9 h-9 opacity-40" />
-        <div className="z-10 absolute top-10 -bottom-3 -left-3 -right-1">
+        <div className="z-10 absolute top-10 -bottom-3 -left-3 -right-3">
           <ChartLineBackground 
             data={beansCountByDayList} 
-            color="rgb(184,216,215, 0.5)" // light blue
+            color="rgb(184,216,215, 0.6)" // light blue
+            max={1000}
           />
         </div>
       </div>
