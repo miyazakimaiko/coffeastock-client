@@ -71,7 +71,7 @@ const Dashboard = ({setTitle}) => {
         />
       );
     }
-  }, [beansSummary, beansList]);
+  }, [beansSummaryIsLoading, beansListIsLoading]);
 
   useEffect(() => {
     if (recipesSummary && beansList) {

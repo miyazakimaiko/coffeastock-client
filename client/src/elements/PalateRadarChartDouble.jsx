@@ -49,15 +49,15 @@ const PalateRadarChartDouble = ({ className, redTitle, blueTitle, redRatesObj, b
 
   useEffect(() => {
     if (Boolean(palateRange)) {
-      if (redRatesObj && !blueRatesObj) {
+      if (Boolean(redRatesObj) && !Boolean(blueRatesObj)) {
         setRedRates(Object.values(redRatesObj));
         setLabels(Object.keys(redRatesObj).map(id => [palateRange[id].label.slice(0, 15), palateRange[id].label.slice(15)]))
       }
-      else if (!redRatesObj && blueRatesObj) {
+      else if (!Boolean(redRatesObj) && Boolean(blueRatesObj)) {
         setBlueRates(Object.values(blueRatesObj));
         setLabels(Object.keys(blueRatesObj).map(id => [palateRange[id].label.slice(0, 15), palateRange[id].label.slice(15)]))
       }
-      else if (redRatesObj && blueRatesObj) {
+      else if (Boolean(redRatesObj) && Boolean(blueRatesObj)) {
         const rateCountObj = makeRateCountObj(redRatesObj, blueRatesObj);
         const idsSortedByCount = makeSortedRateIdsByCount(rateCountObj);
         const [redRates, blueRates] = 
@@ -105,10 +105,23 @@ const PalateRadarChartDouble = ({ className, redTitle, blueTitle, redRatesObj, b
   }
 
   useEffect(() => {
-    if (labels && redRates && blueRates) {
+    if (labels.length > 0 && redRates.length > 0 && blueRates.length > 0) {
+      console.log("labels: ", labels)
+      console.log("redRates: ", redRates)
+      console.log("blueRates: ", blueRates)
       setDoubleRadarChartContent(labels, redRates, blueRates)
     }
   }, [labels, redRates, blueRates])
+
+  useEffect(() => {
+    if (!Boolean(redRatesObj), !Boolean(blueRatesObj)) {
+      setDoubleRadarChartContent(
+        ["sample1", "sample2", "sample3", "sample4", "sample5", "sample6"], 
+        [5, 8, 6, 9, 7, 9], 
+        [7, 5, 8, 5, 6, 8]
+      )
+    }
+  }, [])
 
   function setDoubleRadarChartContent(labels, redRates, blueRates) {
     const data = {
@@ -131,8 +144,7 @@ const PalateRadarChartDouble = ({ className, redTitle, blueTitle, redRatesObj, b
       ],
     };
     const options = {
-      scale: { min: 0, max: 10,
-      },
+      scale: { min: 0, max: 10 },
     };
     setRadarContent(<Radar data={data} options={options} />);
   }

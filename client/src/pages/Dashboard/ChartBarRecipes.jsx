@@ -80,23 +80,25 @@ export const options = {
 };
 
 const ChartBarRecipes = ({labels, totalRates, grades}) => {
+
   const data = {
-    labels,
+    labels: labels.length > 0 ? labels : ["Beans #1", "Beans #2", "Beans #3", "Beans #4"],
     datasets: [
       {
         label: 'Total Rate',
-        data: totalRates,
+        data: totalRates.length > 0 ? totalRates : [87, 76, 65, 43],
         backgroundColor: 'rgb(184,216,215, 1)',
         borderColor: 'rgb(184,216,215, 0)',
       },
       {
         label: 'Bean\'s grade',
-        data: grades,
+        data: grades.length > 0 ? grades : [76, 80, 50, 55],
         backgroundColor: 'rgb(214,228,163,1)',
         borderColor: 'rgb(214,228,163,0)',
       }
     ],
   }
+
   return (
     <div className="px-3 mb-4 lg:mb-6">
       <div
@@ -105,10 +107,15 @@ const ChartBarRecipes = ({labels, totalRates, grades}) => {
         <h3 className="font-medium text-md opacity-60 text-center pb-2">
           Recipes Total Rate Top 5
         </h3>
-        <div style={{
-           height: `calc(50px + 60px * ${labels.length})`,
-          }}>
+        <div style={{ height: `calc(50px + 50px * ${data.labels.length})`, position: "relative" }}>
           <Bar options={options} data={data} />
+          {labels.length === 0 && (
+            <div className="absolute backdrop-filter backdrop-blur-sm bg-white/30 top-0 bottom-0 left-0 right-0 flex justify-center items-center">
+              <p className="text-lg text-burnt-sienna">
+                No Data Available Yet...
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

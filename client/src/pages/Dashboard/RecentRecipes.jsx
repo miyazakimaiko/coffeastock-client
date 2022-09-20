@@ -63,8 +63,15 @@ const RecentRecipes = () => {
           Recently Added Recipes
         </h3>
         <div className="flex">
-          <div className="w-full">
+          <div className="w-full relative">
             {chartContent}
+            {recipesSummary.recentRecipes.length < 2 && (
+            <div className="absolute backdrop-filter backdrop-blur-sm bg-white/30 top-0 bottom-0 left-0 right-0 flex justify-center items-center">
+              <p className="text-lg text-burnt-sienna">
+                No Data Available Yet...
+              </p>
+            </div>
+          )}
           </div>
         </div>
       </div>
