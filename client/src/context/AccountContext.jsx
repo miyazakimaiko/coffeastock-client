@@ -7,6 +7,7 @@ import { NavStateContext } from './NavStateContext'
 const AccountContext = createContext()
 
 const AccountProvider = (props) => {
+  const { forceUnpin } = useContext(NavStateContext);
   const [userData, innerSetUserData] = useState({});
 
   const setUserData = (data) => {
@@ -113,7 +114,6 @@ const AccountProvider = (props) => {
   }
 
   function Signout() {
-    const { forceUnpin } = useContext(NavStateContext);
     const user = Pool.getCurrentUser();
     if (user) {
       forceUnpin();
