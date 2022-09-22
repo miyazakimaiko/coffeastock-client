@@ -15,12 +15,13 @@ export default function useAddBean() {
     {
       enabled: user ? true : false,
       onSuccess: async () => {
-        await queryClient.invalidateQueries('beans');
-        await queryClient.invalidateQueries('ranges');
+        await queryClient.invalidateQueries(['beans']);
+        await queryClient.invalidateQueries(['ranges']);
         await queryClient.invalidateQueries(['recipes', 'summary']);
         await queryClient.invalidateQueries(['beans', 'summary']);
         await queryClient.invalidateQueries(['user', user.sub, 'totalUsedMb']);
-        toastOnBottomCenter('success', 'Coffee bean is added successfully.')
+        navigate('/coffees', { replace: true } );
+        toastOnBottomCenter('success', 'Coffee bean is added successfully.');
       },
       onError: err => {
         if (err.message === 'Not authorized') {
