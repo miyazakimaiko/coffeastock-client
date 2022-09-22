@@ -114,7 +114,7 @@ const PalateRadarChartDouble = ({ className, redTitle, blueTitle, redRatesObj, b
   }, [labels, redRates, blueRates])
 
   useEffect(() => {
-    if (!Boolean(redRatesObj), !Boolean(blueRatesObj)) {
+    if (!Boolean(redRatesObj) && !Boolean(blueRatesObj)) {
       setDoubleRadarChartContent(
         ["sample1", "sample2", "sample3", "sample4", "sample5", "sample6"], 
         [5, 8, 6, 9, 7, 9], 
