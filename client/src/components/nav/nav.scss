@@ -26,3 +26,11 @@
 .pinned {
   transform: rotate(0deg);
 }
+
+.used-storage-bar {
+  width: 100%;
+  height: 6px;
+  border-radius: 5px;
+  background-color: white;
+  opacity: 80%;
+}
