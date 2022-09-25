@@ -167,7 +167,7 @@ const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
     >
       <div className="content">
         <form className="w-full">
-          <div className="bg-white md:px-6 shadow-sm rounded-md">
+          <div className="bg-white md:px-6 shadow-sm md:rounded-md">
             <div className="my-6">
               <NameInput 
                 rangeName={rangeName}

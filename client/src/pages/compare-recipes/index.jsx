@@ -6,6 +6,7 @@ import ErrorPage from '../error'
 import RecipeSelectInput from './components/RecipeSelectInput'
 import './compareRecipes.scss'
 import RecipesInfoComparisonSection from './components/RecipesInfoComparisonSection'
+import Mug from '../../assets/svgs/Mug'
 
 const CompareRecipes = ({setTitle}) => {
 
@@ -40,12 +41,13 @@ const CompareRecipes = ({setTitle}) => {
 
   return (
     <>
-      <div className="mt-8 px-4 pt-8 w-full max-w-980px mx-auto">
-        <div className="flex justify-between md:w-full">
-          <div className="md:w-2/5 border border-burnt-sienna border-opacity-20 rounded-md relative py-4 px-2">
+      <div className="mt-2 px-4 pt-8 w-full max-w-980px mx-auto">
+        <div className="flex flex-col md:flex-row justify-between md:w-full">
+          <div className="md:w-1/2 border border-burnt-sienna border-opacity-20 rounded-md relative pt-8 pb-4 px-2 mx-2 mb-8 md:mb-0">
             <p className="absolute -top-2.5 left-6 bg-creme px-2">
               Recipe on Left (Red)
             </p>
+            <span className={`text-xs pl-4 ${!selectedBeanLeft ? "font-semibold" : ""}`}>Select Beans</span>
             <FormMultiSelect
               options={Object.values(beanList)}
               isDisabled={false}
@@ -55,39 +57,21 @@ const CompareRecipes = ({setTitle}) => {
               isMulti={false}
             />
             {selectedBeanLeft ? (
-              <RecipeSelectInput
-                beanId={selectedBeanLeft.bean_id}
-                value={selectedRecipeLeft}
-                onChange={setSelectedRecipeLeft}
-              />
+              <>
+                <span className={`text-xs pl-4 ${!selectedRecipeLeft ? "font-semibold" : ""}`}>Select Recipe</span>
+                <RecipeSelectInput
+                  beanId={selectedBeanLeft.bean_id}
+                  value={selectedRecipeLeft}
+                  onChange={setSelectedRecipeLeft}
+                />
+              </>
             ) : null}
           </div>
-          <div className="flex flex-col justify-around items-center py-4">
-            <h4
-              className={
-                !selectedBeanLeft || !selectedBeanRight ? "font-semibold" : ""
-              }
-            >
-              Select Beans
-            </h4>
-            {selectedBeanLeft || selectedBeanRight ? (
-              <h4
-                className={
-                  selectedBeanLeft &&
-                  selectedBeanRight &&
-                  (!selectedRecipeLeft || !selectedRecipeRight)
-                    ? "font-semibold"
-                    : ""
-                }
-              >
-                Select Recipes
-              </h4>
-            ) : null}
-          </div>
-          <div className="md:w-2/5 border border-burnt-sienna border-opacity-20 rounded-md relative py-4 px-2">
+          <div className="md:w-1/2 border border-burnt-sienna border-opacity-20 rounded-md relative pt-8 pb-4 px-2 mx-2">
             <p className="absolute -top-2.5 left-6 bg-creme px-2">
               Recipe on Right (Blue)
             </p>
+            <span className={`text-xs pl-4 ${!selectedBeanRight ? "font-semibold" : ""}`}>Select Beans</span>
             <FormMultiSelect
               options={Object.values(beanList)}
               isDisabled={false}
@@ -97,23 +81,35 @@ const CompareRecipes = ({setTitle}) => {
               isMulti={false}
             />
             {selectedBeanRight ? (
-              <RecipeSelectInput
-                beanId={selectedBeanRight.bean_id}
-                value={selectedRecipeRight}
-                onChange={setSelectedRecipeRight}
-              />
+              <>
+                <span className={`text-xs pl-4 ${!selectedRecipeRight ? "font-semibold" : ""}`}>Select Recipe</span>
+                <RecipeSelectInput
+                  beanId={selectedBeanRight.bean_id}
+                  value={selectedRecipeRight}
+                  onChange={setSelectedRecipeRight}
+                />
+              </>
             ) : null}
           </div>
         </div>
       </div>
 
-      {selectedRecipeLeft || selectedRecipeRight ? (
-        <RecipesInfoComparisonSection 
-          selectedRecipeLeftId={selectedRecipeLeft?.recipe_id}
-          selectedRecipeRightId={selectedRecipeRight?.recipe_id}
-        />
-        ) : null
-      }
+      <div className=" max-w-980px mx-auto bg-white py-10 m-10 rounded-lg shadow-sm">
+        <h3 className="mt-5 mb-16 text-xl text-center">
+          Recipes Info Comparison
+        </h3>
+        {selectedRecipeLeft || selectedRecipeRight ? (
+          <RecipesInfoComparisonSection 
+            selectedRecipeLeftId={selectedRecipeLeft?.recipe_id}
+            selectedRecipeRightId={selectedRecipeRight?.recipe_id}
+          />
+          ) : (
+            <div className="flex justify-center">
+              <Mug />
+            </div>
+          )
+        }
+      </div>
     </>
   );
 }

@@ -142,29 +142,30 @@ const ViewBeansList = ({setTitle}) => {
   
   return (
     <>
-      <div className="px-4 pt-8 w-full max-w-980px mx-auto">
+      <div className="px-4 pt-4 sm:pt-8 w-full max-w-980px mx-auto">
         <ToolBar>
-          <ToolbarDropdown title={`Show ${showState}`}>
-            {Object.values(SHOW).map((state) => {
-              return <ToolbarDropdownButton
-                key={state}
-                title={state}
-                active={showState === state}
-                onClick={() => { setShowState(state) }}
-              />
-            })}
-          </ToolbarDropdown>
-
-          <ToolbarDropdown title={`group by ${groupState}`}>
-            {Object.values(GROUPBY).map((state) => {
-              return <ToolbarDropdownButton
-                key={state}
-                title={state}
-                active={groupState === state}
-                onClick={() => { setGroupState(state) }}
-              />
-            })}
-          </ToolbarDropdown>
+          <div className="flex justify-center flex-wrap mb-4 sm:mb-0">
+            <ToolbarDropdown title={`Show ${showState}`}>
+              {Object.values(SHOW).map((state) => {
+                return <ToolbarDropdownButton
+                  key={state}
+                  title={state}
+                  active={showState === state}
+                  onClick={() => { setShowState(state) }}
+                />
+              })}
+            </ToolbarDropdown>
+            <ToolbarDropdown title={`group by ${groupState}`}>
+              {Object.values(GROUPBY).map((state) => {
+                return <ToolbarDropdownButton
+                  key={state}
+                  title={state}
+                  active={groupState === state}
+                  onClick={() => { setGroupState(state) }}
+                />
+              })}
+            </ToolbarDropdown>
+          </div>
           <div className="flex">
             <ToolBarSearchBar
               value={searchValue}

@@ -91,10 +91,7 @@ const RecipesInfoComparisonSection = ({ selectedRecipeLeftId, selectedRecipeRigh
   return (
     <>
       { selectedRecipeLeft || selectedRecipeRight ? (
-        <div className="bg-white py-10 m-10 rounded-lg shadow-sm">
-          <h3 className="mt-5 mb-16 text-xl text-center">
-            Recipes Info Comparison
-          </h3>
+        <div>
           <PalateRadarChartDouble
             className="w-full md:w-1/2 max-w-lg mx-auto"
             redTitle={selectedRecipeLeft ? `${beanList[selectedRecipeLeft.bean_id]?.label} ${

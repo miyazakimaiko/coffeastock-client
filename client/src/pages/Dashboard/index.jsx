@@ -110,8 +110,8 @@ const Dashboard = ({setTitle}) => {
   
   return (
     <>
-      <div className="px-4 pt-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 md:mb-6">
+      <div className="px-0 pt-4 md:px-4 md:pt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
           <TotalCoffeeBags
             amount={beansSummary.totalBeansCount}
             beansCountByDayList={beansSummary.beansCountsByDay}
@@ -131,15 +131,23 @@ const Dashboard = ({setTitle}) => {
             yieldWeightByDayList={recipesSummary.yieldWeightTotalsByDay}
           />
         </div>
-        <div className="flex lg:mb-6">
-          <div className="w-4/12">
+        <div className="flex md:mb-6 flex-wrap">
+          <div 
+            className="flex flex-col w-full
+                       md:flex-row
+                       xl:flex-col xl:w-5/12"
+          >
+            <div className="w-full md:w-1/2 xl:w-full">
+              {beansBarChart}
+            </div>
+            <div className="w-full md:w-1/2 xl:w-full">
+              {recipesBarChart}
+            </div>
+          </div>
+          <div className="w-full md:w-1/2 xl:w-4/12">
             <RecentRecipes/>
           </div>
-          <div className="w-5/12">
-            {beansBarChart}
-            {recipesBarChart}
-          </div>
-          <div className="w-3/12">
+          <div className="w-full md:w-1/2 xl:w-3/12">
             <RssFeed />
           </div>
         </div>

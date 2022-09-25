@@ -50,9 +50,11 @@ const ManageAccount = ({setTitle}) => {
 
   return (
     <>
-      <div className="flex justify-center my-2">
+      <div className="flex flex-col lg:flex-row
+                      justify-center my-2"
+      >
         <div className="py-5 px-3">
-          <div className="bg-white shadow-sm rounded w-full max-w-lg mx-auto py-6 p-10 mb-6">
+          <div className="bg-white shadow-sm rounded w-full lg:max-w-lg mx-auto py-6 p-10 mb-6">
             <h3 className="text-xl font-medium pb-6">Account Details</h3>
             <ul>
               <li key="name" className="flex pb-4">
@@ -97,7 +99,7 @@ const ManageAccount = ({setTitle}) => {
             </ul>
           </div>
 
-          <div className="bg-white shadow-sm rounded w-full max-w-lg mx-auto py-6 p-10 mb-6">
+          <div className="bg-white shadow-sm rounded w-full lg:max-w-lg mx-auto py-6 p-10 mb-6">
             <div className="flex justify-between">
               <h3 className="text-xl font-medium pb-6">Coffee / Recipe Units</h3>
               <div className="ml-6">
@@ -158,7 +160,7 @@ const ManageAccount = ({setTitle}) => {
             </div>
           </div>
 
-          <div className="bg-white shadow-sm rounded w-full max-w-lg mx-auto py-6 p-10 mb-6">
+          <div className="bg-white shadow-sm rounded w-full lg:max-w-lg mx-auto py-6 p-10 mb-6">
             <h3 className="text-xl font-medium pb-6">Plan</h3>
             <div className="flex justify-between">
               <ul>
@@ -174,7 +176,7 @@ const ManageAccount = ({setTitle}) => {
             </div>
           </div>
 
-          <div className="bg-white shadow-sm rounded w-full max-w-lg mx-auto py-6 p-10 mb-6">
+          <div className="bg-white shadow-sm rounded w-full lg:max-w-lg mx-auto py-6 p-10 mb-6">
             <div className="flex justify-between">
               <div>
                 <a
@@ -190,7 +192,7 @@ const ManageAccount = ({setTitle}) => {
         </div>
 
         <div className="py-5 px-3">
-          <div className="bg-white shadow-sm rounded w-full max-w-lg mx-auto py-6 p-10 mb-6">
+          <div className="bg-white shadow-sm rounded w-full lg:max-w-lg mx-auto py-6 p-10 mb-6">
             <h3 className="text-xl text-center font-medium pb-6">
               Upgrade to Premium
             </h3>

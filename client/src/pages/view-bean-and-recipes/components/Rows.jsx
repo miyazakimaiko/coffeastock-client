@@ -9,6 +9,7 @@ import Row from './Row'
 const Rows = ({data}) => {
   const { id: beanId } = useParams();
   const deleteRecipe = useDeleteRecipe(beanId);
+  
   const {
     modal,
     openEditRecipeModal,
@@ -16,6 +17,7 @@ const Rows = ({data}) => {
     closeModal,
     modalModeSelection,
   } = useContext(ModalStateContext);
+
   const [recipe, setRecipe] = useState({})
 
   

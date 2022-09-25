@@ -494,7 +494,7 @@ const AddEditRecipeModal = ({recipeId = null}) => {
       ) : (
         <>
           {/*body*/}
-          <ul className="flex">
+          <ul className="flex flex-wrap">
             <StepsTab
               key="coffee-beans"
               title="1. Coffee Beans"

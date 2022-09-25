@@ -68,7 +68,7 @@ const ChangeEmailModal = () => {
               . Didn't receive it? Check your spam folder.
             </p>
             <div className="pb-6">
-              <input type="text" name="code" placeholder="Enter Verification Code" className="blue-outline-transition bg-creme block w-full py-2 px-3 rounded-md text-lg"
+              <input type="text" name="code" placeholder="Enter Verification Code" className="blue-outline-transition bg-creme block w-full py-2 px-3 md:rounded-md text-lg"
                 value={verificationCode}
                 onChange={e => setVerificationCode(e.target.value)}
               />

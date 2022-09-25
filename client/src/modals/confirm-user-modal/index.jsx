@@ -13,8 +13,8 @@ const ConfirmUserModal = ({ email, verificationCode, setVerificationCode, resend
           className="relative h-fit w-full max-w-3xl md:px-2 md:my-8 mx-auto"
         >
           <div 
-            className="w-full border-0 rounded-lg shadow-lg relative p-8
-            flex flex-col bg-white outline-none focus:outline-none"
+            className="w-full border-0 md:rounded-lg shadow-lg relative p-8
+                       flex flex-col bg-white outline-none focus:outline-none"
           >
             <h3 className="md:text-lg font-light">
               Confirm your email

@@ -3,7 +3,7 @@ import React from 'react'
 const StepsTab = ({key, title, tabState, disabled = false, onClick}) => {
   return (
     <li
-      className="nav-item w-1/4" 
+      className="nav-item w-1/2 sm:w-1/4" 
       key={key}>
       <button 
         role="tab"

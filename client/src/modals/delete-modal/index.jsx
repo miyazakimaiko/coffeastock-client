@@ -34,8 +34,8 @@ const DeleteModal = ({label, onDeleteSubmit}) => {
         </button>
         <button
           className="bg-red text-white opacity-80 
-          hover:opacity-100    
-          px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
+                     hover:opacity-100    
+                     px-6 py-2 rounded-3xl ease-linear transition-all duration-150"
           type="submit"
           onClick={onDeleteSubmit}
         >

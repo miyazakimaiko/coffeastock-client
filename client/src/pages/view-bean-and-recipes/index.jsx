@@ -64,18 +64,9 @@ const ViewBeanAndRecipes = ({setTitle}) => {
 
   return (
     <>
-      <div className="px-4 pt-8 w-full max-w-980px mx-auto">
-        <ToolBar
-          titleHtml={
-            <span className="flex items-center">
-              {targetBean.single_origin ? "Single Origin" : "Blend"}
-              <HiOutlineChevronRight className="h-5 w-5 mx-5" />
-              {unescapeHtml(targetBean.label)}
-            </span>
-          }
-        ></ToolBar>
+      <div className="px-4 w-full max-w-980px mx-auto">
         <div className="my-4">
-          <div className="relative p-2 py-12">
+          <div className="relative p-2">
             <div className="absolute top-5 right-4">
               <Dropdown dropdownText="" type="dot">
                 <div className="dropdown-content">
@@ -96,10 +87,10 @@ const ViewBeanAndRecipes = ({setTitle}) => {
                 </div>
               </Dropdown>
             </div>
-            <div className="coffee-bag-container mx-auto mt-14">
+            <div className="coffee-bag-container mx-auto mt-10">
               <CoffeeBagRight name={targetBean.label} />
             </div>
-            <div className="flex flex-wrap justify-center mt-16">
+            <div className="flex flex-wrap justify-center mt-10">
               <div className="w-full md:w-1/2 my-4 md:px-4">
                 <CoffeeRangeListForAll />
               </div>

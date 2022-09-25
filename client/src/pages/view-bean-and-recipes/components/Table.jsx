@@ -28,7 +28,7 @@ const Table = ({searchValue, orderBy, orderMethod}) => {
 
   useEffect(() => {
     sortRecipes();
-  }, [orderBy, orderMethod])
+  }, [rangesAreLoading, recipesAreLoading, orderBy, orderMethod])
 
   function sortRecipes() {
     if (Boolean(ranges) && Boolean(recipes)) {
@@ -92,11 +92,7 @@ const Table = ({searchValue, orderBy, orderMethod}) => {
 
   return (
     <div className="flex mb-4 w-full flex-wrap justify-center">
-      <table className="w-full">
-        <tbody>
-          <Rows data={search(sortedRecipes ?? recipes)}/>
-        </tbody>
-      </table>
+      <Rows data={search(sortedRecipes ?? recipes)}/>
     </div>
   )
 }

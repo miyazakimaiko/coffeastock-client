@@ -4,7 +4,7 @@ import ChartLineBackground from './ChartLineBackground'
 
 const TotalRecipes = ({amount, recipesCountByDayList}) => {
   return (
-    <div className="px-3 mb-4 md:mb-0">
+    <div className="px-3 mb-4 lg:mb-6">
       <div className="relative overflow-hidden w-full p-4 flex justify-between bg-white shadow-sm rounded-md">
         <div className="z-20 flex flex-col justify-between">
           <h3 className="font-normal text-md opacity-60 mb-4">
