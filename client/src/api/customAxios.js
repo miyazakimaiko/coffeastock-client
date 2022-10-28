@@ -1,7 +1,11 @@
-import axios from 'axios'
+import axios from 'axios';
+
+const baseURL = process.env.NODE_ENV === 'production' 
+                ? process.env.API_ENDPOINT 
+                : "http://localhost:4000" + process.env.API_ENDPOINT;
 
 const customAxios = axios.create({
-  baseURL: 'http://localhost:4000/api/v1',
+  baseURL,
 })
 
 const requestHandler = request => {

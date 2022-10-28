@@ -8,7 +8,7 @@ import './nav.scss'
 import AddEditBeanModal from '../../modals/add-edit-bean-modal'
 import AddEditRecipeModal from '../../modals/add-edit-recipe-modal'
 import { ModalStateContext } from '../../context/ModalStateContext'
-import Logo from '../../assets/images/logo.png'
+import Logo from '../../assets/images/logo-dark-bg.png'
 import useUserTotalUsedMb from '../../hooks/useUserTotalUsedMb';
 import { USER_TYPE } from '../../utils/Constants';
 import useUserInfo from '../../hooks/useUserInfo';

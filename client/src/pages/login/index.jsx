@@ -2,6 +2,7 @@ import { LoginIcon } from '@heroicons/react/outline'
 import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import * as api from '../../api/Users';
+import Logo from '../../assets/images/logo-white-bg.png'
 import toastOnBottomCenter from '../../utils/customToast';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import { useAuthenticate, 
@@ -76,11 +77,10 @@ const Login = () => {
   return (
     <>    
       <div className="h-full">
-        <div className="
-          h-24 w-full max-w-screen-xl mx-auto px-3
-          flex items-center justify-between"
-        >
-          <h2 className="text-2xl">Coffee Journal</h2>
+        <div className="h-16 lg:h-24 w-full max-w-screen-xl mx-auto px-3 flex items-center justify-between">
+          <div className="w-44">
+            <img src={Logo} alt="Coffeastock" />
+          </div>
           <Link to="/register">
             <div className="px-8 py-2 rounded-3xl sinenna-button-transition">Create New Account</div>
           </Link>

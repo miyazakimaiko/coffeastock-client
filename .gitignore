@@ -1,3 +1,5 @@
+ssl/
+
 # Logs
 logs
 *.log
@@ -104,3 +106,4 @@ dist
 .tern-port
 
 .DS_Store
+

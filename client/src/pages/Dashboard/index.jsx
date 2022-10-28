@@ -18,9 +18,9 @@ import TotalCoffeeBags from './TotalCoffeeBags'
 
 const Dashboard = ({setTitle}) => {
 
-  useEffect(() => {
-    setTitle("Dashboard");
-  }, [])
+  // useEffect(() => {
+  //   setTitle("Dashboard");
+  // }, [])
 
   const [beansBarChart, setBeansBarChart] = useState(null);
   const [recipesBarChart, setRecipesBarChart] = useState(null);

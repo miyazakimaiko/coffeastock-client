@@ -19,7 +19,7 @@ export default function useEditRecipe() {
     {
       enabled: user ? true : false,
       onSuccess: async (variables) => {
-        await queryClient.invalidateQueries(['bean', variables[0].bean_id, 'recipes']) // it does not recognize inner values are changed, so it has to force refetch
+        await queryClient.refetchQueries(['bean', variables[0].bean_id, 'recipes']) // it does not recognize inner values are changed, so it has to force refetch
         await queryClient.invalidateQueries(['bean', variables[0].bean_id, 'recipe', variables[0].recipe_no])
         await queryClient.invalidateQueries(['recipes', 'summary']);
         await queryClient.invalidateQueries(['beans', 'summary']);

@@ -1,21 +1,20 @@
 import React, { useEffect } from 'react';
 import { useContext } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { MenuAlt2Icon, PlusIcon, XIcon } from '@heroicons/react/outline'
 import toastOnTopRight from '../../utils/customToast';
 import { capitalize } from '../../helpers/HtmlConverter';
 import { NavStateContext } from '../../context/NavStateContext';
 import { useUserData, 
-        useSetAuthenticated, 
         useSignout } from '../../context/AccountContext';
 import AddEditBeanModal from '../../modals/add-edit-bean-modal';
 import AddRecipeModal from '../../modals/add-edit-recipe-modal';
 import Dropdown from '../../elements/Dropdown';
 import { ModalStateContext } from '../../context/ModalStateContext';
-import './header.scss'
+import './dashboard-header.scss'
 
 
-const Header = (props) => {
+const DashboardHeader = (props) => {
   const { openNav, 
           setMainRef, 
           setHeaderRef,
@@ -101,5 +100,5 @@ const Header = (props) => {
     )
 }
 
-export default Header
+export default DashboardHeader
 
