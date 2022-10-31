@@ -1,4 +1,4 @@
-import axios from './CustomAxios'
+import axios from './CustomAxios';
 
 export const getBean = async (userid, beanid, token) => {
   return await axios.get(`/user/${userid}/bean/${beanid}`, { headers: { accesstoken: token } }).then(res => res.data)
