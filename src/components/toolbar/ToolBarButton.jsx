@@ -1,6 +1,6 @@
-import { PlusIcon } from '@heroicons/react/outline'
-import React from 'react'
-import { capitalize } from '../../helpers/HtmlConverter'
+import { PlusIcon } from '@heroicons/react/outline';
+import React from 'react';
+import { capitalize } from '../../helpers/HtmlConverter';
 
 const ToolBarButton = ({title, onClick}) => {
   return (
