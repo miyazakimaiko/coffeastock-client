@@ -1,5 +1,5 @@
-import React from 'react'
-import { capitalize } from '../../helpers/HtmlConverter'
+import React from 'react';
+import { capitalize } from '../../helpers/HtmlConverter';
 
 const ToolBar = ({children, pageTitle = null, titleHtml = null}) => {
   return (
