@@ -1,6 +1,7 @@
 import axios from './CustomAxios'
 
 export const findUser = async (userid, token) => {
+  console.log("userid, token: ", userid, token)
   return await axios.get(`/user`, { headers: { accesstoken: token }, params: { id: userid } }).then(res => res.data);
 }
 
@@ -21,6 +22,7 @@ export const editUserUnitIds = async (userid, body, token) => {
 }
 
 export const addUser = async (userid, body, token) => {
+  console.log("axios.getUri(): ", axios.getUri())
   return await axios.post(`/user/${userid}`, body, { headers: { accesstoken: token } }).then(res => res.data)
 }
 
