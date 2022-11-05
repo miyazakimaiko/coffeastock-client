@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = "http://localhost:4000" + process.env.API_ENDPOINT;
+const baseURL = "http://localhost:4000" + process.env.REACT_APP_API_ENDPOINT;
 
 const customAxios = axios.create({
   baseURL,
