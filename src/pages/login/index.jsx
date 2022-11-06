@@ -57,12 +57,14 @@ const Login = () => {
 
       if (!userFound) {
         addUser.mutate(userData, {
-          onSuccess: () => navigateToDashboard()
+          onSuccess: () => navigateToDashboard(),
+          onError: (err) => console.log("err: ", err)
         });
       }
       else {
         getUser.mutate(userData, {
-          onSuccess: () => navigateToDashboard()
+          onSuccess: () => navigateToDashboard(),
+          onError: (err) => console.log("err: ", err)
         });
       }
 
