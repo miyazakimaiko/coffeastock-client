@@ -1,9 +1,9 @@
 @import "/src/assets/scss/breakpoints";
 
 .l-nav {
-  width: var(--nav-width);
   position: fixed;
   top: 0;
+  width: var(--nav-width);
   left: var(--nav-width-negative);
   transition: .5s;
   z-index: 40;
