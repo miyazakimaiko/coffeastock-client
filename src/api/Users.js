@@ -1,7 +1,9 @@
 import axios from './CustomAxios'
 
 export const findUser = async (userid, token) => {
-  return await axios.get(`/user`, { headers: { accesstoken: token }, params: { id: userid } }).then(res => res.data);
+  return await axios.get(`/user`, { headers: { accesstoken: token }, params: { id: userid } })
+                    .then(res => res.data)
+                    .catch(err => err);
 }
 
 export const getUser = async (userid, token) => {
