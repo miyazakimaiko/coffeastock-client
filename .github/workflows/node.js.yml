@@ -28,6 +28,7 @@ jobs:
         touch .env
         echo REACT_APP_COGNITO_USER_POOL_ID=${{ secrets.REACT_APP_COGNITO_USER_POOL_ID }} >> .env
         echo REACT_APP_COGNITO_CLIENT_ID=${{ secrets.REACT_APP_COGNITO_CLIENT_ID }} >> .env
+        echo REACT_APP_URL=${{ secrets.REACT_APP_URL }} >> .env
         echo REACT_APP_API_ENDPOINT=${{ secrets.REACT_APP_API_ENDPOINT }} >> .env
         cat .env
     - run: npm ci
