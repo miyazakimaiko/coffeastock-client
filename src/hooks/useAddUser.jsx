@@ -11,7 +11,7 @@ export default function useAddUser() {
   return useMutation(
     async (user) => await api.addUser(user.sub, body, user.accessToken.jwtToken),
     {
-      onSuccess: () => toastOnBottomCenter('success', 'Welcome to Coffee Journal!'),
+      onSuccess: () => toastOnBottomCenter('success', 'Welcome to Coffeeastock!'),
       onError: err => {
         if (err.message === 'Not authorized') {
           signout();
