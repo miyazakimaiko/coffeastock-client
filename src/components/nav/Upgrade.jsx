@@ -14,7 +14,12 @@ const Upgrade = ({totalUsedMbPercentage}) => {
           style={{ width: `${totalUsedMbPercentage}%` }}
         ></div>
       </div>
-      <a href="/plans" className="flex justify-center items-center mt-4 px-2 py-1 w-full rounded text-base text-center bg-red hover:bg-orange transition-all">
+      <a 
+        href="/plans"
+        target="_blank"
+        rel="nofollow noopener noreferrer"
+        className="flex justify-center items-center mt-4 px-2 py-1 w-full rounded text-base text-center bg-red hover:bg-orange transition-all"
+      >
         <FaRocket className="w-4 h-4 mr-2" />
         Upgrade
       </a>
