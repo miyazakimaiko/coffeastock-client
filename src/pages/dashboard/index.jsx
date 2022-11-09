@@ -18,9 +18,9 @@ import TotalCoffeeBags from './TotalCoffeeBags'
 
 const Dashboard = ({setTitle}) => {
 
-  // useEffect(() => {
-  //   setTitle("Dashboard");
-  // }, [])
+  useEffect(() => {
+    setTitle("Dashboard");
+  }, [])
 
   const [beansBarChart, setBeansBarChart] = useState(null);
   const [recipesBarChart, setRecipesBarChart] = useState(null);
@@ -55,11 +55,6 @@ const Dashboard = ({setTitle}) => {
     isError: recipesSummaryHasError,
   } = useRecipesSummary();
 
-  const { 
-    data: totalUsedMb, 
-    isLoading: totalUsedMbIsLoading,
-    isError: totalUsedMbHasError,
-  } = useUserTotalUsedMb();
 
   useEffect(() => {
     if (beansSummary && beansList) {
@@ -94,8 +89,7 @@ const Dashboard = ({setTitle}) => {
     || beansSummaryIsLoading 
     || recipesSummaryIsLoading 
     || beansListIsLoading
-    || totalUsedMbIsLoading) 
-  {
+  ) {
     return <Spinner />
   }
 
@@ -104,7 +98,7 @@ const Dashboard = ({setTitle}) => {
     || userInfoHaveError
     || beansSummaryHasError
     || recipesSummaryHasError
-    || totalUsedMbHasError) {
+  ) {
     return <ErrorPage />
   }
   
@@ -118,7 +112,7 @@ const Dashboard = ({setTitle}) => {
           />
           <TotalBeansBrewed
             amount={recipesSummary.groundsweight}
-            unit={units['solid' + userInfo.unit_solid_weight_id].short_label}
+            unit={units['solid' + userInfo.unit_solid_weight_id]?.short_label}
             groundWeightByDayList={recipesSummary.groundWeightTotalsByDay}
           />
           <TotalRecipes
@@ -127,7 +121,7 @@ const Dashboard = ({setTitle}) => {
           />
           <TotalBrews
             amount={recipesSummary.yieldsweight}
-            unit={units['fluid' + userInfo.unit_fluid_weight_id].short_label}
+            unit={units['fluid' + userInfo.unit_fluid_weight_id]?.short_label}
             yieldWeightByDayList={recipesSummary.yieldWeightTotalsByDay}
           />
         </div>

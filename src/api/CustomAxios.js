@@ -8,7 +8,6 @@ const customAxios = axios.create({
 })
 
 const requestHandler = request => {
-  console.log("request: ", request)
   return request;
 };
 
