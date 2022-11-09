@@ -233,18 +233,11 @@ to {
     text-align: left;
     white-space: nowrap;
     transition: background-color 0.3s ease;
-    &::before, &::after {
-      content: "→";
-      margin-right: 5px;
-      visibility: hidden;
-    }
     &:hover {
       background-color: var(--lightgrey);
     }
     &.active {
-      &::before {
-        visibility: visible;
-      }
+      font-weight: bold;
     }
   }
 }
