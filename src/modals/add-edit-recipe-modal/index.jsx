@@ -4,6 +4,7 @@ import { useQueryClient } from 'react-query';
 import { useGetSession, useSignout } from '../../context/AccountContext';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import RecipeService from '../../services/RecipeService';
+import { TO_LOGIN } from '../../utils/Paths';
 import { MAX_TEMP, USER_TYPE } from '../../utils/Constants';
 import { checkItemsLabelLessThanMax } from '../../helpers/InputValidators';
 import { convertItemListToIdList } from '../../helpers/ListConverter';
@@ -60,8 +61,6 @@ import {
 import '../modals.scss'
 
 
-
-
 const AddEditRecipeModal = ({recipeId = null}) => {
 
   const getSession = useGetSession();
@@ -74,7 +73,7 @@ const AddEditRecipeModal = ({recipeId = null}) => {
     getSession((err, _) => {
       if (err) {
         signout();
-        navigate('/login', { replace: true } );
+        navigate(TO_LOGIN, { replace: true } );
       }
     });
   }, []);

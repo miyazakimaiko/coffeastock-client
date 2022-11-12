@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGetSession, useSignout } from '../../context/AccountContext'
 import { ModalStateContext } from '../../context/ModalStateContext'
+import { TO_LOGIN } from '../../utils/Paths'
 import toastOnBottomCenter from '../../utils/customToast'
 import { MAX_LENGTH, USER_TYPE } from '../../utils/Constants'
 import { capitalize } from '../../helpers/HtmlConverter'
@@ -30,7 +31,7 @@ const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
     getSession((err, _) => {
       if (err) {
         signout();
-        navigate('/login', { replace: true } );
+        navigate(TO_LOGIN, { replace: true } );
       }
     });
     if (targetRangeItem && modal.mode === modalModeSelection.editRange) {

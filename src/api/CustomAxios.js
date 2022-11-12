@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { TO_LOGIN } from '../utils/Paths';
 
 const baseURL = process.env.REACT_APP_URL + process.env.REACT_APP_API_ENDPOINT;
 
@@ -13,7 +14,7 @@ const requestHandler = request => {
 
 const responseHandler = response => {
   if (response.status === 401) {
-      window.location = '/login';
+      window.location = TO_LOGIN;
   }
   return response;
 };

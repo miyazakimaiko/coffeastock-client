@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useContext } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { MenuAlt2Icon, PlusIcon, XIcon } from '@heroicons/react/outline'
+import { TO_PUBLIC_HOME } from '../../utils/Paths';
 import toastOnTopRight from '../../utils/customToast';
 import { capitalize } from '../../helpers/HtmlConverter';
 import { NavStateContext } from '../../context/NavStateContext';
@@ -25,6 +26,7 @@ const DashboardHeader = (props) => {
  
   const userData = useUserData();
   const signout = useSignout();
+  const navigate = useNavigate();
 
   const { modal, 
           openAddBeanModal, 
@@ -34,6 +36,7 @@ const DashboardHeader = (props) => {
 
   const logout = () => {
     signout();
+    navigate(TO_PUBLIC_HOME, { replace: true });
     toastOnTopRight('success', 'Logged out successfully.')
   }
 
@@ -83,7 +86,7 @@ const DashboardHeader = (props) => {
         <div className="mx-6">
           <Dropdown dropdownText={userData.nickname}>
             <div className="dropdown-content" >
-              <NavLink exact="true" to="/account" className="dropdown-item">My Account</NavLink>
+              <NavLink exact="true" to="account" className="dropdown-item">My Account</NavLink>
               <div className="dropdown-divider"></div>
               <button type="button" className="dropdown-item" onClick={logout}>Logout</button>
             </div>

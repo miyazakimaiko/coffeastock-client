@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from 'react-query';
 import { useGetSession, useSignout } from '../../context/AccountContext';
 import { ModalStateContext } from '../../context/ModalStateContext';
+import { TO_LOGIN } from '../../utils/Paths';
 import { MAX_LENGTH, USER_TYPE } from '../../utils/Constants';
 import BeanService from '../../services/BeanService';
 import { convertIdListToItemList, convertItemListToIdList } from '../../helpers/ListConverter';
@@ -59,7 +60,6 @@ import AromaInput from './components/AromaInput';
 
 const AddEditBeanModal = ({targetBean = null}) => {
 
-
   const getSession = useGetSession();
   const signout = useSignout();
   const navigate = useNavigate();
@@ -70,7 +70,7 @@ const AddEditBeanModal = ({targetBean = null}) => {
     getSession((err, _) => {
       if (err) {
         signout();
-        navigate('/login', { replace: true } );
+        navigate(TO_LOGIN, { replace: true } );
       }
     });
   }, []);

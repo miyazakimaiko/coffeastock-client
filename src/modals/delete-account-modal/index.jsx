@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { CognitoUser } from 'amazon-cognito-identity-js';
 import { MdWavingHand } from 'react-icons/md'
-import UserPool from '../../utils/UserPool';
+import { TO_LOGIN } from '../../utils/Paths';
 import toastOnBottomCenter from '../../utils/customToast';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer';
-import { useAuthenticate, useAuthenticated, useGetSession, useSetAuthenticated, useSignout } from '../../context/AccountContext';
+import { useAuthenticate, useGetSession, useSetAuthenticated, useSignout } from '../../context/AccountContext';
 
 
 const DeleteAccountModal = ({ email }) => {
@@ -19,13 +18,6 @@ const DeleteAccountModal = ({ email }) => {
   const [user, setUser] = useState(null);
   const [stage, setStage] = useState(1); // 1 = verify password, 2 = confirm
   const [password, setPassword] = useState('');
-  
-  function getUser() {
-    return new CognitoUser({
-      Username: email.toLowerCase(),
-      Pool: UserPool
-    });
-  }
 
   function verifyPassword(event) {
     event.preventDefault();
@@ -44,14 +36,14 @@ const DeleteAccountModal = ({ email }) => {
   function deleteAccount(event) {
     event.preventDefault();
 
-    user.deleteUser((err, data) => {
+    user.deleteUser((err, _) => {
       if (err) {
         toastOnBottomCenter('error', err.message);
       }
       else {
         signout();
         setAuthenticated(false);
-        navigate('/login', { replace: true } );
+        navigate(TO_LOGIN, { replace: true } );
       }
     })
   }

@@ -1,10 +1,9 @@
-import React, { useEffect, createRef, useState } from 'react';
-import {BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import {BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './index.scss'
-import Nav from './components/nav';
-import DashboardHeader from './components/dashboard-header';
+import PublicHome from './pages/public-home';
 import Login from './pages/login';
 import Register from './pages/register';
 import Dashboard from './pages/dashboard';
@@ -13,42 +12,17 @@ import ViewMyCoffees from './pages/view-beans-list';
 import ViewRanges from './pages/view-ranges';
 import CompareRecipes from './pages/compare-recipes';
 import ManageAccount from './pages/manage-account';
-import ErrorPage from './pages/error';
 import { useGetSession, 
         useSetUserData, 
         useAuthenticated, 
         useSetAuthenticated } from './context/AccountContext';
 import ScrollBackButton from './elements/ScrollBackButton';
 import Plans from './pages/plans';
-import BasicHeader from './components/basic-header';
+import ServerError from './pages/server-error';
+import DashboardLayout from './components/dashboard-layout';
+import BasicLayout from './components/basic-layout';
+import NotFound from './pages/not-found-error';
 
-export function DashboardLayout({title}) {
-  const mainRef = createRef();
-  const navRef = createRef();
-  const headerRef = createRef();
-  const pushpinRef = createRef();
-
-  return (
-    <>
-      <Nav mainRef={mainRef} navRef={navRef} headerRef={headerRef} pushpinRef={pushpinRef}/>
-      <DashboardHeader mainRef={mainRef} navRef={navRef} headerRef={headerRef} pushpinRef={pushpinRef} title={title}/>
-      <div ref={mainRef} className={"relative main min-h-screen box-border header-top-pd"}>
-        <Outlet />
-      </div>
-    </>
-  )
-}
-
-export function BasicLayout() {
-  return (
-    <>
-      <BasicHeader />
-      <div className="h-full">
-        <Outlet />
-      </div>
-    </>
-  )
-}
 
 const App = () => {
 
@@ -66,14 +40,18 @@ const App = () => {
     });
   }, []);
 
+  const dashboard = <Dashboard setTitle={setTitle} />;
+  const login = <Login />;
+  const pageNotFound = <NotFound />;
+
   return <>
     <Router>
-      <div className="relative flex flex-col w-full min-h-screen bg-creme font-sans text-xs md:text-sm text-burnt-sienna">
         { authenticated ? 
           <>
             <Routes>
-              <Route path="/" element={<DashboardLayout title={title} />} >
-                <Route index element={<Dashboard setTitle={setTitle} />} />
+              <Route path="app/" element={<DashboardLayout title={title} />} >
+                <Route index path="" element={dashboard} />
+                <Route exact path="dashboard" element={dashboard} />
                 <Route exact path="coffees" element={<ViewMyCoffees setTitle={setTitle} />} />
                 <Route exact path="coffee/:id" element={<ViewBeanAndRecipes setTitle={setTitle} />} />
                 <Route exact path="compare/recipes" element={<CompareRecipes setTitle={setTitle} />} />
@@ -90,26 +68,30 @@ const App = () => {
                 <Route exact path="settings/palate" element={<ViewRanges rangeName="palate" setTitle={setTitle} />} />
                 <Route exact path="settings/water" element={<ViewRanges rangeName="water" setTitle={setTitle} />} />
                 <Route exact path="account" element={<ManageAccount setTitle={setTitle} />} />
-                <Route path="*" element={<ErrorPage />} />
+                <Route path="*" element={pageNotFound} />
               </Route>
 
               <Route path="/" element={<BasicLayout />} >
+                <Route exact path="" element={<PublicHome />} />
                 <Route exact path="plans" element={<Plans />} />
-                <Route path="*" element={<ErrorPage />} />
+                <Route exact path="500" element={<ServerError />} />  
+                <Route path="*" element={pageNotFound} />              
               </Route>
             </Routes>
           </>
           :
-          <div className="relative main min-h-screen box-border">
+          <div className="relative main min-h-screen box-border bg-white font-sans text-xs md:text-sm text-burnt-sienna">
             <Routes>
+              <Route exact path="/" element={<PublicHome />} />
               <Route exact path='/register' element={<Register />} />
-              <Route exact path='/login' element={<Login />} />
+              <Route exact path='/login' element={login} />
+              <Route path='/app/*' element={login} />
+              <Route path="*" element={pageNotFound} />              
             </Routes>
           </div>
         }
         <ToastContainer theme="colored" newestOnTop hideProgressBar={false}/>
         <ScrollBackButton />
-      </div>
     </Router>
   </>
 }

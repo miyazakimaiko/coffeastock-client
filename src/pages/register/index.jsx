@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { BookOpenIcon, GlobeIcon, LightBulbIcon } from '@heroicons/react/outline'
 import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
 import UserPool from '../../utils/UserPool'
+import { TO_LOGIN } from '../../utils/Paths';
 import toastOnBottomCenter from '../../utils/customToast'
 import CoffeeBagLeft from '../../assets/svgs/CoffeeBagLeft'
 import ConfirmUserModal from '../../modals/confirm-user-modal';
@@ -49,8 +50,8 @@ const Register = () => {
         toastOnBottomCenter('error', err.message);
         return;
       }
-      toastOnBottomCenter('success', 'Accunt Confirmed.');
-      navigate('/login', { replace: true } );
+      toastOnBottomCenter('success', 'Account Confirmed. Please login to get started!');
+      navigate(TO_LOGIN, { replace: true } );
     })
   }
 

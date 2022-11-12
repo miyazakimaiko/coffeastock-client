@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import { TO_LOGIN, TO_SERVER_ERROR } from '../utils/Paths';
 import toastOnBottomCenter from '../utils/customToast';
 import { useSignout, useUserData } from '../context/AccountContext';
 import extractBeanIdFromRecipeId from '../helpers/ExtractBeanIdFromRecipeId';
@@ -30,7 +31,10 @@ export default function useRecipe(recipeId) {
       onError: err => {
         if (err.message === 'Not authorized') {
           signout();
-          navigate('/login', { replace: true } );
+          navigate(TO_LOGIN, { replace: true } );
+        }
+        else if (err.message === 'Network Error') {
+          navigate(TO_SERVER_ERROR, { replace: true } );
         }
         else toastOnBottomCenter('error', err.message ? err.message : 'An unknown error has ocurred.');
       },

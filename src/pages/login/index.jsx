@@ -12,6 +12,7 @@ import { useAuthenticate,
 import useAddUser from '../../hooks/useAddUser';
 import useGetUser from '../../hooks/useGetUser';
 import ChangePasswordModal from '../../modals/change-password-modal';
+import { TO_DASHBOARD } from '../../utils/Paths';
 
 
 const Login = () => {
@@ -72,7 +73,7 @@ const Login = () => {
   }
 
   function navigateToDashboard() {
-    navigate('/', {replace: true});
+    navigate(TO_DASHBOARD, {replace: true});
     toastOnBottomCenter('success', 'Logged in successfully.');
   }
 
@@ -95,21 +96,21 @@ const Login = () => {
             className="w-96"
             onSubmit={onSubmit}
           >
-            <div className="bg-white p-6 shadow-sm rounded-md">
+            <div className="bg-creme p-6 shadow-sm rounded-md border border-burnt-sienna border-opacity-20">
               <div>
                 <h3 className="text-2xl font-light">Login</h3>
               </div>
               <div className="card-content pt-3">
                 <div className="pb-3">
                   <label className="">Email address</label>
-                  <input type="email" name="email" placeholder="Enter email" className="blue-outline-transition bg-creme block w-full py-2 px-3 rounded-md"
+                  <input type="email" name="email" placeholder="Enter email" className="blue-outline-transition bg-white block w-full py-2 px-3 rounded-md"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="pb-3">
                   <label className="">Password</label>
-                  <input type="password" name="password" placeholder="Password" className="blue-outline-transition bg-creme block w-full py-2 px-3 rounded-md"
+                  <input type="password" name="password" placeholder="Password" className="blue-outline-transition bg-white block w-full py-2 px-3 rounded-md"
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                   />
