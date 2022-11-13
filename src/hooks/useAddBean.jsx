@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query'
 import { useNavigate } from 'react-router-dom';
-import { TO_LOGIN, TO_SERVER_ERROR } from '../utils/Paths';
+import { TO_COFFEE, TO_LOGIN, TO_SERVER_ERROR } from '../utils/Paths';
 import toastOnBottomCenter from '../utils/customToast'
 import { useSignout, useUserData } from '../context/AccountContext';
 import * as api from '../api/Beans'
@@ -21,7 +21,7 @@ export default function useAddBean() {
         await queryClient.invalidateQueries(['recipes', 'summary']);
         await queryClient.invalidateQueries(['beans', 'summary']);
         await queryClient.invalidateQueries(['user', user.sub, 'totalUsedMb']);
-        navigate('/coffees', { replace: true } );
+        navigate(TO_COFFEE, { replace: true } );
         toastOnBottomCenter('success', 'Coffee bean is added successfully.');
       },
       onError: err => {

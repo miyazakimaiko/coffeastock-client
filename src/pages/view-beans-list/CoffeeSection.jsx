@@ -1,6 +1,7 @@
 import React from 'react'
-import CoffeeBag from '../../assets/svgs/CoffeeBagRight'
 import { Link } from 'react-router-dom'
+import { TO_COFFEE } from '../../utils/Paths'
+import CoffeeBag from '../../assets/svgs/CoffeeBagRight'
 import StarHalfIcon from '../../assets/svgs/StarHalfIcon'
 import StarFullIcon from '../../assets/svgs/StarFullIcon'
 
@@ -34,7 +35,7 @@ const CoffeeSection = ({bean}) => {
       className={`relative px-1 py-6 w-1/2 ${bean['bean_id']}`}
       style={{minWidth: '110px', maxWidth: '220px'}}
     >
-      <Link to={`/coffee/${bean['bean_id']}`}>
+      <Link to={`${TO_COFFEE}/${bean['bean_id']}`}>
         <div 
           className="absolute left-3 right-3 top-3 bottom-3 
             bg-burnt-sienna rounded-md z-10 

@@ -122,7 +122,7 @@ const Nav = (props) => {
               </li>
 
               <li className="h-10 flex items-center justify-between">
-                <NavLink exact="true" to="coffees"
+                <NavLink exact="true" to="coffee"
                   className={({ isActive }) => "flex items-center" 
                   + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                   onClick={pinnedNavbar ? null : showNavbar}>

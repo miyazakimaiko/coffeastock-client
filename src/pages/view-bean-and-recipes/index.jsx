@@ -1,12 +1,11 @@
 import React, { useEffect, useContext } from 'react'
 import { useParams, useNavigate } from 'react-router-dom';
-import { HiOutlineChevronRight } from 'react-icons/hi'
 import CoffeeBagRight from '../../assets/svgs/CoffeeBagRight';
 import { unescapeHtml } from '../../helpers/HtmlConverter'
+import { TO_COFFEE } from '../../utils/Paths';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import useBean from '../../hooks/useBean';
 import useDeleteBean from '../../hooks/useDeleteBean';
-import ToolBar from '../../components/toolbar';
 import Dropdown from '../../elements/Dropdown';
 import Spinner from '../../elements/Spinner';
 import DeleteModal from '../../modals/delete-modal';
@@ -44,7 +43,7 @@ const ViewBeanAndRecipes = ({setTitle}) => {
 
   const onDeleteSubmit = () => {
     deleteBean.mutate(targetBean, {
-      onSuccess: () => navigate('/coffees', {replace: true})
+      onSuccess: () => navigate(TO_COFFEE, {replace: true})
     })
     closeModal();
   }
