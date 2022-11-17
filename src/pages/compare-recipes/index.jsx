@@ -94,7 +94,7 @@ const CompareRecipes = ({setTitle}) => {
         </div>
       </div>
 
-      <div className=" max-w-980px mx-auto bg-white py-10 m-10 rounded-lg shadow-sm">
+      <div className="w-full max-w-[980px] mx-auto bg-white py-10 m-10 rounded-lg shadow-sm">
         <h3 className="mt-5 mb-16 text-xl text-center">
           Recipes Info Comparison
         </h3>

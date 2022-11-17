@@ -94,12 +94,8 @@ const RecipesInfoComparisonSection = ({ selectedRecipeLeftId, selectedRecipeRigh
         <div>
           <PalateRadarChartDouble
             className="w-full md:w-1/2 max-w-lg mx-auto"
-            redTitle={selectedRecipeLeft ? `${beanList[selectedRecipeLeft.bean_id]?.label} ${
-              selectedRecipeLeft.label
-            }` : 'Not Selected'}
-            blueTitle={selectedRecipeRight ? `${beanList[selectedRecipeRight.bean_id]?.label} ${
-              selectedRecipeRight.label
-            }` : 'Not Selected'}
+            redTitle={selectedRecipeLeft ? `${beanList[selectedRecipeLeft.bean_id]?.label} ${selectedRecipeLeft.label}` : 'Not Selected'}
+            blueTitle={selectedRecipeRight ? `${beanList[selectedRecipeRight.bean_id]?.label} ${selectedRecipeRight.label}` : 'Not Selected'}
             redRatesObj={selectedRecipeLeft?.palate_rates}
             blueRatesObj={selectedRecipeRight?.palate_rates}
           />

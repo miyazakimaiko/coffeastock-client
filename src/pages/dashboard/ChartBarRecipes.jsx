@@ -29,7 +29,7 @@ export const options = {
   },
   maintainAspectRatio: false,
   responsive: true,
-  barThickness: 10,
+  barThickness: 15,
   scale: {
     min: 0,
     max: 100,

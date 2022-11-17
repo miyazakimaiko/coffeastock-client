@@ -30,12 +30,8 @@ const RecentRecipes = () => {
         <>
           <PalateRadarChartDouble
             className="w-full max-w-lg mx-auto"
-            redTitle={recipeLeft ? `${beanList[recipeLeft.bean_id]?.label} ${
-              recipeLeft.label
-            }` : 'Not Selected'}
-            blueTitle={recipeRight ? `${beanList[recipeRight.bean_id]?.label} ${
-              recipeRight.label
-            }` : 'Not Selected'}
+            redTitle={recipeLeft ? `${beanList[recipeLeft.bean_id]?.label} (Recipe No.${recipeLeft.recipe_no})` : 'Not Selected'}
+            blueTitle={recipeRight ? `${beanList[recipeRight.bean_id]?.label} (Recipe No. ${recipeRight.recipe_no})` : 'Not Selected'}
             redRatesObj={recipeLeft?.palate_rates}
             blueRatesObj={recipeRight?.palate_rates}
           />
