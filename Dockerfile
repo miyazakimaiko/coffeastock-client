@@ -1,7 +1,5 @@
 FROM node:14-alpine
 
-RUN apt-get update -y && apt-get upgrade -y
-
 RUN mkdir -p /home/client
 
 COPY . /home/client
