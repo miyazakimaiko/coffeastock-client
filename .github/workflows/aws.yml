@@ -29,6 +29,12 @@ name: Deploy to Amazon ECS
 on:
   push:
     branches: [ "main" ]
+    
+env:
+  REACT_APP_COGNITO_USER_POOL_ID: ${{ secrets.REACT_APP_COGNITO_USER_POOL_ID }}
+  REACT_APP_COGNITO_CLIENT_ID: ${{ secrets.REACT_APP_COGNITO_CLIENT_ID }}
+  REACT_APP_API_ENDPOINT: ${{ secrets.REACT_APP_API_ENDPOINT }}
+  REACT_APP_URL=: ${{ secrets.REACT_APP_URL }}
 
 permissions:
   contents: read
