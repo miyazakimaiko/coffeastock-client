@@ -86,6 +86,6 @@ jobs:
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: coffeastock-client-service
-        cluster: coffeastock-server
+        service: client
+        cluster: coffeastock
         wait-for-service-stability: true
