@@ -52,7 +52,7 @@ const PublicHome = () => {
             <img src={DashboardImg} alt="coffeastock dashboard" className="rounded-lg shadow-2xl" />
           </section>
           <section className="md:min-w-[570px] pl-8 flex flex-col justify-center">
-            <h1 className="text-4xl font-bold leading-snug text-burnt-sienna pb-2">No more <br/> guessing game <br/> to improve your brewing.</h1>
+            <h1 className="text-4xl font-bold leading-snug text-burnt-sienna-header pb-2">No more <br/> guessing game <br/> to improve your brewing.</h1>
             <p className="text-lg">Collect, visualize, and analyze your brewing data accurately</p>
             <div className="mr-8 mt-8">
               <Link to="/register">
@@ -72,7 +72,7 @@ const PublicHome = () => {
 
         <article id="dashboard-metrics" className="w-[95%] md:w-[90%] p-4 md:p-10 mt-14 md:mt-32 lg:mt-36 mx-auto flex flex-col-reverse lg:flex-row justify-between bg-green bg-opacity-10 rounded-2xl">
           <section className="min-w-[100%] lg:min-w-[380px] pt-6 pl-0 md:pl-8 flex flex-col justify-center text-center lg:text-left">
-            <h2 className="text-3xl md:text-4xl font-bold leading-snug text-burnt-sienna pb-2">Dashboard metrics <br/> for your coffee data analysis</h2>
+            <h2 className="text-3xl md:text-4xl font-bold leading-snug text-burnt-sienna-header pb-2">Dashboard metrics <br/> for your coffee data analysis</h2>
             <p className="text-base md:text-lg leading-8 py-4">Displays your activity summaries, recent recipes comparison, beans and recipes rankings. <br/> Discover the tendency of your brewing and the best recipe.</p>
           </section>
           <section>
@@ -84,7 +84,7 @@ const PublicHome = () => {
 
         <article id="record-coffee-beans" className="w-[95%] md:w-[90%] p-4 md:p-10 mt-10 md:mt-22 lg:mt-24 mx-auto flex flex-col-reverse justify-between bg-orange bg-opacity-10 rounded-2xl">
           <section className="md:min-w-[500px] mt-8 md:mt-12 flex flex-col justify-center text-center">
-            <h2 className="text-3xl md:text-4xl font-bold leading-snug text-burnt-sienna pb-2">Record coffee beans and recipe data separately</h2>
+            <h2 className="text-3xl md:text-4xl font-bold leading-snug text-burnt-sienna-header pb-2">Record coffee beans and recipe data separately</h2>
             <p className="text-base md:text-lg leading-8 py-4">Not only you can record recipes, but also create individual coffee beans entry. <br/> So each recipe can be associated with one of the coffee beans details.</p>
           </section>
           <section className="image-section flex mx-2 md:mx-10">
@@ -99,7 +99,7 @@ const PublicHome = () => {
 
         <article id="customize-range" className="w-[95%] md:w-[90%] p-4 md:p-10 mt-10 md:mt-22 lg:mt-24 mx-auto flex flex-col-reverse lg:flex-row-reverse justify-between bg-blue bg-opacity-10 rounded-2xl">
           <section className="min-w-[100%] lg:min-w-[380px] pt-6 flex flex-col justify-center text-center lg:text-left">
-            <h2 className="text-3xl md:text-4xl font-bold leading-snug text-burnt-sienna pb-2">Create your own <br/> beans and recipes attributes</h2>
+            <h2 className="text-3xl md:text-4xl font-bold leading-snug text-burnt-sienna-header pb-2">Create your own <br/> beans and recipes attributes</h2>
             <p className="text-base md:text-lg leading-8 py-4">You can create the origin, variety, process, roaster, method, water, and many more attributes in your own words and language.</p>
           </section>
           <section className="mx-2 md:mx-10">
@@ -111,7 +111,7 @@ const PublicHome = () => {
 
         <article id="tasting-wheel" className="w-[95%] md:w-[90%] p-4 md:p-10 mt-10 md:mt-22 lg:mt-24 mx-auto flex flex-col-reverse justify-between bg-green bg-opacity-10 rounded-2xl">
           <section className="md:min-w-[500px] mt-8 md:mt-12 flex flex-col justify-center text-center">
-            <h2 className="text-3xl md:text-4xl font-bold leading-snug text-burnt-sienna pb-2">Up to 20 palate ranges on your tasting wheel</h2>
+            <h2 className="text-3xl md:text-4xl font-bold leading-snug text-burnt-sienna-header pb-2">Up to 20 palate ranges on your tasting wheel</h2>
             <p className="text-base md:text-lg leading-8 py-4">Do you want to record complex tasting profile? Up to 20 custom palates can be attached to a recipe. <br/> Of course, you can go for a smaller wheel if that's too much!</p>
           </section>
           <section className="image-section flex lg:mx-32">
@@ -131,7 +131,7 @@ const PublicHome = () => {
         </article>
 
         <article id="faq" className="w-[95%] md:max-w-[1000px] p-4 mx-auto mt-16 md:mt-24">
-          <h2 className="text-4xl font-semibold text-center mb-8">FAQs</h2>
+          <h2 className="text-4xl font-semibold text-center mb-8 text-burnt-sienna-header">FAQs</h2>
           <div className="border border-burnt-sienna border-opacity-40 rounded-2xl child-border-bottom">
             {
               faqs.map(faq => (
@@ -146,7 +146,7 @@ const PublicHome = () => {
 
         <article id="get-started" className="w-full pt-20">
           <section className="md:max-w-[1000px] mx-auto shadow-xl rounded-xl p-10 bg-creme bg-opacity-30">
-            <h3 className="text-2xl md:text-3xl font-semibold">Get started today</h3>
+            <h3 className="text-2xl md:text-3xl font-semibold text-burnt-sienna-header">Get started today</h3>
             <p className="text-md md:text-lg leading-relaxed md:leading-loose">Available on 5 platforms for just $4.16 per month (annual billing). No credit card information required for 30-day free trial.</p>
           </section>
         </article>
