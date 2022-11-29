@@ -4,7 +4,7 @@ RUN mkdir /home/client
 
 COPY . .
 
-WORKDIR /home/clientß
+WORKDIR /home/client
 
 ENV NODE_ENV production\
     REACT_APP_COGNITO_USER_POOL_ID test
