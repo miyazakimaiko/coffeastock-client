@@ -10,15 +10,16 @@ WORKDIR /home/client
 # Create a .env for react app
 # Define a required build arg
 ARG REACT_APP_COGNITO_USER_POOL_ID
+ARG REACT_APP_COGNITO_CLIENT_ID
 # Create a .env file
 RUN touch .env
 # Write the api url into the env file
 RUN echo REACT_APP_COGNITO_USER_POOL_ID=${REACT_APP_COGNITO_USER_POOL_ID} > .env
-
+RUN echo REACT_APP_COGNITO_CLIENT_ID=${REACT_APP_COGNITO_CLIENT_ID} > .env
+RUN echo REACT_APP_API_ENDPOINT=/api/v1 > .env
 RUN cat .env
 
 RUN npm ci
-
 RUN npm run build
 
 ENV NODE_ENV production
