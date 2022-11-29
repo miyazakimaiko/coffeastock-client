@@ -6,11 +6,22 @@ COPY . /home/client
 
 WORKDIR /home/client
 
-ENV NODE_ENV production
-ENV REACT_APP_COGNITO_USER_POOL_ID test
+
+# Create a .env for react app
+# Define a required build arg
+ARG REACT_APP_COGNITO_USER_POOL_ID
+# Create a .env file
+RUN touch .env
+# Write the api url into the env file
+RUN echo REACT_APP_COGNITO_USER_POOL_ID=${REACT_APP_COGNITO_USER_POOL_ID} > .env
+
+RUN cat .env
 
 RUN npm ci
+
 RUN npm run build
+
+ENV NODE_ENV production
 
 EXPOSE 3000
 CMD [ "npx", "serve", "build" ]
