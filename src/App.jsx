@@ -77,7 +77,6 @@ const App = () => {
                 <Route path="/" element={<BasicLayout />} >
                   <Route exact path="plans" element={<Plans />} />
                   <Route exact path="500" element={<ServerError />} />  
-                  <Route path="*" element={pageNotFound} />              
                 </Route>
               </Routes>
             </>
@@ -88,7 +87,6 @@ const App = () => {
                 <Route exact path='/register' element={<Register />} />
                 <Route exact path='/login' element={login} />
                 <Route path='/app/*' element={login} />
-                <Route path="*" element={pageNotFound} />              
               </Routes>
             </div>
           }
