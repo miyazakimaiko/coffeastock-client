@@ -24,12 +24,10 @@ const ManageAccount = ({setTitle}) => {
   
   const { data: units, 
           isLoading: unitsAreLoading,
-          isError: unitsHaveError,
         } = useUnits();
 
   const { data: userUnitIds, 
           isLoading: userUnitIdsAreLoading,
-          isError: userUnitIdsHaveError,
         } = useUserInfo();
   
   const { modal, 
@@ -43,10 +41,6 @@ const ManageAccount = ({setTitle}) => {
 
   if (unitsAreLoading || userUnitIdsAreLoading) {
     return <Spinner />
-  }
-
-  if(unitsHaveError || userUnitIdsHaveError) {
-    return <ErrorPage />
   }
 
   return (
@@ -121,12 +115,7 @@ const ManageAccount = ({setTitle}) => {
                     {units["solid" + userUnitIds.unit_solid_weight_id].label}
                   </div>
                   <div className="ml-2">
-                    (
-                    {
-                      units["solid" + userUnitIds.unit_solid_weight_id]
-                        .short_label
-                    }
-                    )
+                    {units["solid" + userUnitIds.unit_solid_weight_id].short_label}
                   </div>
                 </li>
                 <li key="email" className="flex pb-4">
@@ -135,26 +124,16 @@ const ManageAccount = ({setTitle}) => {
                     {units["fluid" + userUnitIds.unit_fluid_weight_id].label}
                   </div>
                   <div className="ml-2">
-                    (
-                    {
-                      units["fluid" + userUnitIds.unit_fluid_weight_id]
-                        .short_label
-                    }
-                    )
+                    {units["fluid" + userUnitIds.unit_fluid_weight_id].short_label}
                   </div>
                 </li>
                 <li key="password" className="flex pb-4">
                   <div className="w-48">Water Temperature: </div>
                   <div>
-                    {units["temp" + userUnitIds.unit_temperature_id].label}
+                    {units["temp" + userUnitIds.unit_temperature_id]?.label}
                   </div>
                   <div className="ml-2">
-                    (
-                    {
-                      units["temp" + userUnitIds.unit_temperature_id]
-                        .short_label
-                    }
-                    )
+                    {units["temp" + userUnitIds.unit_temperature_id]?.short_label}
                   </div>
                 </li>
               </ul>

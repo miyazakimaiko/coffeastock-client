@@ -4,7 +4,7 @@ import { useQueryClient } from 'react-query';
 import { useGetSession, useSignout } from '../../context/AccountContext';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import RecipeService from '../../services/RecipeService';
-import { TO_LOGIN } from '../../utils/Paths';
+import { TO_LOGIN, TO_GENERAL_ERROR } from '../../utils/Paths';
 import { MAX_TEMP, USER_TYPE } from '../../utils/Constants';
 import { checkItemsLabelLessThanMax } from '../../helpers/InputValidators';
 import { convertItemListToIdList } from '../../helpers/ListConverter';
@@ -434,6 +434,17 @@ const AddEditRecipeModal = ({recipeId = null}) => {
   ]);
 
 
+  if (beanListHasError 
+    || rangeListHasError 
+    || recipeHasError
+    || unitsHaveError
+    || userInfoHaveError
+    || totalUsedMbHasError
+  ) {
+    closeModal();
+  }
+
+
   if (recipeIsLoading 
     || beanListIsLoading
     || rangeListIsLoading
@@ -444,18 +455,8 @@ const AddEditRecipeModal = ({recipeId = null}) => {
     return <Spinner />
   }
 
-  if (beanListHasError 
-    || rangeListHasError 
-    || recipeHasError
-    || unitsHaveError
-    || userInfoHaveError
-    || totalUsedMbHasError
-  ) {
-    return <ErrorPage />
-  }
-
   if (modal.mode === modalModeSelection.addRecipe 
-    && totalUsedMb > USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB
+    && totalUsedMb > USER_TYPE[userInfo.user_type]?.MAX_CAPACITY_IN_MB
   ) {
     return (
       <ModalWrapperContainer

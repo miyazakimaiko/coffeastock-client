@@ -11,7 +11,6 @@ import {
 import { Radar } from 'react-chartjs-2';
 import useRange from '../hooks/useRange';
 import Spinner from './Spinner';
-import ErrorPage from '../pages/error';
 
 
 ChartJS.register(
@@ -106,9 +105,6 @@ const PalateRadarChartDouble = ({ className, redTitle, blueTitle, redRatesObj, b
 
   useEffect(() => {
     if (labels.length > 0 && redRates.length > 0 && blueRates.length > 0) {
-      console.log("labels: ", labels)
-      console.log("redRates: ", redRates)
-      console.log("blueRates: ", blueRates)
       setDoubleRadarChartContent(labels, redRates, blueRates)
     }
   }, [labels, redRates, blueRates])
@@ -151,10 +147,6 @@ const PalateRadarChartDouble = ({ className, redTitle, blueTitle, redRatesObj, b
 
   if (palateRangeIsLoading) {
     return <Spinner />
-  }
-
-  if (palateRangeHasError) {
-    return <ErrorPage />
   }
 
   return (

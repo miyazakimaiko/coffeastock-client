@@ -8,7 +8,6 @@ import ToolbarDropdownButton from '../../components/toolbar/ToolbarDropdownButto
 import ToolBarSearchBar from '../../components/toolbar/ToolBarSearchBar';
 import TooltipBottomLeft from '../../elements/TooltipBottomLeft';
 import Spinner from '../../elements/Spinner';
-import ErrorPage from '../error';
 import CoffeeGroupSection from './CoffeeGroupSection';
 import CoffeeSection from './CoffeeSection'
 
@@ -35,12 +34,10 @@ const ViewBeansList = ({setTitle}) => {
 
   const { data: beanList, 
           isLoading: beanListIsLoading,
-          isError: beanListHasError, 
         } = useBeans();
 
   const { data: rangeList, 
           isLoading: rangeListIsLoading,
-          isError: rangeListHasError,
         } = useRanges();
 
   const [showState, setShowState] = useState(SHOW.ALL)
@@ -135,10 +132,6 @@ const ViewBeansList = ({setTitle}) => {
   if (beanListIsLoading || rangeListIsLoading) {
     return <Spinner />
   } 
-
-  if (beanListHasError || rangeListHasError) {
-    return <ErrorPage />
-  }
   
   return (
     <>
@@ -181,7 +174,7 @@ const ViewBeansList = ({setTitle}) => {
           </div>
         </ToolBar>
 
-        {rangeList[groupState + '_range']
+        {Boolean(rangeList[groupState + '_range'])
           ?
           Object.keys(sortedCoffeesHtmlDictionary).map(attrId => {
             if (Object.keys(sortedCoffeesHtmlDictionary[attrId]).length > 0) {

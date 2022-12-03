@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from 'react-query';
 import { useGetSession, useSignout } from '../../context/AccountContext';
 import { ModalStateContext } from '../../context/ModalStateContext';
-import { TO_LOGIN } from '../../utils/Paths';
+import { TO_LOGIN, TO_GENERAL_ERROR } from '../../utils/Paths';
 import { MAX_LENGTH, USER_TYPE } from '../../utils/Constants';
 import BeanService from '../../services/BeanService';
 import { convertIdListToItemList, convertItemListToIdList } from '../../helpers/ListConverter';
@@ -20,7 +20,6 @@ import Spinner from '../../elements/Spinner';
 import useBeans from '../../hooks/useBeans';
 import useRanges from '../../hooks/useRanges';
 import useAddRange from '../../hooks/useAddRange';
-import ErrorPage from '../../pages/error';
 import '../modals.scss'
 import useSelectedBeansAndRatio from './hooks/useSelectedBeansAndRatio';
 import InputConfirmSection from './components/InputConfirmSection';
@@ -381,6 +380,13 @@ const AddEditBeanModal = ({targetBean = null}) => {
   }
 
 
+  if (rangeListHasError 
+      || beanListHasError
+      || totalUsedMbHasError
+      || userInfoHasError) {
+    closeModal();
+  }
+
   if (rangeListIsLoading 
       || beanListIsLoading
       || totalUsedMbIsLoading
@@ -388,15 +394,8 @@ const AddEditBeanModal = ({targetBean = null}) => {
     return <Spinner />
   }
 
-  if (rangeListHasError 
-      || beanListHasError
-      || totalUsedMbHasError
-      || userInfoHasError) {
-    return <ErrorPage />
-  }
-
   if (modal.mode === modalModeSelection.addBean 
-    && totalUsedMb > USER_TYPE[userInfo.user_type].MAX_CAPACITY_IN_MB
+    && totalUsedMb > USER_TYPE[userInfo.user_type]?.MAX_CAPACITY_IN_MB
   ) {
     return (
       <ModalWrapperContainer

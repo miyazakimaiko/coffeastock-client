@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,6 +22,8 @@ import ServerError from './pages/server-error';
 import DashboardLayout from './components/dashboard-layout';
 import BasicLayout from './components/basic-layout';
 import NotFound from './pages/not-found-error';
+import Spinner from './elements/Spinner';
+import ErrorPage from './pages/error';
 
 
 const App = () => {
@@ -69,6 +71,8 @@ const App = () => {
                   <Route exact path="settings/palate" element={<ViewRanges rangeName="palate" setTitle={setTitle} />} />
                   <Route exact path="settings/water" element={<ViewRanges rangeName="water" setTitle={setTitle} />} />
                   <Route exact path="account" element={<ManageAccount setTitle={setTitle} />} />
+                  <Route exact path="error" element={<ErrorPage />} />
+                  <Route exact path="500" element={<ServerError />} />  
                   <Route path="*" element={pageNotFound} />
                 </Route>
 
@@ -90,6 +94,7 @@ const App = () => {
               </Routes>
             </div>
           }
+
           <ToastContainer theme="colored" newestOnTop hideProgressBar={false}/>
           <ScrollBackButton />
       </Router>

@@ -108,7 +108,10 @@ const ChartBarBeans = ({labels, grades, avgRecipeRate}) => {
         <div style={{ height: `calc(50px + 50px * ${data.labels.length})`, position: "relative" }}>
           <Bar options={options} data={data} />
           {labels.length === 0 && (
-            <div className="absolute backdrop-filter backdrop-blur-sm bg-white/30 top-0 bottom-0 left-0 right-0 flex justify-center items-center">
+            <div 
+              className="absolute backdrop-filter backdrop-blur-sm bg-white/30 
+                top-0 bottom-0 left-0 right-0 flex justify-center items-center"
+            >
               <p className="text-lg text-burnt-sienna">
                 No Data Available Yet...
               </p>

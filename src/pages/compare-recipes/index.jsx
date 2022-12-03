@@ -16,7 +16,6 @@ const CompareRecipes = ({setTitle}) => {
 
   const { data: beanList,
           isLoading,
-          isError,
       } = useBeans();
 
   const [selectedBeanLeft, setSelectedBeanLeft] = useState(null);
@@ -36,8 +35,6 @@ const CompareRecipes = ({setTitle}) => {
   if (isLoading) {
     return <Spinner />
   }
-
-  if (isError) return <ErrorPage />
 
   return (
     <>

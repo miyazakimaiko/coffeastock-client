@@ -10,10 +10,8 @@ import TotalBrews from './TotalBrews'
 import TotalRecipes from './TotalRecipes'
 import useBeansSummary from '../../hooks/useBeansSummary'
 import Spinner from '../../elements/Spinner'
-import ErrorPage from '../error'
 import RecentRecipes from './RecentRecipes'
 import RssFeed from './RssFeed'
-import useUserTotalUsedMb from '../../hooks/useUserTotalUsedMb'
 import TotalCoffeeBags from './TotalCoffeeBags'
 
 const Dashboard = ({setTitle}) => {
@@ -28,31 +26,26 @@ const Dashboard = ({setTitle}) => {
   const { 
     data: units, 
     isLoading: unitsAreLoading,
-    isError: unitsHaveError,
   } = useUnits();
 
   const { 
     data: userInfo, 
     isLoading: userInfoAreLoading,
-    isError: userInfoHaveError,
   } = useUserInfo();
   
   const {
     data: beansList,
     isLoading: beansListIsLoading,
-    isError: beansHaveError,
   } = useBeans();
 
   const { 
     data: beansSummary, 
     isLoading: beansSummaryIsLoading,
-    isError: beansSummaryHasError,
   } = useBeansSummary();
   
   const { 
     data: recipesSummary, 
     isLoading: recipesSummaryIsLoading,
-    isError: recipesSummaryHasError,
   } = useRecipesSummary();
 
 
@@ -72,9 +65,15 @@ const Dashboard = ({setTitle}) => {
     if (recipesSummary && beansList) {
       setRecipesBarChart(
         <ChartBarRecipes
-          labels={recipesSummary.totalrateranking.map(recipe => ([beansList[recipe.bean_id].label, `(Recipe ${recipe.recipe_no})`]))}
-          totalRates={recipesSummary.totalrateranking.map(recipe => (recipe.total_rate))}
-          grades={recipesSummary.totalrateranking.map(recipe => (recipe.grade))}
+          labels={recipesSummary.totalrateranking.map(
+            recipe => ([beansList[recipe.bean_id].label, `(Recipe ${recipe.recipe_no})`])
+          )}
+          totalRates={recipesSummary.totalrateranking.map(
+            recipe => (recipe.total_rate)
+          )}
+          grades={recipesSummary.totalrateranking.map(
+            recipe => (recipe.grade)
+          )}
         />
       );
     }
@@ -91,15 +90,6 @@ const Dashboard = ({setTitle}) => {
     || beansListIsLoading
   ) {
     return <Spinner />
-  }
-
-  if (beansHaveError 
-    || unitsHaveError
-    || userInfoHaveError
-    || beansSummaryHasError
-    || recipesSummaryHasError
-  ) {
-    return <ErrorPage />
   }
   
   return (

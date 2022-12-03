@@ -6,7 +6,7 @@ import Rows from './Rows';
 
 const Table = ({searchValue, rangeName}) => {
   const [pageNumber, setPageNumber] = useState(0);
-  const { data: items, isLoading, isFetching, isError } = useRange(rangeName);
+  const { data: items, isLoading, isFetching } = useRange(rangeName);
   const [filteredItems, setFilteredItems] = useState([])
   const itemsCountToDisplay = 10;
 
@@ -42,10 +42,6 @@ const Table = ({searchValue, rangeName}) => {
   
   if (isLoading) {
     return <Spinner />
-  }
-
-  if (isError) {
-     return <ErrorPage />
   }
 
   return (

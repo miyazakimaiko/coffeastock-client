@@ -16,7 +16,6 @@ import DetailsTextarea from './components/DetailsTextarea'
 import useUserTotalUsedMb from '../../hooks/useUserTotalUsedMb'
 import useUserInfo from '../../hooks/useUserInfo'
 import Spinner from '../../elements/Spinner'
-import ErrorPage from '../../pages/error'
 
 
 const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
@@ -63,8 +62,9 @@ const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
   useEffect(() => {
     if (Boolean(rangeItem) 
       && (rangeItem.label.length < 1 
-          || rangeItem.label.length > MAX_LENGTH.RANGES_LABEL
-          || rangeItem.def?.length > MAX_LENGTH.RANGES_DEFINITION)
+        || rangeItem.label.length > MAX_LENGTH.RANGES_LABEL
+        || rangeItem.def?.length > MAX_LENGTH.RANGES_DEFINITION
+      )
     ) {
       setRangeItemIsValid(false);
     }
@@ -95,10 +95,7 @@ const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
             )
           },
           onError: (error) => {
-            toastOnBottomCenter(
-              "error",
-              error.message ?? "An unknown error has ocurred."
-            )
+            toastOnBottomCenter("error", "Failed to add the range.");
           }
         }
       );
@@ -126,21 +123,18 @@ const AddEditRangeModal = ({rangeName, targetRangeItem = null}) => {
           );
         },
         onError: (error) => {
-          toastOnBottomCenter(
-            "error",
-            error.message ?? "An unknown error has ocurred."
-          )
+          toastOnBottomCenter("error", "Failed to edit the range.");
         }
       }
     )
   }
 
-  if (userInfoIsLoading || totalUsedMbIsLoading) {
-    return <Spinner />
+  if (userInfoHasError || totalUsedMbHasError) {
+    closeModal();
   }
 
-  if (userInfoHasError || totalUsedMbHasError) {
-    return <ErrorPage />
+  if (userInfoIsLoading || totalUsedMbIsLoading) {
+    return <Spinner />
   }
 
   if (modal.mode === modalModeSelection.addRange 

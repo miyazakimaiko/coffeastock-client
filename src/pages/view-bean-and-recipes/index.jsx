@@ -25,9 +25,9 @@ const ViewBeanAndRecipes = ({setTitle}) => {
   }, [])
   
   const { id } = useParams();
+  
   const { data: targetBean,
           isLoading: targetBeanIsLoading,
-          isError: targetBeanHasError,
          } = useBean(id);
 
   const deleteBean = useDeleteBean()
@@ -55,10 +55,6 @@ const ViewBeanAndRecipes = ({setTitle}) => {
 
   if (targetBeanIsLoading) {
     return <Spinner />
-  }
-
-  if (targetBeanHasError) {
-    return <ErrorPage />
   }
 
   return (
