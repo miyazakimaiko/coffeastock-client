@@ -9,67 +9,97 @@ import { ModalStateContext } from '../../context/ModalStateContext';
 import { useAuthenticate, 
         useGetSession, 
         useSetUserData, 
-        useSetAuthenticated } from '../../context/AccountContext';
+        useSetAuthenticated, 
+        useSignout, 
+        useUserData,
+        useAuthenticated} from '../../context/AccountContext';
 import useAddUser from '../../hooks/useAddUser';
 import useGetUser from '../../hooks/useGetUser';
 import ChangePasswordModal from '../../modals/change-password-modal';
 import { TO_DASHBOARD } from '../../utils/Paths';
+import SpinnerSmall from '../../elements/SpinnerSmall';
+import { useEffect } from 'react';
 
 
 const Login = () => {
+  const [loading, setLoading] = useState(false);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const { modal, 
         openChangePasswordModal, 
         modalModeSelection } = useContext(ModalStateContext);
+
+  const userData = useUserData();
   const setUserData = useSetUserData();
   const authenticate = useAuthenticate();
   const getSession = useGetSession();
+  const authenticated = useAuthenticated();
   const setAuthenticated = useSetAuthenticated();
   const addUser = useAddUser();
   const getUser = useGetUser();
   const navigate = useNavigate();
+  const signout = useSignout();
 
 
   const onSubmit = (event) => {
     event.preventDefault();
 
+    setLoading(true);
+
     if (email.length === 0 && password.length === 0) {
-      toastOnBottomCenter('error', 'Please enter Email Address and Password.')
+      toastOnBottomCenter('error', 'Please enter Email Address and Password.');
+      setLoading(false);
     }
     else {
-      authenticate(email, password).then(data => {
-        getSession().then((session) => {
-          setUserData(session);
-          setAuthenticated(true);
-          createUserIfNotFound(session);
-        });
-      })
-      .catch(err => {
-        toastOnBottomCenter('error', err.message)
-      })
+      authenticate(email, password)
+        .then(data => {
+          getSession()
+            .then((userData) => {
+              setUserData(userData);
+              setAuthenticated(true);
+            })
+        })
+        .catch(err => {
+          setLoading(false);
+          toastOnBottomCenter('error', err.message);
+        })
     }
   };
 
+  useEffect(() => {
+    if (loading && userData.sub) {
+      createUserIfNotFound(userData);
+    }
+  }, [userData])
   
 
   async function createUserIfNotFound(userData) {
-    if (userData.sub) {
+    try {
       const userFound = await api.findUser(userData.sub, userData.accessToken.jwtToken);
 
       if (!userFound) {
         addUser.mutate(userData, {
-          onSuccess: () => navigateToDashboard(),
-          onError: (err) => console.log("err: ", err)
+          onSuccess: () => {
+            navigateToDashboard();
+            setLoading(false);
+          }
         });
       }
       else {
         getUser.mutate(userData, {
-          onSuccess: () => navigateToDashboard(),
-          onError: (err) => console.log("err: ", err)
+          onSuccess: () => {
+            navigateToDashboard();
+            setLoading(false);
+          }
         });
       }
-
+    }
+    catch (err) {
+      toastOnBottomCenter('error', `${err.message}: Please try again later.`);
+      signout();
+      setLoading(false);
     }
   }
 
@@ -128,10 +158,16 @@ const Login = () => {
               <div className="text-center">
                 <button 
                   type="submit"
-                  className="shadow-sm rounded-3xl pl-6 pr-8 py-2 my-2 mx-auto bg-blue button-transition text-white flex"
+                  disabled={loading}
+                  className="shadow-sm rounded-3xl py-2 my-2 mx-auto bg-blue button-transition text-white text-center min-w-[150px]"
                 >
-                  <LoginIcon className="h-5 w-5 my-auto" />
-                  <span className="ml-1">Sign in</span>
+                  {loading 
+                    ? <SpinnerSmall />
+                    : <div className="w-full flex justify-center">
+                        <LoginIcon className="h-5 w-5 my-auto" />
+                        <span className="ml-1 mr-2">Sign in</span>
+                      </div>
+                  }
                   </button>
                 <div className="forgot">
                   <a href="#" onClick={openChangePasswordModal}>Forgot your password?</a>

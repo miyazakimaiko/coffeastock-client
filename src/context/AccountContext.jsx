@@ -114,13 +114,11 @@ const AccountProvider = (props) => {
   }
 
   function Signout() {
-    const user = Pool.getCurrentUser();
-    if (user) {
-      forceUnpin();
-      user.signOut();
-      innerSetUserData({});
-      setAuthenticated(false);
-    };
+    // order matters...
+    setAuthenticated(false);
+    innerSetUserData({});
+    Pool.getCurrentUser().signOut();
+    forceUnpin();
   };
 
   return (

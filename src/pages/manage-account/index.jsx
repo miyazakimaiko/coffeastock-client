@@ -11,7 +11,6 @@ import ChangeEmailModal from '../../modals/change-email-modal';
 import ChangeUnitsModal from '../../modals/change-units-modal';
 import DeleteAccountModal from '../../modals/delete-account-modal';
 import './manageAccount.scss';
-import ErrorPage from '../error';
 
 
 const ManageAccount = ({setTitle}) => {
