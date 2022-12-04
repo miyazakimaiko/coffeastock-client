@@ -39,11 +39,11 @@ const PublicHome = () => {
           </Link>
         </div>
         <div className="flex items-center">
-            <Link to="/login">
+            <Link to="/login" className="text-sm mr-4">
                 Sign in
             </Link>
             <Link to="/register">
-              <div className="px-4 py-2 rounded-3xl sinenna-button-transition flex items-center">
+              <div className="border text-base border-white text-white shadow-xl px-3 py-2 rounded-md button-transition">
                 Sign up
               </div>
             </Link>
@@ -61,8 +61,7 @@ const PublicHome = () => {
             <div className="mr-8 mt-8">
               <Link to="/register">
                 <div 
-                  className="w-56 border-2 border-orange bg-orange text-white text-center text-lg opacity-80 
-                            hover:opacity-100 orange-button px-6 py-2 rounded-3xl button-transition shadow-lg"
+                  className="w-56 home-btn start-trial-button"
                 >
                   TRY FOR FREE
                 </div>
@@ -74,10 +73,20 @@ const PublicHome = () => {
           </section>
         </article>
 
-        <article id="dashboard-metrics" className="w-[95%] md:w-[90%] p-4 md:p-10 mt-14 md:mt-32 lg:mt-36 mx-auto flex flex-col-reverse lg:flex-row justify-between bg-green bg-opacity-10 rounded-2xl">
+        <article 
+          id="dashboard-metrics" 
+          className="w-[95%] md:w-[90%] p-4 md:p-10 mt-14 md:mt-32 lg:mt-36 mx-auto flex flex-col-reverse 
+            lg:flex-row justify-between bg-green bg-opacity-10 rounded-md border border-burnt-sienna border-opacity-10"
+        >
           <section className="min-w-[100%] lg:min-w-[380px] pt-6 pl-0 md:pl-8 flex flex-col justify-center text-center lg:text-left">
-            <h2 className="text-3xl md:text-4xl font-bold leading-snug text-burnt-sienna-header pb-2">Dashboard metrics <br/> for your coffee data analysis</h2>
-            <p className="text-base md:text-lg leading-8 py-4">Coffeastock dashboard displays your activity summaries, recent recipes comparison, beans and recipes rankings. <br/> Discover the tendency of your brewing and the best recipe.</p>
+            <h2 className="text-3xl md:text-4xl font-bold leading-snug text-burnt-sienna-header pb-2">
+              Dashboard metrics <br/> for your coffee data analysis
+            </h2>
+            <p className="text-base md:text-lg leading-8 py-4">
+              Coffeastock dashboard displays your activity summaries, recent recipes comparison, beans and recipes rankings.
+              <br/>
+              Discover the tendency of your brewing and the best recipe.
+            </p>
           </section>
           <section>
             <div className="image-section mx-1 md:mx-5 mt-10 lg:m-10">
@@ -86,10 +95,20 @@ const PublicHome = () => {
           </section>
         </article>
 
-        <article id="record-coffee-beans" className="w-[95%] md:w-[90%] p-4 md:p-10 mt-10 md:mt-22 lg:mt-24 mx-auto flex flex-col-reverse justify-between bg-orange bg-opacity-10 rounded-2xl">
+        <article 
+          id="record-coffee-beans" 
+          className="w-[95%] md:w-[90%] p-4 md:p-10 mt-10 md:mt-22 lg:mt-24 mx-auto flex flex-col-reverse 
+            justify-between bg-orange bg-opacity-10 rounded-md border border-burnt-sienna border-opacity-10"
+        >
           <section className="md:min-w-[500px] mt-8 md:mt-12 flex flex-col justify-center text-center">
-            <h2 className="text-3xl md:text-4xl font-bold leading-snug text-burnt-sienna-header pb-2">Record coffee beans and recipe data separately</h2>
-            <p className="text-base md:text-lg leading-8 py-4">Not only you can record recipes, but also create individual coffee beans entry. <br/> So each recipe can be associated with one of the coffee beans details.</p>
+            <h2 className="text-3xl md:text-4xl font-bold leading-snug text-burnt-sienna-header pb-2">
+              Record coffee beans and recipe data separately
+            </h2>
+            <p className="text-base md:text-lg leading-8 py-4">
+              Not only you can record recipes, but also create individual coffee beans entry.
+              <br/>
+              So each recipe can be associated with one of the coffee beans details.
+            </p>
           </section>
           <section className="image-section flex mx-2 md:mx-10">
             <div className="mr-2 lg:mr-8 mt-6">
@@ -101,10 +120,19 @@ const PublicHome = () => {
           </section>
         </article>
 
-        <article id="customize-range" className="w-[95%] md:w-[90%] p-4 md:p-10 mt-10 md:mt-22 lg:mt-24 mx-auto flex flex-col-reverse lg:flex-row-reverse justify-between bg-blue bg-opacity-10 rounded-2xl">
+        <article 
+          id="customize-range" 
+          className="w-[95%] md:w-[90%] p-4 md:p-10 mt-10 md:mt-22 lg:mt-24 mx-auto flex flex-col-reverse 
+            lg:flex-row-reverse justify-between bg-blue bg-opacity-10 rounded-md border border-burnt-sienna border-opacity-10"
+          >
           <section className="min-w-[100%] lg:min-w-[380px] pt-6 flex flex-col justify-center text-center lg:text-left">
-            <h2 className="text-3xl md:text-4xl font-bold leading-snug text-burnt-sienna-header pb-2">Create your own <br/> beans and recipes attributes</h2>
-            <p className="text-base md:text-lg leading-8 py-4">You can create the origin, variety, process, roaster, method, water, and many more attributes in your own words and language.</p>
+            <h2 className="text-3xl md:text-4xl font-bold leading-snug text-burnt-sienna-header pb-2">
+              Create your own <br/> beans and recipes attributes
+            </h2>
+            <p className="text-base md:text-lg leading-8 py-4">
+              You can create the origin, variety, process, roaster, method, water, and many more attributes 
+              in your own words and language.
+            </p>
           </section>
           <section className="mx-2 md:mx-10">
             <div className="image-section mt-5 lg:m-10">
@@ -113,10 +141,20 @@ const PublicHome = () => {
           </section>
         </article>
 
-        <article id="tasting-wheel" className="w-[95%] md:w-[90%] p-4 md:p-10 mt-10 md:mt-22 lg:mt-24 mx-auto flex flex-col-reverse justify-between bg-green bg-opacity-10 rounded-2xl">
+        <article 
+          id="tasting-wheel" 
+          className="w-[95%] md:w-[90%] p-4 md:p-10 mt-10 md:mt-22 lg:mt-24 mx-auto flex flex-col-reverse 
+            justify-between bg-green bg-opacity-10 rounded-md border border-burnt-sienna border-opacity-10"
+        >
           <section className="md:min-w-[500px] mt-8 md:mt-12 flex flex-col justify-center text-center">
-            <h2 className="text-3xl md:text-4xl font-bold leading-snug text-burnt-sienna-header pb-2">Up to 20 palate ranges on your tasting wheel</h2>
-            <p className="text-base md:text-lg leading-8 py-4">Do you want to record complex tasting profile? Up to 20 custom palates can be attached to a recipe. <br/> Of course, you can go for a smaller wheel if that's too much!</p>
+            <h2 className="text-3xl md:text-4xl font-bold leading-snug text-burnt-sienna-header pb-2">
+              Up to 20 palate ranges on your tasting wheel
+            </h2>
+            <p className="text-base md:text-lg leading-8 py-4">
+              Do you want to record complex tasting profile? Up to 20 custom palates can be attached to a recipe.
+              <br/> 
+              Of course, you can go for a smaller wheel if that's too much!
+            </p>
           </section>
           <section className="image-section flex lg:mx-32">
             <div className="mr-2 lg:mr-8 mt-6 lg:mt-10">
