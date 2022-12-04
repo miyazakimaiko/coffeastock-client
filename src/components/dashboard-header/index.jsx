@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useContext } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { MenuAlt2Icon, PlusIcon, XIcon } from '@heroicons/react/outline'
-import { TO_PUBLIC_HOME } from '../../utils/Paths';
+import { TO_LOGIN, TO_PUBLIC_HOME } from '../../utils/Paths';
 import toastOnTopRight from '../../utils/customToast';
 import { capitalize } from '../../helpers/HtmlConverter';
 import { NavStateContext } from '../../context/NavStateContext';
@@ -22,11 +22,7 @@ const DashboardHeader = (props) => {
           setNavRef, 
           setPushPinRef, 
           showNavbar
-        } = useContext(NavStateContext);
- 
-  const userData = useUserData();
-  const signout = useSignout();
-  const navigate = useNavigate();
+        } = useContext(NavStateContext); 
 
   const { modal, 
           openAddBeanModal, 
@@ -34,9 +30,13 @@ const DashboardHeader = (props) => {
           modalModeSelection
         } = useContext(ModalStateContext);
 
+  const userData = useUserData();
+  const signout = useSignout();
+  const navigate = useNavigate();
+
   const logout = () => {
     signout();
-    navigate(TO_PUBLIC_HOME, { replace: true });
+    navigate(TO_LOGIN, { replace: true });
     toastOnTopRight('success', 'Logged out successfully.')
   }
 

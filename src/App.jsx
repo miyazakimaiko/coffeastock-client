@@ -85,14 +85,12 @@ const App = () => {
               </Routes>
             </>
             :
-            <div className="relative main min-h-screen box-border bg-white">
-              <Routes>
-                <Route exact path="/" element={<PublicHome />} />
-                <Route exact path='/register' element={<Register />} />
-                <Route exact path='/login' element={login} />
-                <Route path='/app/*' element={login} />
-              </Routes>
-            </div>
+            <Routes>
+              <Route exact path="/" element={<PublicHome />} />
+              <Route exact path='/register' element={<Register />} />
+              <Route exact path='/login' element={login} />
+              <Route path='/app/*' element={login} />
+            </Routes>
           }
 
           <ToastContainer theme="colored" newestOnTop hideProgressBar={false}/>

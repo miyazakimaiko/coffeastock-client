@@ -32,18 +32,22 @@ const faqs = [
 const PublicHome = () => {
   return (
     <div className="max-w-[1500px] mx-auto">    
-      <header className="h-16 lg:h-24 w-full max-w-screen-xl mx-auto px-3 flex items-center justify-between">
+      <header className="h-16 lg:h-24 w-full max-w-screen-xl mx-auto px-3 flex items-center justify-between text-white">
         <div className="w-44">
-          <img src={Logo} alt="Coffeastock" />
+          <Link to="/">
+            <img src={Logo} alt="Coffeastock" />
+          </Link>
         </div>
-        <Link to="/register">
-          <div 
-            className="border-2 border-white text-white md:text-lg shadow-xl
-                       blue-button px-6 py-2 rounded-3xl button-transition"
-          >
-            Go To Web App
+        <div className="flex items-center">
+            <Link to="/login">
+                Sign in
+            </Link>
+            <Link to="/register">
+              <div className="px-4 py-2 rounded-3xl sinenna-button-transition flex items-center">
+                Sign up
+              </div>
+            </Link>
           </div>
-        </Link>
       </header>
 
       <main>
@@ -73,7 +77,7 @@ const PublicHome = () => {
         <article id="dashboard-metrics" className="w-[95%] md:w-[90%] p-4 md:p-10 mt-14 md:mt-32 lg:mt-36 mx-auto flex flex-col-reverse lg:flex-row justify-between bg-green bg-opacity-10 rounded-2xl">
           <section className="min-w-[100%] lg:min-w-[380px] pt-6 pl-0 md:pl-8 flex flex-col justify-center text-center lg:text-left">
             <h2 className="text-3xl md:text-4xl font-bold leading-snug text-burnt-sienna-header pb-2">Dashboard metrics <br/> for your coffee data analysis</h2>
-            <p className="text-base md:text-lg leading-8 py-4">Displays your activity summaries, recent recipes comparison, beans and recipes rankings. <br/> Discover the tendency of your brewing and the best recipe.</p>
+            <p className="text-base md:text-lg leading-8 py-4">Coffeastock dashboard displays your activity summaries, recent recipes comparison, beans and recipes rankings. <br/> Discover the tendency of your brewing and the best recipe.</p>
           </section>
           <section>
             <div className="image-section mx-1 md:mx-5 mt-10 lg:m-10">

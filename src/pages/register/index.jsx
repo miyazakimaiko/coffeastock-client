@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { BookOpenIcon, GlobeIcon, LightBulbIcon } from '@heroicons/react/outline'
 import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
-import UserPool from '../../utils/UserPool'
+import * as EmailValidator from 'email-validator';
+import { BsCheckLg } from 'react-icons/bs';
+import { AiOutlineArrowRight } from 'react-icons/ai';
+import UserPool from '../../utils/UserPool';
 import { TO_LOGIN } from '../../utils/Paths';
 import toastOnBottomCenter from '../../utils/customToast'
-import CoffeeBagLeft from '../../assets/svgs/CoffeeBagLeft'
+import Logo from '../../assets/images/logo-white-bg.png'
 import ConfirmUserModal from '../../modals/confirm-user-modal';
 
 const Register = () => {
@@ -13,11 +15,36 @@ const Register = () => {
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const [passwordRetype, setPasswordRetype] = useState('');
+  
+  const [showEmailWarningMsg, setShowEmailWarningMsg] = useState(null);
+  const [showPwdRetypeWarningMsg, setShowPwdRetypeWarningMsg] = useState(false);
 
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [verificationCode, setVerificationCode] = useState(null);
+  
+  const navigate = useNavigate();
 
+  function validateEmail() {
+    if (!EmailValidator.validate(email)) {
+      setShowEmailWarningMsg(true);
+    }
+    else {
+      setShowEmailWarningMsg(false);
+    }
+  }
+
+  useEffect(() => {
+    if (passwordRetype.length > 0) {
+      if (password !== passwordRetype) {
+        setShowPwdRetypeWarningMsg(true);
+      }
+      else {
+        setShowPwdRetypeWarningMsg(false);
+      }
+    }
+  }, [password, passwordRetype])
+  
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -73,87 +100,68 @@ const Register = () => {
           h-24 w-full max-w-screen-xl mx-auto px-3
           flex items-center justify-between"
         >
-          <Link to="/register" className="text-2xl w-8 h-8">
-            <CoffeeBagLeft />
+          <Link to="/" className="w-44">
+            <img src={Logo} alt="Coffeastock" />
           </Link>
-          <Link to="/login">
-            <div className="px-8 py-2 rounded-3xl sinenna-button-transition">
-              Login
-            </div>
-          </Link>
+          <div className="flex items-center">
+            <span className="pr-3">Already have an account?</span>
+            <Link to="/login">
+              <div className="px-4 py-2 rounded-3xl sinenna-button-transition flex items-center">
+                Sign in
+                <AiOutlineArrowRight className="ml-1"/>
+              </div>
+            </Link>
+          </div>
         </header>
 
         <div className="">
           <div className="text-center">
-            <h1 className="text-4xl  mb-3">Coffee Journal</h1>
-            <h2 className="text-xl">
-              Collect, Analyse and Improve Your Coffee Records In One Place.
-            </h2>
+            <h1 className="text-3xl  mb-3">Sign up</h1>
           </div>
 
-          <div className="flex flex-wrap items-center m-auto pt-14 max-w-screen-lg">
-            <div className="p-6 w-1/2">
-              <div className="pb-4">
-                <div className="flex items-center mb-2">
-                  <BookOpenIcon className="w-10 h-10 mr-3 text-blue" />
-                  <h3 className="text-lg font-medium">Free Account</h3>
-                </div>
-                <p>
-                  Here you can write a feature description for your dashboard,
-                  let the users know what is the value that you give them.
-                </p>
-              </div>
-              <div className="pb-4">
-                <div className="flex items-center mb-2">
-                  <GlobeIcon className="w-10 h-10 mr-3 text-green" />
-                  <h3 className="text-lg font-medium">Access From Anywhere</h3>
-                </div>
-                <p>
-                  Here you can write a feature description for your dashboard,
-                  let the users know what is the value that you give them.
-                </p>
-              </div>
-              <div className="pb-4">
-                <div className="flex items-center mb-2">
-                  <LightBulbIcon className="w-10 h-10 mr-3 text-yellow" />
-                  <h3 className="text-lg font-medium">Other Features</h3>
-                </div>
-                <p>
-                  Here you can write a feature description for your dashboard,
-                  let the users know what is the value that you give them.
-                </p>
-              </div>
-            </div>
-            <div className="w-1/2">
-              <form method="#" action="#" onSubmit={onSubmit}>
-                <div className="bg-white p-6">
-                  <div className="card-content">
+          <div className="flex flex-wrap items-center m-auto py-4 w-full max-w-md">
+            <div className="w-full">
+              <form method="#" action="#">
+                <div className="bg-creme py-8 px-6 shadow-sm rounded-md border border-burnt-sienna border-opacity-20">
+                  <h2 className="text-xl text-center">Welcome to Coffeastock!</h2>
+                  <div className="card-content py-4">
                     <div className="pb-4">
-                      <input
-                        type="text"
-                        placeholder="Nickname"
-                        name="nickname"
-                        className="orange-outline-transition bg-creme block w-full py-2 px-3 rounded-md"
-                        value={nickname}
-                        onChange={(e) => setNickname(e.target.value)}
-                      />
-                    </div>
-                    <div className="pb-4">
+                      <div className="flex items-center">
+                        { showEmailWarningMsg
+                          ? <span className="text-red font-medium">Please enter valid email address.</span>
+                          : <span>Enter your email</span>
+                        }
+                        {email.length > 0 && !showEmailWarningMsg
+                          ? <BsCheckLg className="ml-2 w-3 h-3 text-green" />
+                          : null
+                        }
+                      </div>
                       <input
                         type="email"
                         placeholder="Email"
                         name="email"
-                        className="orange-outline-transition transition-all bg-creme block w-full py-2 px-3 rounded-md"
+                        className="orange-outline-transition transition-all block w-full py-2 px-3 rounded-md"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        onBlur={validateEmail}
                       />
                     </div>
                     <div className="pb-4">
+                      <div className="flex items-center">
+                        {showPwdRetypeWarningMsg
+                          ? <span className="text-red font-medium">Password does not match.</span>
+                          : <span>Create a password</span>
+                        }
+                        {password.length > 0 && passwordRetype.length > 0 && !showPwdRetypeWarningMsg
+                          ? <BsCheckLg className="ml-2 w-3 h-3 text-green" />
+                          : null
+                        }
+                      </div>
                       <input
                         type="password"
                         placeholder="Password"
                         name="password"
-                        className="orange-outline-transition transition-all bg-creme block w-full py-2 px-3 rounded-md"
+                        className="orange-outline-transition transition-all block w-full py-2 px-3 rounded-md"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                       />
@@ -161,18 +169,50 @@ const Register = () => {
                     <div className="pb-4">
                       <input
                         type="password"
-                        placeholder="Password Confirmation"
-                        className="orange-outline-transition transition-all bg-creme block w-full py-2 px-3 rounded-md"
+                        placeholder="Password Retype"
+                        className="orange-outline-transition transition-all block w-full py-2 px-3 rounded-md"
+                        value={passwordRetype}
+                        onChange={(e) => setPasswordRetype(e.target.value)}
+                      />
+                    </div>
+                    <div className="pb-4">
+                      <div className="flex items-center">
+                        <label>Enter a nickname</label>
+                        {nickname.length > 0
+                            ? <BsCheckLg className="ml-2 w-3 h-3 text-green" />
+                            : null
+                        }
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Nickname"
+                        name="nickname"
+                        className="orange-outline-transition block w-full py-2 px-3 rounded-md"
+                        value={nickname}
+                        onChange={(e) => setNickname(e.target.value)}
                       />
                     </div>
                   </div>
                   <div className="text-center">
                     <button
                       type="submit"
+                      onClick={onSubmit}
+                      disabled={ showEmailWarningMsg || email.length <= 0 
+                                || password.length <= 0
+                                || passwordRetype.length <= 0
+                                || nickname.length <= 0
+                                || showPwdRetypeWarningMsg}
                       className="bg-orange button-transition shadow-sm rounded-3xl pl-6 pr-8 py-2 my-2 mx-auto text-white flex"
                     >
                       <span className="ml-1">Create Free Account</span>
                     </button>
+
+                    <p className="text-xs pt-4">
+                      By creating an account, you agree to the <Link to="/terms" className="text-blue underline">Terms of Service</Link>
+                      . For more information about Coffeastock's privacy practices, 
+                      see the <Link to="/privacy-statement" className="text-blue underline">Coffeastock Privacy Statement</Link>
+                      . We'll occasionally send you account-related emails.
+                    </p>
                   </div>
                 </div>
               </form>

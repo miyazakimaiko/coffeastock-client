@@ -1,8 +1,9 @@
-import { LoginIcon } from '@heroicons/react/outline'
-import React, { useContext, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { LoginIcon } from '@heroicons/react/outline';
+import React, { useContext, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { BsCheck2 } from 'react-icons/bs';
 import * as api from '../../api/Users';
-import Logo from '../../assets/images/logo-white-bg.png'
+import Logo from '../../assets/images/logo-white-bg.png';
 import toastOnBottomCenter from '../../utils/customToast';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import { useAuthenticate, 
@@ -82,11 +83,19 @@ const Login = () => {
       <div className="h-full">
         <div className="h-16 lg:h-24 w-full max-w-screen-xl mx-auto px-3 flex items-center justify-between">
           <div className="w-44">
-            <img src={Logo} alt="Coffeastock" />
+            <Link to="/">
+              <img src={Logo} alt="Coffeastock" />
+            </Link>
           </div>
-          <Link to="/register">
-            <div className="px-8 py-2 rounded-3xl sinenna-button-transition">Create New Account</div>
-          </Link>
+          <div className="flex items-center">
+            <span className="pr-3">New to Coffeastock?</span>
+            <Link to="/register">
+              <div className="px-4 py-2 rounded-3xl sinenna-button-transition flex items-center">
+                Sign up
+                <BsCheck2 className="ml-1"/>
+              </div>
+            </Link>
+          </div>
         </div>
 
         <div className="w-full flex justify-center mt-20">
@@ -98,7 +107,7 @@ const Login = () => {
           >
             <div className="bg-creme p-6 shadow-sm rounded-md border border-burnt-sienna border-opacity-20">
               <div>
-                <h3 className="text-2xl font-light">Login</h3>
+                <h3 className="text-2xl font-light text-center">Sign in to Coffeastock</h3>
               </div>
               <div className="card-content pt-3">
                 <div className="pb-3">
@@ -122,7 +131,7 @@ const Login = () => {
                   className="shadow-sm rounded-3xl pl-6 pr-8 py-2 my-2 mx-auto bg-blue button-transition text-white flex"
                 >
                   <LoginIcon className="h-5 w-5 my-auto" />
-                  <span className="ml-1">Login</span>
+                  <span className="ml-1">Sign in</span>
                   </button>
                 <div className="forgot">
                   <a href="#" onClick={openChangePasswordModal}>Forgot your password?</a>

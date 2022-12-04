@@ -20,15 +20,20 @@ const Nav = (props) => {
           pinnedNavbar, 
           setPinnedNavbar,
         } = useContext(NavStateContext);
+
+  const { modal, 
+          openAddBeanModal, 
+          openAddRecipeModal, 
+          modalModeSelection
+        } = useContext(ModalStateContext);
+
   const [openBeansAccordion, innerSetOpenBeansAccordion] = useState(false);
   const [openRecipesAccordion, innerSetOpenRecipesAccordion] = useState(false);
-  const {modal, openAddBeanModal, openAddRecipeModal, modalModeSelection} = useContext(ModalStateContext);
 
   const [beansOpacity, setBeansOpacity] = useState(0);
   const [recipesOpacity, setRecipesOpacity] = useState(0);
   const [beansMarginTop, setBeansMarginTop] = useState("-400px");
   const [recipesMarginTop, setRecipesMarginTop] = useState("-400px");
-
 
   const toggleOpenBeansAccordion = () => {
     if (openBeansAccordion) {
