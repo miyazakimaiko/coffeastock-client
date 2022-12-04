@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
-import * as EmailValidator from 'email-validator';
 import { BsCheckLg } from 'react-icons/bs';
+import * as EmailValidator from 'email-validator';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import UserPool from '../../utils/UserPool';
 import { TO_LOGIN } from '../../utils/Paths';
@@ -16,6 +16,10 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordRetype, setPasswordRetype] = useState('');
+
+  const [pwdContainsLowercase, setPwdContainsLowercase] = useState(false);
+  const [pwdContainsUppercase, setPwdContainsUppwecase] = useState(false);
+  const [pwdContainsNumber, setPwdContainsNumber] = useState(false);
   
   const [showEmailWarningMsg, setShowEmailWarningMsg] = useState(null);
   const [showPwdRetypeWarningMsg, setShowPwdRetypeWarningMsg] = useState(false);
@@ -34,7 +38,20 @@ const Register = () => {
     }
   }
 
+  function validatePassword() {
+    password.match(/[a-z]/g) 
+      ? setPwdContainsLowercase(true) 
+      : setPwdContainsLowercase(false);
+    password.match(/[A-Z]/g) 
+      ? setPwdContainsUppwecase(true) 
+      : setPwdContainsUppwecase(false);
+    password.match(/[0-9]/g) 
+      ? setPwdContainsNumber(true) 
+      : setPwdContainsNumber(false);
+  }
+
   useEffect(() => {
+    validatePassword();
     if (passwordRetype.length > 0) {
       if (password !== passwordRetype) {
         setShowPwdRetypeWarningMsg(true);
@@ -132,7 +149,7 @@ const Register = () => {
                           : <span>Enter your email</span>
                         }
                         {email.length > 0 && !showEmailWarningMsg
-                          ? <BsCheckLg className="ml-2 w-3 h-3 text-green" />
+                          ? <BsCheckLg className="ml-2 w-3 h-3 text-deep-green" />
                           : null
                         }
                       </div>
@@ -153,7 +170,7 @@ const Register = () => {
                           : <span>Create a password</span>
                         }
                         {password.length > 0 && passwordRetype.length > 0 && !showPwdRetypeWarningMsg
-                          ? <BsCheckLg className="ml-2 w-3 h-3 text-green" />
+                          ? <BsCheckLg className="ml-2 w-3 h-3 text-deep-green" />
                           : null
                         }
                       </div>
@@ -165,6 +182,38 @@ const Register = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                       />
+                      <div className="flex items-center flex-wrap text-xs">
+                        Must contain: 
+                        <div className="mx-1">
+                          {pwdContainsLowercase
+                            ? <div className="text-deep-green flex items-center">
+                                <BsCheckLg className="mr-1"/> 
+                                A lowercase letter
+                              </div>
+                            : <div className="text-red">A lowercase letter</div>
+                          }
+                        </div>
+                        |
+                        <div className="mx-1">
+                          {pwdContainsUppercase
+                            ? <div className="text-deep-green flex items-center">
+                                <BsCheckLg className="mr-1"/> 
+                                A uppercase letter
+                              </div>
+                            : <div className="text-red">A uppercase letter</div>
+                          }
+                        </div>
+                        |
+                        <div className="mx-1">
+                          {pwdContainsNumber
+                            ? <div className="text-deep-green flex items-center">
+                                <BsCheckLg className="mr-1"/> 
+                                A number
+                              </div>
+                            : <div className="text-red">A number</div>
+                          }
+                        </div>
+                      </div>
                     </div>
                     <div className="pb-4">
                       <input
@@ -179,7 +228,7 @@ const Register = () => {
                       <div className="flex items-center">
                         <label>Enter a nickname</label>
                         {nickname.length > 0
-                            ? <BsCheckLg className="ml-2 w-3 h-3 text-green" />
+                            ? <BsCheckLg className="ml-2 w-3 h-3 text-deep-green" />
                             : null
                         }
                       </div>
@@ -197,8 +246,12 @@ const Register = () => {
                     <button
                       type="submit"
                       onClick={onSubmit}
-                      disabled={ showEmailWarningMsg || email.length <= 0 
+                      disabled={ showEmailWarningMsg
+                                || email.length <= 0 
                                 || password.length <= 0
+                                || !pwdContainsLowercase
+                                || !pwdContainsUppercase
+                                || !pwdContainsNumber
                                 || passwordRetype.length <= 0
                                 || nickname.length <= 0
                                 || showPwdRetypeWarningMsg}
