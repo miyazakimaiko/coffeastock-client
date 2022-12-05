@@ -17,12 +17,10 @@ import { useGetSession,
         useAuthenticated, 
         useSetAuthenticated } from './context/AccountContext';
 import ScrollBackButton from './elements/ScrollBackButton';
-import Plans from './pages/plans';
+import Pricing from './pages/pricing';
 import ServerError from './pages/server-error';
 import DashboardLayout from './components/dashboard-layout';
-import BasicLayout from './components/basic-layout';
 import NotFound from './pages/not-found-error';
-import Spinner from './elements/Spinner';
 import ErrorPage from './pages/error';
 
 
@@ -49,6 +47,12 @@ const App = () => {
   return (
     <div className="font-sans text-xs md:text-sm text-burnt-sienna">
       <Router>
+        <Routes>
+          <Route exact path="/" element={<PublicHome />} />
+          <Route exact path="pricing" element={<Pricing />} />
+          <Route exact path="500" element={<ServerError />} />  
+        </Routes>
+
           { authenticated ? 
             <>
               <Routes>
@@ -75,18 +79,10 @@ const App = () => {
                   <Route exact path="500" element={<ServerError />} />  
                   <Route path="*" element={pageNotFound} />
                 </Route>
-
-                <Route exact path="/" element={<PublicHome />} />
-
-                <Route path="/" element={<BasicLayout />} >
-                  <Route exact path="plans" element={<Plans />} />
-                  <Route exact path="500" element={<ServerError />} />  
-                </Route>
               </Routes>
             </>
             :
             <Routes>
-              <Route exact path="/" element={<PublicHome />} />
               <Route exact path='/register' element={<Register />} />
               <Route exact path='/login' element={login} />
               <Route path='/app/*' element={login} />
