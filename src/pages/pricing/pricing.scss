@@ -1,0 +1,11 @@
+#trial-hero {
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    z-index: -1;
+    height: 21rem;
+    width: 100%;
+    background-color: var(--creme);
+  }
+}

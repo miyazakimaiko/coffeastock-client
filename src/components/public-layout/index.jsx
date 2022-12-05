@@ -1,11 +1,11 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
-import BasicHeader from '../basic-header'
+import PublicHeader from '../public-header'
 
-const BasicLayout = () => {
+const PublicLayout = () => {
   return (
     <div className="bg-white font-sans text-xs md:text-sm text-burnt-sienna">
-      <BasicHeader />
+      <PublicHeader />
       <div className="h-full">
         <Outlet />
       </div>
@@ -13,4 +13,4 @@ const BasicLayout = () => {
   )
 }
 
-export default BasicLayout
+export default PublicLayout
