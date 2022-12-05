@@ -5,6 +5,7 @@
 @import "./assets/scss/breakpoints";
 
 body {
+  overflow-x: hidden;
   box-sizing: border-box;
   position: relative;
   transition: .5s;
@@ -41,7 +42,7 @@ body {
 }
 
 :root {
-  --burnt-sienna-header: #484040;
+  --burnt-sienna-darker: #484040;
   --burnt-sienna: #66615B;
   --blue: #0075FF;
   --orange: #FF8F5D;

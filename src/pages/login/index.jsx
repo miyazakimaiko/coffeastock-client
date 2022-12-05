@@ -3,7 +3,8 @@ import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BsCheck2 } from 'react-icons/bs';
 import * as api from '../../api/Users';
-import Logo from '../../assets/images/logo-white-bg.png';
+import LogoSm from '../../assets/images/logo.png';
+import LogoLg from '../../assets/images/logo-white-bg.png';
 import toastOnBottomCenter from '../../utils/customToast';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import { useAuthenticate, 
@@ -112,9 +113,10 @@ const Login = () => {
     <>    
       <div className="h-full">
         <div className="h-16 lg:h-24 w-full max-w-screen-xl mx-auto px-3 flex items-center justify-between">
-          <div className="w-44">
+          <div className="w-10 md:w-44">
             <Link to="/">
-              <img src={Logo} alt="Coffeastock" />
+              <img src={LogoSm} alt="Coffeastock" className="block md:hidden w-10" />
+              <img src={LogoLg} alt="Coffeastock" className="hidden md:block" />
             </Link>
           </div>
           <div className="flex items-center">
@@ -132,7 +134,7 @@ const Login = () => {
           <form 
             method="#" 
             action="#"
-            className="w-96"
+            className="w-96 mx-2"
             onSubmit={onSubmit}
           >
             <div className="bg-creme p-6 shadow-sm rounded-md border border-burnt-sienna border-opacity-20">

@@ -7,7 +7,8 @@ import { AiOutlineArrowRight } from 'react-icons/ai';
 import UserPool from '../../utils/UserPool';
 import { TO_LOGIN } from '../../utils/Paths';
 import toastOnBottomCenter from '../../utils/customToast'
-import Logo from '../../assets/images/logo-white-bg.png'
+import LogoSm from '../../assets/images/logo.png'
+import LogoLg from '../../assets/images/logo-white-bg.png'
 import ConfirmUserModal from '../../modals/confirm-user-modal';
 
 const Register = () => {
@@ -37,6 +38,13 @@ const Register = () => {
       setShowEmailWarningMsg(false);
     }
   }
+
+  useEffect(() => {
+    if (Boolean(showEmailWarningMsg)) {
+      validateEmail()
+    }
+  }, [email, showEmailWarningMsg])
+  
 
   function validatePassword() {
     password.match(/[a-z]/g) 
@@ -112,13 +120,10 @@ const Register = () => {
   return (
     <>
       <div className="h-full bg-white">
-        <header
-          className="
-          h-24 w-full max-w-screen-xl mx-auto px-3
-          flex items-center justify-between"
-        >
-          <Link to="/" className="w-44">
-            <img src={Logo} alt="Coffeastock" />
+        <header className="h-16 lg:h-24 w-full max-w-screen-xl mx-auto px-3 flex items-center justify-between">
+          <Link to="/" className="w-10 md:w-44">
+            <img src={LogoSm} alt="Coffeastock" className="block md:hidden w-10" />
+            <img src={LogoLg} alt="Coffeastock" className="hidden md:block" />
           </Link>
           <div className="flex items-center">
             <span className="pr-3">Already have an account?</span>
@@ -137,10 +142,10 @@ const Register = () => {
           </div>
 
           <div className="flex flex-wrap items-center m-auto py-4 w-full max-w-md">
-            <div className="w-full">
+            <div className="w-full mx-2">
               <form method="#" action="#">
                 <div className="bg-creme py-8 px-6 shadow-sm rounded-md border border-burnt-sienna border-opacity-20">
-                  <h2 className="text-xl text-center">Welcome to Coffeastock!</h2>
+                  <h2 className="text-xl text-center">Start your 14-day free trial</h2>
                   <div className="card-content py-4">
                     <div className="pb-4">
                       <div className="flex items-center">
@@ -169,7 +174,12 @@ const Register = () => {
                           ? <span className="text-red font-medium">Password does not match.</span>
                           : <span>Create a password</span>
                         }
-                        {password.length > 0 && passwordRetype.length > 0 && !showPwdRetypeWarningMsg
+                        {password.length > 0 
+                          && passwordRetype.length > 0 
+                          && !showPwdRetypeWarningMsg
+                          && pwdContainsLowercase
+                          && pwdContainsUppercase
+                          && pwdContainsNumber
                           ? <BsCheckLg className="ml-2 w-3 h-3 text-deep-green" />
                           : null
                         }
