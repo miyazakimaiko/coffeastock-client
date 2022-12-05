@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       colors: {
         'burnt-sienna': '#66615B',
+        'burnt-sienna-darker': '#484040',
         'creme': '#F4F3EE',
         'lightgrey': '#E6E6E6',
         'greycreme': '#e9e8e3',
