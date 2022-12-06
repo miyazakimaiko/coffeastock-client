@@ -1,8 +1,8 @@
 export const ORDER_BY = {
-  DATE_EDITED: 'date edited',
+  // DATE_EDITED: 'date edited',
   BREW_DATE: 'brew_date',
-  EXTRACTION_TIME: 'extraction_time', // not working correctly
-  GRIND_SIZE: 'grind_size',
+  // EXTRACTION_TIME: 'extraction_time',
+  // GRIND_SIZE: 'grind_size',
   GRINDER: 'grinder',
   GROUNDS_WEIGHT: 'grounds_weight',
   METHOD:'method',

@@ -56,9 +56,9 @@ const ViewBeansList = ({setTitle}) => {
     coffeeHtmlDictionary['No Group'] = []
 
     Object.values(beanList).forEach(bean => {
-      const beanIsApplicableToShowState = showState === SHOW.ALL ||
-        (((showState === SHOW.SINGLE_ORIGIN) && bean.single_origin) ||
-          ((showState === SHOW.BLEND) && !bean.single_origin))
+      const beanIsApplicableToShowState = showState === SHOW.ALL
+        || (((showState === SHOW.SINGLE_ORIGIN) && bean.single_origin)
+        || ((showState === SHOW.BLEND) && !bean.single_origin));
   
       if (beanIsApplicableToShowState) {
         let pushed = false

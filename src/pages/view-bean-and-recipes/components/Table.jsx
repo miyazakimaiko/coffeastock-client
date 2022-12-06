@@ -72,11 +72,36 @@ const Table = ({searchValue, orderBy, orderMethod}) => {
   }
 
   function search(data) {
-    const keys = ["brew_date", "grind_size"];
+    const keys = ["extraction_time", "brew_date", "grind_size", "grounds_weight", 
+      "water_weight", "water_temp", "yield_weight", "tds", "water", "grinder", "method", "memo"];
 
     if (Boolean(searchValue) && searchValue.length !== 0) {
       return data.filter((item) => 
-        keys.some(key => item[key].toLowerCase().includes(searchValue.toLowerCase()))
+        (
+          keys.some(key => { 
+            if (key === "extraction_time") {
+              return Object.keys(item[key]).map(time => {
+                if (time === "hours") {
+                  return `${item[key].hours} hr`;
+                }
+                else if (time === "minutes") {
+                  return `${item[key].minutes} min`;
+                }
+                else if (time === "seconds") {
+                  return `${item[key].seconds} sec`;
+                }
+              }).toString().replaceAll(",", " ")
+                .toLowerCase().includes(searchValue.toLowerCase());
+            }
+            else if (item[key] instanceof Array) {
+              return ranges[`${key}_range`][item[key][0]].label.toLowerCase().includes(searchValue.toLowerCase())
+            }
+            else if (typeof item[key] === 'string') {
+              return item[key].toLowerCase().includes(searchValue.toLowerCase())
+            }
+            else return;
+          })
+        )
       );
     }
     return data;

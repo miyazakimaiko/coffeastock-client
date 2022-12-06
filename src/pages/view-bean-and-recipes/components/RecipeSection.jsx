@@ -10,7 +10,7 @@ import Table from './Table'
 
 const RecipeSection = () => {
   const [searchValue, setSearchValue] = useState("")
-  const [orderByState, setOrderByState] = useState(ORDER_BY.DATE_EDITED);
+  const [orderByState, setOrderByState] = useState(ORDER_BY.BREW_DATE);
   const [orderByMethod, setOrderByMethod] = useState(ORDER_METHOD.ASC);
 
   return (
@@ -46,7 +46,7 @@ const RecipeSection = () => {
               onChange={setSearchValue}
             />
             <TooltipBottomLeft 
-              tooltipText="The search filter applies to the Name, Altitude, Harvest Period, and Roast Date."
+              tooltipText="Please use 'YYYY-MM-DD' format to search by the Brew Date. (e.g. 2022-01-31) "
             >
               <div className="flex items-center">
                 <AiOutlineQuestionCircle className="h-5 w-5 flex-shrink-0" />
