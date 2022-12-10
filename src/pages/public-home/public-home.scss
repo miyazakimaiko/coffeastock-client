@@ -26,6 +26,10 @@
     }
 
     @include xl() {
+      right: -390px;
+    }
+
+    @include xxl() {
       top: -200px;
       right: -300px;
     }
@@ -73,110 +77,140 @@
   background: #E96D71;
 }
 
+#about-coffeasatock {
+  position: relative;
+  
+  &::before {
+    content: "";
+    background-image: url(../../assets/images/blue-separator.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    display: block;
+    position: absolute;
+    top: -23.9%;
+    height: 24%;
+    width: 100vw;
+    z-index: -1;
+  }
+
+  .gradient-underline span {
+    background: linear-gradient(transparent 70%, #579999 70%);
+  }
+}
+
 #dashboard-metrics {
-  .image-section {
+  .bg-circle-orange {
     position: relative;
 
-    &::after {
+    &::before {
       content: "";
       position: absolute;
-      top: -20px;
-      bottom: 20px;
-      right: 30px;
-      left: 10px;
+      bottom: 5px;
+      left: 5px;
+      height: 400px;
+      width: 400px;
+      background-color: var(--orange);
+      border-radius: 50%;
       z-index: -1;
-      opacity: 0.4;
-      background-image: url('../../assets/images/bg-dot-green.png');
-      background-repeat: no-repeat;
-      background-size: cover;
+    }
+  }
+
+  .bottom-line-orange {
+    &::after {
+      content: "";
+      display: block;
+      width: 150px;
+      height: 5px;
+      margin-top: 30px;
+      background-color: var(--orange);
     }
   }
 }
 
 #record-coffee-beans {
-  .image-section {
+  .bg-circle-green {
     position: relative;
 
     &::before {
       content: "";
       position: absolute;
-      top: 0;
-      left: -20px;
-      width: 30%;
-      height: 60%;
+      bottom: -20px;
+      right: -60px;
+      height: 400px;
+      width: 400px;
+      background-color: var(--green);
+      border-radius: 50%;
       z-index: -1;
-      opacity: 0.4;
-      background-image: url('../../assets/images/bg-dot-orange.png');
-      background-repeat: no-repeat;
-      background-size: cover;
     }
+  }
 
+  .bottom-line-green {
     &::after {
       content: "";
-      position: absolute;
-      bottom: -30px;
-      right: -20px;
-      width: 30%;
-      height: 60%;
-      z-index: -1;
-      opacity: 0.4;
-      background-image: url('../../assets/images/bg-dot-orange.png');
-      background-repeat: no-repeat;
-      background-size: cover;
+      display: block;
+      width: 150px;
+      height: 5px;
+      margin-top: 30px;
+      background-color: var(--green);
     }
   }
 }
 
 #customize-range {
-  .image-section {
-    position: relative;
-
-    &::after {
-      content: "";
-      position: absolute;
-      top: -20px;
-      bottom: 0px;
-      right: -20px;
-      left: 0px;
-      z-index: -1;
-      opacity: 0.3;
-      background-image: url('../../assets/images/bg-dot-blue.png');
-      background-repeat: no-repeat;
-      background-size: cover;
-    }
-  }
-}
-
-#tasting-wheel {
-  .image-section {
+  .bg-circle-pink {
     position: relative;
 
     &::before {
       content: "";
       position: absolute;
-      top: 0;
-      left: -40px;
-      width: 30%;
-      height: 70%;
+      bottom: 5px;
+      left: 5px;
+      height: 400px;
+      width: 400px;
+      background-color: var(--pink);
+      border-radius: 50%;
       z-index: -1;
-      opacity: 0.4;
-      background-image: url('../../assets/images/bg-dot-green-sm.png');
-      background-repeat: no-repeat;
-      background-size: cover;
     }
+  }
 
+  .bottom-line-pink {
     &::after {
       content: "";
+      display: block;
+      width: 150px;
+      height: 5px;
+      margin-top: 30px;
+      background-color: var(--pink);
+    }
+  }
+}
+
+#tasting-wheel {
+  .bg-circle-blue {
+    position: relative;
+
+    &::before {
+      content: "";
       position: absolute;
-      bottom: 0;
-      right: -50px;
-      width: 30%;
-      height: 70%;
+      bottom: -20px;
+      right: -60px;
+      height: 400px;
+      width: 400px;
+      background-color: var(--ash-blue);
+      border-radius: 50%;
       z-index: -1;
-      opacity: 0.4;
-      background-image: url('../../assets/images/bg-dot-green-sm.png');
-      background-repeat: no-repeat;
-      background-size: cover;
+    }
+  }
+
+  .bottom-line-blue {
+    &::after {
+      content: "";
+      display: block;
+      width: 150px;
+      height: 5px;
+      margin-top: 30px;
+      background-color: var(--ash-blue);
     }
   }
 }
@@ -185,7 +219,7 @@
   .quote {
     position: relative;
 
-    &::before {
+    &::after {
       content: "";
       position: absolute;
       top: 0;
@@ -198,6 +232,24 @@
       background-repeat: no-repeat;
       background-size: cover;
     }
+  }
+}
+
+#faq {
+  position: relative;
+  
+  &::before {
+    content: "";
+    background-image: url(../../assets/images/pink-separator.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    display: block;
+    position: absolute;
+    top: -61.9%;
+    height: 63%;
+    width: 100vw;
+    z-index: -1;
   }
 }
 
