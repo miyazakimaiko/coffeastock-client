@@ -12,13 +12,17 @@ module.exports = {
         'creme': '#F4F3EE',
         'lightgrey': '#E6E6E6',
         'greycreme': '#e9e8e3',
-        'green': '#79C29A',
+        'green': '#93CCAC',
         'deep-green': '#1da359',
         'blue': '#68B3C7',
-        'orange': '#FF8F5D',
+        'ash-blue': '#a8c8c8',
+        'orange': '#EA9470',
         'lime': '#D6E4A3',
         'yellow': '#F3BB44',
-        'red': '#EB5E28'
+        'red': '#EB5E28',
+        'pink': '#e19193',
+        'ash-pink': '#E8C1B4',
+        'purple': '#9a92c4',
       },
       width: {
         '800px': '800px'
