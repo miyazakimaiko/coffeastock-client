@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { BsPlusLg } from 'react-icons/bs';
 import PublicHeader from '../../components/public-header';
 import './pricing.scss';
+import PublicFooter from '../../components/public-footer';
 
 
 const Pricing = () => {
@@ -11,9 +12,7 @@ const Pricing = () => {
   return (
     <>    
       <div className="h-full w-full font-sans text-xs md:text-sm text-burnt-sienna-darker">
-        <div className="bg-creme">
-          <PublicHeader />
-        </div>
+        <PublicHeader />
         <div id="trial-hero" className="flex flex-col justify-center items-center">
           <h1 className="text-5xl tracking-wider pt-6 pb-16">At the cost of a latte per month.</h1>
 
@@ -57,8 +56,8 @@ const Pricing = () => {
             </div>
           </Link>
         </div>
+        <PublicFooter />
       </div>
-
     </>
   )
 }

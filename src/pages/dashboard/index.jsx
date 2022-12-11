@@ -80,7 +80,7 @@ const Dashboard = ({setTitle}) => {
   }, [recipesSummary, beansList]);
 
   useEffect(() => {
-    window.scroll({ top: 0, behavior: 'smooth' });
+    window.scroll({ top: 0 });
   }, []);
 
   if (unitsAreLoading 
