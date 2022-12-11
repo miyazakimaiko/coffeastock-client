@@ -289,3 +289,31 @@ to {
     left: 60%;
   }
 }
+
+#terms, #privacy {
+  article {
+    margin-bottom: 30px;
+
+    h2 {
+      border-bottom: 1px solid var(--burnt-sienna);
+    }
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 400;
+      margin: 10px 0;
+    }
+    ol {
+      padding-left: 25px;
+    }
+    p, ol.list-decimal li {
+      padding-bottom: 20px;
+    }
+    ol.list-disc li {
+      padding-bottom: 5px;
+
+      &:last-child {
+        padding-bottom: 20px;
+      }
+    }
+  }
+}

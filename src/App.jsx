@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import {BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './index.scss'
 import PublicHome from './pages/public-home';
 import Login from './pages/login';
 import Register from './pages/register';
@@ -13,15 +12,18 @@ import ViewRanges from './pages/view-ranges';
 import CompareRecipes from './pages/compare-recipes';
 import ManageAccount from './pages/manage-account';
 import { useGetSession, 
-        useSetUserData, 
-        useAuthenticated, 
-        useSetAuthenticated } from './context/AccountContext';
+  useSetUserData, 
+  useAuthenticated, 
+  useSetAuthenticated } from './context/AccountContext';
 import ScrollBackButton from './elements/ScrollBackButton';
 import Pricing from './pages/pricing';
 import ServerError from './pages/server-error';
 import DashboardLayout from './components/dashboard-layout';
 import NotFound from './pages/not-found-error';
 import ErrorPage from './pages/error';
+import Terms from './pages/terms';
+import Privacy from './pages/privacy';
+import './index.scss'
 
 
 const App = () => {
@@ -51,6 +53,8 @@ const App = () => {
           <Route exact path="/" element={<PublicHome />} />
           <Route exact path="pricing" element={<Pricing />} />
           <Route exact path="500" element={<ServerError />} />  
+          <Route exact path="terms" element={<Terms />} />
+          <Route exact path="privacy" element={<Privacy />} />
         </Routes>
 
           { authenticated ? 
