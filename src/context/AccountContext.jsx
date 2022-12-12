@@ -117,7 +117,7 @@ const AccountProvider = (props) => {
     // order matters...
     setAuthenticated(false);
     innerSetUserData({});
-    Pool.getCurrentUser().signOut();
+    Pool.getCurrentUser()?.signOut();
     forceUnpin();
   };
 
