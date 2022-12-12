@@ -1,23 +1,26 @@
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { MdWavingHand } from 'react-icons/md'
-import { TO_LOGIN } from '../../utils/Paths';
+import { TO_PUBLIC_HOME } from '../../utils/Paths';
 import toastOnBottomCenter from '../../utils/customToast';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer';
 import { useAuthenticate, useGetSession, useSetAuthenticated, useSignout } from '../../context/AccountContext';
+import useQueueToDeleteAccount from '../../hooks/useQueueToDeleteAccount';
 
 
 const DeleteAccountModal = ({ email }) => {
   const { closeModal } = useContext(ModalStateContext);
   const authenticate = useAuthenticate();
   const getSession = useGetSession();
+  const queueToDeleteAccount = useQueueToDeleteAccount();
   const signout = useSignout();
   const setAuthenticated = useSetAuthenticated();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [stage, setStage] = useState(1); // 1 = verify password, 2 = confirm
   const [password, setPassword] = useState('');
+  const [reason, setReason] = useState('')
 
   function verifyPassword(event) {
     event.preventDefault();
@@ -35,17 +38,24 @@ const DeleteAccountModal = ({ email }) => {
 
   function deleteAccount(event) {
     event.preventDefault();
+    
+    queueToDeleteAccount.mutate({user, body: {reason}}, {
+      onSuccess: () => {
+        user.deleteUser((err, _) => {
+          if (err) {
+            toastOnBottomCenter('error', err.message);
+          }
+          else {
+            signout();
+            setAuthenticated(false);
+            navigate(TO_PUBLIC_HOME, { replace: true } );
+            toastOnBottomCenter('success', 'Account is deleted successfully.');
+          }
+        })
+      }
+    });
 
-    user.deleteUser((err, _) => {
-      if (err) {
-        toastOnBottomCenter('error', err.message);
-      }
-      else {
-        signout();
-        setAuthenticated(false);
-        navigate(TO_LOGIN, { replace: true } );
-      }
-    })
+
   }
 
   return (
@@ -95,11 +105,19 @@ const DeleteAccountModal = ({ email }) => {
           <>
             <div className="card-content pb-6 text-center">
               <MdWavingHand className="h-16 w-16 mx-auto mb-4 mt-6 opacity-50"/>
-              <p className="py-6">
-                Thank you for having us as a part of your coffee journey!
-              </p>
+              <p className="py-6">Thank you for having us as a part of your coffee journey!</p>
+              <p className="pb-6">Before you go... please tell us why you'd like to close the account.</p>
               <form onSubmit={deleteAccount}>
-                <div className="card-content w-80 mx-auto mb-4">
+                <div className="card-content mx-auto mb-4">
+                  <textarea 
+                    name="reason" 
+                    id="form-reason" 
+                    cols="20" 
+                    rows="10"
+                    className="blue-outline-transition bg-creme block w-full py-2 px-3 rounded-md"
+                    placeholder="Reason for account deletion"
+                    onChange={e => setReason(e.target.value)}
+                  ></textarea>
                 </div>
                 <div className="flex items-center justify-center">
                   <button 
