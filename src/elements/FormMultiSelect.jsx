@@ -11,6 +11,7 @@ const FormMultiSelect = ({
   invalid = false,
   onChange,
   isCreatable = false,
+  isClearable = true,
   isDisabled = false,
   isMulti = true,
   warningText,
@@ -98,7 +99,7 @@ const FormMultiSelect = ({
       {isCreatable ? (
         <CreatableSelect
           isMulti={isMulti}
-          isClearable={true}
+          isClearable={isClearable}
           isDisabled={isDisabled}
           styles={customStyle}
           options={decodedOptions}
@@ -110,7 +111,7 @@ const FormMultiSelect = ({
       ) : (
         <Select
           isMulti={isMulti}
-          isClearable={true}
+          isClearable={isClearable}
           isDisabled={isDisabled}
           styles={customStyle}
           options={decodedOptions}

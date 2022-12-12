@@ -79,6 +79,7 @@ const ChangeUnitsModal = () => {
                   })}
                   isMulti={false}
                   isCreatable={false}
+                  isClearable={false}
                   value={solidWeightUnit}
                   onChange={setSolidWeightUnit}
                 />
@@ -95,6 +96,7 @@ const ChangeUnitsModal = () => {
                   })}
                   isMulti={false}
                   isCreatable={false}
+                  isClearable={false}
                   value={fluidWeightUnit}
                   onChange={setFluidWeightUnit}
                 />
@@ -111,6 +113,7 @@ const ChangeUnitsModal = () => {
                   })}
                   isMulti={false}
                   isCreatable={false}
+                  isClearable={false}
                   value={temperatureUnit}
                   onChange={setTemperatureUnit}
                 />
