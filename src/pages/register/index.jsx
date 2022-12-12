@@ -273,7 +273,7 @@ const Register = () => {
                     <p className="text-xs pt-4">
                       By creating an account, you agree to the <Link to="/terms" className="text-blue underline">Terms of Service</Link>
                       . For more information about Coffeastock's privacy practices, 
-                      see the <Link to="/privacy-statement" className="text-blue underline">Coffeastock Privacy Statement</Link>
+                      see the <Link to="/privacy" className="text-blue underline">Coffeastock Privacy Policy</Link>
                       . We'll occasionally send you account-related emails.
                     </p>
                   </div>
