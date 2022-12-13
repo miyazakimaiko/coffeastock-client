@@ -20,7 +20,7 @@ const DeleteAccountModal = ({ email }) => {
   const [user, setUser] = useState(null);
   const [stage, setStage] = useState(1); // 1 = verify password, 2 = confirm
   const [password, setPassword] = useState('');
-  const [reason, setReason] = useState('')
+  const [reason, setReason] = useState('');
 
   function verifyPassword(event) {
     event.preventDefault();
