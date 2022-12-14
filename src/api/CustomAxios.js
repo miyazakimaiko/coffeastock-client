@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { TO_LOGIN } from '../utils/Paths';
 
-const baseURL = process.env.REACT_APP_URL + '/api/v1';
+const baseURL = process.env.REACT_APP_URL + process.env.REACT_APP_API_ENDPOINT;
 
 
 const customAxios = axios.create({
