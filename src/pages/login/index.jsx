@@ -56,7 +56,9 @@ const Login = () => {
     else {
       authenticate(email, password)
         .then(data => {
+          console.log("data: ", data)
           getSession().then((userData) => {
+            console.log("userData: ", userData)
             setUserData(userData);
             setAuthenticated(true);
           })  

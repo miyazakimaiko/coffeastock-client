@@ -60,11 +60,7 @@ const AccountProvider = (props) => {
   async function authenticate(Username, Password) {
     return await new Promise((resolve, reject) => {
       const user = new CognitoUser({ Username, Pool });
-
-      console.log("user: ", user)
       const authDetails = new AuthenticationDetails({ Username, Password });
-
-      console.log("authDetails: ", authDetails)
 
 
     
