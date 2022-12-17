@@ -56,11 +56,10 @@ const Login = () => {
     else {
       authenticate(email, password)
         .then(data => {
-          getSession()
-            .then((userData) => {
-              setUserData(userData);
-              setAuthenticated(true);
-            })
+          getSession().then((userData) => {
+            setUserData(userData);
+            setAuthenticated(true);
+          })  
         })
         .catch(err => {
           setLoading(false);
