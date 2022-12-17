@@ -79,9 +79,9 @@ const Login = () => {
 
   async function createUserIfNotFound(userData) {
     try {
-      const userFound = await api.findUser(userData.sub, userData.accessToken.jwtToken);
+      const user = await api.findUser(userData.sub, userData.accessToken.jwtToken);
 
-      if (!userFound) {
+      if (!user.found) {
         addUser.mutate(userData, {
           onSuccess: () => {
             navigateToDashboard();
