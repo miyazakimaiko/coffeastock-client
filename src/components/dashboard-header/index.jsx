@@ -51,7 +51,7 @@ const DashboardHeader = (props) => {
     <>
     <div 
       ref={el => { props.headerRef.current = el; }}
-      className="header z-10 w-full items-center border-b border-burnt-sienna border-opacity-20"
+      className="header z-30 w-full items-center border-b border-burnt-sienna border-opacity-20"
     >
       <div className="flex items-center">
         <div className="flex items-center cursor-pointer mx-4" onClick={showNavbar}>

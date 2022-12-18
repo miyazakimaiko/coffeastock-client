@@ -98,7 +98,7 @@ const Nav = (props) => {
     <div>
       <nav
         ref={el => { props.navRef.current = el; }}
-        className="l-nav z-20 top-0 bottom-0 overflow-auto bg-burnt-sienna border-r text-white"
+        className="l-nav z-40 top-0 bottom-0 overflow-auto bg-burnt-sienna border-r text-white"
       >
         <div className="p-4 lg:py-3 flex justify-between items-center">
             <div className="w-10/12 mx-auto lg:mx-0">
