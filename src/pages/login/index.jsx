@@ -36,12 +36,18 @@ const Login = () => {
   const setUserData = useSetUserData();
   const authenticate = useAuthenticate();
   const getSession = useGetSession();
-  const authenticated = useAuthenticated();
   const setAuthenticated = useSetAuthenticated();
   const addUser = useAddUser();
   const getUser = useGetUser();
   const navigate = useNavigate();
   const signout = useSignout();
+
+
+  useEffect(() => {
+    if (userData.sub) {
+      navigate(TO_DASHBOARD, {replace: true});
+    }
+  }, [userData])
 
 
   const onSubmit = (event) => {
@@ -56,9 +62,7 @@ const Login = () => {
     else {
       authenticate(email, password)
         .then(data => {
-          console.log("data: ", data)
           getSession().then((userData) => {
-            console.log("userData: ", userData)
             setUserData(userData);
             setAuthenticated(true);
           })  
