@@ -55,6 +55,8 @@ const App = () => {
           <Route exact path="500" element={<ServerError />} />  
           <Route exact path="terms" element={<Terms />} />
           <Route exact path="privacy" element={<Privacy />} />
+          <Route exact path='/login' element={login} />
+          <Route exact path='/register' element={<Register />} />
         </Routes>
 
           { authenticated ? 
@@ -87,8 +89,6 @@ const App = () => {
             </>
             :
             <Routes>
-              <Route exact path='/register' element={<Register />} />
-              <Route exact path='/login' element={login} />
               <Route path='/app/*' element={login} />
             </Routes>
           }
