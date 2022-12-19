@@ -6,8 +6,8 @@
   &::before {
     content: "";
     position: absolute;
-    top: -360px;
-    right: -620px;
+    top: -450px;
+    right: -570px;
     height: 800px;
     width: 800px;
     z-index: -1;
@@ -16,13 +16,17 @@
     border-radius: 68% 32% 68% 32% / 29% 66% 34% 71%;
 
     @include sm() {
-      top: -280px;
+      top: -370px;
       right: -520px;
     }
 
     @include md() {
-      top: -220px;
+      top: -310px;
       right: -490px;
+    }
+
+    @include lg() {
+      top: -240px;
     }
 
     @include xl() {
@@ -33,7 +37,6 @@
     }
 
     @include xxl() {
-      top: -200px;
       right: -300px;
     }
   }
