@@ -13,6 +13,7 @@ import useUserTotalUsedMb from '../../hooks/useUserTotalUsedMb';
 import { USER_TYPE } from '../../utils/Constants';
 import useUserInfo from '../../hooks/useUserInfo';
 import Upgrade from './Upgrade';
+import Feedback from './Feedback';
 
 
 const Nav = (props) => {
@@ -87,8 +88,9 @@ const Nav = (props) => {
 
   useEffect(() => {
     if (userInfo?.user_type === 'TRIAL' && totalUsedMb) {
-      const totalUsedMbPercentage = totalUsedMb / USER_TYPE.TRIAL.MAX_CAPACITY_IN_MB * 100;
-      setUpgradeComponent(<Upgrade totalUsedMbPercentage={totalUsedMbPercentage} />);
+      // const totalUsedMbPercentage = totalUsedMb / USER_TYPE.TRIAL.MAX_CAPACITY_IN_MB * 100;
+      // setUpgradeComponent(<Upgrade totalUsedMbPercentage={totalUsedMbPercentage} />);
+      setUpgradeComponent(<Feedback />);
     }
   }, [userInfoIsLoading, totalUsedMbIsLoading]);
 
@@ -112,7 +114,7 @@ const Nav = (props) => {
           </button>
         </div>
 
-        <div className="overflow-auto absolute top-16 bottom-36 border-b left-0 right-0 border-creme border-opacity-20">
+        <div className="overflow-auto absolute top-16 bottom-28 border-b left-0 right-0 border-creme border-opacity-20">
           <div className="py-4">
             <h3 className="mx-6 mb-3 text-xs opacity-50">Main</h3>
             <ul className="ml-10">

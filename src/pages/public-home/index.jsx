@@ -12,7 +12,6 @@ import TasteWheelsImg from '../../assets/images/coffeastock-wheels.png';
 import './public-home.scss';
 import FaqAccordion from './FaqAccordion';
 import PublicFooter from '../../components/public-footer/index.jsx';
-import PublicHeader from '../../components/public-header';
 
 const faqs = [
   {
@@ -21,14 +20,12 @@ const faqs = [
       Safari, Firefox, and Opera. That means we don't use your devices storage, it's all in the cloud.`
   },
   {
-    title: "Is there mobile app available for Android or iOS?",
-    textContent: `Currently Coffeastock is only available on web/mobile browsers, such as Chrome, Microsoft Edge, 
-      Safari, Firefox, and Opera. That means we don't use your devices storage, it's all in the cloud.`
+    title: "When will the beta version end, and what will happen after that?",
+    textContent: `Planning to end the beta version on April 2023 (Subject to change). ----`
   },
   {
-    title: "Is there mobile app available for Android or iOS?",
-    textContent: `Currently Coffeastock is only available on web/mobile browsers, such as Chrome, Microsoft Edge, 
-      Safari, Firefox, and Opera. That means we don't use your devices storage, it's all in the cloud.`
+    title: "What will happen to my account when beta version ends?",
+    textContent: `When If you are a beta version user, you will be eligible to the lifetime discount on ----`
   },
 ]
 
@@ -52,7 +49,7 @@ const PublicHome = () => {
             </Link>
           </div>
       </header>
-      <main>
+      <main className="text-burnt-sienna-darker">
         <article id="hero" 
           className="w-full max-w-screen-xl mx-auto h-auto md:h-[60vh] min-h-[500px] max-h-[900px] 
           flex flex-col lg:flex-row justify-between items-center bg-circle"

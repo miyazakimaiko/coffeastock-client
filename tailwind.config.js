@@ -7,7 +7,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'burnt-sienna': '#66615B',
+        'burnt-sienna': '#484040',
         'burnt-sienna-darker': '#484040',
         'creme': '#F4F3EE',
         'lightgrey': '#E6E6E6',
