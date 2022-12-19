@@ -12,6 +12,7 @@ import TasteWheelsImg from '../../assets/images/coffeastock-wheels.png';
 import './public-home.scss';
 import FaqAccordion from './FaqAccordion';
 import PublicFooter from '../../components/public-footer/index.jsx';
+import PublicHeader from '../../components/public-header';
 
 const faqs = [
   {
@@ -33,7 +34,7 @@ const faqs = [
 
 const PublicHome = () => {
   return (
-    <div className="">    
+    <>
       <header className="h-16 lg:h-24 w-full max-w-screen-xl mx-auto px-3 flex items-center justify-between text-white">
         <div className="w-44">
           <Link to="/">
@@ -45,22 +46,22 @@ const PublicHome = () => {
                 Sign in
             </Link>
             <Link to="/register">
-              <div className="border text-base border-white text-white shadow-xl px-3 py-2 rounded-md button-transition">
+              <div className="text-base border-white border-2 shadow-xl px-3 py-2 rounded-md button-transition">
                 Sign up
               </div>
             </Link>
           </div>
       </header>
-
       <main>
         <article id="hero" 
-          className="w-full max-w-screen-xl mx-auto h-auto md:h-[60vh] min-h-[500px] max-h-[900px] flex flex-col md:flex-row justify-between items-center bg-circle"
+          className="w-full max-w-screen-xl mx-auto h-auto md:h-[60vh] min-h-[500px] max-h-[900px] 
+          flex flex-col lg:flex-row justify-between items-center bg-circle"
         >          
-          <section className="w-[110%] ml-4 md:mx-auto mb-10 block md:hidden">
+          <section className="w-[96%] mx-auto mt-4 mb-10 block lg:hidden">
             <img src={DashboardImg} alt="coffeastock dashboard" className="rounded-lg shadow-2xl" />
           </section>
-          <section className="md:min-w-[530px] pl-8 flex flex-col justify-center">
-            <h1 className="text-5xl font-bold leading-snug text-burnt-sienna-darker pb-2">No more <br/> guessing game <br/> to improve your brewing.</h1>
+          <section className="w-full md:min-w-[660px] pl-8 flex flex-col justify-center">
+            <h1 className="text-4xl md:text-5xl font-bold leading-snug md:leading-snug text-burnt-sienna-darker pb-2">No more <br/> guessing game <br/> to improve your brewing.</h1>
             <p className="text-lg">Collect, visualize, and analyze your brewing data accurately</p>
             <div className="mr-8 mt-8">
               <Link to="/register">
@@ -70,13 +71,13 @@ const PublicHome = () => {
               </Link>
             </div>
           </section>
-          <section className="w-full min-w-[56rem] hidden md:block">
+          <section className="w-full min-w-[50rem] hidden lg:block">
             <img src={DashboardImg} alt="coffeastock dashboard" className="rounded-lg shadow-2xl" />
           </section>
         </article>
 
-        <article id="about-coffeasatock" className="w-full mt-28 sm:mt-40 bg-ash-blue">
-          <div className="flex flex-col lg:flex-row w-full max-w-[1200px] mx-auto pt-8 lg:pt-24 pb-28">
+        <article id="about-coffeasatock" className="w-full mt-40 md:mt-96 bg-ash-blue">
+          <div className="flex flex-col lg:flex-row w-full max-w-[1200px] mx-auto pt-8 pb-24 lg:pt-48 lg:pb-48">
             <section className="p-3">
               <img src={LogoSm} alt="coffeastock logo" className="w-14"/>
               <h2 className="gradient-underline text-white text-4xl md:text-5xl font-bold leading-snug py-5">
@@ -93,7 +94,7 @@ const PublicHome = () => {
           </div>
         </article>
 
-        <article id="dashboard-metrics" className="flex flex-col lg:flex-row items-center w-full max-w-[1300px] mx-auto mt-32">
+        <article id="dashboard-metrics" className="flex flex-col lg:flex-row items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-64">
           <section>
             <div className="bg-circle-orange w-full p-3">
               <img src={MetricsImg} alt="coffeastock coffee data metrics" />
@@ -112,7 +113,7 @@ const PublicHome = () => {
           </section>
         </article>
 
-        <article id="record-coffee-beans" className="flex flex-col lg:flex-row-reverse items-center w-full max-w-[1300px] mx-auto mt-32">
+        <article id="record-coffee-beans" className="flex flex-col lg:flex-row-reverse items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
           <section>
             <div className="bg-circle-green w-full p-3">
               <img src={BeansAndRecipeImg} alt="coffeastock coffee beans and recipe data"/>
@@ -131,7 +132,7 @@ const PublicHome = () => {
           </section>
         </article>
 
-        <article id="customize-range" className="flex flex-col lg:flex-row items-center w-full max-w-[1300px] mx-auto mt-32">
+        <article id="customize-range" className="flex flex-col lg:flex-row items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
           <section>
             <div className="bg-circle-pink w-full p-3">
               <img src={RoasterRangeImg} alt="coffeastock custom ranges" />
@@ -149,7 +150,7 @@ const PublicHome = () => {
           </section>
         </article>
 
-        <article id="tasting-wheel" className="flex flex-col lg:flex-row-reverse items-center w-full max-w-[1300px] mx-auto mt-32">
+        <article id="tasting-wheel" className="flex flex-col lg:flex-row-reverse items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
           <section>
             <div className="bg-circle-blue w-full p-3">
               <img src={TasteWheelsImg} alt="coffeastock coffee tasting wheel large"/>
@@ -168,7 +169,7 @@ const PublicHome = () => {
           </section>
         </article>
 
-        <article id="customers-voice" className="w-full p-4 md:p-10 mt-10 md:mt-24">
+        <article id="customers-voice" className="w-full p-4 md:p-10 my-24 md:my-48">
           <FaHeart className="mx-auto mb-16 text-lg text-orange" />
           <section className="quote md:max-w-[800px] mx-auto text-center">
             <p className="text-xl md:text-2xl leading-relaxed md:leading-loose italic">I’ve tried many coffee journal apps. But as a coffee amateur, I used to get overwhelmed when I see so many options to choose from... I felt myself too novice to use the app. Coffeastock is fully customizable, so I can record the recipes with only what I know. <span className="font-medium">- Jessica</span></p>
@@ -219,7 +220,7 @@ const PublicHome = () => {
       <footer>
 
       </footer>
-    </div>
+    </>
   )
 }
 
