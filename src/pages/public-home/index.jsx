@@ -52,9 +52,9 @@ const PublicHome = () => {
       <main className="text-burnt-sienna-darker">
         <article id="hero" 
           className="w-full max-w-screen-xl mx-auto h-auto md:h-[60vh] min-h-[500px] max-h-[900px] 
-          flex flex-col lg:flex-row justify-between items-center bg-circle"
+          flex flex-col lg:flex-row justify-between items-center"
         >          
-          <section className="w-[96%] mx-auto mt-4 mb-10 block lg:hidden">
+          <section className="w-[96%] mx-auto mt-4 mb-10 block lg:hidden bg-circle">
             <img src={DashboardImg} alt="coffeastock dashboard" className="rounded-lg shadow-2xl" />
           </section>
           <section className="w-full md:min-w-[660px] pl-8 flex flex-col justify-center">
@@ -68,7 +68,7 @@ const PublicHome = () => {
               </Link>
             </div>
           </section>
-          <section className="w-full min-w-[50rem] hidden lg:block">
+          <section className="w-full min-w-[50rem] hidden lg:block bg-circle">
             <img src={DashboardImg} alt="coffeastock dashboard" className="rounded-lg shadow-2xl" />
           </section>
         </article>
