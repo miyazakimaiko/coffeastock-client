@@ -22,7 +22,7 @@ import SpinnerSmall from '../../elements/SpinnerSmall';
 import { useEffect } from 'react';
 
 
-const Login = ({jwtExpired = false}) => {
+const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const [email, setEmail] = useState('');
@@ -45,12 +45,7 @@ const Login = ({jwtExpired = false}) => {
 
   useEffect(() => {
     if (userData.sub) {
-      if (jwtExpired) {
-        navigate(-1);
-      }
-      else {
-        navigate(TO_DASHBOARD, {replace: true});
-      }
+      navigate(TO_DASHBOARD, {replace: true});
     }
   }, [userData])
 
