@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PublicHome from './pages/public-home';
@@ -51,11 +51,11 @@ const App = () => {
       <Router>
         <Routes>
           <Route exact path="/" element={<PublicHome />} />
-          <Route exact path="pricing" element={<Pricing />} />
+          {/* <Route exact path="pricing" element={<Pricing />} /> */}
           <Route exact path="500" element={<ServerError />} />  
           <Route exact path="terms" element={<Terms />} />
           <Route exact path="privacy" element={<Privacy />} />
-          <Route exact path='/login' element={login} />
+          <Route exact path='/login' element={authenticated ? <Navigate to="/app/dashboard" />  : login} />
           <Route exact path='/register' element={<Register />} />
         </Routes>
 
@@ -89,7 +89,7 @@ const App = () => {
             </>
             :
             <Routes>
-              <Route path='/app/*' element={login} />
+              <Route path='*' element={ <Navigate to="/login" /> } />
             </Routes>
           }
 
