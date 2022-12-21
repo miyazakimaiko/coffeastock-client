@@ -42,14 +42,6 @@ const Login = () => {
   const navigate = useNavigate();
   const signout = useSignout();
 
-
-  useEffect(() => {
-    if (userData.sub) {
-      navigate(TO_DASHBOARD, {replace: true});
-    }
-  }, [userData])
-
-
   const onSubmit = (event) => {
     event.preventDefault();
 
