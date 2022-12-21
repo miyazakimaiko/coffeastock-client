@@ -43,7 +43,6 @@ const App = () => {
   }, []);
 
   const dashboard = <Dashboard setTitle={setTitle} />;
-  const login = <Login />;
   const pageNotFound = <NotFound />;
 
   return (
@@ -55,7 +54,7 @@ const App = () => {
           <Route exact path="500" element={<ServerError />} />  
           <Route exact path="terms" element={<Terms />} />
           <Route exact path="privacy" element={<Privacy />} />
-          <Route exact path='/login' element={login} />
+          <Route exact path='/login' element={<Login jwtExpired={false} />} />
           <Route exact path='/register' element={<Register />} />
         </Routes>
 
@@ -89,7 +88,7 @@ const App = () => {
             </>
             :
             <Routes>
-              <Route path='/app/*' element={login} />
+              <Route path='/app/*' element={<Login jwtExpired={true} />} />
             </Routes>
           }
 
