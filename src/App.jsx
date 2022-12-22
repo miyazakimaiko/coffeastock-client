@@ -16,7 +16,6 @@ import { useGetSession,
   useAuthenticated, 
   useSetAuthenticated } from './context/AccountContext';
 import ScrollBackButton from './elements/ScrollBackButton';
-import Pricing from './pages/pricing';
 import ServerError from './pages/server-error';
 import DashboardLayout from './components/dashboard-layout';
 import NotFound from './pages/not-found-error';
@@ -89,7 +88,7 @@ const App = () => {
             </>
             :
             <Routes>
-              <Route path='*' element={ <Navigate to="/login" /> } />
+              <Route path='app/*' element={login} />
             </Routes>
           }
 
