@@ -34,12 +34,12 @@ const ChangeEmailModal = () => {
         title="Change Email"
       >
         { stage === 1 && (
-          <div className="card-content px-6 pb-6 justify-center text-center">
+          <div className="card-content pb-6 justify-center text-center">
             <p className="mb-6">
               Please enter new email address.
             </p>
             <form onSubmit={(e) => sendVerificationCode(e)}>
-              <div className="card-content w-80 mx-auto">
+              <div className="card-content w-full md:w-80 mx-auto">
                 <div className="pb-6">
                   <input type="email" name="email" placeholder="Enter email" className="blue-outline-transition bg-creme block w-full py-2 px-3 rounded-md text-lg"
                     value={email}

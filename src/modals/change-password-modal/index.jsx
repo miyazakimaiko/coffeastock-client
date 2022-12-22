@@ -85,7 +85,7 @@ const ChangePasswordModal = ({ currentUserEmail = null }) => {
                 </p>
               ) }
               <form onSubmit={sendCode}>
-                <div className="card-content w-80 mx-auto">
+                <div className="card-content w-full md:w-80 mx-auto">
                   <div className="pb-6">
                     <input type="email" name="code" placeholder="Enter email address" className="blue-outline-transition bg-creme block w-full py-2 px-3 rounded-md text-lg"
                       value={email}

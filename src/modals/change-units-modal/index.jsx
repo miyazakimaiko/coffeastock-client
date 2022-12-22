@@ -64,9 +64,9 @@ const ChangeUnitsModal = () => {
         onCloseClick={closeModal}
         title="Change Coffee/Recipe Units"
       >
-        <div className="card-content px-6 pb-6 justify-center">
+        <div className="card-content pb-6 justify-center">
           <form onSubmit={(e) => changeUnits(e)}>
-            <div className="card-content w-80 mx-auto">
+            <div className="card-content w-full md:w-80 mx-auto">
               <div className="pb-6">
                 <FormMultiSelect
                   title="Volume weight unit"

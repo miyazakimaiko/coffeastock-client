@@ -11,8 +11,8 @@ const StepsTab = ({key, title, tabState, disabled = false, onClick}) => {
         disabled={disabled}
         onClick={onClick}
         className={
-          (tabState ? "active " : "") + 
-          "w-full h-full p-2 text-white bg-burnt-sienna opacity-50"
+          (tabState ? "opacity-100" : "opacity-50") + 
+          " w-full h-full p-2 text-white bg-burnt-sienna"
         } >
         {title}
       </button>
