@@ -168,7 +168,7 @@ const ManageAccount = ({setTitle}) => {
           </div>
         </div>
 
-        <div className="py-5 px-3">
+        {/* <div className="py-5 px-3">
           <div className="bg-white shadow-sm rounded w-full lg:max-w-xl mx-auto py-6 p-10 mb-6">
             <h3 className="text-xl text-center font-medium pb-6">
               Upgrade to Premium
@@ -213,7 +213,7 @@ const ManageAccount = ({setTitle}) => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {modal.isOpen && modal.mode === modalModeSelection.changeNickname && (
