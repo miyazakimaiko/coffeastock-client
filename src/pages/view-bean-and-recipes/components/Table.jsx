@@ -116,7 +116,7 @@ const Table = ({searchValue, orderBy, orderMethod}) => {
   }
 
   return (
-    <div className="flex mb-4 w-full flex-wrap justify-center">
+    <div className="flex mb-4 w-full min-h-[400px] flex-wrap justify-center">
       <Rows data={search(sortedRecipes ?? recipes)}/>
     </div>
   )
