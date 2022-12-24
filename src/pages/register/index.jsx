@@ -100,7 +100,6 @@ const Register = () => {
 
   async function verifyUser(event) {
     event.preventDefault();
-    console.log("cognitoUser: ", cognitoUser)
     await cognitoUser.confirmRegistration(verificationCode, true, function(err, result) {
       if (err) {
         toastOnBottomCenter('error', err.message);
