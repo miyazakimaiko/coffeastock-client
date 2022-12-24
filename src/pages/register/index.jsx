@@ -10,6 +10,7 @@ import toastOnBottomCenter from '../../utils/customToast'
 import LogoSm from '../../assets/images/logo.png'
 import LogoLg from '../../assets/images/logo-white-bg.png'
 import ConfirmUserModal from '../../modals/confirm-user-modal';
+import useAddContact from '../../hooks/useAddContact';
 
 const Register = () => {
   const [cognitoUser, setCognitoUser] = useState(null);
@@ -29,6 +30,8 @@ const Register = () => {
   const [verificationCode, setVerificationCode] = useState(null);
   
   const navigate = useNavigate();
+
+  const addContact = useAddContact();
 
   function validateEmail() {
     if (!EmailValidator.validate(email)) {
@@ -95,16 +98,30 @@ const Register = () => {
     });
   };
 
-  function verifyUser(event) {
+  async function verifyUser(event) {
     event.preventDefault();
-    cognitoUser.confirmRegistration(verificationCode, true, function(err, result) {
+    console.log("cognitoUser: ", cognitoUser)
+    await cognitoUser.confirmRegistration(verificationCode, true, function(err, result) {
       if (err) {
         toastOnBottomCenter('error', err.message);
-        return;
       }
-      toastOnBottomCenter('success', 'Account Confirmed. Please login to get started!');
-      navigate(TO_LOGIN, { replace: true } );
-    })
+      else {
+        addContact.mutate({
+          userid: cognitoUser.sub,
+          nickname,
+          email
+        },
+        {
+          onSuccess: () => {
+            toastOnBottomCenter('success', 'Account Confirmed. Please login to get started!');
+            navigate(TO_LOGIN, { replace: true } );
+          },
+          onError: (error) => {
+            toastOnBottomCenter("error", error.message);
+          }
+        });
+      }
+    });
   }
 
   function resendVerificationCode() {
