@@ -112,11 +112,14 @@ const Register = () => {
         },
         {
           onSuccess: () => {
-            toastOnBottomCenter('success', 'Account Confirmed. Please login to get started!');
-            navigate(TO_LOGIN, { replace: true } );
+            console.log("addContact successs: ")
           },
           onError: (error) => {
-            toastOnBottomCenter("error", error.message);
+            console.log("addContact error: ", error)
+          },
+          onSettled:() => {
+            toastOnBottomCenter('success', 'Account Confirmed. Please login to get started!');
+            navigate(TO_LOGIN, { replace: true } );
           }
         });
       }
