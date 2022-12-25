@@ -1,5 +1,4 @@
 import { useMutation } from 'react-query'
-import toastOnBottomCenter from '../utils/customToast'
 import * as api from '../api/Hubspot'
 
 export default function useAddContact() {
@@ -10,10 +9,7 @@ export default function useAddContact() {
       email: user.email,
     }, user.accessToken.jwtToken),
     {
-      onSuccess: () => toastOnBottomCenter('success', 'Contqct is added'),
-      onError: err => {
-        toastOnBottomCenter('error', err.message)
-      }
+      onError: err => console.error(err)
     }
   )
 }

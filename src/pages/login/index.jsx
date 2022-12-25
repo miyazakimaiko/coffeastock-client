@@ -13,7 +13,8 @@ import { useAuthenticate,
         useSetAuthenticated, 
         useSignout, 
         useUserData,
-        useAuthenticated} from '../../context/AccountContext';
+        useAuthenticated,
+        useChangeAttribute} from '../../context/AccountContext';
 import useAddContact from '../../hooks/useAddContact';
 import useAddUser from '../../hooks/useAddUser';
 import useGetUser from '../../hooks/useGetUser';
@@ -38,11 +39,13 @@ const Login = () => {
   const authenticate = useAuthenticate();
   const getSession = useGetSession();
   const setAuthenticated = useSetAuthenticated();
+  const changeAttribute = useChangeAttribute();
   const addContact = useAddContact();
   const addUser = useAddUser();
   const getUser = useGetUser();
   const navigate = useNavigate();
   const signout = useSignout();
+
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -80,13 +83,16 @@ const Login = () => {
       const user = await api.findUser(userData.sub, userData.accessToken.jwtToken);
 
       if (!user.found) {
-        await addContact.mutateAsync(userData);
-        await addUser.mutateAsync(userData, {
-          onSuccess: () => {
-            navigateToDashboard();
-            setLoading(false);
-          }
+        await addContact.mutateAsync(userData).then(contact => {
+          changeAttribute('custom:contact_id', contact.id, null);
+          addUser.mutate({...userData, contactid: contact.id}, {
+            onSuccess: () => {
+              navigateToDashboard();
+              setLoading(false);
+            }
+          });
         });
+
       }
       else {
         getUser.mutate(userData, {

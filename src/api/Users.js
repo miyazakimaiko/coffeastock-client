@@ -20,7 +20,7 @@ export const editUserUnitIds = async (userid, body, token) => {
   return await axios.post(`/user/${userid}/unit-ids`, body, { headers: { accesstoken: token } }).then(res => res.data);
 }
 
-export const addUser = async (userid, body, token) => {
-  return await axios.post(`/user/${userid}`, body, { headers: { accesstoken: token } }).then(res => res.data)
+export const addUser = async (userid, contactid, token) => {
+  return await axios.post(`/user/${userid}`, {contactid}, { headers: { accesstoken: token } }).then(res => res.data)
 }
 
