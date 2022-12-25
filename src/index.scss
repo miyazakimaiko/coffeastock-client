@@ -4,8 +4,10 @@
 
 @import "./assets/scss/breakpoints";
 
-body {
+html {
   overflow-x: hidden;
+}
+body {
   box-sizing: border-box;
   transition: .5s;
   font-weight: 300;
