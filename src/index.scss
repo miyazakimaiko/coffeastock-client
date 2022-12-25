@@ -5,7 +5,9 @@
 @import "./assets/scss/breakpoints";
 
 html {
-  overflow-x: hidden;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
 }
 body {
   box-sizing: border-box;
