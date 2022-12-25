@@ -5,11 +5,11 @@
 @import "./assets/scss/breakpoints";
 
 html {
-  overflow: hidden;
+  overflow-x: hidden;
   position: relative;
-  height: 100%;
 }
 body {
+  overflow-x: hidden;
   box-sizing: border-box;
   transition: .5s;
   font-weight: 300;
