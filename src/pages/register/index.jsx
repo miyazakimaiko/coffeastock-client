@@ -148,8 +148,7 @@ const Register = () => {
             <div className="w-full mx-2">
               <form method="#" action="#">
                 <div className="bg-creme py-8 px-6 shadow-sm rounded-md border border-burnt-sienna border-opacity-20">
-                  <h2 className="text-xl text-center">Start your 14-day free trial</h2>
-                  <div className="card-content py-4">
+                  <div className="card-content">
                     <div className="pb-4">
                       <div className="flex items-center">
                         { showEmailWarningMsg
