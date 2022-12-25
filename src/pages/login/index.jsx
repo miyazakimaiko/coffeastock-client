@@ -84,10 +84,9 @@ const Login = () => {
 
       if (!user.found) {
         await addContact.mutateAsync(userData).then(contact => {
-          changeAttribute('custom:contact_id', contact.id, null);
           addUser.mutate({...userData, contactid: contact.id}, {
             onSuccess: () => {
-              navigateToDashboard();
+              changeAttribute('custom:contact_id', contact.id, navigateToDashboard);
               setLoading(false);
             }
           });

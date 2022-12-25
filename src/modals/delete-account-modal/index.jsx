@@ -5,8 +5,9 @@ import { TO_PUBLIC_HOME } from '../../utils/Paths';
 import toastOnBottomCenter from '../../utils/customToast';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer';
-import { useAuthenticate, useGetSession, useSetAuthenticated, useSignout } from '../../context/AccountContext';
+import { useAuthenticate, useGetSession, useSetAuthenticated, useSetUserData, useSignout, useUserData } from '../../context/AccountContext';
 import useQueueToDeleteAccount from '../../hooks/useQueueToDeleteAccount';
+import useDeleteContact from '../../hooks/useDeleteContact';
 
 
 const DeleteAccountModal = ({ email }) => {
@@ -14,8 +15,11 @@ const DeleteAccountModal = ({ email }) => {
   const authenticate = useAuthenticate();
   const getSession = useGetSession();
   const queueToDeleteAccount = useQueueToDeleteAccount();
+  const deleteContact = useDeleteContact();
   const signout = useSignout();
   const setAuthenticated = useSetAuthenticated();
+  const userData = useUserData();
+  const setUserData = useSetUserData();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [stage, setStage] = useState(1); // 1 = verify password, 2 = confirm
@@ -27,7 +31,8 @@ const DeleteAccountModal = ({ email }) => {
 
     authenticate(email, password).then(data => {
       getSession().then((session) => {
-        setUser(session.user);
+        setUserData(session);
+        // setUser(session.user);
         setStage(2);
       });
     })
@@ -39,9 +44,10 @@ const DeleteAccountModal = ({ email }) => {
   function deleteAccount(event) {
     event.preventDefault();
     
-    queueToDeleteAccount.mutate({user, body: {reason}}, {
+    queueToDeleteAccount.mutate({user: userData.user, body: {reason}}, {
       onSuccess: () => {
-        user.deleteUser((err, _) => {
+        deleteContact.mutate(userData);
+        userData.user.deleteUser((err, _) => {
           if (err) {
             toastOnBottomCenter('error', err.message);
           }
