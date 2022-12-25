@@ -3,18 +3,19 @@ import { CognitoUser, AuthenticationDetails, CognitoUserAttribute } from 'amazon
 import Pool from '../utils/UserPool'
 import toastOnBottomCenter from '../utils/customToast'
 import { NavStateContext } from './NavStateContext'
+import useUpdateContact from '../hooks/useUpdateContact'
 
 const AccountContext = createContext()
 
 const AccountProvider = (props) => {
   const { forceUnpin } = useContext(NavStateContext);
   const [userData, innerSetUserData] = useState({});
+  const [authenticated, innerSetAuthenticated] = useState(false);
+  const updateContact = useUpdateContact();
 
   const setUserData = (data) => {
     innerSetUserData(data);
   }
-
-  const [authenticated, innerSetAuthenticated] = useState(false);
 
   function setAuthenticated(boolean) {
     innerSetAuthenticated(boolean);
@@ -94,6 +95,9 @@ const AccountProvider = (props) => {
         else if (res === 'SUCCESS') {
           getSession().then((session) => {
             setUserData(session);
+            if (name !== 'email') {
+              updateContact.mutate(session);
+            }
           });
           callBack();
         }
@@ -105,6 +109,7 @@ const AccountProvider = (props) => {
       onSuccess: function(result) {
          getSession().then((session) => {
           setUserData(session);
+          updateContact.mutate(session);
           callback();
         });
         toastOnBottomCenter('success', `Your ${attrName} is updated successfully.`);
