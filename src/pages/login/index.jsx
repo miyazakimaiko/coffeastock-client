@@ -14,6 +14,7 @@ import { useAuthenticate,
         useSignout, 
         useUserData,
         useAuthenticated} from '../../context/AccountContext';
+import useAddContact from '../../hooks/useAddContact';
 import useAddUser from '../../hooks/useAddUser';
 import useGetUser from '../../hooks/useGetUser';
 import ChangePasswordModal from '../../modals/change-password-modal';
@@ -37,6 +38,7 @@ const Login = () => {
   const authenticate = useAuthenticate();
   const getSession = useGetSession();
   const setAuthenticated = useSetAuthenticated();
+  const addContact = useAddContact();
   const addUser = useAddUser();
   const getUser = useGetUser();
   const navigate = useNavigate();
@@ -78,7 +80,8 @@ const Login = () => {
       const user = await api.findUser(userData.sub, userData.accessToken.jwtToken);
 
       if (!user.found) {
-        addUser.mutate(userData, {
+        await addContact.mutateAsync(userData);
+        await addUser.mutateAsync(userData, {
           onSuccess: () => {
             navigateToDashboard();
             setLoading(false);

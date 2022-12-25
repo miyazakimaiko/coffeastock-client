@@ -31,8 +31,7 @@ const Register = () => {
   
   const navigate = useNavigate();
 
-  const addContact = useAddContact();
-
+  
   function validateEmail() {
     if (!EmailValidator.validate(email)) {
       setShowEmailWarningMsg(true);
@@ -100,28 +99,13 @@ const Register = () => {
 
   async function verifyUser(event) {
     event.preventDefault();
-    await cognitoUser.confirmRegistration(verificationCode, true, function(err, result) {
+    const result = await cognitoUser.confirmRegistration(verificationCode, true, function(err, result) {
       if (err) {
         toastOnBottomCenter('error', err.message);
       }
       else {
-        addContact.mutate({
-          userid: cognitoUser.sub,
-          nickname,
-          email
-        },
-        {
-          onSuccess: () => {
-            console.log("addContact successs: ")
-          },
-          onError: (error) => {
-            console.log("addContact error: ", error)
-          },
-          onSettled:() => {
-            toastOnBottomCenter('success', 'Account Confirmed. Please login to get started!');
-            navigate(TO_LOGIN, { replace: true } );
-          }
-        });
+        toastOnBottomCenter('success', 'Account Confirmed. Please login to get started!');
+        navigate(TO_LOGIN, { replace: true } );
       }
     });
   }
