@@ -23,20 +23,25 @@ const SendFeedbackModal = () => {
     <>
       <ModalWrapperContainer
         onCloseClick={closeModal}
-        title="Send Feedback"
+        title="Product Customer Feedback Form"
       >
         { stage === 1 && (
           <>
-            <div className="card-content pb-6">
-              <form onSubmit={confirmFeedback}>
+            <div className="card-content">
+              <div className="mb-8">
+                <p>Thank you for taking your timet to provide feedback. We appreciate hearing from you and will review your comments carefully.</p>
+              </div>
+              <hr />
+              <form onSubmit={confirmFeedback} className="mt-8">
                 <div className="card-content mx-auto mb-4">
+                  <p>Do you have any suggestions to improve our product and service?</p>
                   <textarea 
                     name="feedback" 
                     id="form-feedback" 
-                    cols="10" 
+                    cols="6" 
                     rows="10"
-                    className="blue-outline-transition bg-creme block w-full py-2 px-3 rounded-md"
-                    placeholder="Write feedback here"
+                    className="blue-outline-transition bg-creme block w-full py-2 px-3 rounded-md my-2"
+                    placeholder="..."
                     onChange={e => setFeedback(e.target.value)}
                   ></textarea>
                 </div>
@@ -57,9 +62,12 @@ const SendFeedbackModal = () => {
 
         { stage === 2 && (
           <>
-            <div className="card-content pb-6 text-center">
+            <div className="card-content">
               <form onSubmit={submitFeedback}>
-                <p>{feedback}</p>
+                <div className="text-left max-w-[500px] mx-auto">
+                  <p className="font-semibold mb-4">Do you have any suggestions to improve our product and service?</p>
+                  <p>{feedback}</p>
+                </div>
                 <div className="flex items-center justify-center mt-4">
                   <button 
                     type="submit"
