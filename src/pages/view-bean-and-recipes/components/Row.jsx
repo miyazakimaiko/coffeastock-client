@@ -42,7 +42,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
 
   return (
     <>
-      <div className="relative px-4 pt-8 pb-4 mb-4 bg-white shadow-sm rounded-md w-full transition-all">
+      <div className="relative px-4 pt-8 pb-4 mb-4 bg-white shadow-sm rounded-md w-full transition-all h-fit">
         <div className="absolute top-2 right-2">
           <Dropdown dropdownText="" type="dot">
             <div className="dropdown-content">

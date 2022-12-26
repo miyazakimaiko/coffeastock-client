@@ -27,6 +27,9 @@ module.exports = {
       width: {
         '800px': '800px'
       },
+      height: {
+        'fit': 'fit-content'
+      },
       maxWidth: {
         '1/2': '50%',
         '10': '10rem',
