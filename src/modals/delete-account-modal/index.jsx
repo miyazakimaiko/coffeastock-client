@@ -21,7 +21,6 @@ const DeleteAccountModal = ({ email }) => {
   const userData = useUserData();
   const setUserData = useSetUserData();
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
   const [stage, setStage] = useState(1); // 1 = verify password, 2 = confirm
   const [password, setPassword] = useState('');
   const [reason, setReason] = useState('');
@@ -112,16 +111,16 @@ const DeleteAccountModal = ({ email }) => {
             <div className="card-content pb-6 text-center">
               <MdWavingHand className="h-16 w-16 mx-auto mb-4 mt-6 opacity-50"/>
               <p className="py-6">Thank you for having us as a part of your coffee journey!</p>
-              <p className="pb-6">Before you go... please tell us why you'd like to close the account.</p>
+              <p className="pb-6">Before you go... please let us know the reason you are leaving. Please 100% be honest, we'll use your feedback to improve!</p>
               <form onSubmit={deleteAccount}>
                 <div className="card-content mx-auto mb-4">
                   <textarea 
                     name="reason" 
                     id="form-reason" 
-                    cols="20" 
+                    cols="10" 
                     rows="10"
                     className="blue-outline-transition bg-creme block w-full py-2 px-3 rounded-md"
-                    placeholder="Reason for account deletion"
+                    placeholder="I'm cancelling because..."
                     onChange={e => setReason(e.target.value)}
                   ></textarea>
                 </div>

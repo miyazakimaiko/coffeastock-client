@@ -27,6 +27,7 @@ const ModalStateProvider = (props) => {
     changeEmail: 'changeEmail',
     changeUnits: 'changeUnits',
     deleteAccount: 'deleteAccount',
+    sendFeedback: 'sendFeedback',
   }
 
   function openAddRangeModal() {
@@ -85,6 +86,10 @@ const ModalStateProvider = (props) => {
     setModal({ mode: modalModeSelection.deleteAccount, isOpen: true });
   }
 
+  function openSendFeedbackModal() {
+    setModal({ mode: modalModeSelection.sendFeedback, isOpen: true });
+  }
+
   function closeModal() {
     setModal({ mode: "", isOpen: false });
   }
@@ -108,6 +113,7 @@ const ModalStateProvider = (props) => {
           openChangeEmailModal,
           openChangeUnitsModal,
           openDeleteAccountModal,
+          openSendFeedbackModal,
           closeModal,
           modalModeSelection,
         }

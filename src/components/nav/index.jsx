@@ -14,6 +14,7 @@ import { USER_TYPE } from '../../utils/Constants';
 import useUserInfo from '../../hooks/useUserInfo';
 import Upgrade from './Upgrade';
 import Feedback from './Feedback';
+import SendFeedbackModal from '../../modals/send-feedback-modal';
 
 
 const Nav = (props) => {
@@ -76,7 +77,7 @@ const Nav = (props) => {
     }
   }, [openRecipesAccordion]);
 
-  const [upgradeComponent, setUpgradeComponent] = useState(null);
+  const [feedbackComponent, setFeedbackComponent] = useState(null);
 
   const { data: userInfo, 
           isLoading: userInfoIsLoading,
@@ -90,7 +91,7 @@ const Nav = (props) => {
     if (userInfo?.user_type === 'TRIAL' && totalUsedMb) {
       // const totalUsedMbPercentage = totalUsedMb / USER_TYPE.TRIAL.MAX_CAPACITY_IN_MB * 100;
       // setUpgradeComponent(<Upgrade totalUsedMbPercentage={totalUsedMbPercentage} />);
-      setUpgradeComponent(<Feedback />);
+      setFeedbackComponent(<Feedback />);
     }
   }, [userInfoIsLoading, totalUsedMbIsLoading]);
 
@@ -349,13 +350,14 @@ const Nav = (props) => {
           </div>
         </div>
 
-        { upgradeComponent }
+        { feedbackComponent }
       </nav>
 
     </div>
 
     {modal.mode === modalModeSelection.addBean && modal.isOpen ?  <AddEditBeanModal /> : null}
     {modal.mode === modalModeSelection.addRecipe && modal.isOpen ?  <AddEditRecipeModal /> : null}
+    {modal.mode === modalModeSelection.sendFeedback && modal.isOpen ?  <SendFeedbackModal /> : null}
   </>
   )
 }
