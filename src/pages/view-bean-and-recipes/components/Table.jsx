@@ -28,7 +28,7 @@ const Table = ({searchValue, orderBy, orderMethod}) => {
 
   useEffect(() => {
     sortRecipes();
-  }, [rangesAreLoading, recipesAreLoading, orderBy, orderMethod])
+  }, [recipes, rangesAreLoading, recipesAreLoading, orderBy, orderMethod])
 
   function sortRecipes() {
     if (Boolean(ranges) && Boolean(recipes)) {

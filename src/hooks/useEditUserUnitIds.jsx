@@ -20,7 +20,7 @@ export default function useEditUserUnitIds() {
     {
       enabled: user ? true : false,
       onSuccess: async () => {
-        await queryClient.invalidateQueries(['user', 'units']);
+        await queryClient.refetchQueries(['user', 'info']);
         toastOnBottomCenter('success', 'Units are edited successfully.')
       },
       onError: err => {

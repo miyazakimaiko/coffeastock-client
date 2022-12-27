@@ -21,11 +21,11 @@ export default function useAddRecipe() {
     {
       enabled: user ? true : false,
       onSuccess: async (variables) => {
-        await queryClient.invalidateQueries(['bean', variables[0].bean_id, 'recipes']);
-        await queryClient.invalidateQueries('ranges');
-        await queryClient.invalidateQueries(['recipes', 'summary']);
-        await queryClient.invalidateQueries(['beans', 'summary']);
-        await queryClient.invalidateQueries(['user', user.sub, 'totalUsedMb']);
+        await queryClient.refetchQueries(['bean', variables[0].bean_id, 'recipes']);
+        await queryClient.refetchQueries('ranges');
+        await queryClient.refetchQueries(['recipes', 'summary']);
+        await queryClient.refetchQueries(['beans', 'summary']);
+        await queryClient.refetchQueries(['user', user.sub, 'totalUsedMb']);
         toastOnBottomCenter('success', 'Recipe is added successfully.');
       },
       onError: err => {
