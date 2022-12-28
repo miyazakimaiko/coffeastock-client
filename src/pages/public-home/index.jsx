@@ -21,11 +21,15 @@ const faqs = [
   },
   {
     title: "When will the beta version end, and what will happen after that?",
-    textContent: `Planning to end the beta version on April 2023 (Subject to change). ----`
+    textContent: `Planning to end the beta version on April 2023 (Subject to change). At the end of the beta version, users can continue using the app by subscribing to the basic plan.`
   },
   {
-    title: "What will happen to my account when beta version ends?",
-    textContent: `When If you are a beta version user, you will be eligible to the lifetime discount on ----`
+    title: "How much the basic subscription will cost?",
+    textContent: `Basic subscription is planned to be $6.99/mo. For the beta version users, it'll be 20% OFF as they are eligible to the lifetime discount!`
+  },
+  {
+    title: "What will happen to my account when beta version ends and if I don't subscribe?",
+    textContent: `If you don't subscribe after the end of the beta versions life, your account will be deactivated and can't be accessed while deactivated. Your data is kept stored on the server and can re-activate your account anytime.`
   },
 ]
 
