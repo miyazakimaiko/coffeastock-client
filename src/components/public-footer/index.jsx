@@ -22,27 +22,9 @@ const PublicFooter = () => {
         >
           Privacy Policy
         </Link>
-        <span className="px-2">|</span>
-        <Link 
-          to="/"
-          target="_blank"
-          rel="nofollow noopener noreferrer"
-          key="contact"
-        >
-          Contact
-        </Link>
-        <span className="px-2">|</span>
-        <Link 
-          to="/"
-          target="_blank"
-          rel="nofollow noopener noreferrer"
-          key="linkedin"
-        >
-          Linkedin
-        </Link>
       </div>
       <div>
-        <Link to="/">© {new Date().getFullYear()} Coffeastock</Link>
+        <Link to="/">© {new Date().getFullYear()} Maiko Miyazaki</Link>
       </div>
     </div>
   )

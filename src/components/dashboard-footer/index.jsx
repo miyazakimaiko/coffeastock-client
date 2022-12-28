@@ -15,7 +15,7 @@ const DashboardFooter = () => {
           rel="nofollow noopener noreferrer"
           key="home"
         >
-          © {new Date().getFullYear()} Coffeastock
+          © {new Date().getFullYear()} Maiko Miyazaki
         </Link>
         <span className="px-2">|</span>
         <Link 
@@ -43,15 +43,6 @@ const DashboardFooter = () => {
         >
           Feedback
         </a>
-        <span className="px-2">|</span>
-        <Link 
-          to="/"
-          target="_blank"
-          rel="nofollow noopener noreferrer"
-          key="linkedin"
-        >
-          Linkedin
-        </Link>
       </div>
     </div>
   )
