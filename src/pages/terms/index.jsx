@@ -28,7 +28,7 @@ const Terms = () => {
             We reserve the right to update and change these Terms of Service without notice. Any new features that augment or enhance 
             the current Service, including the release of new tools and resources, shall be subject to the Terms of Service. Continued 
             use of the Service after any such changes shall constitute your consent to such changes. You can review the most current 
-            version of the Terms of Service at any time at: https://docs.Coffeastock.app/terms
+            version of the Terms of Service at any time at: https://coffeastock.com/terms
           </p>
           <p>
             Violation of any of the terms below will result in the termination of your Account. While Coffeastock prohibits such conduct 
@@ -54,12 +54,11 @@ const Terms = () => {
                 actions performed under your account. We recommend that you use "strong" passwords (passwords that use a combination of 
                 upper and lower case letters, numbers and symbols) with your account and that you logout from your account at the end of 
                 every session. Coffeastock cannot and will not be liable for any loss or damage arising from your failure to comply with the 
-                above. You agree to notify Coffeastock immediately at contact@Coffeastock.app of any actual or suspected unauthorized use of your 
+                above. You agree to notify Coffeastock immediately at support@coffeastock.com of any actual or suspected unauthorized use of your 
                 account or any other breach of security known by you.
               </li>
               <li>
-                You are responsible for remembering the password that you use in association with your account. You understand that Coffeastock 
-                encrypts your note data at rest based on the password and it is not able to restore the data without the password.
+                You are responsible for remembering the password that you use in association with your account.
               </li>
               <li>
                 Your login may only be used by one person - a single login shared by multiple people is not permitted. You may create separate 
@@ -101,7 +100,7 @@ const Terms = () => {
           <section>
             <ol className="list-decimal">
               <li>
-                The Service is offered with a 30-day free trial. You will only be able to continue using the Service by paying 
+                The Service is offered with a 14-day free trial. You will only be able to continue using the Service by paying 
                 in advance for additional usage. If you fail to pay for additional usage, your account will be frozen and inaccessible 
                 until payment is made.
               </li>
@@ -109,8 +108,9 @@ const Terms = () => {
                 There will be no refunds or credits for partial months of service.
               </li>
               <li>
-                All fees are exclusive of all taxes, levies, or duties imposed by taxing authorities. If your billing address is in 
-                Ireland, you shall be responsible for payment of a consumption tax.
+                All listed fees and any amounts payable are net amounts exclusive of possibly applicable VAT, sales tax, or any other 
+                applicable taxes and charges imposed by any government entity in connection with your use of the Service. You are solely 
+                liable for any such taxes and charges. 
               </li>
               <li>
                 The credit card that you provided will automatically be charged the new rate on your next billing cycle when your 
@@ -132,7 +132,7 @@ const Terms = () => {
             <ol className="list-decimal">
               <li>
                 You are solely responsible for properly canceling your account. An email or phone request to cancel your account is 
-                not considered cancellation. You can cancel your account at any time by visiting your account page on my.Coffeastock.app.
+                not considered cancellation. You can cancel your account at any time by visiting your account page on coffeastock.com/account.
               </li>
               <li>
                 All of your content will be immediately be inaccessible from the Service upon cancellation. This information can not 
@@ -224,7 +224,7 @@ const Terms = () => {
               </li>
               <li>
                We may, but have no obligation to, remove content and accounts that we determine in our sole discretion are 
-               unlawful or violates any party’s intellectual property or these Terms of Service.
+               unlawful or violates any party's intellectual property or these Terms of Service.
               </li>
               <li>
                Verbal, physical, written or other abuse (including threats of abuse or retribution) of any Service customer 
@@ -257,7 +257,7 @@ const Terms = () => {
                versions of the Terms of Service).
               </li>
               <li>
-               Questions about the Terms of Service should be sent to contact@Coffeastock.app.
+               Questions about the Terms of Service should be sent to support@Coffeastock.com.
               </li>
             </ol>
             <p>The end.</p>

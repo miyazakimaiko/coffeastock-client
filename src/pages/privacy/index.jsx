@@ -38,15 +38,10 @@ const Privacy = () => {
               Coffeastock collects data about you:
             </p>
             <ol className="list-disc">
-              <li> when you browse the Coffeastock website, Coffeastock.app</li>
+              <li>when you browse the Coffeastock website, coffeastock.com</li>
               <li>when you create an Coffeastock account or update your account</li>
               <li>when you send support, privacy, legal, and other requests to us</li>
-              <li>when working with and researching current and potential customers</li>
             </ol>
-            <p>
-              When researching potential customers, we sometimes search the public World Wide Web or paid business databases. 
-              Otherwise, we don't buy or receive data about you from data brokers or other private services.
-            </p>
           </section>
         </article>
 
@@ -55,28 +50,23 @@ const Privacy = () => {
             <h2 className="text-2xl mb-5">What data does Coffeastock collect about me, and why?</h2>
           </section>
           <section>
-            <h3>Coffeastock collects note data.</h3>
+            <h3>Coffeastock collects coffee, recipes and custom ranges data.</h3>
             <p>
-              When you add notes, notebooks, tags and attachment files on the Coffeastock client apps, Coffeastock stores them in your 
-              local devices and the Coffeastock servers. The data is associated with your Coffeastock account. When the data is stored in 
-              the Coffeastock server, Coffeastock encrypts it in transit and at rest so that other people including the server administrators 
-              can not see the contents of the data. The Coffeastock server uses the data to provide data synchronization functionality 
-              across your devices. You can disable this functionality from Preferences. The client apps keep the data in your local 
-              storage in order to provide quick offline access to the data. The client apps don't encrypt the data at rest in local 
-              to provide quick search functionality.
+              When you add coffee collections, recipes, coffee or recipes custom ranges on the Coffeastock client app, Coffeastock 
+              stores them in the Coffeastock servers. The data is associated with your Coffeastock account.
             </p>
           </section>
           <section>
             <h3>Coffeastock collects data about how you use Coffeastock service.</h3>
             <p>
-              When you use the Coffeastock client apps, the Coffeastock website or the ipm command, Coffeastock logs data that might 
+              When you use the Coffeastock client apps or the Coffeastock website, Coffeastock logs data that might 
               be identified to you:
             </p>
             <ol className="list-disc">
               <li>a random, unique identifier</li>
               <li>the version of the Coffeastock app, and the operating system you are using</li>
               <li>network request data, such as the date and time, your IP address, and the URL</li>
-              <li>number of notes, notebooks, tags, files and the total data size of them</li>
+              <li>number of coffee collections, recipes, custom ranges and the total data size of them</li>
             </ol>
             <p>
               Coffeastock uses this data to:
@@ -96,7 +86,7 @@ const Privacy = () => {
           <section>
             <h3>Coffeastock collects data about how you use the website.</h3>
             <p>
-              When you visit Coffeastock.app, my.Coffeastock.app, docs.Coffeastock.app, forum.Coffeastock.app, and other Coffeastock websites, Coffeastock 
+              When you visit coffeastock.com, api.coffeastock.app, and other Coffeastock websites, Coffeastock 
               uses cookies, server logs, and other methods to collect data about what pages you visit, and when. Coffeastock also 
               collects technical information about the software and computer you use, such as:
             </p>
@@ -133,7 +123,7 @@ const Privacy = () => {
           <section>
             <h3>Coffeastock collects account data.</h3>
             <p>
-              Basically Coffeastock serviecs require an Coffeastock account. For example, you must have an Coffeastock account to use the Coffeastock 
+              Basically Coffeastock services require an Coffeastock account. For example, you must have an Coffeastock account to use the Coffeastock 
               client apps.
             </p>
             <p>
@@ -145,10 +135,6 @@ const Privacy = () => {
               You can also open more than one account.
             </p>
             <p>
-              Coffeastock publishes account data for the whole world to see on user shared notes like this one. Coffeastock also publishes 
-              account data through the Coffeastock plugin registry if you have published plugins.
-            </p>
-            <p>
               You don't have to give Coffeastock a personal name or any social media names, and you can erase this data at any time.
             </p>
             <p>
@@ -156,11 +142,11 @@ const Privacy = () => {
             </p>
             <ol className="list-disc">
               <li>confirm if your email address is correct to sign you up</li>
+              <li>notify you when beta version ends in 3 days</li>
               <li>notify you about your free trial expires in 3 days</li>
               <li>notify you about your free trial has been expired</li>
               <li>notify you about your payment failure</li>
               <li>notify you about your account has been deactivated because of payment failure</li>
-              <li>invite you to our lounge where only paid users can access when you became a paid user</li>
               <li>notify you about your annual subscription renewal 3 days before</li>
               <li>contact you in special circumstances related to your account</li>
               <li>contact you about support requests</li>
@@ -168,15 +154,14 @@ const Privacy = () => {
               <li>announce new Coffeastock product offerings, service changes, and features</li>
             </ol>
             <p>
-              Coffeastock stores account data as long as the account stays open. When account data also appear in plugin data, 
-              Coffeastock stores that data as long as it stores the plugin.
+              Coffeastock stores account data as long as the account stays open.
             </p>
           </section>
           <section>
             <h3>Coffeastock collects payment card data.</h3>
             <p>
-              To continue using Coffeastock service after expiring free trial, Coffeastock requires your payment card data. Coffeastock itself 
-              does not collect or store enough information to charge your card itself. Rather, Stripe collects that data on 
+              To continue using Coffeastock service after expiring the beta version or free trial, Coffeastock requires your payment card data. 
+              Coffeastock itself does not collect or store enough information to charge your card itself. Rather, Stripe collects that data on 
               Coffeastock's behalf, and gives Coffeastock security tokens that allow Coffeastock to create charges and subscriptions. 
               Stripe meets the highest level of PCI compliance (Level 1). See more on their Security page.
             </p>
@@ -190,9 +175,9 @@ const Privacy = () => {
           <section>
             <h3>Coffeastock collects billing address.</h3>
             <p>
-              In Japan, there is consumption tax on Coffeastock service. However, people who live outside Japan are exempt from consumption 
-              tax. Coffeastock collects your billing address in order to ensure whether you live in Japan or not. This is required by the 
-              national tax agency Japan.
+              All listed fees and any amounts payable are net amounts exclusive of possibly applicable VAT, sales tax, or any other 
+              applicable taxes and charges imposed by any government entity in connection with your use of the Service. 
+              Coffeastock collects your billing address in order to evaluate the applicable VAT.
             </p>
             <p>
               Coffeastock stores it safely on Stripe.
@@ -209,7 +194,7 @@ const Privacy = () => {
               Coffeastock uses contact data to:
             </p>
             <ol className="list-disc">
-              <li>crespond to you</li>
+              <li>correspond to you</li>
               <li>compile aggregate statistics about correspondence</li>
               <li>train support staff and other Coffeastock personnel</li>
               <li>review the performance of Coffeastock personnel who respond</li>
@@ -227,9 +212,9 @@ const Privacy = () => {
           </section>
           <section>
             <p>
-              Coffeastock stores account data, note data, data about website use, and plugins on servers in the United States of America. 
-              I sometimes retrieve those data to my personal computers in Japan. I use the data to develop, debug and maintain the 
-              service. The data is erased from my computers when no longer needed.
+              Coffeastock stores account data, coffee collections, recipes, custom ranges, and data about website use on servers in 
+              Ireland and sometimes retrieve those data to my personal computers in Ireland. I use the data to develop, debug and 
+              maintain the service. The data is erased from my computers when no longer needed.
             </p>
           </section>
         </article>
@@ -257,24 +242,16 @@ const Privacy = () => {
             <h2 className="text-2xl mb-5">How can I change or erase data about me?</h2>
           </section>
           <section>
+            {/* <p>
+              You can change your account data and payment card data at any time by visiting your account settings page on coffeastock.com/account.
+            </p> */}
             <p>
-              You can change your account data and payment card data at any time by visiting your account settings page on my.Coffeastock.app.
+              You can close your Coffeastock account at any time through coffeastock.com/account. Closing your account starts a process of erasing 
+              Coffeastock's records of your account data including nickname, email address, and password. Within 30 days of closing account, your coffee 
+              collections, recipes, and custom ranges will be completely erased.
             </p>
             <p>
-              You can close your Coffeastock account at any time through my.Coffeastock.app. Closing your account starts a process of erasing 
-              Coffeastock's records of your account data including notes, shared notes, notebooks, tags and attachment files. Closing your 
-              account does not automatically erase plugins published under your account. You can unpublish plugins before closing your 
-              account with ipm unpublish command. When you uninstalled our iOS app or Android app, the data stored in your device is 
-              completely erased. When you uninstalled our desktop app for macOS, Windows or Linux, the data is not completely erased 
-              from your device.
-            </p>
-            <p>
-              Closing your account anonymizes your topics and comments posted on forum.Coffeastock.app. Your profile and IP address on 
-              the forum will be erased but your posts will be remained because they would be helpful for other users. If you wish 
-              to delete them completely, email contact@Coffeastock.app and let us know which user needs to be erased.
-            </p>
-            <p>
-              If you have questions or problems using the website or ipm command to change or delete data about you, email contact@Coffeastock.app.
+              If you have questions or problems using the website to change or delete data about you, email support@coffeastock.com.
             </p>
           </section>
         </article>
@@ -294,18 +271,17 @@ const Privacy = () => {
             </p>
           </section>
           <section>
-            <h3>Coffeastock uses Fathom Analytics.</h3>
+            <h3>Coffeastock uses Hubspot Contact.</h3>
             <p>
-              Coffeastock's website uses Fathom Analytics to collect and analyze data about visitors to its websites. You can find 
-              more information about the technical implementation here. Further information on data protection at Fathom can be 
-              found at usefathom.com/data.
+              Coffeastock's website uses Hubspot Contact to store and manage the subscription list. 
+              Further information on data protection at Hubspot can be found at https://legal.hubspot.com/security.
             </p>
           </section>
           <section>
             <h3>Coffeastock uses cloud computing platforms.</h3>
             <p>
               Coffeastock uses Amazon Web Services servers and services, in service regions all across the world, to power the 
-              Coffeastock services. You can read the privacy policy for AWS online.
+              Coffeastock services. You can read the privacy policy at https://aws.amazon.com/privacy/.
             </p>
           </section>
         </article>
@@ -331,10 +307,10 @@ const Privacy = () => {
             </p>
             <p>
               Maiko Miyazaki<br/>
-              contact@Coffeastock.app<br/>
-              1-1-1<br/>
+              maikomiyazaki@Coffeastock.com<br/>
+              162, Block 11, Allendale Square<br/>
               Clonsilla, Dublin<br/>
-              D00 0000<br/>
+              D15 E5CR<br/>
               Ireland
             </p>
           </section>
@@ -346,12 +322,10 @@ const Privacy = () => {
           </section>
           <section>
             <p>
-              Coffeastock will announce the next version on the Coffeastock blog. In the meantime, Coffeastock may update its contact information and minor 
+              Coffeastock will announce the next version on the Coffeastock app dashboard. 
+              In the meantime, Coffeastock may update its contact information and minor 
               changes by updating the page at Privacy Policy, without an announcement. Coffeastock may change how it announces changes in future 
               privacy versions.
-            </p>
-            <p>
-              You can review the history of changes in the Git repository for Coffeastock's documentation.
             </p>
           </section>
         </article>

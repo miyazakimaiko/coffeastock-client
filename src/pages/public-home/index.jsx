@@ -21,7 +21,7 @@ const faqs = [
   },
   {
     title: "When will the beta version end, and what will happen after that?",
-    textContent: `Planning to end the beta version on April 2023 (Subject to change). At the end of the beta version, users can continue using the app by subscribing to the basic plan.`
+    textContent: `Coffeastock is planning to end the beta version on March 2023 or later. At the end of the beta version, users can continue using the app by subscribing to the basic plan.`
   },
   {
     title: "How much the basic subscription will cost?",
@@ -29,7 +29,7 @@ const faqs = [
   },
   {
     title: "What will happen to my account when beta version ends and if I don't subscribe?",
-    textContent: `If you don't subscribe after the end of the beta versions life, your account will be deactivated and can't be accessed while deactivated. Your data is kept stored on the server and can re-activate your account anytime.`
+    textContent: `If you don't subscribe after the end of the beta version's life, your account will be deactivated and can't be accessed while deactivated. Your data is kept stored on the server for 6 months and can re-activate your account anytime.`
   },
 ]
 
