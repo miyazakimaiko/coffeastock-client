@@ -59,7 +59,7 @@ const CoffeeRangeListForAll = () => {
         const range = rangeList[`${category}_range`][id];
         const label = unescapeHtml(range ? range.label : "error");
         const info = unescapeHtml(range ? range.def : "error");
-        const text = `${info === "" ? "No Info" : info}`;
+        const text = `${info === "" || !Boolean(info) ? "No Info" : info}`;
         result.push(
           <div
             className="flex justify-end"
