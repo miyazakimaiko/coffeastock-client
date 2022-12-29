@@ -20,6 +20,7 @@ module.exports = {
         'lime': '#D6E4A3',
         'yellow': '#F3BB44',
         'red': '#EB5E28',
+        'pink-red': '#C65673',
         'pink': '#e19193',
         'ash-pink': '#E8C1B4',
         'purple': '#9a92c4',

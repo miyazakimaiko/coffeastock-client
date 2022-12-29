@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import { FaHeart } from 'react-icons/fa';
 import LogoSm from '../../assets/images/logo.png';
 import Logo from '../../assets/images/logo-white-bg.png';
-import GifImg from '../../assets/images/coffeastock-gif-placeholder.png';
+import RecipesImg from '../../assets/images/coffeastock-recipes.png';
 import DashboardImg from '../../assets/images/coffeastock-dashboard.jpg';
 import MetricsImg from '../../assets/images/coffeastock-metrics.png';
 import BeansAndRecipeImg from '../../assets/images/coffeastock-bean-and-recipe.png';
-import RoasterRangeImg from '../../assets/images/coffeastock-edit-ranges.png';
+import CompareRecipesImg from '../../assets/images/coffeastock-compare-recipes.png';
 import TasteWheelsImg from '../../assets/images/coffeastock-wheels.png';
 import './public-home.scss';
 import FaqAccordion from './FaqAccordion';
@@ -15,9 +15,9 @@ import PublicFooter from '../../components/public-footer/index.jsx';
 
 const faqs = [
   {
-    title: "Is there Coffeastock mobile app for Android or iOS?",
-    textContent: `No, currently Coffeastock is only available on web/mobile browsers, such as Chrome, Microsoft Edge, 
-      Safari, Firefox, and Opera. That means we don't use your devices storage, it's all in the cloud.`
+    title: "Do I need to download the app on my smartphone or computer?",
+    textContent: `No, You don't need to download to use the app. Coffeastock is available on web/mobile browsers, such as Chrome, Microsoft Edge, 
+      Safari, Firefox, and Opera. You can access it from anywhere on the web, it's all in the cloud!`
   },
   {
     title: "When will the beta version end, and what will happen after that?",
@@ -29,7 +29,7 @@ const faqs = [
   },
   {
     title: "What will happen to my account when beta version ends and if I don't subscribe?",
-    textContent: `If you don't subscribe after the end of the beta version's life, your account will be deactivated and can't be accessed while deactivated. Your data is kept stored on the server for 6 months and can re-activate your account anytime.`
+    textContent: `If you don't subscribe after the end of the beta version's life, your account will be deactivated and can't be accessed while deactivated. Your data is kept stored on the server for 6 months and can re-activate your account anytime within 6 months.`
   },
 ]
 
@@ -62,8 +62,12 @@ const PublicHome = () => {
             <img src={DashboardImg} alt="coffeastock dashboard" className="rounded-lg shadow-2xl" />
           </section>
           <section className="w-full md:min-w-[660px] pl-8 flex flex-col justify-center">
-            <h1 className="text-4xl md:text-5xl font-bold leading-snug md:leading-snug text-burnt-sienna-darker pb-2">No more <br/> guessing game <br/> to improve your brewing.</h1>
-            <p className="text-lg">Collect, visualize, and analyze your brewing data accurately</p>
+            <h1 className="text-4xl md:text-5xl font-bold leading-snug md:leading-snug text-burnt-sienna-darker pb-2">
+              No more <br/> guessing game
+              <br/>
+              to improve your brewing.
+            </h1>
+            <p className="text-lg">Ultimate coffee journal app for coffee lovers. Collect, visualize, and analyze your brewing data accurately to make better coffee.</p>
             <div className="mr-8 mt-8">
               <Link to="/register">
                 <div className="w-56 home-btn start-trial-button">
@@ -77,95 +81,107 @@ const PublicHome = () => {
           </section>
         </article>
 
-        <article id="about-coffeasatock" className="w-full mt-40 md:mt-96 bg-ash-blue">
-          <div className="flex flex-col lg:flex-row w-full max-w-[1200px] mx-auto pt-8 pb-24 lg:pt-48 lg:pb-48">
+        <article id="about-coffeasatock" className="w-full mt-40 md:mt-96 lg:mt-64 bg-ash-blue">
+          <div className="flex flex-col lg:flex-row w-full max-w-[1300px] mx-auto pt-8 pb-24 lg:pt-48 lg:pb-48">
             <section className="p-3">
               <img src={LogoSm} alt="coffeastock logo" className="w-14"/>
-              <h2 className="gradient-underline text-white text-4xl md:text-5xl font-bold leading-snug py-5">
-                <span>Designed to make<br/>the most out of your brewing data</span>
+              <h2 className="gradient-underline text-white text-4xl md:text-5xl font-bold leading-snug md:leading-snug py-5">
+                <span>We want you to make
+                <br/>
+                <i>the most out of your data</i>
+                <br/>
+                to brew better coffee.
+                </span>
               </h2>
               <p className="text-base md:text-lg leading-8 py-4">
-                Get a central workspace to accumulate and analyze your brewing methods. 
-                Understanding how you are actually brewing is the best way to improve the brewing skills.
+                Understanding how we are actually brewing is the best way to improve the brewing skills - but when we brew so many cups of coffee, we begin to <strong>"guess"</strong> how we can improve brewing techniques rather than analyzing how we're actually brewing.
+                <br/><br/>
+                <i>So, <strong>how can we improve brewing techniques without falling into the guessing game? </strong></i>
               </p>
             </section>
-            <section className="flex w-full lg:max-w-[690px] p-3">
-              <img src={GifImg} alt="coffeastock gif" className="rounded-lg shadow-2xl" />
+            <section className="flex items-center w-full min-w-[36rem] p-3">
+              <img src={RecipesImg} alt="coffeastock gif" className="rounded-lg shadow-2xl h-fit" />
             </section>
           </div>
         </article>
 
+        <div className="mb-40 mt-56">
+          <p className="text-center text-3xl tracking-wider">Here are what Coffeastock can do to help you improve.</p>
+        </div>
+
+        <article id="record-coffee-beans" className="flex flex-col lg:flex-row items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
+          <section className="max-w-[680px]">
+            <div className="bg-circle-green w-full p-3">
+              <img src={BeansAndRecipeImg} alt="coffeastock coffee beans and recipe data"/>
+            </div>
+          </section>
+          <section className="w-full lg:max-w-[620px] px-8 mt-12">
+            <span className="uppercase font-mono tracking-widest text-green font-medium">1. Organze</span>
+            <h2 className="bottom-line-green text-4xl md:text-5xl font-bold leading-snug md:leading-snug py-5">
+              Record Beans Collection and brewing recipes
+            </h2>
+            <p className="text-base md:text-lg leading-8 py-4">
+              Let you create your coffee beans collection and add brewing recipes to it.
+              <br/>
+              You can <strong>create</strong> your own list of <strong>Origin</strong>, <strong>Variety</strong>, <strong>Process</strong>, <strong>Roaster</strong>,  <strong>Method</strong>, <strong>Water</strong>, and many more attributes <strong>in your own words and language!</strong>
+            </p>
+          </section>
+        </article>
+
+        <article id="tasting-wheel" className="flex flex-col lg:flex-row-reverse items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
+          <section className="max-w-[680px]">
+            <div className="bg-circle-pink w-full p-3">
+              <img src={TasteWheelsImg} alt="coffeastock coffee tasting wheel large"/>
+            </div>
+          </section>
+          <section className="w-full lg:max-w-[620px] px-8 mt-12">
+            <span className="uppercase font-mono tracking-widest text-pink font-medium">2. Record</span>          
+            <h2 className="bottom-line-pink text-4xl md:text-5xl font-bold leading-snug md:leading-snug py-5">
+              Log up to 20 palate ranges on your tasting wheel
+            </h2>
+            <p className="text-base md:text-lg leading-8 py-4">
+              Do you need to record <strong>complex tasting profile</strong>? Up to <strong>20 custom palates</strong> can be attached to a recipe.
+              <br/> 
+              Of course, you can go for a smaller wheel if that's too much!
+            </p>
+          </section>
+        </article>
+
         <article id="dashboard-metrics" className="flex flex-col lg:flex-row items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-64">
-          <section>
-            <div className="bg-circle-orange w-full p-3">
+          <section className="max-w-[680px]">
+            <div className="bg-circle-blue w-full p-3">
               <img src={MetricsImg} alt="coffeastock coffee data metrics" />
             </div>
           </section>
-          <section className="w-full lg:max-w-[520px] px-8 mt-12">
-            <span className="uppercase font-mono tracking-widest text-orange font-medium">Analyze</span>
-            <h2 className="bottom-line-orange text-4xl md:text-5xl font-bold leading-snug py-5">
+          <section className="w-full lg:max-w-[620px] px-8 mt-12">
+            <span className="uppercase font-mono tracking-widest text-blue font-medium">3. Discover</span>
+            <h2 className="bottom-line-blue text-4xl md:text-5xl font-bold leading-snug md:leading-snug py-5">
               Dashboard metrics <br/> for your coffee data analysis
             </h2>
             <p className="text-base md:text-lg leading-8 py-4">
-              Coffeastock dashboard displays your activity summaries, recent recipes comparison, beans and recipes rankings.
+              Coffeastock dashboard displays your <strong>activity summaries</strong>, <strong>recent recipes comparison</strong>, <strong>beans and recipes rankings</strong>.
               <br/>
               Discover the tendency of your brewing and the best recipe.
             </p>
           </section>
         </article>
 
-        <article id="record-coffee-beans" className="flex flex-col lg:flex-row-reverse items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
-          <section>
-            <div className="bg-circle-green w-full p-3">
-              <img src={BeansAndRecipeImg} alt="coffeastock coffee beans and recipe data"/>
-            </div>
-          </section>
-          <section className="w-full lg:max-w-[520px] px-8 mt-12">
-            <span className="uppercase font-mono tracking-widest text-green font-medium">Organze</span>
-            <h2 className="bottom-line-green text-4xl md:text-5xl font-bold leading-snug py-5">
-              Record coffee beans and recipe data separately
-            </h2>
-            <p className="text-base md:text-lg leading-8 py-4">
-              Not only you can record recipes, but also create individual coffee beans entry.
-              <br/>
-              So each recipe can be associated with one of the coffee beans details.
-            </p>
-          </section>
-        </article>
 
-        <article id="customize-range" className="flex flex-col lg:flex-row items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
-          <section>
-            <div className="bg-circle-pink w-full p-3">
-              <img src={RoasterRangeImg} alt="coffeastock custom ranges" />
-            </div>
-          </section>
-          <section className="w-full lg:max-w-[520px] px-8 mt-12">
-            <span className="uppercase font-mono tracking-widest text-pink font-medium">Customize</span>
-            <h2 className="bottom-line-pink text-4xl md:text-5xl font-bold leading-snug py-5">
-              Create your own <br/> beans and recipes attributes
-            </h2>
-            <p className="text-base md:text-lg leading-8 py-4">
-              You can create the origin, variety, process, roaster, method, water, and many more attributes 
-              in your own words and language.
-            </p>
-          </section>
-        </article>
 
-        <article id="tasting-wheel" className="flex flex-col lg:flex-row-reverse items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
-          <section>
-            <div className="bg-circle-blue w-full p-3">
-              <img src={TasteWheelsImg} alt="coffeastock coffee tasting wheel large"/>
+        <article id="compare-recipes" className="flex flex-col lg:flex-row-reverse items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
+          <section className="max-w-[680px]">
+            <div className="bg-circle-orange w-full p-3">
+              <img src={CompareRecipesImg} alt="coffeastock compare recipes" />
             </div>
           </section>
-          <section className="w-full lg:max-w-[520px] px-8 mt-12">
-            <span className="uppercase font-mono tracking-widest text-ash-blue font-medium">Record</span>          
-            <h2 className="bottom-line-blue text-4xl md:text-5xl font-bold leading-snug py-5">
-              Up to 20 palate ranges on your tasting wheel
+          <section className="w-full lg:max-w-[620px] px-8 mt-12">
+            <span className="uppercase font-mono tracking-widest text-orange font-medium">4. Analyze</span>
+            <h2 className="bottom-line-orange text-4xl md:text-5xl font-bold leading-snug md:leading-snug py-5">
+              Compare recipes to analyze the difference
             </h2>
             <p className="text-base md:text-lg leading-8 py-4">
-              Do you want to record complex tasting profile? Up to 20 custom palates can be attached to a recipe.
-              <br/> 
-              Of course, you can go for a smaller wheel if that's too much!
+              You can <strong>compare any pair of recipes</strong> and let you analyze the difference between recipes.
+
             </p>
           </section>
         </article>
@@ -173,7 +189,8 @@ const PublicHome = () => {
         <article id="customers-voice" className="w-full p-4 md:p-10 my-24 md:my-48">
           <FaHeart className="mx-auto mb-16 text-lg text-orange" />
           <section className="quote md:max-w-[800px] mx-auto text-center">
-            <p className="text-xl md:text-2xl leading-relaxed md:leading-loose italic">I’ve tried many coffee journal apps. But as a coffee amateur, I used to get overwhelmed when I see so many options to choose from... I felt myself too novice to use the app. Coffeastock is fully customizable, so I can record the recipes with only what I know. <span className="font-medium">- Jessica</span></p>
+            <p className="text-xl md:text-2xl leading-relaxed md:leading-loose italic">
+              I've used many journaling apps for coffee recipes, but Coffeastock is only one that allows me to express exactly how I taste in coffee in my own way. This helps me to analyze how I brewed coffees, so I know what to change for the next time to make it better!<span className="font-medium">- Jessica</span></p>
           </section>
         </article>
 

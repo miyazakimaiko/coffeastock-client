@@ -21,6 +21,9 @@ body {
   p, span {
     overflow-wrap: anywhere;
   }
+  strong {
+    font-weight: 600;
+  }
 }
 
 .main {
@@ -52,6 +55,7 @@ body {
   --orange: #EA9470;
   --green: #93CCAC;
   --red: #EB5E28;
+  --pink-red: #C65673;
   --pink: #e19193;
   --ash-pink: #E8C1B4;
   --lightpink: #FFE1E6;
