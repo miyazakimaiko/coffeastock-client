@@ -100,7 +100,7 @@ const PublicHome = () => {
               </p>
             </section>
             <section className="flex items-center w-full min-w-[36rem] p-3">
-              <img src={RecipesImg} alt="coffeastock gif" className="rounded-lg shadow-2xl h-fit" />
+              <img src={RecipesImg} alt="coffeastock gif" className="rounded-lg shadow-2xl h-auto" />
             </section>
           </div>
         </article>
