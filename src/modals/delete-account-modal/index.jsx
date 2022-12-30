@@ -75,12 +75,12 @@ const DeleteAccountModal = ({ email }) => {
               <p className="pb-6">
                 Please take a moment to review what will happen when your account is deleted. This action is permanent and not reversible.
               </p>
-              <h4 className="font-medium my-2">Workspace</h4>
-              <p>Any worksplace that you own will be deleted after 30 days.</p>
+              <h4 className="font-medium my-2">Coffee collections, Recipes and Custom Ranges</h4>
+              <p>Any collections that you own will be deleted after 30 days.</p>
               <h4 className="font-medium my-2">Billing</h4>
-              <p>Future billing for the workspace will be stopped.</p>
+              <p>Future billing for the account will be stopped.</p>
               <h4 className="font-medium my-2">Your User Data</h4>
-              <p>All user data will be removed immidiately after confirmation.</p>
+              <p>Your email address, password, and nickname will be removed from the system immidiately after confirmation.</p>
               <hr className="my-4"/>
               <p className="font-medium text-base">This action is permanent, please confirm your understanding by entering your password</p>
               <form onSubmit={verifyPassword}>
