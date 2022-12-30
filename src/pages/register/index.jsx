@@ -10,7 +10,6 @@ import toastOnBottomCenter from '../../utils/customToast'
 import LogoSm from '../../assets/images/logo.png'
 import LogoLg from '../../assets/images/logo-white-bg.png'
 import ConfirmUserModal from '../../modals/confirm-user-modal';
-import useAddContact from '../../hooks/useAddContact';
 
 const Register = () => {
   const [cognitoUser, setCognitoUser] = useState(null);

@@ -25,7 +25,8 @@ const faqs = [
   },
   {
     title: "How much the basic subscription will cost?",
-    textContent: `Basic subscription is planned to be $6.99/mo. For the beta version users, it'll be 20% OFF as they are eligible to the lifetime discount!`
+    textContent: `Basic subscription is planned to be $6.99/mo (Subject to change), because it costs to run the server and to store the journal data securely. 
+    However, for the beta version users, it'll be 20% OFF as they will be eligible to the lifetime discount!`
   },
   {
     title: "What will happen to my account when beta version ends and if I don't subscribe?",
@@ -67,7 +68,7 @@ const PublicHome = () => {
               <br/>
               to improve your brewing.
             </h1>
-            <p className="text-lg">Ultimate coffee journal app for coffee lovers. Collect, visualize, and analyze your brewing data accurately to make better coffee.</p>
+            <p className="text-lg">Ultimate coffee journal app for coffee lovers. Collect, visualize, and analyze your brewing data accurately to make the coffee you wanted.</p>
             <div className="mr-8 mt-8">
               <Link to="/register">
                 <div className="w-56 home-btn start-trial-button">
@@ -86,21 +87,17 @@ const PublicHome = () => {
             <section className="p-3">
               <img src={LogoSm} alt="coffeastock logo" className="w-14"/>
               <h2 className="gradient-underline text-white text-4xl md:text-5xl font-bold leading-snug md:leading-snug py-5">
-                <span>We want you to make
-                <br/>
-                <i>the most out of your data</i>
-                <br/>
-                to brew better coffee.
+                <span>We want you to make <i>the most out of your brewing data</i> to make better coffee.
                 </span>
               </h2>
               <p className="text-base md:text-lg leading-8 py-4">
                 Understanding how we are actually brewing is the best way to improve the brewing skills - but when we brew so many cups of coffee, we begin to <strong>"guess"</strong> how we can improve brewing techniques rather than analyzing how we're actually brewing.
                 <br/><br/>
-                <i>So, <strong>how can we improve brewing techniques without falling into the guessing game? </strong></i>
+                <i>So, <strong>how can we be better at brewing without falling into the guessing game? </strong></i>
               </p>
             </section>
             <section className="flex items-center w-full min-w-[36rem] p-3">
-              <img src={RecipesImg} alt="coffeastock gif" className="rounded-lg shadow-2xl h-auto" />
+              <img src={RecipesImg} alt="coffeastock recipe list" className="rounded-lg shadow-2xl h-auto" />
             </section>
           </div>
         </article>
@@ -123,7 +120,7 @@ const PublicHome = () => {
             <p className="text-base md:text-lg leading-8 py-4">
               Let you create your coffee beans collection and add brewing recipes to it.
               <br/>
-              You can <strong>create</strong> your own list of <strong>Origin</strong>, <strong>Variety</strong>, <strong>Process</strong>, <strong>Roaster</strong>,  <strong>Method</strong>, <strong>Water</strong>, and many more attributes <strong>in your own words and language!</strong>
+              You can <strong>create your own list of Origin</strong>, <strong>Variety</strong>, <strong>Process</strong>, <strong>Roaster</strong>,  <strong>Method</strong>, <strong>Water</strong>, and many more attributes <strong>in your own words and language!</strong>
             </p>
           </section>
         </article>
@@ -218,7 +215,7 @@ const PublicHome = () => {
               </div>
               <div>
                 <h3 className="text-2xl md:text-3xl font-semibold text-burnt-sienna-darker mb-2">Get started today with the beta version</h3>
-                <p className="text-md md:text-lg leading-relaxed md:leading-loose mb-4">If registered for the beta version of Coffeastock, you will be eligible to get a lifetime discount on Premium.</p>
+                <p className="text-md md:text-lg leading-relaxed md:leading-loose mb-4">If registered for the beta version of Coffeastock, you will be eligible to get a lifetime discount on Basic Plan.</p>
                 <Link to="/register">
                   <div className="w-56 home-btn start-trial-button mx-auto sm:mx-0">
                     Get Started
