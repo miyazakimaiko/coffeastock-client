@@ -142,7 +142,7 @@ const ManageAccount = ({setTitle}) => {
             <div className="flex justify-between">
               <ul>
                 <li key="name" className="flex pb-4">
-                  <div className="w-48">Premium Plan</div>
+                  <div className="w-48">Trial (Beta Version)</div>
                   <div className="ml-6">
                     <a href="#" className="underline text-blue">
                       Change
