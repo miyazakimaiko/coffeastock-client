@@ -80,9 +80,9 @@ const PublicHome = () => {
           </section>
         </article>
 
-        <article id="about-coffeasatock" className="w-full mt-24 md:mt-80 lg:mt-64 bg-ash-blue">
-          <div className="flex flex-col lg:flex-row w-full max-w-[1300px] mx-auto pt-8 pb-24">
-            <section className="p-3">
+        <article id="about-coffeasatock" className="w-full mt-24 md:mt-80 lg:mt-64 bg-ash-blue p-3">
+          <section className="flex flex-col lg:flex-row w-full max-w-[1300px] mx-auto pt-8 pb-24">
+            <div>
               <img src={LogoSm} alt="coffeastock logo" className="w-14"/>
               <h2 className="gradient-underline text-white text-4xl md:text-5xl font-bold md:leading-snug py-5">
                 <span>We want you to make <i>the most out of your brewing data</i> to make better coffee.
@@ -93,16 +93,16 @@ const PublicHome = () => {
                 <br/><br/>
                 <i>So, <strong>how can we be better at brewing without falling into the guessing game? </strong></i>
               </p>
-            </section>
-            <section className="flex items-center w-full min-w-[36rem] p-3">
-              <img src={RecipesImg} alt="coffeastock recipe list" className="rounded-lg shadow-2xl h-auto" />
-            </section>
-          </div>
+            </div>
+            <div className="flex items-center w-full min-w-[36rem] p-3">
+              <img src={RecipesImg} alt="coffeastock recipe list" className="h-auto" />
+            </div>
+          </section>
+          <section id="scroll-down-arrow" className="text-xl flex justify-center">
+            <a href="#record-coffee-beans"><span></span>Here are what Coffeastock can do to help you improve...</a>
+          </section>
         </article>
 
-        <div className="mb-40 mt-56">
-          <p className="text-center text-xl tracking-wider">Here are what Coffeastock can do to help you improve...</p>
-        </div>
 
         <article id="record-coffee-beans" className="flex flex-col lg:flex-row items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
           <section className="max-w-[680px]">
@@ -110,7 +110,7 @@ const PublicHome = () => {
               <img src={BeansAndRecipeImg} alt="coffeastock coffee beans and recipe data"/>
             </div>
           </section>
-          <section className="w-full lg:max-w-[620px] px-8 mt-12 text-center">
+          <section className="w-full lg:max-w-[620px] px-4 mt-8 text-center">
             <span className="uppercase font-mono tracking-widest text-green font-medium">1. Organze</span>
             <h2 className="bottom-line-green text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Record Beans Collection and brewing recipes
@@ -129,7 +129,7 @@ const PublicHome = () => {
               <img src={TasteWheelsImg} alt="coffeastock coffee tasting wheel large"/>
             </div>
           </section>
-          <section className="w-full lg:max-w-[620px] px-8 mt-12 text-center">
+          <section className="w-full lg:max-w-[620px] px-4 mt-8 text-center">
             <span className="uppercase font-mono tracking-widest text-pink font-medium">2. Record</span>          
             <h2 className="bottom-line-pink text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Log up to 20 palate ranges on your tasting wheel
@@ -148,10 +148,10 @@ const PublicHome = () => {
               <img src={MetricsImg} alt="coffeastock coffee data metrics" />
             </div>
           </section>
-          <section className="w-full lg:max-w-[620px] px-8 mt-12 text-center">
+          <section className="w-full lg:max-w-[620px] px-4 mt-8 text-center">
             <span className="uppercase font-mono tracking-widest text-blue font-medium">3. Discover</span>
             <h2 className="bottom-line-blue text-4xl md:text-5xl font-bold md:leading-snug py-5">
-              Dashboard metrics <br/> for your coffee data analysis
+              Dashboard metrics for your coffee data analysis
             </h2>
             <p className="text-base md:text-lg leading-8 py-4">
               Coffeastock dashboard displays your <strong>activity summaries</strong>, <strong>recent recipes comparison</strong>, <strong>beans and recipes rankings</strong>.
@@ -169,7 +169,7 @@ const PublicHome = () => {
               <img src={CompareRecipesImg} alt="coffeastock compare recipes" />
             </div>
           </section>
-          <section className="w-full lg:max-w-[620px] px-8 text-center">
+          <section className="w-full lg:max-w-[620px] px-4 mt-8 text-center">
             <span className="uppercase font-mono tracking-widest text-orange font-medium">4. Analyze</span>
             <h2 className="bottom-line-orange text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Compare recipes to analyze the difference

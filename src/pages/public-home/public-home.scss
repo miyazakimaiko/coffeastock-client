@@ -8,7 +8,7 @@
     position: absolute;
     top: -245px;
     bottom: 0px;
-    right: -630px;
+    right: -645px;
     width: 800px;
     z-index: -1;
     background: hsla(14, 90%, 73%, 1);
@@ -90,9 +90,10 @@
     background-position: bottom;
     display: block;
     position: absolute;
-    top: -23.9%;
+    top: -23.8%;
+    left: -2%;
+    right: -2%;
     height: 24%;
-    width: 102vw;
     z-index: -1;
   }
 
@@ -100,6 +101,63 @@
     background: linear-gradient(transparent 70%, #579999 70%);
   }
 }
+
+#scroll-down-arrow a {
+  padding-top: 70px;
+  z-index: 2;
+  display: inline-block;
+  -webkit-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+  letter-spacing: .1em;
+  text-decoration: none;
+  text-align: center;
+  transition: opacity .3s;
+  &:hover {
+    opacity: .5;
+  }
+}
+#scroll-down-arrow a span {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  border-left: 1px solid rgb(76, 74, 74);
+  border-bottom: 1px solid rgb(76, 74, 74);
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  -webkit-animation: scrollDown 1.5s infinite;
+  animation: scrollDown 1.5s infinite;
+  box-sizing: border-box;
+}
+@-webkit-keyframes scrollDown {
+  0% {
+    -webkit-transform: rotate(-45deg) translate(0, 0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: rotate(-45deg) translate(-20px, 20px);
+    opacity: 0;
+  }
+}
+@keyframes scrollDown {
+  0% {
+    transform: rotate(-45deg) translate(0, 0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(-45deg) translate(-20px, 20px);
+    opacity: 0;
+  }
+}
+
 
 #record-coffee-beans {
   .bg-circle-green {
@@ -154,7 +212,7 @@
     &::before {
       content: "";
       position: absolute;
-      bottom: -30px;
+      bottom: 0px;
       right: -30px;
       height: 250px;
       width: 250px;
@@ -200,7 +258,7 @@
     &::before {
       content: "";
       position: absolute;
-      bottom: 20px;
+      bottom: 0px;
       left: 5px;
       height: 250px;
       width: 250px;
@@ -225,12 +283,6 @@
       background-size: cover;
       z-index: -2;
     }
-    img {
-      max-width: 109%;
-      height: auto;
-      margin-left: -30px;
-      margin-right: -20px;
-    }
   }
 
   .bottom-line-blue {
@@ -254,7 +306,7 @@
     &::before {
       content: "";
       position: absolute;
-      bottom: -30px;
+      bottom: 0px;
       right: -40px;
       height: 250px;
       width: 250px;
@@ -278,10 +330,6 @@
       background-image: url(../../assets/images/bg-dot-orange.png);
       background-size: cover;
       z-index: -2;
-    }
-    img {
-      border-radius: 15px;
-      box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
     }
   }
 
@@ -330,7 +378,7 @@
     background-position: bottom;
     display: block;
     position: absolute;
-    top: -61.9%;
+    top: -62.8%;
     height: 63%;
     width: 100vw;
     z-index: -1;
