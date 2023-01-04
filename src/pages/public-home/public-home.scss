@@ -6,9 +6,9 @@
   &::before {
     content: "";
     position: absolute;
-    bottom: -45px;
-    right: -570px;
-    height: 800px;
+    top: -245px;
+    bottom: 0px;
+    right: -630px;
     width: 800px;
     z-index: -1;
     background: hsla(14, 90%, 73%, 1);
@@ -24,18 +24,16 @@
     }
 
     @include lg() {
-      height: 900px;
       width: 900px;
-      right: -220px;
-      bottom: -130px;
+      left: 100px;
     }
 
     @include xl() {
-
+      left: 200px;
+      right: 0px;
     }
 
     @include xxl() {
-      right: -300px;
     }
   }
 }
@@ -110,10 +108,10 @@
     &::before {
       content: "";
       position: absolute;
-      bottom: -20px;
+      bottom: 0px;
       left: -20px;
-      height: 300px;
-      width: 300px;
+      height: 250px;
+      width: 250px;
       background-color: var(--green);
       border-radius: 50%;
       z-index: -1;
@@ -143,7 +141,7 @@
       display: block;
       width: 150px;
       height: 5px;
-      margin-top: 30px;
+      margin: 30px auto 0 auto;
       background-color: var(--green);
     }
   }
@@ -156,10 +154,10 @@
     &::before {
       content: "";
       position: absolute;
-      bottom: -50px;
-      right: -110px;
-      height: 300px;
-      width: 300px;
+      bottom: -30px;
+      right: -30px;
+      height: 250px;
+      width: 250px;
       background-color: var(--pink);
       border-radius: 50%;
       z-index: -1;
@@ -189,7 +187,7 @@
       display: block;
       width: 150px;
       height: 5px;
-      margin-top: 30px;
+      margin: 30px auto 0 auto;
       background-color: var(--pink);
     }
   }
@@ -202,10 +200,10 @@
     &::before {
       content: "";
       position: absolute;
-      bottom: 5px;
+      bottom: 20px;
       left: 5px;
-      height: 300px;
-      width: 300px;
+      height: 250px;
+      width: 250px;
       background-color: var(--ash-blue);
       border-radius: 50%;
       z-index: -1;
@@ -241,7 +239,7 @@
       display: block;
       width: 150px;
       height: 5px;
-      margin-top: 30px;
+      margin: 30px auto 0 auto;
       background-color: var(--blue);
     }
   }
@@ -256,10 +254,10 @@
     &::before {
       content: "";
       position: absolute;
-      bottom: -50px;
-      right: -110px;
-      height: 300px;
-      width: 300px;
+      bottom: -30px;
+      right: -40px;
+      height: 250px;
+      width: 250px;
       background-color: var(--orange);
       border-radius: 50%;
       z-index: -1;
@@ -293,7 +291,7 @@
       display: block;
       width: 150px;
       height: 5px;
-      margin-top: 30px;
+      margin: 30px auto 0 auto;
       background-color: var(--orange);
     }
   }

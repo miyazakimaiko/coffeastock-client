@@ -4,7 +4,7 @@ import { FaHeart } from 'react-icons/fa';
 import LogoSm from '../../assets/images/logo.png';
 import Logo from '../../assets/images/logo-white-bg.png';
 import RecipesImg from '../../assets/images/coffeastock-recipes.png';
-import DashboardImg from '../../assets/images/coffeastock-dashboard.jpg';
+import DashboardImg from '../../assets/images/coffeastock-dashboard.png';
 import MetricsImg from '../../assets/images/coffeastock-metrics.png';
 import BeansAndRecipeImg from '../../assets/images/coffeastock-bean-and-recipe.png';
 import CompareRecipesImg from '../../assets/images/coffeastock-compare-recipes.png';
@@ -57,16 +57,14 @@ const PublicHome = () => {
       <main className="text-burnt-sienna-darker">
         <article id="hero" 
           className="w-full max-w-screen-xl mx-auto h-auto md:h-[60vh] min-h-[500px] max-h-[900px] 
-          flex flex-col lg:flex-row justify-between items-center"
+          flex flex-col lg:flex-row justify-between px-4"
         >          
-          <section className="w-[96%] mx-auto mt-4 mb-10 block lg:hidden bg-circle">
-            <img src={DashboardImg} alt="coffeastock dashboard" className="rounded-lg shadow-2xl" />
+          <section className="w-full my-4 block lg:hidden bg-circle">
+            <img src={DashboardImg} alt="coffeastock dashboard" className="h-auto w-auto min-w-[600px]"/>
           </section>
-          <section className="w-full md:min-w-[660px] pl-8 flex flex-col justify-center">
-            <h1 className="text-4xl md:text-5xl font-bold leading-snug md:leading-snug text-burnt-sienna-darker pb-2">
-              No more <br/> guessing game
-              <br/>
-              to improve your brewing.
+          <section className="w-full md:min-w-[660px] flex flex-col justify-center">
+            <h1 className="text-4xl md:text-5xl font-bold md:leading-snug text-burnt-sienna-darker pb-2">
+              No more guessing game to improve your brewing.
             </h1>
             <p className="text-lg">Ultimate coffee journal app for coffee lovers. Collect, visualize, and analyze your brewing data accurately to make the coffee you wanted.</p>
             <div className="mr-8 mt-8">
@@ -77,16 +75,16 @@ const PublicHome = () => {
               </Link>
             </div>
           </section>
-          <section className="w-full min-w-[50rem] hidden lg:block bg-circle">
-            <img src={DashboardImg} alt="coffeastock dashboard" className="rounded-lg shadow-2xl" />
+          <section className="hidden lg:block bg-circle">
+            <img src={DashboardImg} alt="coffeastock dashboard" className="h-auto w-auto min-w-[82rem]" />
           </section>
         </article>
 
-        <article id="about-coffeasatock" className="w-full mt-40 md:mt-96 lg:mt-64 bg-ash-blue">
-          <div className="flex flex-col lg:flex-row w-full max-w-[1300px] mx-auto pt-8 pb-24 lg:pt-48 lg:pb-48">
+        <article id="about-coffeasatock" className="w-full mt-24 md:mt-80 lg:mt-64 bg-ash-blue">
+          <div className="flex flex-col lg:flex-row w-full max-w-[1300px] mx-auto pt-8 pb-24">
             <section className="p-3">
               <img src={LogoSm} alt="coffeastock logo" className="w-14"/>
-              <h2 className="gradient-underline text-white text-4xl md:text-5xl font-bold leading-snug md:leading-snug py-5">
+              <h2 className="gradient-underline text-white text-4xl md:text-5xl font-bold md:leading-snug py-5">
                 <span>We want you to make <i>the most out of your brewing data</i> to make better coffee.
                 </span>
               </h2>
@@ -103,7 +101,7 @@ const PublicHome = () => {
         </article>
 
         <div className="mb-40 mt-56">
-          <p className="text-center text-3xl tracking-wider">Here are what Coffeastock can do to help you improve.</p>
+          <p className="text-center text-xl tracking-wider">Here are what Coffeastock can do to help you improve...</p>
         </div>
 
         <article id="record-coffee-beans" className="flex flex-col lg:flex-row items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
@@ -112,9 +110,9 @@ const PublicHome = () => {
               <img src={BeansAndRecipeImg} alt="coffeastock coffee beans and recipe data"/>
             </div>
           </section>
-          <section className="w-full lg:max-w-[620px] px-8 mt-12">
+          <section className="w-full lg:max-w-[620px] px-8 mt-12 text-center">
             <span className="uppercase font-mono tracking-widest text-green font-medium">1. Organze</span>
-            <h2 className="bottom-line-green text-4xl md:text-5xl font-bold leading-snug md:leading-snug py-5">
+            <h2 className="bottom-line-green text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Record Beans Collection and brewing recipes
             </h2>
             <p className="text-base md:text-lg leading-8 py-4">
@@ -131,9 +129,9 @@ const PublicHome = () => {
               <img src={TasteWheelsImg} alt="coffeastock coffee tasting wheel large"/>
             </div>
           </section>
-          <section className="w-full lg:max-w-[620px] px-8 mt-12">
+          <section className="w-full lg:max-w-[620px] px-8 mt-12 text-center">
             <span className="uppercase font-mono tracking-widest text-pink font-medium">2. Record</span>          
-            <h2 className="bottom-line-pink text-4xl md:text-5xl font-bold leading-snug md:leading-snug py-5">
+            <h2 className="bottom-line-pink text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Log up to 20 palate ranges on your tasting wheel
             </h2>
             <p className="text-base md:text-lg leading-8 py-4">
@@ -150,9 +148,9 @@ const PublicHome = () => {
               <img src={MetricsImg} alt="coffeastock coffee data metrics" />
             </div>
           </section>
-          <section className="w-full lg:max-w-[620px] px-8 mt-12">
+          <section className="w-full lg:max-w-[620px] px-8 mt-12 text-center">
             <span className="uppercase font-mono tracking-widest text-blue font-medium">3. Discover</span>
-            <h2 className="bottom-line-blue text-4xl md:text-5xl font-bold leading-snug md:leading-snug py-5">
+            <h2 className="bottom-line-blue text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Dashboard metrics <br/> for your coffee data analysis
             </h2>
             <p className="text-base md:text-lg leading-8 py-4">
@@ -171,9 +169,9 @@ const PublicHome = () => {
               <img src={CompareRecipesImg} alt="coffeastock compare recipes" />
             </div>
           </section>
-          <section className="w-full lg:max-w-[620px] px-8 mt-12">
+          <section className="w-full lg:max-w-[620px] px-8 text-center">
             <span className="uppercase font-mono tracking-widest text-orange font-medium">4. Analyze</span>
-            <h2 className="bottom-line-orange text-4xl md:text-5xl font-bold leading-snug md:leading-snug py-5">
+            <h2 className="bottom-line-orange text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Compare recipes to analyze the difference
             </h2>
             <p className="text-base md:text-lg leading-8 py-4">
