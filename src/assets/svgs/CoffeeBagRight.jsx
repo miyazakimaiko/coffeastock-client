@@ -20,13 +20,15 @@ const CoffeeBagRight = ({name}) => {
           <div xmlns="http://www.w3.org/1999/xhtml"
             className="absolute top-20 bottom-6 
             left-16 right-4 transform -skew-y-6 -skew-x-2 font-semibold">
-            <p xmlns="http://www.w3.org/1999/xhtml" 
+            <div xmlns="http://www.w3.org/1999/xhtml" 
               className="h-full w-full flex items-center justify-center text-center">
+                <span>
                 {unescapedName.length < 40
                   ? `${unescapedName}`
                   : `${unescapedName.substring(0, 32)}...`
                 }
-            </p>
+                </span>
+            </div>
           </div>
         </foreignObject>
       </svg>
