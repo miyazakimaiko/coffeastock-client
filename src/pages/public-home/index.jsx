@@ -88,7 +88,7 @@ const PublicHome = () => {
                 <span>We want you to make <i>the most out of your brewing data</i> to make better coffee.
                 </span>
               </h2>
-              <p className="text-base md:text-lg leading-8 py-4">
+              <p className="text-base md:text-lg leading-8">
                 Understanding how we are actually brewing is the best way to improve the brewing skills - but when we brew so many cups of coffee, we begin to <strong>"guess"</strong> how we can improve brewing techniques rather than analyzing how we're actually brewing.
                 <br/><br/>
                 <i>So, <strong>how can we be better at brewing without falling into the guessing game? </strong></i>
@@ -115,7 +115,7 @@ const PublicHome = () => {
             <h2 className="bottom-line-green text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Record Beans Collection and brewing recipes
             </h2>
-            <p className="text-base md:text-lg leading-8 py-4">
+            <p className="text-base md:text-lg leading-8">
               Let you create your coffee beans collection and add brewing recipes to it.
               <br/>
               You can <strong>create your own list of Origin</strong>, <strong>Variety</strong>, <strong>Process</strong>, <strong>Roaster</strong>,  <strong>Method</strong>, <strong>Water</strong>, and many more attributes <strong>in your own words and language!</strong>
@@ -134,7 +134,7 @@ const PublicHome = () => {
             <h2 className="bottom-line-pink text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Log up to 20 palate ranges on your tasting wheel
             </h2>
-            <p className="text-base md:text-lg leading-8 py-4">
+            <p className="text-base md:text-lg leading-8">
               Do you need to record <strong>complex tasting profile</strong>? Up to <strong>20 custom palates</strong> can be attached to a recipe.
               <br/> 
               Of course, you can go for a smaller wheel if that's too much!
@@ -153,7 +153,7 @@ const PublicHome = () => {
             <h2 className="bottom-line-blue text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Dashboard metrics for your coffee data analysis
             </h2>
-            <p className="text-base md:text-lg leading-8 py-4">
+            <p className="text-base md:text-lg leading-8">
               Coffeastock dashboard displays your <strong>activity summaries</strong>, <strong>recent recipes comparison</strong>, <strong>beans and recipes rankings</strong>.
               <br/>
               Discover the tendency of your brewing and the best recipe.
@@ -174,7 +174,7 @@ const PublicHome = () => {
             <h2 className="bottom-line-orange text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Compare recipes to analyze the difference
             </h2>
-            <p className="text-base md:text-lg leading-8 py-4">
+            <p className="text-base md:text-lg leading-8">
               You can <strong>compare any pair of recipes</strong> and let you analyze the difference between recipes.
 
             </p>

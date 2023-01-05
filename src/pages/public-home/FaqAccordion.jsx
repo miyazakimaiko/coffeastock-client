@@ -27,7 +27,7 @@ const FaqAccordion = ({title, textContent}) => {
           className="h-5 w-5 transition-all duration-400"
           style={isOpen ? {transform: "rotate(90deg)"} : {transform: "rotate(0deg)"}}
         />
-        <h3 className="ml-4 md:text-xl">{title}</h3>
+        <h3 className="ml-4 text-base md:text-xl">{title}</h3>
       </div>
       <div 
         className="px-8 text-base overflow-hidden transition-all duration-400"
