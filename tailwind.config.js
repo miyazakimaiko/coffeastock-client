@@ -8,7 +8,6 @@ module.exports = {
     fontFamily: {
       'sans': ['Kumbh Sans', 'system-ui', 'sans-serif'],
       'serif': ['ui-serif', 'Georgia'],
-      'mono': ['ui-monospace', 'SFMono-Regular'],
     },
     extend: {
       colors: {

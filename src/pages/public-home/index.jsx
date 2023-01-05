@@ -66,7 +66,7 @@ const PublicHome = () => {
             <h1 className="text-4xl md:text-5xl font-bold md:leading-snug text-burnt-sienna-darker pb-2">
               No more guessing game to improve your brewing.
             </h1>
-            <p className="text-lg">Ultimate coffee journal app for coffee lovers. Collect, visualize, and analyze your brewing data accurately to make the coffee you wanted.</p>
+            <p className="text-lg">Ultimate coffee journal app for Baristas. Collect, visualize, and analyze your brewing data accurately to find your signature recipes for every coffee.</p>
             <div className="mr-8 mt-8">
               <Link to="/register">
                 <div className="w-56 home-btn start-trial-button">
