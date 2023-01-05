@@ -5,6 +5,11 @@ module.exports = {
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/*.html'],
   darkMode: false, // or 'media' or 'class'
   theme: {
+    fontFamily: {
+      'sans': ['Kumbh Sans', 'system-ui', 'sans-serif'],
+      'serif': ['ui-serif', 'Georgia'],
+      'mono': ['ui-monospace', 'SFMono-Regular'],
+    },
     extend: {
       colors: {
         'burnt-sienna': '#484040',

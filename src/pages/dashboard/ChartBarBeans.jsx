@@ -41,16 +41,16 @@ export const options = {
         usePointStyle: true,
         boxWidth: 6,
         font: {
-          family: "system-ui" // Add your font here to change the font of your legend label
+          family: "Kumbh Sans" // Add your font here to change the font of your legend label
         }
       }
     },
     tooltip: {
       bodyFont: {
-        family: "system-ui" // Add your font here to change the font of your tooltip body
+        family: "Kumbh Sans" // Add your font here to change the font of your tooltip body
       },
       titleFont: {
-        family: "system-ui" // Add your font here to change the font of your tooltip title
+        family: "Kumbh Sans" // Add your font here to change the font of your tooltip title
       }
     }
   },
@@ -61,7 +61,7 @@ export const options = {
       },
       ticks: {
         font: {
-          family: "system-ui", // Add your font here to change the font of your legend label
+          family: "Kumbh Sans", // Add your font here to change the font of your legend label
           size: 11
         }
       },
@@ -72,7 +72,7 @@ export const options = {
       },
       ticks: {
         font: {
-          family: "system-ui", // Add your font here to change the font of your legend label
+          family: "Kumbh Sans", // Add your font here to change the font of your legend label
         }
       }
     }

@@ -140,7 +140,32 @@ const PalateRadarChartDouble = ({ className, redTitle, blueTitle, redRatesObj, b
       ],
     };
     const options = {
-      scale: { min: 0, max: 10 },
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            font: {
+              family: "Kumbh Sans" // Add your font here to change the font of your legend label
+            }
+          }
+        },
+        tooltip: {
+          bodyFont: {
+            family: "Kumbh Sans" // Add your font here to change the font of your tooltip body
+          },
+          titleFont: {
+            family: "Kumbh Sans" // Add your font here to change the font of your tooltip title
+          }
+        }
+      },
+      scale: { 
+        min: 0, 
+        max: 10,
+        font: {
+          family: "Kumbh Sans", // Add your font here to change the font of your legend label
+          size: 11
+        }
+      },
     };
     setRadarContent(<Radar data={data} options={options} />);
   }
