@@ -56,17 +56,17 @@ const PublicHome = () => {
       </header>
       <main className="text-burnt-sienna-darker">
         <article id="hero" 
-          className="w-full max-w-screen-xl mx-auto h-auto md:h-[60vh] min-h-[500px] max-h-[900px] 
+          className="w-full max-w-screen-xl mx-auto h-auto md:h-[80vh] 
           flex flex-col lg:flex-row justify-between px-4"
         >          
           <section className="w-full my-4 block lg:hidden bg-circle">
             <img src={DashboardImg} alt="coffeastock dashboard" className="h-auto w-auto min-w-[600px]"/>
           </section>
           <section className="w-full md:min-w-[660px] flex flex-col justify-center">
-            <h1 className="text-4xl md:text-5xl font-bold md:leading-snug text-burnt-sienna-darker pb-2">
+            <h1 className="text-4xl md:text-6xl font-bold md:leading-snug text-burnt-sienna-darker pb-6">
               No more guessing game to improve your brewing.
             </h1>
-            <p className="text-lg">Ultimate coffee journal app for Baristas. Collect, visualize, and analyze your brewing data accurately to find your signature recipes for every coffee.</p>
+            <p className="text-lg">Ultimate coffee journal app for Baristas. Collect, visualize, and analyze your brewing data accurately to find your signature recipe for every coffee.</p>
             <div className="mr-8 mt-8">
               <Link to="/register">
                 <div className="w-56 home-btn start-trial-button">
@@ -82,7 +82,7 @@ const PublicHome = () => {
 
         <article id="about-coffeasatock" className="w-full mt-24 md:mt-80 lg:mt-64 bg-ash-blue p-3">
           <section className="flex flex-col lg:flex-row w-full max-w-[1300px] mx-auto pt-8 pb-24">
-            <div>
+          <div>
               <img src={LogoSm} alt="coffeastock logo" className="w-14"/>
               <h2 className="gradient-underline text-white text-4xl md:text-5xl font-bold md:leading-snug py-5">
                 <span>We want you to make <i>the most out of your brewing data</i> to make better coffee.
