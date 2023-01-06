@@ -21,7 +21,7 @@ import './ViewBeanAndRecipes.scss'
 const ViewBeanAndRecipes = ({setTitle}) => {
 
   useEffect(() => {
-    setTitle("Beans and Recipes");
+    setTitle("Beans & Recipes");
   }, [])
   
   const { id } = useParams();

@@ -58,7 +58,7 @@ const DashboardHeader = (props) => {
           {openNav ? <XIcon className="h-8 w-8 opacity-80 hover:opacity-100 ease-linear transition-all duration-150" /> 
           : <MenuAlt2Icon className="h-8 w-8 opacity-80 hover:opacity-100 ease-linear transition-all duration-150"/>}
         </div>
-        <h2 className="text-xl">{capitalize(props.title)}</h2>
+        <h2 className="text-base lg:text-xl">{capitalize(props.title)}</h2>
       </div>
 
       <div className="flex items-center">
