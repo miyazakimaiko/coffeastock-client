@@ -21,7 +21,7 @@ const responseHandler = response => {
 
 const errorHandler = error => {
   if (error.response) {
-    return Promise.reject(error.response.data.error)
+    return Promise.reject({...error.response.data.error, status: error.response.status})
   }
   return Promise.reject(error);
 };
