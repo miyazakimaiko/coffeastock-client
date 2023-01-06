@@ -15,7 +15,6 @@ import FaqAccordion from './FaqAccordion';
 import PublicFooter from '../../components/public-footer/index.jsx';
 import { useRef } from 'react';
 import { useEffect } from 'react';
-import { textPopup } from '../../animation/textPopup';
 
 const faqs = [
   {
