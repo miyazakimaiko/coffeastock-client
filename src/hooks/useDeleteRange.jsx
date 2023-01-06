@@ -29,7 +29,7 @@ export default function useDeleteRange() {
           "Selected range has been deleted successfully."
         );
       },
-      onError: err => {
+      onError: (err) => { 
         if (err.message === 'Not authorized') {
           signout();
           navigate(TO_LOGIN, { replace: true } );
@@ -37,9 +37,7 @@ export default function useDeleteRange() {
         else if (err.message === 'Network Error') {
           navigate(TO_SERVER_ERROR, { replace: true } );
         }
-        else {
-          navigate(TO_GENERAL_ERROR, { replace: true } );
-        }
+        toastOnBottomCenter('error', err.message);
       },
     }
   );
