@@ -1,4 +1,5 @@
 import React from 'react';
+import gsap from 'gsap';
 import { Link } from 'react-router-dom';
 import { FaHeart } from 'react-icons/fa';
 import LogoSm from '../../assets/images/logo.png';
@@ -12,6 +13,9 @@ import TasteWheelsImg from '../../assets/images/coffeastock-wheels.png';
 import './public-home.scss';
 import FaqAccordion from './FaqAccordion';
 import PublicFooter from '../../components/public-footer/index.jsx';
+import { useRef } from 'react';
+import { useEffect } from 'react';
+import { textPopup } from '../../animation/textPopup';
 
 const faqs = [
   {
@@ -35,6 +39,28 @@ const faqs = [
 ]
 
 const PublicHome = () => {
+  let heroImgLg = useRef(null);
+  let heroImgSm = useRef(null);
+  let heroTitle = useRef(null);
+  let heroText = useRef(null);
+  let heroBtn = useRef(null);
+
+  const tl = gsap.timeline({
+    defaults: {
+      duration: 1.5,
+      ease: "Power3.easeOut",
+    }
+  })
+  tl.startTime(1)
+  useEffect(() => {
+
+    tl.fromTo(heroImgLg, {x:30, opacity: 0}, {x:0, opacity: 1}, "<20%") 
+    tl.fromTo(heroImgSm, {x:30, opacity: 0}, {x:0, opacity: 1}, "<") 
+    tl.fromTo(heroTitle, {y:20, opacity: 0}, {y:0, opacity: 1}, "<20%") 
+    tl.fromTo(heroText, {y:20, opacity: 0}, {y:0, opacity: 1}, "<20%") 
+    tl.fromTo(heroBtn, {y:20, opacity: 0}, {y:0, opacity: 1}, "<20%") 
+  }, [])
+
   return (
     <>
       <header className="h-16 lg:h-24 w-full max-w-screen-xl mx-auto px-3 flex items-center justify-between text-white">
@@ -60,23 +86,44 @@ const PublicHome = () => {
           flex flex-col lg:flex-row justify-between px-4"
         >          
           <section className="w-full my-4 block lg:hidden bg-circle">
-            <img src={DashboardImg} alt="coffeastock dashboard" className="h-auto w-auto min-w-[600px]"/>
+            <img 
+              src={DashboardImg} 
+              alt="coffeastock dashboard" 
+              className="h-auto w-auto min-w-[600px]"
+              ref={(el) => (heroImgSm = el)}
+            />
           </section>
           <section className="w-full md:min-w-[660px] flex flex-col justify-center">
-            <h1 className="text-4xl md:text-6xl font-bold md:leading-snug text-burnt-sienna-darker pb-6">
-              No more guessing game to improve your brewing.
+            <h1 
+              className="text-4xl md:text-6xl font-bold md:leading-snug text-burnt-sienna-darker pb-6"
+              ref={(el) => (heroTitle = el)}
+            >
+                No more guessing game to improve your brewing.
             </h1>
-            <p className="text-lg">Ultimate coffee journal app for Baristas. Collect, visualize, and analyze your brewing data accurately to find your signature recipe for every coffee.</p>
+            <p 
+              className="text-lg"
+              ref={(el) => (heroText = el)}
+            >
+              Ultimate coffee journal app for Baristas. Collect, visualize, and analyze your brewing data accurately to find your signature recipe for every coffee.
+            </p>
             <div className="mr-8 mt-8">
               <Link to="/register">
-                <div className="w-56 home-btn start-trial-button">
+                <div 
+                  className="w-56 home-btn start-trial-button"
+                  ref={(el) => (heroBtn = el)}
+                >
                   TRY FOR FREE
                 </div>
               </Link>
             </div>
           </section>
           <section className="hidden lg:block bg-circle">
-            <img src={DashboardImg} alt="coffeastock dashboard" className="h-auto w-auto min-w-[82rem]" />
+            <img 
+              src={DashboardImg} 
+              alt="coffeastock dashboard" 
+              className="h-auto w-auto min-w-[82rem]"
+              ref={(el) => (heroImgLg = el)}
+            />
           </section>
         </article>
 
@@ -85,7 +132,7 @@ const PublicHome = () => {
           <div>
               <img src={LogoSm} alt="coffeastock logo" className="w-14"/>
               <h2 className="gradient-underline text-white text-4xl md:text-5xl font-bold md:leading-snug py-5">
-                <span>We want you to make <i>the most out of your brewing data</i> to make better coffee.
+                <span>Make the most out of your data to be better at brewing.
                 </span>
               </h2>
               <p className="text-base md:text-lg leading-8">
@@ -99,7 +146,7 @@ const PublicHome = () => {
             </div>
           </section>
           <section id="scroll-down-arrow" className="text-xl flex justify-center">
-            <a href="#record-coffee-beans"><span></span>Here are what Coffeastock can do to help you improve...</a>
+            <a href="#record-coffee-beans"><span></span>Coffeastock has everything for you to fix that.</a>
           </section>
         </article>
 
