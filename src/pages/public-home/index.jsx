@@ -1,5 +1,6 @@
 import React from 'react';
 import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
 import { Link } from 'react-router-dom';
 import { FaHeart } from 'react-icons/fa';
 import LogoSm from '../../assets/images/logo.png';
@@ -13,8 +14,8 @@ import TasteWheelsImg from '../../assets/images/coffeastock-wheels.png';
 import './public-home.scss';
 import FaqAccordion from './FaqAccordion';
 import PublicFooter from '../../components/public-footer/index.jsx';
-import { useRef } from 'react';
 import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 
 const faqs = [
   {
@@ -38,27 +39,37 @@ const faqs = [
 ]
 
 const PublicHome = () => {
-  let heroImgLg = useRef(null);
-  let heroImgSm = useRef(null);
-  let heroTitle = useRef(null);
-  let heroText = useRef(null);
-  let heroBtn = useRef(null);
-
   const tl = gsap.timeline({
     defaults: {
-      duration: 1.5,
-      ease: "Power3.easeOut",
-    }
+      duration: 1,
+      ease: "Power3.easeInOut",
+    },
+    paused: true,
+    delay: 0.8,
   })
-  tl.startTime(1)
-  useEffect(() => {
+  
+  useLayoutEffect(() => {
+    const words = document.querySelectorAll(".words");
+    words.forEach(word => {
+      const letters = word.textContent.split("");
+      let html = word;
+      word.textContent = "";
+      letters.forEach(letter => {
+        html.innerHTML += '<span class="letter">' + letter + '</span>';
+      });
+      word.innerHTML = html.innerHTML;
+    })
+    gsap.set(".letter", {display: "inline-block"});
 
-    tl.fromTo(heroImgLg, {x:30, opacity: 0}, {x:0, opacity: 1}, "<20%") 
-    tl.fromTo(heroImgSm, {x:30, opacity: 0}, {x:0, opacity: 1}, "<") 
-    tl.fromTo(heroTitle, {y:20, opacity: 0}, {y:0, opacity: 1}, "<20%") 
-    tl.fromTo(heroText, {y:20, opacity: 0}, {y:0, opacity: 1}, "<20%") 
-    tl.fromTo(heroBtn, {y:20, opacity: 0}, {y:0, opacity: 1}, "<20%") 
+    tl.fromTo("#heroImgLg", {x:30, opacity: 0}, {x:0, opacity: 1}, "<");
+    tl.fromTo("#heroImgSm", {x:30, opacity: 0}, {x:0, opacity: 1}, "<");
+    tl.fromTo("#heroText", {y:20, opacity: 0}, {y:0, opacity: 1}, "<");
+    tl.fromTo(".letter", {y: '120%'}, {y: -4, stagger: 0.02}, "<20%");
   }, [])
+  
+  window.addEventListener("load", function(event) {
+    tl.play();
+  });
 
   return (
     <>
@@ -89,28 +100,32 @@ const PublicHome = () => {
               src={DashboardImg} 
               alt="coffeastock dashboard" 
               className="h-auto w-auto min-w-[600px]"
-              ref={(el) => (heroImgSm = el)}
+              id="heroImgSm"
             />
           </section>
           <section className="w-full md:min-w-[660px] flex flex-col justify-center">
             <h1 
-              className="text-4xl md:text-6xl font-bold md:leading-snug text-burnt-sienna-darker pb-6"
-              ref={(el) => (heroTitle = el)}
+              id="heroTitle"
+              className="text-4xl md:text-6xl font-bold md:leading-snug text-burnt-sienna-darker pb-6 flex flex-wrap"
             >
-                No more guessing game to improve your brewing.
+              <span className="words block overflow-hidden mr-3">No</span>
+              <span className="words block overflow-hidden mr-3">more</span>
+              <span className="words block overflow-hidden mr-3">guessing</span>
+              <span className="words block overflow-hidden mr-3">game</span>
+              <span className="words block overflow-hidden mr-3">to</span>
+              <span className="words block overflow-hidden mr-3">improve</span>
+              <span className="words block overflow-hidden mr-3">your</span>
+              <span className="words block overflow-hidden mr-3">brewing.</span>
             </h1>
             <p 
+              id="heroText"
               className="text-lg"
-              ref={(el) => (heroText = el)}
             >
               Ultimate coffee journal app for Baristas. Collect, visualize, and analyze your brewing data accurately to find your signature recipe for every coffee.
             </p>
             <div className="mr-8 mt-8">
               <Link to="/register">
-                <div 
-                  className="w-56 home-btn start-trial-button"
-                  ref={(el) => (heroBtn = el)}
-                >
+                <div className="w-56 home-btn start-trial-button">
                   TRY FOR FREE
                 </div>
               </Link>
@@ -121,7 +136,7 @@ const PublicHome = () => {
               src={DashboardImg} 
               alt="coffeastock dashboard" 
               className="h-auto w-auto min-w-[82rem]"
-              ref={(el) => (heroImgLg = el)}
+              id="heroImgLg"
             />
           </section>
         </article>
@@ -130,9 +145,11 @@ const PublicHome = () => {
           <section className="flex flex-col lg:flex-row w-full max-w-[1300px] mx-auto pt-8 pb-24">
           <div>
               <img src={LogoSm} alt="coffeastock logo" className="w-14"/>
-              <h2 className="gradient-underline text-white text-4xl md:text-5xl font-bold md:leading-snug py-5">
-                <span>Make the most out of your data to be better at brewing.
-                </span>
+              <h2 
+                className="gradient-underline text-white text-4xl md:text-5xl font-bold md:leading-snug py-5"
+                id="aboutTitle"
+              >
+                <span>Make the most out of your data to be better at brewing.</span>
               </h2>
               <p className="text-base md:text-lg leading-8">
                 Understanding how we are actually brewing is the best way to improve the brewing skills - but when we brew so many cups of coffee, we begin to <strong>"guess"</strong> how we can improve brewing techniques rather than analyzing how we're actually brewing.
