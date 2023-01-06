@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from 'react-query'
 import { useNavigate } from 'react-router-dom';
-import { TO_LOGIN, TO_SERVER_ERROR, TO_GENERAL_ERROR } from '../utils/Paths';
+import { TO_LOGIN, TO_SERVER_ERROR } from '../utils/Paths';
+import toastOnBottomCenter from '../utils/customToast';
 import { useSignout, useUserData } from '../context/AccountContext';
 import * as api from '../api/Beans'
 
@@ -28,9 +29,7 @@ export default function useBeans() {
         else if (err.message === 'Network Error') {
           navigate(TO_SERVER_ERROR, { replace: true } );
         }
-        else {
-          navigate(TO_GENERAL_ERROR, { replace: true } );
-        }
+        else toastOnBottomCenter('error', err.message ?? 'An unknown error has ocurred.');
       },
       refetchOnWindowFocus: false,
       refetchOnMount: false,

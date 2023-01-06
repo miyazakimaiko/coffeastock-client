@@ -27,7 +27,7 @@ export default function useRssFeed() {
         else if (err.message === 'Network Error') {
           navigate(TO_SERVER_ERROR, { replace: true } );
         }
-        else toastOnBottomCenter('error', err.message ? err.message : 'An unknown error has ocurred.');
+        else toastOnBottomCenter('error', err.message ?? 'An unknown error has ocurred.');
       },
       initialStale: true,
       refetchOnWindowFocus: false,

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from 'react-query'
 import { useNavigate } from 'react-router-dom';
 import { useSignout, useUserData } from '../context/AccountContext';
-import { TO_LOGIN, TO_SERVER_ERROR, TO_GENERAL_ERROR } from '../utils/Paths';
+import { TO_LOGIN } from '../utils/Paths';
 import toastOnBottomCenter from '../utils/customToast'
 import * as api from '../api/Recipes'
 
@@ -33,12 +33,7 @@ export default function useAddRecipe() {
           signout();
           navigate(TO_LOGIN, { replace: true } );
         }
-        else if (err.message === 'Network Error') {
-          navigate(TO_SERVER_ERROR, { replace: true } );
-        }
-        else {
-          navigate(TO_GENERAL_ERROR, { replace: true } );
-        }
+        else toastOnBottomCenter('error', err.message ?? 'An unknown error has ocurred.');
       },
     }
   )

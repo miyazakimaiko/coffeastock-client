@@ -1,9 +1,10 @@
 import { useQuery, useQueryClient } from 'react-query'
 import { useNavigate } from 'react-router-dom';
-import { TO_LOGIN, TO_SERVER_ERROR, TO_GENERAL_ERROR } from '../utils/Paths';
+import { TO_LOGIN, TO_SERVER_ERROR } from '../utils/Paths';
 import { useSignout, useUserData } from '../context/AccountContext';
 import extractRecipeNoFromRecipeId from '../helpers/ExtractRecipeNoFromRecipeId';
 import * as apiRecipes from '../api/Recipes'
+import toastOnBottomCenter from '../utils/customToast';
 
 export default function useRecipes(beanid) {
   const user = useUserData();
@@ -41,9 +42,7 @@ export default function useRecipes(beanid) {
         else if (err.message === 'Network Error') {
           navigate(TO_SERVER_ERROR, { replace: true } );
         }
-        else {
-          navigate(TO_GENERAL_ERROR, { replace: true } );
-        }
+        else toastOnBottomCenter('error', err.message ?? 'An unknown error has ocurred.');
       },
       refetchOnWindowFocus: false,
       refetchOnMount: false,
