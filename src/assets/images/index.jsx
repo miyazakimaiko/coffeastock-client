@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import gsap from 'gsap';
+import ScrollToPlugin from 'gsap/dist/ScrollToPlugin';
 import { Link } from 'react-router-dom';
 import { FaHeart } from 'react-icons/fa';
 import LogoSm from '../../assets/images/logo.png';
@@ -9,7 +10,7 @@ import DashboardImg from '../../assets/images/coffeastock-dashboard.png';
 import MetricsImg from '../../assets/images/coffeastock-metrics.png';
 import BeansAndRecipeImg from '../../assets/images/coffeastock-bean-and-recipe.png';
 import CompareRecipesImg from '../../assets/images/coffeastock-compare-recipes.png';
-import TasteWheelsImg from '../../assets/images/coffeastock-wheels.webp';
+import TasteWheelsImg from '../../assets/images/record-coffee.webp';
 import './public-home.scss';
 import FaqAccordion from './FaqAccordion';
 import PublicFooter from '../../components/public-footer/index.jsx';
