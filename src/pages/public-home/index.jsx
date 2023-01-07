@@ -85,7 +85,6 @@ const PublicHome = () => {
     const aboutTimeline = gsap.timeline({
       scrollTrigger:{ 
         trigger: "#aboutTitle, #aboutText",
-        markers: true,
       },
       defaults: {
         ease: "Power3.easeInOut",
