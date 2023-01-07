@@ -82,27 +82,26 @@ const PublicHome = () => {
   useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const aboutTimeline = gsap.timeline({
-      scrollTrigger:{ 
-        trigger: "#aboutTitle, #aboutText",
-      },
-      defaults: {
-        ease: "Power3.easeInOut",
-      },
-    });
-
     const words = document.querySelectorAll("#aboutTitle .words");
     separateLetters(words);
     gsap.set("#aboutTitle .letter", {display: "inline-block"});
 
-    aboutTimeline.fromTo("#aboutTitle .letter", 
-      {y: '100%'}, 
-      {
-        y: -4, 
-        stagger: 0.02
-      }
-    );
-    aboutTimeline.fromTo("#aboutText", {y:20, opacity: 0}, {y:0, opacity: 1}, "<0.5");
+    gsap.fromTo("#aboutTitle .letter", {y: '100%'}, {scrollTrigger: {trigger: "#aboutTitle"}, y: -4, stagger: 0.02});
+    gsap.fromTo("#aboutImg", {x:-30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#aboutImg"}}, "<");
+    gsap.fromTo("#aboutText", {y:30, opacity: 0}, {y:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#aboutImg"}}, "<");
+  }, [])
+
+  useLayoutEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.fromTo("#record-coffee .left-section", {x:-30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#record-coffee .left-section"}}, "<");
+    gsap.fromTo("#record-coffee .right-section", {x:30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#record-coffee .right-section"}}, "<");
+    gsap.fromTo("#tasting-wheel .left-section", {x:-30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#tasting-wheel .left-section"}}, "<");
+    gsap.fromTo("#tasting-wheel .right-section", {x:30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#tasting-wheel .right-section"}}, "<");
+    gsap.fromTo("#dashboard-metrics .left-section", {x:-30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#dashboard-metrics .left-section"}}, "<");
+    gsap.fromTo("#dashboard-metrics .right-section", {x:30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#dashboard-metrics .right-section"}}, "<");
+    gsap.fromTo("#compare-recipes .left-section", {x:-30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#compare-recipes .left-section"}}, "<");
+    gsap.fromTo("#compare-recipes .right-section", {x:30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#compare-recipes .right-section"}}, "<");
   }, [])
 
   return (
@@ -223,18 +222,18 @@ const PublicHome = () => {
             </div>
           </section>
           <section id="scroll-down-arrow" className="gradient-underline text-xl flex justify-center">
-            <a href="#record-coffee-beans"><span></span><strong>Coffeastock has everything to analyze your brewing.</strong></a>
+            <a href="#record-coffee"><span></span><strong>Coffeastock has everything to analyze your brewing.</strong></a>
           </section>
         </article>
 
 
-        <article id="record-coffee-beans" className="flex flex-col lg:flex-row items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
-          <section className="max-w-[680px]">
+        <article id="record-coffee" className="flex flex-col lg:flex-row items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
+          <section className="left-section max-w-[680px]">
             <div className="bg-circle-green w-full p-3">
               <img src={BeansAndRecipeImg} alt="coffeastock coffee beans and recipe data"/>
             </div>
           </section>
-          <section className="w-full lg:max-w-[620px] px-4 mt-8 text-center">
+          <section className="right-section w-full lg:max-w-[620px] px-4 mt-8 text-center">
             <span className="uppercase font-mono tracking-widest text-green font-medium">1. Organze</span>
             <h2 className="bottom-line-green text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Record Beans Collection and brewing recipes
@@ -248,12 +247,12 @@ const PublicHome = () => {
         </article>
 
         <article id="tasting-wheel" className="flex flex-col lg:flex-row-reverse items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
-          <section className="max-w-[680px]">
+          <section className="right-section max-w-[680px]">
             <div className="bg-circle-pink w-full p-3">
               <img src={TasteWheelsImg} alt="coffeastock coffee tasting wheel large"/>
             </div>
           </section>
-          <section className="w-full lg:max-w-[620px] px-4 mt-8 text-center">
+          <section className="left-section w-full lg:max-w-[620px] px-4 mt-8 text-center">
             <span className="uppercase font-mono tracking-widest text-pink font-medium">2. Record</span>          
             <h2 className="bottom-line-pink text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Log up to 20 palate ranges on your tasting wheel
@@ -267,12 +266,12 @@ const PublicHome = () => {
         </article>
 
         <article id="dashboard-metrics" className="flex flex-col lg:flex-row items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-64">
-          <section className="max-w-[680px]">
+          <section className="left-section max-w-[680px]">
             <div className="bg-circle-blue w-full p-3">
               <img src={MetricsImg} alt="coffeastock coffee data metrics" />
             </div>
           </section>
-          <section className="w-full lg:max-w-[620px] px-4 mt-8 text-center">
+          <section className="right-section w-full lg:max-w-[620px] px-4 mt-8 text-center">
             <span className="uppercase font-mono tracking-widest text-blue font-medium">3. Discover</span>
             <h2 className="bottom-line-blue text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Dashboard metrics for your coffee data analysis
@@ -285,15 +284,13 @@ const PublicHome = () => {
           </section>
         </article>
 
-
-
         <article id="compare-recipes" className="flex flex-col lg:flex-row-reverse items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
-          <section className="max-w-[680px]">
+          <section className="right-section max-w-[680px]">
             <div className="bg-circle-orange w-full p-3">
               <img src={CompareRecipesImg} alt="coffeastock compare recipes" />
             </div>
           </section>
-          <section className="w-full lg:max-w-[620px] px-4 mt-8 text-center">
+          <section className="left-section w-full lg:max-w-[620px] px-4 mt-8 text-center">
             <span className="uppercase font-mono tracking-widest text-orange font-medium">4. Analyze</span>
             <h2 className="bottom-line-orange text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Compare recipes to analyze the difference
