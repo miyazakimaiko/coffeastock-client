@@ -34,7 +34,7 @@ const PublicHome = () => {
                 Sign in
             </Link>
             <Link to="/register">
-              <div className="text-base border-white border-2 shadow-xl px-3 py-2 rounded-md button-transition">
+              <div className="text-base font-bold text-pink-red bg-white shadow-xl px-3 py-2 rounded-md">
                 Sign up
               </div>
             </Link>
