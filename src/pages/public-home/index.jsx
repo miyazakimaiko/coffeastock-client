@@ -246,7 +246,7 @@ const PublicHome = () => {
             </div>
           </section>
           <section className="right-section w-full lg:max-w-[620px] px-4 mt-8 text-center">
-            <span className="uppercase font-mono tracking-widest text-green font-medium">1. Organze</span>
+            <span className="uppercase font-mono tracking-widest text-deep-green font-medium">1. Organze</span>
             <h2 className="bottom-line-green text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Record Beans Collection and brewing recipes
             </h2>
@@ -269,7 +269,7 @@ const PublicHome = () => {
             </div>
           </section>
           <section className="left-section w-full lg:max-w-[620px] px-4 mt-8 text-center">
-            <span className="uppercase font-mono tracking-widest text-pink font-medium">2. Record</span>          
+            <span className="uppercase font-mono tracking-widest text-pink-red font-medium">2. Record</span>          
             <h2 className="bottom-line-pink text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Log up to 20 palate ranges on your tasting wheel
             </h2>
@@ -292,7 +292,7 @@ const PublicHome = () => {
             </div>
           </section>
           <section className="right-section w-full lg:max-w-[620px] px-4 mt-8 text-center">
-            <span className="uppercase font-mono tracking-widest text-blue font-medium">3. Discover</span>
+            <span className="uppercase font-mono tracking-widest text-deep-blue font-medium">3. Discover</span>
             <h2 className="bottom-line-blue text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Dashboard metrics for your coffee data analysis
             </h2>
@@ -315,7 +315,7 @@ const PublicHome = () => {
             </div>
           </section>
           <section className="left-section w-full lg:max-w-[620px] px-4 mt-8 text-center">
-            <span className="uppercase font-mono tracking-widest text-orange font-medium">4. Analyze</span>
+            <span className="uppercase font-mono tracking-widest text-deep-orange font-medium">4. Analyze</span>
             <h2 className="bottom-line-orange text-4xl md:text-5xl font-bold md:leading-snug py-5">
               Compare recipes to analyze the difference
             </h2>
