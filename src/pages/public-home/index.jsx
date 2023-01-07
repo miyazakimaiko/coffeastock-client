@@ -95,12 +95,8 @@ const PublicHome = () => {
     gsap.registerPlugin(ScrollTrigger);
 
     gsap.fromTo("#record-coffee .left-section", {x:-30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#record-coffee .left-section"}}, "<");
-    gsap.fromTo("#record-coffee .right-section", {x:30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#record-coffee .right-section"}}, "<");
-    gsap.fromTo("#tasting-wheel .left-section", {x:-30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#tasting-wheel .left-section"}}, "<");
     gsap.fromTo("#tasting-wheel .right-section", {x:30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#tasting-wheel .right-section"}}, "<");
     gsap.fromTo("#dashboard-metrics .left-section", {x:-30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#dashboard-metrics .left-section"}}, "<");
-    gsap.fromTo("#dashboard-metrics .right-section", {x:30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#dashboard-metrics .right-section"}}, "<");
-    gsap.fromTo("#compare-recipes .left-section", {x:-30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#compare-recipes .left-section"}}, "<");
     gsap.fromTo("#compare-recipes .right-section", {x:30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#compare-recipes .right-section"}}, "<");
   }, [])
 
@@ -109,7 +105,11 @@ const PublicHome = () => {
       <header className="h-16 lg:h-24 w-full max-w-screen-xl mx-auto px-3 flex items-center justify-between text-white">
         <div className="w-44">
           <Link to="/">
-            <img src={Logo} alt="Coffeastock" />
+            <img 
+              src={Logo}
+              width="200" height="40"
+              alt="Coffeastock"
+            />
           </Link>
         </div>
         <div className="flex items-center">
@@ -132,6 +132,7 @@ const PublicHome = () => {
             <img 
               src={DashboardImg} 
               alt="coffeastock dashboard" 
+              width="600" height="400"
               className="h-auto w-auto min-w-[600px]"
               id="heroImgSm"
             />
@@ -174,7 +175,8 @@ const PublicHome = () => {
           <section className="hidden lg:block bg-circle">
             <img 
               src={DashboardImg} 
-              alt="coffeastock dashboard" 
+              alt="coffeastock dashboard"
+              width="600" height="400"
               className="h-auto w-auto min-w-[82rem]"
               id="heroImgLg"
             />
@@ -186,13 +188,19 @@ const PublicHome = () => {
             <div className="flex md:justify-end md:items-center w-full min-w-[36rem] p-3">
               <img 
                 src={RecipesImg} 
-                alt="coffeastock recipe list" 
+                alt="coffeastock recipe list"
+                width="600" height="400"
                 className="h-auto min-w-[42rem]"
                 id="aboutImg"
               />
             </div>
             <div className="flex flex-col justify-center">
-              <img src={LogoSm} alt="coffeastock logo" className="w-14"/>
+              <img 
+                src={LogoSm} 
+                alt="coffeastock logo"
+                width="60" height="60"
+                className="w-14"
+              />
               <h2 
                 className="text-4xl md:text-5xl font-bold md:leading-snug py-5 flex flex-wrap"
                 id="aboutTitle"
@@ -230,7 +238,11 @@ const PublicHome = () => {
         <article id="record-coffee" className="flex flex-col lg:flex-row items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
           <section className="left-section max-w-[680px]">
             <div className="bg-circle-green w-full p-3">
-              <img src={BeansAndRecipeImg} alt="coffeastock coffee beans and recipe data"/>
+              <img 
+                src={BeansAndRecipeImg}
+                width="600" height="400"
+                alt="coffeastock coffee beans and recipe data"
+              />
             </div>
           </section>
           <section className="right-section w-full lg:max-w-[620px] px-4 mt-8 text-center">
@@ -249,7 +261,11 @@ const PublicHome = () => {
         <article id="tasting-wheel" className="flex flex-col lg:flex-row-reverse items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
           <section className="right-section max-w-[680px]">
             <div className="bg-circle-pink w-full p-3">
-              <img src={TasteWheelsImg} alt="coffeastock coffee tasting wheel large"/>
+              <img 
+                src={TasteWheelsImg}
+                width="600" height="400"
+                alt="coffeastock coffee tasting wheel large"
+              />
             </div>
           </section>
           <section className="left-section w-full lg:max-w-[620px] px-4 mt-8 text-center">
@@ -268,7 +284,11 @@ const PublicHome = () => {
         <article id="dashboard-metrics" className="flex flex-col lg:flex-row items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-64">
           <section className="left-section max-w-[680px]">
             <div className="bg-circle-blue w-full p-3">
-              <img src={MetricsImg} alt="coffeastock coffee data metrics" />
+              <img 
+                src={MetricsImg}
+                width="600" height="400"
+                alt="coffeastock coffee data metrics"
+              />
             </div>
           </section>
           <section className="right-section w-full lg:max-w-[620px] px-4 mt-8 text-center">
@@ -287,7 +307,11 @@ const PublicHome = () => {
         <article id="compare-recipes" className="flex flex-col lg:flex-row-reverse items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
           <section className="right-section max-w-[680px]">
             <div className="bg-circle-orange w-full p-3">
-              <img src={CompareRecipesImg} alt="coffeastock compare recipes" />
+              <img
+                src={CompareRecipesImg}
+                width="600" height="400"
+                alt="coffeastock compare recipes"
+              />
             </div>
           </section>
           <section className="left-section w-full lg:max-w-[620px] px-4 mt-8 text-center">
@@ -330,7 +354,12 @@ const PublicHome = () => {
           <section className="md:max-w-[1200px] mx-auto">
             <div className="flex flex-col sm:flex-row bg-white p-10 rounded-xl mx-2 shadow-2xl">
               <div className="flex items-center mb-4 sm:mb-0">
-                <img src={LogoSm} alt="coffeastock logo" className="w-32 mx-auto sm:mr-4"/>
+                <img 
+                  src={LogoSm}
+                   alt="coffeastock logo"
+                   width="60" height="60"
+                   className="w-32 mx-auto sm:mr-4"
+                />
               </div>
               <div>
                 <h3 className="text-2xl md:text-3xl font-semibold text-burnt-sienna-darker mb-2">Get started today with the beta version</h3>
