@@ -97,8 +97,9 @@
     z-index: -1;
   }
 
-  .gradient-underline span {
-    background: linear-gradient(transparent 70%, #579999 70%);
+  .gradient-underline strong {
+    background: linear-gradient(transparent 50%, #a8fffa 50%);
+    padding-bottom: 3px;
   }
 }
 

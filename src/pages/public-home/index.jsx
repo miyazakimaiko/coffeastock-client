@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
+import ScrollToPlugin from 'gsap/dist/ScrollToPlugin';
 import { Link } from 'react-router-dom';
 import { FaHeart } from 'react-icons/fa';
 import LogoSm from '../../assets/images/logo.png';
@@ -16,6 +16,7 @@ import FaqAccordion from './FaqAccordion';
 import PublicFooter from '../../components/public-footer/index.jsx';
 import { useEffect } from 'react';
 import { useLayoutEffect } from 'react';
+import ScrollTrigger from 'gsap/dist/ScrollTrigger';
 
 const faqs = [
   {
@@ -38,38 +39,72 @@ const faqs = [
   },
 ]
 
+function separateLetters(nodeListOfWords) {
+  nodeListOfWords.forEach(word => {
+    const letters = word.textContent.split("");
+    let html = word;
+    word.textContent = "";
+    letters.forEach(letter => {
+      html.innerHTML += '<span class="letter">' + letter + '</span>';
+    });
+    word.innerHTML = html.innerHTML;  
+  })
+}
+
 const PublicHome = () => {
-  const tl = gsap.timeline({
+  const heroTimeline = gsap.timeline({
     defaults: {
-      duration: 1,
       ease: "Power3.easeInOut",
     },
     paused: true,
     delay: 0.8,
-  })
-  
-  useLayoutEffect(() => {
-    const words = document.querySelectorAll(".words");
-    words.forEach(word => {
-      const letters = word.textContent.split("");
-      let html = word;
-      word.textContent = "";
-      letters.forEach(letter => {
-        html.innerHTML += '<span class="letter">' + letter + '</span>';
-      });
-      word.innerHTML = html.innerHTML;
-    })
-    gsap.set(".letter", {display: "inline-block"});
-
-    tl.fromTo("#heroImgLg", {x:30, opacity: 0}, {x:0, opacity: 1}, "<");
-    tl.fromTo("#heroImgSm", {x:30, opacity: 0}, {x:0, opacity: 1}, "<");
-    tl.fromTo("#heroText", {y:20, opacity: 0}, {y:0, opacity: 1}, "<");
-    tl.fromTo(".letter", {y: '120%'}, {y: -4, stagger: 0.02}, "<20%");
-  }, [])
-  
-  window.addEventListener("load", function(event) {
-    tl.play();
   });
+
+  document.addEventListener("readystatechange", (event) => {
+    if (document.readyState === "complete") {
+      heroTimeline.play();
+    }
+  });
+
+  useLayoutEffect(() => {
+    const words = document.querySelectorAll("#heroTitle .words");
+    separateLetters(words);
+    gsap.set("#heroTitle .letter", {display: "inline-block"});
+    heroTimeline.fromTo("#heroTitle .letter", {y: '100%'}, {y: -4, stagger: 0.02}, "<");
+    heroTimeline.fromTo("#heroImgLg", {x:30, opacity: 0}, {x:0, opacity: 1}, "<0.5");
+    heroTimeline.fromTo("#heroImgSm", {x:30, opacity: 0}, {x:0, opacity: 1}, "<");
+    heroTimeline.fromTo("#heroText", {y:20, opacity: 0}, {y:0, opacity: 1}, "<");
+    if (document.readyState === "complete") {
+      heroTimeline.play();
+    }
+  }, [])
+
+  useLayoutEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const aboutTimeline = gsap.timeline({
+      scrollTrigger:{ 
+        trigger: "#aboutTitle, #aboutText",
+        markers: true,
+      },
+      defaults: {
+        ease: "Power3.easeInOut",
+      },
+    });
+
+    const words = document.querySelectorAll("#aboutTitle .words");
+    separateLetters(words);
+    gsap.set("#aboutTitle .letter", {display: "inline-block"});
+
+    aboutTimeline.fromTo("#aboutTitle .letter", 
+      {y: '100%'}, 
+      {
+        y: -4, 
+        stagger: 0.02
+      }
+    );
+    aboutTimeline.fromTo("#aboutText", {y:20, opacity: 0}, {y:0, opacity: 1}, "<0.5");
+  }, [])
 
   return (
     <>
@@ -108,14 +143,21 @@ const PublicHome = () => {
               id="heroTitle"
               className="text-4xl md:text-6xl font-bold md:leading-snug text-burnt-sienna-darker pb-6 flex flex-wrap"
             >
-              <span className="words block overflow-hidden mr-3">No</span>
-              <span className="words block overflow-hidden mr-3">more</span>
-              <span className="words block overflow-hidden mr-3">guessing</span>
-              <span className="words block overflow-hidden mr-3">game</span>
-              <span className="words block overflow-hidden mr-3">to</span>
-              <span className="words block overflow-hidden mr-3">improve</span>
-              <span className="words block overflow-hidden mr-3">your</span>
-              <span className="words block overflow-hidden mr-3">brewing.</span>
+              <span className="words block overflow-hidden">No</span>
+              <span className="w-2 md:w-3"> </span>
+              <span className="words block overflow-hidden">more</span>
+              <span className="w-2 md:w-3"> </span>
+              <span className="words block overflow-hidden">guessing</span>
+              <span className="w-2 md:w-3"> </span>
+              <span className="words block overflow-hidden">game</span>
+              <span className="w-2 md:w-3"> </span>
+              <span className="words block overflow-hidden">to</span>
+              <span className="w-2 md:w-3"> </span>
+              <span className="words block overflow-hidden">improve</span>
+              <span className="w-2 md:w-3"> </span>
+              <span className="words block overflow-hidden">your</span>
+              <span className="w-2 md:w-3"> </span>
+              <span className="words block overflow-hidden">brewing.</span>
             </h1>
             <p 
               id="heroText"
@@ -142,27 +184,47 @@ const PublicHome = () => {
         </article>
 
         <article id="about-coffeasatock" className="w-full mt-24 md:mt-80 lg:mt-64 bg-ash-blue p-3">
-          <section className="flex flex-col lg:flex-row w-full max-w-[1300px] mx-auto pt-8 pb-24">
-          <div>
+          <section className="flex flex-col lg:flex-row w-full max-w-[1300px] mx-auto pt-8  pb-16">
+            <div className="flex md:justify-end md:items-center w-full min-w-[36rem] p-3">
+              <img 
+                src={RecipesImg} 
+                alt="coffeastock recipe list" 
+                className="h-auto min-w-[42rem]"
+                id="aboutImg"
+              />
+            </div>
+            <div className="flex flex-col justify-center">
               <img src={LogoSm} alt="coffeastock logo" className="w-14"/>
               <h2 
-                className="gradient-underline text-white text-4xl md:text-5xl font-bold md:leading-snug py-5"
+                className="text-4xl md:text-5xl font-bold md:leading-snug py-5 flex flex-wrap"
                 id="aboutTitle"
               >
-                <span>Make the most out of your data to be better at brewing.</span>
+                <span className="words block overflow-hidden">Be</span>
+                <span className="w-2 md:w-3"> </span>
+                <span className="words block overflow-hidden">a</span>
+                <span className="w-2 md:w-3"> </span>
+                <span className="words block overflow-hidden">better</span>
+                <span className="w-2 md:w-3"> </span>
+                <span className="words block overflow-hidden">Barista</span>
+                <span className="w-2 md:w-3"> </span>
+                <span className="words block overflow-hidden">by</span>
+                <span className="w-2 md:w-3"> </span>
+                <span className="words block overflow-hidden">analyzing</span>
+                <span className="w-2 md:w-3"> </span>
+                <span className="words block overflow-hidden">recipes</span>
+                <span className="w-2 md:w-3"> </span>
+                <span className="words block overflow-hidden">accurately.</span>
               </h2>
-              <p className="text-base md:text-lg leading-8">
+              <p 
+                className="text-base md:text-lg leading-8"
+                id="aboutText"
+              >
                 Understanding how we are actually brewing is the best way to improve the brewing skills - but when we brew so many cups of coffee, we begin to <strong>"guess"</strong> how we can improve brewing techniques rather than analyzing how we're actually brewing.
-                <br/><br/>
-                <i>So, <strong>how can we be better at brewing without falling into the guessing game? </strong></i>
               </p>
             </div>
-            <div className="flex items-center w-full min-w-[36rem] p-3">
-              <img src={RecipesImg} alt="coffeastock recipe list" className="h-auto" />
-            </div>
           </section>
-          <section id="scroll-down-arrow" className="text-xl flex justify-center">
-            <a href="#record-coffee-beans"><span></span>Coffeastock has everything for you to fix that.</a>
+          <section id="scroll-down-arrow" className="gradient-underline text-xl flex justify-center">
+            <a href="#record-coffee-beans"><span></span><strong>Coffeastock has everything to analyze your brewing.</strong></a>
           </section>
         </article>
 
