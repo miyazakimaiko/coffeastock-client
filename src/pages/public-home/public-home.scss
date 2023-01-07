@@ -38,6 +38,12 @@
   }
 }
 
+.btn-transition {
+  will-change: transform, filter;
+  transform-style: preserve-3d;
+  transition: all .3s ease-out;
+}
+
 .home-btn {
   font-size: 18px;
   color: #fff;
@@ -47,11 +53,9 @@
   text-align: center;
   position: relative;
   z-index: 2;
-  will-change: transform, filter;
-  transform-style: preserve-3d;
-  transition: all .3s ease-out;
 }
-.home-btn:hover {
+
+.home-btn:hover, .signup-btn:hover {
   transform: scale(0.95);
 }
 .home-btn::before {

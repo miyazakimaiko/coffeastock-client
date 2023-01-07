@@ -77,7 +77,7 @@ const Hero = () => {
         </p>
         <div className="mr-8 mt-8">
           <Link to="/register">
-            <div className="w-56 home-btn start-trial-button">
+            <div className="w-56 home-btn btn-transition start-trial-button">
               TRY FOR FREE
             </div>
           </Link>
