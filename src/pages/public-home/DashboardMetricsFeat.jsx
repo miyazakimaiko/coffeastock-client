@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/dist/ScrollTrigger';
-import MetricsImg from '../../assets/images/coffeastock-metrics.png';
+import MetricsImg from '../../assets/images/coffeastock-metrics.webp';
 
 const DashboardMetricsFeat = () => {
   

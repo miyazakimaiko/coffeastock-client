@@ -15,7 +15,7 @@ const GetStartedComponent = lazy(() => import('./GetStarted'));
 const FooterComponent = lazy(() => import('./Footer'));
 
 const PublicHome = () => {
-  const renderLoader = () => <p>Loading</p>;
+  const renderLoader = () => <></>;
 
   return (
     <>

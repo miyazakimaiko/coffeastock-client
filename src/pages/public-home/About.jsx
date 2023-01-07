@@ -2,7 +2,7 @@ import React, { useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/dist/ScrollTrigger';
 import LogoSm from '../../assets/images/logo.png';
-import RecipesImg from '../../assets/images/coffeastock-recipes.png';
+import RecipesImg from '../../assets/images/coffeastock-recipes.webp';
 import separateLetters from '../../helpers/SeparateLettersForAnimation';
 
 

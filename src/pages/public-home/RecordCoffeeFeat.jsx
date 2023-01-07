@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/dist/ScrollTrigger';
-import BeansAndRecipeImg from '../../assets/images/coffeastock-bean-and-recipe.png';
+import BeansAndRecipeImg from '../../assets/images/coffeastock-bean-and-recipe.webp';
 
 const RecordCoffeeFeat = () => {
   

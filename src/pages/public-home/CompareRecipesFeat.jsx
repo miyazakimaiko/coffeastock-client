@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/dist/ScrollTrigger';
-import CompareRecipesImg from '../../assets/images/coffeastock-compare-recipes.png';
+import CompareRecipesImg from '../../assets/images/coffeastock-compare-recipes.webp';
 
 const CompareRecipesFeat = () => {
   
