@@ -2,6 +2,7 @@ import React, { useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/dist/ScrollTrigger';
 import BeansAndRecipeImg from '../../assets/images/coffeastock-bean-and-recipe.webp';
+import tiltImageOnMouseMove from '../../animation/TiltImageOnMouseMove';
 
 const RecordCoffeeFeat = () => {
   
@@ -10,12 +11,17 @@ const RecordCoffeeFeat = () => {
     gsap.fromTo("#record-coffee .left-section", {x:-30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#record-coffee .left-section"}}, "<");
   }, [])
 
+  document.addEventListener("mousemove", (event) => {
+    tiltImageOnMouseMove("#beans-and-recipe-img", event)
+  });
+
   return (
     <article id="record-coffee" className="flex flex-col lg:flex-row items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
       <section className="left-section max-w-[680px]">
         <div className="bg-circle-green w-full p-3">
           <img 
             src={BeansAndRecipeImg}
+            id="beans-and-recipe-img"
             width="600" height="400"
             alt="coffeastock coffee beans and recipe data"
           />

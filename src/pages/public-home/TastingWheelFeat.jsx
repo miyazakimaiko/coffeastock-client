@@ -2,6 +2,7 @@ import React, { useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/dist/ScrollTrigger';
 import TasteWheelsImg from '../../assets/images/coffeastock-wheels.webp';
+import tiltImageOnMouseMove from '../../animation/TiltImageOnMouseMove';
 
 const TastingWheelFeat = () => {
   
@@ -10,12 +11,17 @@ const TastingWheelFeat = () => {
     gsap.fromTo("#tasting-wheel .right-section", {x:30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#tasting-wheel .right-section"}}, "<");
   }, [])
 
+  document.addEventListener("mousemove", (event) => {
+    tiltImageOnMouseMove("#tasting-wheel-img", event)
+  });
+
   return (
     <article id="tasting-wheel" className="flex flex-col lg:flex-row-reverse items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
       <section className="right-section max-w-[680px]">
         <div className="bg-circle-pink w-full p-3">
           <img 
             src={TasteWheelsImg}
+            id="tasting-wheel-img"
             width="600" height="400"
             alt="coffeastock coffee tasting wheel large"
           />

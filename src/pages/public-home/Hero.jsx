@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import DashboardImg from '../../assets/images/coffeastock-dashboard.webp';
 import separateLetters from '../../helpers/SeparateLettersForAnimation';
+import { TweenLite } from 'gsap/gsap-core';
 
 
 
