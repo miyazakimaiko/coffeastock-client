@@ -44,7 +44,7 @@ const Hero = () => {
         <img 
           src={DashboardImg} 
           alt="coffeastock dashboard" 
-          width="600" height="400"
+          width="600" height="305"
           className="h-auto w-auto min-w-[600px]"
           id="heroImgSm"
         />
