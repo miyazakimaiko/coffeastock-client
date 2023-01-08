@@ -5,8 +5,8 @@ export default function tiltImageOnMouseMove(imageId, event) {
   yPos = (event.clientY/window.innerHeight)-0.5;
 
   gsap.to(imageId, {
-    rotationY: 30 * xPos, 
-    rotationX: -30 * yPos,
+    rotationY: 40 * xPos, 
+    rotationX: -40 * yPos,
     ease: 'Power3.easeOut',
     transformPerspective: 900,
     transformOrigin: 'center'
