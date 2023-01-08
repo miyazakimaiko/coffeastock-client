@@ -12,7 +12,7 @@ module.exports = {
     extend: {
       colors: {
         'burnt-sienna': '#484040',
-        'burnt-sienna-darker': '#484040',
+        'burnt-sienna-darker': '#060D0D',
         'creme': '#F4F3EE',
         'lightgrey': '#E6E6E6',
         'greycreme': '#e9e8e3',
