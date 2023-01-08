@@ -20,7 +20,7 @@ const CustomersVoice = () => {
             <h3 className="text-2xl md:text-3xl font-semibold text-burnt-sienna-darker mb-2">Get started today with the beta version</h3>
             <p className="text-md md:text-lg leading-relaxed md:leading-loose mb-4">If registered for the beta version of Coffeastock, you will be eligible to get a lifetime discount on Basic Plan.</p>
             <Link to="/register">
-              <div className="w-56 home-btn start-trial-button mx-auto sm:mx-0">
+              <div className="w-56 home-btn btn-transition start-trial-button mx-auto sm:mx-0">
                 Get Started
               </div>
             </Link>
