@@ -6,8 +6,8 @@ const Faqs = () => {
   const faqs = [
     {
       title: "Do I need to download the app on my smartphone or computer?",
-      textContent: `No, You don't need to download to use the app. Coffeastock is available on web/mobile browsers, such as Chrome, Microsoft Edge, 
-        Safari, Firefox, and Opera. You can access it from anywhere on the web, it's all in the cloud!`
+      textContent: `No, You don't need to download to use the app. Coffeastock is a web-based software available on browsers, such as Chrome, Microsoft Edge, 
+        Safari, Firefox, and Opera. I adopt this form because web apps can constantly evolve on a day-to-day basis, unlike installed software.`
     },
     {
       title: "When will the beta version end, and what will happen after that?",
