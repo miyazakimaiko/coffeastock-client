@@ -53,9 +53,6 @@ const PublicHome = () => {
           <GetStartedComponent />
           <FooterComponent />
         </Suspense>
-
-
-
       </main>
     </>
   )
