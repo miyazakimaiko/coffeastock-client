@@ -144,7 +144,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                     rates={Object.values(recipe.palate_rates).map((rate) => rate)}
                   />
                 ) : null}
-                <div className="w-full md:w-1/2 px-1 md:px-6 mt-auto mb-0">
+                <div className="w-full md:w-1/2 px-1 md:px-6">
                   <div className="coffee-detail-section">
                     <label>Total Rate: </label>
                     <p>{recipe.total_rate ?? "-"}/100</p>

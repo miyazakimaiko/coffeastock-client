@@ -65,8 +65,8 @@ const ViewBeanAndRecipes = ({setTitle}) => {
     <>
       <div className="px-4 w-full max-w-[1200px] mx-auto">
         <div className="p-2">
-          <div className="flex items-center flex-col md:flex-row mt-5">
-            <div className="coffee-bag-container mx-auto px-2 mb-5">
+          <div className="flex items-center justify-center flex-col md:flex-row mt-5">
+            <div className="coffee-bag-container md:mr-10 px-2 mb-5">
               <CoffeeBagRight name={targetBean.label} />
             </div>
             <div className="w-full md:w-3/4">
