@@ -99,14 +99,14 @@ const ViewBeanAndRecipes = ({setTitle}) => {
                   <div className="top-5 right-4 hidden md:flex">
                     <button
                       type="button"
-                      className="mr-2 underline hover:opacity-70"
+                      className="mr-2 underline text-deep-blue hover:opacity-70"
                       onClick={openEditBeanModal}
                     >
                       Edit
                     </button>
                     <button
                       type="button"
-                      className="mr-2 underline hover:opacity-70"
+                      className="mr-2 underline text-red hover:opacity-70"
                       onClick={openDeleteBeanModal}
                     >
                       Delete

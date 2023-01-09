@@ -13,7 +13,6 @@ import { useAuthenticate,
         useSetAuthenticated, 
         useSignout, 
         useUserData,
-        useAuthenticated,
         useChangeAttribute} from '../../context/AccountContext';
 import useAddContact from '../../hooks/useAddContact';
 import useAddUser from '../../hooks/useAddUser';
@@ -156,7 +155,7 @@ const Login = () => {
                 </div>
                 <div className="pb-3">
                   <label className="">Password</label>
-                  <input type="password" name="password" placeholder="Password" className="blue-outline-transition bg-white block w-full py-2 px-3 rounded-md"
+                  <input type="password" name="password" autoComplete="on" placeholder="Password" className="blue-outline-transition bg-white block w-full py-2 px-3 rounded-md"
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                   />
