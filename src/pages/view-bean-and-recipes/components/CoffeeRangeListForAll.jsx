@@ -92,11 +92,6 @@ const CoffeeRangeListForAll = () => {
   return (
     <>
       <CoffeeRangeListItem
-        title="Roasted By"
-        contentType="array"
-        content={beanAttrNames.roaster}
-      />
-      <CoffeeRangeListItem
         title="Roast Date"
         contentType="date"
         content={bean.roast_date}

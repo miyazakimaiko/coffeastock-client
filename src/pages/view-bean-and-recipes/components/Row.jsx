@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { GiCoffeeBeans } from 'react-icons/gi'
-import { MdWaterDrop } from 'react-icons/md'
+import { MdDelete, MdWaterDrop } from 'react-icons/md'
 import { FaCoffee } from 'react-icons/fa'
 import { HiOutlineChevronDown, HiOutlineChevronUp } from 'react-icons/hi'
 import convertIntervalObjToString from '../../../helpers/ConvertIntervalObjToString.js'
@@ -12,6 +12,7 @@ import useRanges from '../../../hooks/useRanges'
 import useUnits from '../../../hooks/useUnits'
 import useUserInfo from '../../../hooks/useUserInfo'
 import ErrorPage from '../../error/index.jsx'
+import { BiEdit } from 'react-icons/bi'
 
 
 const Row = ({recipe, onEditClick, onDeleteClick}) => {
@@ -42,45 +43,26 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
 
   return (
     <>
-      <div className="relative px-4 pt-8 pb-4 mb-4 bg-white shadow-sm rounded-md w-full transition-all h-fit">
-        <div className="absolute top-2 right-2">
-          <Dropdown dropdownText="" type="dot">
-            <div className="dropdown-content">
-              <button
-                type="button"
-                className="dropdown-item"
-                onClick={onEditClick}
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                className="dropdown-item"
-                onClick={onDeleteClick}
-              >
-                Delete
-              </button>
-            </div>
-          </Dropdown>
-        </div>
-
+      <div className="relative px-2 pt-4 pb-2 mb-4 bg-white shadow-sm rounded-md w-full transition-all h-fit">
         <div className="flex flex-col md:flex-row flex-wrap">
           <div className="flex flex-col justify-between w-full border-b pb-2
                           md:w-1/2 md:border-r md:pt-0
                           lg:w-1/4 h-auto px-4 lg:border-b-0 lg:pb-0"
           >
-            <p>
-              {recipe.brew_date ? new Date(recipe.brew_date).toDateString() : "No date"}
-            </p>
-            <h3 className="text-lg md:text-xl my-2">
+            <h3 className="text-base md:text-lg">
               {recipe.method & recipe.method[0]
                 ? rangeList.method_range[recipe.method[0]].label
                 : "-"}
             </h3>
-            <div className="flex justify-end">
-              {recipe.total_rate
-                ? generateStarIconList(recipe.total_rate)
-                : null}
+            <div className="flex justify-between">
+              <span>
+                {recipe.brew_date ? new Date(recipe.brew_date).toDateString().replace(/^\S+\s/,'') : "No date"}
+              </span>
+              <div className="flex justify-end">
+                {recipe.total_rate
+                  ? generateStarIconList(recipe.total_rate)
+                  : null}
+              </div>
             </div>
           </div>
           <div className="flex flex-col justify-between relative w-full border-b py-2
@@ -89,8 +71,8 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
           >
             <div className="flex justify-between">
               <GiCoffeeBeans className="w-5 h-5 opacity-40" />
-              <p className="text-right mb-2">
-                <span className="text-lg md:text-2xl mr-1">{recipe.grounds_weight ?? "-"}</span>
+              <p className="text-right">
+                <span className="text-base md:text-lg mr-1">{recipe.grounds_weight ?? "-"}</span>
                 {units['solid' + userInfo.unit_solid_weight_id].short_label}
               </p>
             </div>
@@ -110,8 +92,8 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                           lg:w-1/4 lg:pt-0">
             <div className="flex justify-between">
               <MdWaterDrop className="w-5 h-5 opacity-40" />
-              <p className="text-right mb-2">
-                <span className="text-lg md:text-2xl mr-1">{recipe.water_weight ?? "-"}</span>
+              <p className="text-right">
+                <span className="text-base md:text-lg mr-1">{recipe.water_weight ?? "-"}</span>
                 {units['fluid' + userInfo.unit_fluid_weight_id].short_label}
               </p>
             </div>
@@ -132,8 +114,8 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
           >
             <div className="flex justify-between">
               <FaCoffee className="w-5 h-5 opacity-40" />
-              <p className="text-right mb-2">
-                <span className="text-lg md:text-2xl">{recipe.yield_weight ?? "-"}</span>{" "}
+              <p className="text-right">
+                <span className="text-base md:text-lg">{recipe.yield_weight ?? "-"}</span>{" "}
                 {units['fluid' + userInfo.unit_fluid_weight_id].short_label}
               </p>
             </div>
@@ -253,6 +235,22 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
           ) : (
             <HiOutlineChevronDown className="w-6 h-6 mt-2 mx-auto" />
           )}
+        </div>
+        <div className="flex absolute bottom-2 right-2">
+          <button
+            type="button"
+            className="mr-2 underline hover:opacity-70"
+            onClick={onEditClick}
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            className="mr-2 underline hover:opacity-70"
+            onClick={onDeleteClick}
+          >
+            Delete
+          </button>
         </div>
       </div>
     </>
