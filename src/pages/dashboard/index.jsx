@@ -94,7 +94,7 @@ const Dashboard = ({setTitle}) => {
   }
   
   return (
-    <div className="max-w-[1177px] mx-auto pt-2 px-1 md:pt-4">
+    <div className="w-full max-w-[1177px] mx-auto pt-2 px-1 md:pt-4">
       <div className="w-full grid grid-cols-2 md:grid-cols-4">
         <TotalCoffeeBags
           amount={beansSummary.totalBeansCount}
