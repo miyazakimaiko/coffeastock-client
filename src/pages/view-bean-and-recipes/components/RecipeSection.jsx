@@ -15,31 +15,34 @@ const RecipeSection = () => {
 
   return (
     <>
-      <div className="p-4 mt-10 w-full max-w-980px mx-auto border-t border-burnt-sienna border-opacity-20">
-        <h3 className="my-5 text-xl text-center">
-          Recipes
-        </h3>
+      <div className="p-4 mt-2 w-full max-w-980px mx-auto border-t border-burnt-sienna border-opacity-20">
+
         <ToolBar>
-          <ToolbarDropdown title={`Order by ${orderByState.replace('_', ' ').replace('temp', 'temperature')}`}>
-            { Object.values(ORDER_BY).map((state) => (
-              <ToolbarDropdownButton
-                key={state}
-                title={state.replace('_', ' ').replace('temp', 'temperature')}
-                active={orderByState === state}
-                onClick={() => {setOrderByState(state)}}
-              />
-            ))}
-          </ToolbarDropdown>
-          <ToolbarDropdown title={`${orderByMethod}`}>
-            { Object.values(ORDER_METHOD).map((method) => (
-              <ToolbarDropdownButton
-                key={method}
-                title={method}
-                active={orderByMethod === method}
-                onClick={() => {setOrderByMethod(method)}}
-              />
-            ))}
-          </ToolbarDropdown>
+          <h3 className="w-full sm:w-auto sm:mr-5 text-2xl text-center">
+            Recipes
+          </h3>
+          <div className="flex flex-wrap justify-center my-2">
+            <ToolbarDropdown title={`Order by ${orderByState.replace('_', ' ').replace('temp', 'temperature')}`}>
+              { Object.values(ORDER_BY).map((state) => (
+                <ToolbarDropdownButton
+                  key={state}
+                  title={state.replace('_', ' ').replace('temp', 'temperature')}
+                  active={orderByState === state}
+                  onClick={() => {setOrderByState(state)}}
+                />
+              ))}
+            </ToolbarDropdown>
+            <ToolbarDropdown title={`${orderByMethod}`}>
+              { Object.values(ORDER_METHOD).map((method) => (
+                <ToolbarDropdownButton
+                  key={method}
+                  title={method}
+                  active={orderByMethod === method}
+                  onClick={() => {setOrderByMethod(method)}}
+                />
+              ))}
+            </ToolbarDropdown>
+          </div>
           <div className="flex">
             <ToolBarSearchBar
               value={searchValue}

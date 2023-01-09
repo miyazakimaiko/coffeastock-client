@@ -63,7 +63,7 @@ const ViewBeanAndRecipes = ({setTitle}) => {
 
   return (
     <>
-      <div className="px-4 w-full max-w-[1200px] mx-auto">
+      <div className="px-1 w-full max-w-[1200px] mx-auto">
         <div className="p-2">
           <div className="flex items-center justify-center flex-col md:flex-row mt-5">
             <div className="coffee-bag-container md:mr-10 px-2 mb-5">

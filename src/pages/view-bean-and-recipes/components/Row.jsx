@@ -140,7 +140,7 @@ const Row = ({recipe, onEditClick, onDeleteClick}) => {
                   />
                 ) : null}
               </div>
-              <div className="px-8 mb-8">
+              <div className="px-1 mb-2">
                 <label className="font-medium mr-3">Memo: </label>
                 <p className="inline">{recipe.memo ?? "-"}</p>
               </div>

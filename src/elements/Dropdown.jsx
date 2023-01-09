@@ -69,7 +69,7 @@ const Dropdown = ({ children, type = 'chevron', dropdownText }) => {
         />
         {children}
       </div>
-      <div className="flex items-center cursor-pointer my-2">
+      <div className="flex items-center cursor-pointer py-2">
         {dropdownText}
         {type === 'chevron' ? <HiOutlineChevronDown className="h-4 w-4 ml-2"/> :
         type === 'dot' ? <BsThreeDotsVertical className="h-5 w-5 ml-2"/> : null}
