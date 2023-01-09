@@ -23,21 +23,21 @@ const RssFeed = () => {
   }
 
   return (
-    <div className="px-3 mb-4 md:mb-0">
+    <div className="px-1 mb-4 md:mb-0">
       <div
         className="w-full p-4 bg-white shadow-sm rounded-md"
       >
         <h3 className="font-normal text-md opacity-60 mb-4">
           RSS Coffee Feed
         </h3>
-        <div className="items-center max-h-600px overflow-auto">
+        <div className="flex flex-col xl:flex-row items-center max-h-[400px] overflow-auto">
           
           {sortByPublishDate(feed).map(article => {
 
             const thumbnail = new DOMParser().parseFromString(article.content, 'text/html').body.getElementsByTagName('img')[0]?.src;
             
             return (
-              <article className="flex flex-col p-4 border mb-2 rounded-md">
+              <article className="w-full min-w-[380px] flex flex-col p-4 border mb-2 xl:mr-2 rounded-md">
                 <a 
                   href={article.link} 
                   className="text-base font-medium mb-2 hover:opacity-70"
@@ -48,11 +48,11 @@ const RssFeed = () => {
                 >
                   {article.title}
                 </a>
-                {thumbnail && 
+                {/* {thumbnail && 
                   <div>
                     <img src={thumbnail} alt="" className="h-40 w-full object-cover rounded-md mb-2"/>
                   </div>
-                }
+                } */}
                 <div>
                   <span className="font-medium text-xs opacity-50 mr-2">{article.csName} -</span>
                   <span className="font-medium text-xs opacity-50">{article.pubDate ? new Date(article.pubDate).toDateString() : null}</span>

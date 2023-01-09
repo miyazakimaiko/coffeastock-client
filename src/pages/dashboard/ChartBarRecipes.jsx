@@ -20,7 +20,7 @@ ChartJS.register(
 );
 
 export const options = {
-  indexAxis: 'y',
+  indexAxis: 'x',
   elements: {
     bar: {
       borderWidth: 2,
@@ -100,14 +100,14 @@ const ChartBarRecipes = ({labels, totalRates, grades}) => {
   }
 
   return (
-    <div className="px-3 mb-4 lg:mb-6">
+    <div className="px-1 sm:px-2 mb-2 sm:mb-4">
       <div
         className="w-full p-4 bg-white shadow-sm rounded-md"
       >
         <h3 className="font-medium text-md opacity-60 text-center pb-2">
           Recipes Total Rate Top 5
         </h3>
-        <div style={{ height: `calc(50px + 50px * ${data.labels.length})`, position: "relative" }}>
+        <div style={{ minHeight: '350px', width: '100%', position: "relative" }}>
           <Bar options={options} data={data} />
           {labels.length === 0 && (
             <div className="absolute backdrop-filter backdrop-blur-sm bg-white/30 top-0 bottom-0 left-0 right-0 flex justify-center items-center">

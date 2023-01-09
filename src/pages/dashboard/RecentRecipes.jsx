@@ -49,17 +49,13 @@ const RecentRecipes = () => {
   }
 
   return (
-    <div className="px-3 mb-4 md:mb-0">
-      <div
-        className="
-          w-full p-4 justify-between
-          bg-white shadow-sm rounded-md"
-      >
+    <div className="h-full px-1 sm:px-2 mb-2 sm:mb-4">
+      <div className="w-full p-4 justify-between bg-white shadow-sm rounded-md">
         <h3 className="font-normal text-md opacity-60 mb-4">
           Recently Added Recipes
         </h3>
-        <div className="flex">
-          <div className="w-full relative">
+        <div className="w-full">
+          <div className="relative flex items-center justify-center">
             {chartContent}
             {recipesSummary.recentRecipes.length < 2 && (
             <div className="absolute backdrop-filter backdrop-blur-sm bg-white/30 top-0 bottom-0 left-0 right-0 flex justify-center items-center">

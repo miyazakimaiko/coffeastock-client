@@ -32,8 +32,8 @@ const CoffeeSection = ({bean}) => {
 
   return (
     <div
-      className={`relative px-1 py-6 w-1/2 ${bean['bean_id']}`}
-      style={{minWidth: '110px', maxWidth: '220px'}}
+      className={`relative px-1 py-3 w-1/2 sm:w-1/3 md:w-1/4 ${bean['bean_id']}`}
+      // style={{minWidth: '110px', maxWidth: '220px'}}
     >
       <Link to={`${TO_COFFEE}/${bean['bean_id']}`}>
         <div 
@@ -45,7 +45,7 @@ const CoffeeSection = ({bean}) => {
             View Recipes
           </span>
         </div>
-        <div className="h-full p-4 bg-white rounded-md">
+        <div className="h-full p-2 bg-white rounded-md">
           <div className="m-auto mb-4 w-full max-w-10">
             <CoffeeBag name={bean['label']} />
           </div>

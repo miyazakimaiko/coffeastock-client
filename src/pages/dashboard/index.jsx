@@ -13,6 +13,7 @@ import Spinner from '../../elements/Spinner'
 import RecentRecipes from './RecentRecipes'
 import RssFeed from './RssFeed'
 import TotalCoffeeBags from './TotalCoffeeBags'
+import ViewBeansList from '../view-beans-list'
 
 const Dashboard = ({setTitle}) => {
 
@@ -93,50 +94,48 @@ const Dashboard = ({setTitle}) => {
   }
   
   return (
-    <>
-      <div className="px-0 pt-4 md:px-4 md:pt-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-          <TotalCoffeeBags
-            amount={beansSummary.totalBeansCount}
-            beansCountByDayList={beansSummary.beansCountsByDay}
-          />
-          <TotalBeansBrewed
-            amount={recipesSummary.groundsweight}
-            unit={units['solid' + userInfo.unit_solid_weight_id]?.short_label}
-            groundWeightByDayList={recipesSummary.groundWeightTotalsByDay}
-          />
-          <TotalRecipes
-            amount={recipesSummary.count}
-            recipesCountByDayList={recipesSummary.recipesCountsByDay}
-          />
-          <TotalBrews
-            amount={recipesSummary.yieldsweight}
-            unit={units['fluid' + userInfo.unit_fluid_weight_id]?.short_label}
-            yieldWeightByDayList={recipesSummary.yieldWeightTotalsByDay}
-          />
+    <div className="max-w-[1177px] mx-auto pt-2 px-1 md:pt-4">
+      <div className="w-full grid grid-cols-2 md:grid-cols-4">
+        <TotalCoffeeBags
+          amount={beansSummary.totalBeansCount}
+          beansCountByDayList={beansSummary.beansCountsByDay}
+        />
+        <TotalBeansBrewed
+          amount={recipesSummary.groundsweight}
+          unit={units['solid' + userInfo.unit_solid_weight_id]?.short_label}
+          groundWeightByDayList={recipesSummary.groundWeightTotalsByDay}
+        />
+        <TotalRecipes
+          amount={recipesSummary.count}
+          recipesCountByDayList={recipesSummary.recipesCountsByDay}
+        />
+        <TotalBrews
+          amount={recipesSummary.yieldsweight}
+          unit={units['fluid' + userInfo.unit_fluid_weight_id]?.short_label}
+          yieldWeightByDayList={recipesSummary.yieldWeightTotalsByDay}
+        />
+      </div>
+      <div className="flex flex-wrap px-0">
+        <div className="w-full sm:w-1/2 xl:w-1/3">
+          {recipesBarChart}
         </div>
-        <div className="flex md:mb-6 flex-wrap">
-          <div 
-            className="flex flex-col w-full
-                       md:flex-row
-                       xl:flex-col xl:w-5/12"
-          >
-            <div className="w-full md:w-1/2 xl:w-full">
-              {beansBarChart}
-            </div>
-            <div className="w-full md:w-1/2 xl:w-full">
-              {recipesBarChart}
-            </div>
-          </div>
-          <div className="w-full md:w-1/2 xl:w-4/12">
-            <RecentRecipes/>
-          </div>
-          <div className="w-full md:w-1/2 xl:w-3/12">
-            <RssFeed />
-          </div>
+        <div className="w-full sm:w-1/2 xl:w-1/3">
+          {beansBarChart}
+        </div>
+        <div className="w-full sm:w-1/2 xl:w-1/3">
+          <RecentRecipes/>
+        </div>
+        <div className="w-full sm:w-1/2 xl:w-full">
+          <RssFeed />
         </div>
       </div>
-    </>
+      {/* <div className="w-full flex">
+        <div className="lg:w-[70%]">
+          <ViewBeansList />
+        </div>
+
+      </div> */}
+    </div>
   )
 }
 

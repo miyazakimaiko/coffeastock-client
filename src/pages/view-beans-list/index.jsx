@@ -135,7 +135,7 @@ const ViewBeansList = ({setTitle}) => {
   
   return (
     <>
-      <div className="px-4 pt-4 sm:pt-8 w-full max-w-980px mx-auto">
+      <div className="px-4 pt-4 sm:pt-6 w-full max-w-980px mx-auto">
         <ToolBar>
           <div className="flex justify-center flex-wrap mb-4 sm:mb-0">
             <ToolbarDropdown title={`Show ${showState}`}>
@@ -174,27 +174,29 @@ const ViewBeansList = ({setTitle}) => {
           </div>
         </ToolBar>
 
-        {Boolean(rangeList[groupState + '_range'])
-          ?
-          Object.keys(sortedCoffeesHtmlDictionary).map(attrId => {
-            if (Object.keys(sortedCoffeesHtmlDictionary[attrId]).length > 0) {
-              const title = rangeList[groupState + '_range'][attrId] ?
-                rangeList[groupState + '_range'][attrId].label : attrId
-              return (
-                <CoffeeGroupSection title={title} key={title} >
-                  {sortedCoffeesHtmlDictionary[attrId]
-                    ?
-                    Object.values(sortedCoffeesHtmlDictionary[attrId]).map(html => html)
-                    :
-                    null
-                  }
-                </CoffeeGroupSection>
-              )
-            }
-          })
-          :
-          null
-        }
+        <div className="pt-5">
+          {Boolean(rangeList[groupState + '_range'])
+            ?
+            Object.keys(sortedCoffeesHtmlDictionary).map(attrId => {
+              if (Object.keys(sortedCoffeesHtmlDictionary[attrId]).length > 0) {
+                const title = rangeList[groupState + '_range'][attrId] ?
+                  rangeList[groupState + '_range'][attrId].label : attrId
+                return (
+                  <CoffeeGroupSection title={title} key={title} >
+                    {sortedCoffeesHtmlDictionary[attrId]
+                      ?
+                      Object.values(sortedCoffeesHtmlDictionary[attrId]).map(html => html)
+                      :
+                      null
+                    }
+                  </CoffeeGroupSection>
+                )
+              }
+            })
+            :
+            null
+          }
+        </div>
       </div>
     </>
   )
