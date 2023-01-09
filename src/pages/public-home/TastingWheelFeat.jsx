@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/dist/ScrollTrigger';
 import TasteWheelsImg from '../../assets/images/coffeastock-wheels.webp';
@@ -9,11 +9,16 @@ const TastingWheelFeat = () => {
   useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     gsap.fromTo("#tasting-wheel .right-section", {x:30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#tasting-wheel .right-section"}}, "<");
+    
+    document.addEventListener("mousemove", onMouseMove);
+    return(() => {
+      document.removeEventListener("mousemove", onMouseMove);
+    })
   }, [])
 
-  document.addEventListener("mousemove", (event) => {
+  function onMouseMove(event) {
     tiltImageOnMouseMove("#tasting-wheel-img", event)
-  });
+  }
 
   return (
     <article id="tasting-wheel" className="flex flex-col lg:flex-row-reverse items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">

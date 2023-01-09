@@ -9,11 +9,16 @@ const CompareRecipesFeat = () => {
   useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     gsap.fromTo("#compare-recipes .right-section", {x:30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#compare-recipes .right-section"}}, "<");
+
+    document.addEventListener("mousemove", onMouseMove);
+    return(() => {
+      document.removeEventListener("mousemove", onMouseMove);
+    })
   }, [])
 
-  document.addEventListener("mousemove", (event) => {
+  function onMouseMove(event) {
     tiltImageOnMouseMove("#compare-recipes-img", event)
-  });
+  }
 
   return (
     <article id="compare-recipes" className="flex flex-col lg:flex-row-reverse items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">

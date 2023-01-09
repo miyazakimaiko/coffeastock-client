@@ -9,11 +9,16 @@ const RecordCoffeeFeat = () => {
   useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     gsap.fromTo("#record-coffee .left-section", {x:-30, opacity: 0}, {x:0, opacity: 1, delay:0.5, scrollTrigger: {trigger: "#record-coffee .left-section"}}, "<");
+
+    document.addEventListener("mousemove", onMouseMove);
+    return(() => {
+      document.removeEventListener("mousemove", onMouseMove);
+    })
   }, [])
 
-  document.addEventListener("mousemove", (event) => {
+  function onMouseMove(event) {
     tiltImageOnMouseMove("#beans-and-recipe-img", event)
-  });
+  }
 
   return (
     <article id="record-coffee" className="flex flex-col lg:flex-row items-center w-full max-w-[1300px] mx-auto mt-32 lg:mt-48">
