@@ -37,26 +37,21 @@ const RssFeed = () => {
             const thumbnail = new DOMParser().parseFromString(article.content, 'text/html').body.getElementsByTagName('img')[0]?.src;
             
             return (
-              <article className="w-full min-w-[380px] flex flex-col p-4 border mb-2 xl:mr-2 rounded-md">
+              <article className="w-full md:min-w-[380px] h-20 flex flex-col p-4 border mb-2 xl:mr-2 rounded-md">
                 <a 
                   href={article.link} 
-                  className="text-base font-medium mb-2 hover:opacity-70"
+                  className="h-[60%] text-base font-medium mb-2 hover:opacity-70"
                   target="_blank"
                   rel="nofollow noopener noreferrer"
                   aria-label={article.link}
                   key={article.link}
                 >
-                  {article.title}
-                </a>
-                {/* {thumbnail && 
+                  <div className="w-full truncate overflow-ellipsis">{article.title}</div>
                   <div>
-                    <img src={thumbnail} alt="" className="h-40 w-full object-cover rounded-md mb-2"/>
+                    <span className="font-medium text-xs opacity-50 mr-2">{article.csName} -</span>
+                    <span className="font-medium text-xs opacity-50">{article.pubDate ? new Date(article.pubDate).toDateString() : null}</span>
                   </div>
-                } */}
-                <div>
-                  <span className="font-medium text-xs opacity-50 mr-2">{article.csName} -</span>
-                  <span className="font-medium text-xs opacity-50">{article.pubDate ? new Date(article.pubDate).toDateString() : null}</span>
-                </div>
+                </a>
               </article>
             )
           })}
