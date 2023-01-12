@@ -33,8 +33,6 @@ const RssFeed = () => {
         <div className="flex flex-col xl:flex-row items-center max-h-[400px] overflow-auto">
           
           {sortByPublishDate(feed).map(article => {
-
-            const thumbnail = new DOMParser().parseFromString(article.content, 'text/html').body.getElementsByTagName('img')[0]?.src;
             
             return (
               <article className="w-full md:min-w-[380px] h-20 flex flex-col p-4 border mb-2 xl:mr-2 rounded-md">
