@@ -20,8 +20,8 @@ const TooltipBottomLeft = ({ children, tooltipText }) => {
         <div className="relative">
           {children}
           <div
-            className="absolute bg-black text-white flex w-auto opacity-0 p-4 rounded-md items-center transition-all duration-300 z-50"
-            style={{ right: "-10px", top: "33px", width: "200px", visibility: "hidden" }}
+            className="absolute bg-black text-white flex w-max max-w-xs md:max-w-sm opacity-0 p-4 rounded-md items-center transition-all duration-300 z-50"
+            style={{ right: "-10px", top: "30px", visibility: "hidden" }}
             ref={tipRef}>
             <div
               className="bg-black h-3 w-3 absolute"

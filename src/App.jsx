@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import PublicHome from './pages/public-home';
 import Login from './pages/login';
 import Register from './pages/register';
 import Dashboard from './pages/dashboard';
@@ -12,16 +11,14 @@ import ViewRanges from './pages/view-ranges';
 import CompareRecipes from './pages/compare-recipes';
 import ManageAccount from './pages/manage-account';
 import { useGetSession, 
-  useSetUserData, 
-  useAuthenticated, 
-  useSetAuthenticated } from './context/AccountContext';
+        useSetUserData, 
+        useAuthenticated, 
+        useSetAuthenticated } from './context/AccountContext';
 import ScrollBackButton from './elements/ScrollBackButton';
 import ServerError from './pages/server-error';
 import DashboardLayout from './components/dashboard-layout';
 import NotFound from './pages/not-found-error';
 import ErrorPage from './pages/error';
-import Terms from './pages/terms';
-import Privacy from './pages/privacy';
 import './index.scss'
 
 
@@ -49,11 +46,9 @@ const App = () => {
     <div className="font-sans text-xs md:text-sm text-burnt-sienna">
       <Router>
         <Routes>
-          <Route exact path="/" element={<PublicHome />} />
+          <Route exact path="/" element={authenticated ? <Navigate to="/app/dashboard" />  : login} />
           {/* <Route exact path="pricing" element={<Pricing />} /> */}
           <Route exact path="500" element={<ServerError />} />  
-          <Route exact path="terms" element={<Terms />} />
-          <Route exact path="privacy" element={<Privacy />} />
           <Route exact path='/login' element={authenticated ? <Navigate to="/app/dashboard" />  : login} />
           <Route exact path='/register' element={<Register />} />
         </Routes>

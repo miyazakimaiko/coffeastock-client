@@ -123,10 +123,10 @@ const Register = () => {
     <>
       <div className="h-full bg-white">
         <header className="h-16 lg:h-24 w-full max-w-screen-xl mx-auto px-3 flex items-center justify-between">
-          <Link to="/" className="w-10 md:w-44">
+          <a href="https://coffeastock.com" className="w-10 md:w-44">
             <img src={LogoSm} alt="Coffeastock" className="block md:hidden w-10" />
             <img src={LogoLg} alt="Coffeastock" className="hidden md:block" />
-          </Link>
+          </a>
           <div className="flex items-center">
             <span className="pr-3">Already have an account?</span>
             <Link to="/login">
@@ -224,6 +224,16 @@ const Register = () => {
                             : <div className="text-red">A number</div>
                           }
                         </div>
+                        |
+                        <div className="mx-1">
+                          {password.length >= 8
+                            ? <div className="text-deep-green flex items-center">
+                                <BsCheckLg className="mr-1"/> 
+                                8 characters or more
+                              </div>
+                            : <div className="text-red">8 characters or more</div>
+                          }
+                        </div>
                       </div>
                     </div>
                     <div className="pb-4">
@@ -259,7 +269,7 @@ const Register = () => {
                       onClick={onSubmit}
                       disabled={ showEmailWarningMsg
                                 || email.length <= 0 
-                                || password.length <= 0
+                                || password.length < 8
                                 || !pwdContainsLowercase
                                 || !pwdContainsUppercase
                                 || !pwdContainsNumber

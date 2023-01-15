@@ -40,7 +40,7 @@ const CompareRecipes = ({setTitle}) => {
     <>
       <div className="mt-2 px-4 pt-8 w-full max-w-980px mx-auto">
         <div className="flex flex-col md:flex-row justify-between md:w-full">
-          <div className="md:w-1/2 border border-burnt-sienna border-opacity-20 rounded-md relative pt-8 pb-4 px-2 mx-2 mb-8 md:mb-0">
+          <div className="md:w-1/2 border border-burnt-sienna border-opacity-20 rounded-md relative py-4 px-2 mx-2 mb-8 md:mb-0">
             <p className="absolute -top-2.5 left-6 bg-creme px-2">
               Recipe on Left (Red)
             </p>
@@ -64,7 +64,7 @@ const CompareRecipes = ({setTitle}) => {
               </>
             ) : null}
           </div>
-          <div className="md:w-1/2 border border-burnt-sienna border-opacity-20 rounded-md relative pt-8 pb-4 px-2 mx-2">
+          <div className="md:w-1/2 border border-burnt-sienna border-opacity-20 rounded-md relative py-4 px-2 mx-2">
             <p className="absolute -top-2.5 left-6 bg-creme px-2">
               Recipe on Right (Blue)
             </p>

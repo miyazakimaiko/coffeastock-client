@@ -118,10 +118,10 @@ const Login = () => {
       <div className="h-full">
         <div className="h-16 lg:h-24 w-full max-w-screen-xl mx-auto px-3 flex items-center justify-between">
           <div className="w-10 md:w-44">
-            <Link to="/">
+            <a href="https://coffeastock.com">
               <img src={LogoSm} alt="Coffeastock" className="block md:hidden w-10" />
               <img src={LogoLg} alt="Coffeastock" className="hidden md:block" />
-            </Link>
+            </a>
           </div>
           <div className="flex items-center">
             <span className="pr-3">New to Coffeastock?</span>

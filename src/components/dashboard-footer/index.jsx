@@ -1,6 +1,5 @@
 import React from 'react';
 import { useContext } from 'react';
-import { Link } from 'react-router-dom';
 import { ModalStateContext } from '../../context/ModalStateContext';
 
 const DashboardFooter = () => {
@@ -9,32 +8,32 @@ const DashboardFooter = () => {
   return (
     <div className="flex justify-between flex-wrap w-full mx-auto p-4 text-xs">
       <div>
-        <Link 
-          to="/"
+        <a 
+          href="https://coffeastock.com"
           target="_blank"
           rel="nofollow noopener noreferrer"
           key="home"
         >
           © {new Date().getFullYear()} Maiko Miyazaki
-        </Link>
+        </a>
         <span className="px-2">|</span>
-        <Link 
-          to="/terms"
+        <a 
+          href="https://coffeastock.com/terms"
           target="_blank"
           rel="nofollow noopener noreferrer"
           key="terms"
         >
           Terms of Service
-        </Link>
+        </a>
         <span className="px-2">|</span>
-        <Link 
-          to="/privacy"
+        <a 
+          href="https://coffeastock.com/privacy"
           target="_blank"
           rel="nofollow noopener noreferrer"
           key="privacy"
         >
           Privacy Policy
-        </Link>
+        </a>
         <span className="px-2">|</span>
         <a
           onClick={openSendFeedbackModal}

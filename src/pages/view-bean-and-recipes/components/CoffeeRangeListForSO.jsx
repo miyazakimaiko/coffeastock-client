@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { FaInfoCircle } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
 import Spinner from '../../../elements/Spinner';
-import TooltipLeft from '../../../elements/TooltipLeft';
+import TooltipBottomLeft from '../../../elements/TooltipBottomLeft';
 import { unescapeHtml } from '../../../helpers/HtmlConverter';
 import useBean from '../../../hooks/useBean';
 import useRanges from '../../../hooks/useRanges';
@@ -55,7 +55,7 @@ const CoffeeRangeListForSO = () => {
             className="flex justify-end"
             style={{ paddingTop: "4px", paddingBottom: "4px" }}
           >
-            <TooltipLeft category={category} itemId={id} tooltipText={text}>
+            <TooltipBottomLeft category={category} itemId={id} tooltipText={text}>
               <div
                 className="flex items-center"
                 id={`tooltip-${category}-${id}`}
@@ -63,7 +63,7 @@ const CoffeeRangeListForSO = () => {
                 <p className="text-right">{label}</p>
                 <FaInfoCircle className="h-4 w-4 ml-2 flex-shrink-0" />
               </div>
-            </TooltipLeft>
+            </TooltipBottomLeft>
           </div>
         );
       });
