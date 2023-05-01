@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import { useContext } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { MenuAlt2Icon, PlusIcon, XIcon } from '@heroicons/react/outline'
-import { TO_LOGIN, TO_PUBLIC_HOME } from '../../utils/Paths';
+import { HiMenuAlt2 } from 'react-icons/hi';
+import { FiPlus } from 'react-icons/fi';
+import { IoClose } from 'react-icons/io5';
+import { TO_LOGIN } from '../../utils/Paths';
 import toastOnTopRight from '../../utils/customToast';
 import { capitalize } from '../../helpers/HtmlConverter';
 import { NavStateContext } from '../../context/NavStateContext';
@@ -55,8 +57,8 @@ const DashboardHeader = (props) => {
     >
       <div className="flex items-center">
         <div className="flex items-center cursor-pointer mx-4" onClick={showNavbar}>
-          {openNav ? <XIcon className="h-8 w-8 opacity-80 hover:opacity-100 ease-linear transition-all duration-150" /> 
-          : <MenuAlt2Icon className="h-8 w-8 opacity-80 hover:opacity-100 ease-linear transition-all duration-150"/>}
+          {openNav ? <IoClose className="h-8 w-8 opacity-80 hover:opacity-100 ease-linear transition-all duration-150" /> 
+          : <HiMenuAlt2 className="h-8 w-8 opacity-80 hover:opacity-100 ease-linear transition-all duration-150"/>}
         </div>
         <h2 className="text-base lg:text-xl">{capitalize(props.title)}</h2>
       </div>
@@ -69,7 +71,7 @@ const DashboardHeader = (props) => {
                        border border-burnt-sienna rounded border-opacity-40 hover:border-opacity-100
                        opacity-80 hover:opacity-100 ease-linear transition-all duration-150"
           >
-            <PlusIcon className="h-4 w-4 mr-2" />
+            <FiPlus className="h-4 w-4 mr-2" />
             Coffee Bean
           </button>
 
@@ -79,7 +81,7 @@ const DashboardHeader = (props) => {
                        border border-burnt-sienna rounded border-opacity-40 hover:border-opacity-100
                        opacity-80 hover:opacity-100 ease-linear transition-all duration-150"
           >
-            <PlusIcon className="h-4 w-4 mr-2" />
+            <FiPlus className="h-4 w-4 mr-2" />
             Recipe
           </button>
         </div>

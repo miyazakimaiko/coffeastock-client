@@ -1,4 +1,3 @@
-import { PencilAltIcon, XIcon } from '@heroicons/react/outline'
 import React from 'react'
 import { unescapeHtml } from '../../../helpers/HtmlConverter'
 import Dropdown from '../../../elements/Dropdown'

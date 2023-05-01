@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import { useChangeAttribute, useUserData, useVerifyAttribute } from '../../context/AccountContext';
 import { ModalStateContext } from '../../context/ModalStateContext';
 import ModalWrapperContainer from '../../elements/ModalWrapperContainer';
-import toastOnBottomCenter from '../../utils/customToast';
 
 
 const ChangeEmailModal = () => {

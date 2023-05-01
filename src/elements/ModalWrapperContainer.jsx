@@ -1,4 +1,4 @@
-import { XIcon } from '@heroicons/react/outline'
+import { IoClose } from 'react-icons/io5';
 import React from 'react'
 
 const ModalWrapperContainer = ({ children, title, onCloseClick, maxWidthClass = "max-w-2xl" }) => {
@@ -23,7 +23,7 @@ const ModalWrapperContainer = ({ children, title, onCloseClick, maxWidthClass = 
               <button
                 className="absolute right-4 top-4 border-0 text-black float-right"
                 onClick={onCloseClick}>
-                <XIcon className="h-6 w-6"/>
+                <IoClose className="h-6 w-6"/>
               </button>
             </div>
             {children}

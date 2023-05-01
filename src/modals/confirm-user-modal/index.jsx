@@ -1,20 +1,16 @@
-import { LoginIcon } from '@heroicons/react/outline'
+import { HiOutlineLogin } from 'react-icons/hi';
 import React from 'react'
 
 const ConfirmUserModal = ({ email, verificationCode, setVerificationCode, resendVerificationCode, onSubmit }) => {
 
   return (
     <>
-      <div
-        className="justify-center flex overflow-x-hidden 
+      <div className="justify-center flex overflow-x-hidden 
         overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
       >
-        <div 
-          className="relative h-fit w-full max-w-3xl md:px-2 md:my-8 mx-auto"
-        >
-          <div 
-            className="w-full border-0 md:rounded-lg shadow-lg relative p-8
-                       flex flex-col bg-white outline-none focus:outline-none"
+        <div className="relative h-fit w-full max-w-3xl md:px-2 md:my-8 mx-auto">
+          <div className="w-full border-0 md:rounded-lg shadow-lg relative p-8
+              flex flex-col bg-white outline-none focus:outline-none"
           >
             <h3 className="md:text-lg font-light">
               Confirm your email
@@ -40,7 +36,7 @@ const ConfirmUserModal = ({ email, verificationCode, setVerificationCode, resend
                   onClick={onSubmit}
                   className="shadow-sm rounded-3xl pl-6 pr-8 py-2 my-2 ml-4 bg-blue button-transition text-white flex"
                 >
-                  <LoginIcon className="h-5 w-5 my-auto" />
+                  <HiOutlineLogin className="h-5 w-5 my-auto" />
                   <span className="ml-1">Submit</span>
                 </button>
               </div>

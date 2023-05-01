@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import { BsPlus } from 'react-icons/bs';
-import { BookOpenIcon, ChevronDownIcon, ChevronUpIcon, CogIcon, HomeIcon } from '@heroicons/react/outline'
+import { HiOutlineBookOpen, HiOutlineCog, HiOutlineHome } from 'react-icons/hi';
+import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
 import PushPinIcon from '../../assets/svgs/PushPinIcon'
 import { NavStateContext } from '../../context/NavStateContext'
 import './nav.scss'
@@ -124,7 +125,7 @@ const Nav = (props) => {
                   className={({ isActive }) => "flex items-center" 
                     + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                     onClick={pinnedNavbar ? null : showNavbar}>
-                  <HomeIcon className="h-4 w-4"></HomeIcon>
+                  <HiOutlineHome className="h-4 w-4"></HiOutlineHome>
                   <span className="ml-4">Dashboard</span>
                 </NavLink>
               </li>
@@ -134,7 +135,7 @@ const Nav = (props) => {
                   className={({ isActive }) => "flex items-center" 
                   + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                   onClick={pinnedNavbar ? null : showNavbar}>
-                  <BookOpenIcon className="h-4 w-4"></BookOpenIcon>
+                  <HiOutlineBookOpen className="h-4 w-4"></HiOutlineBookOpen>
                   <span className="ml-4">View All Beans</span>
                 </NavLink>
               </li>
@@ -144,7 +145,7 @@ const Nav = (props) => {
                   className={({ isActive }) => "flex items-center" 
                   + (isActive ? ' nav-link-active font-bold' : ' transition-opacity duration-300 ease-out opacity-70 hover:opacity-100')}
                   onClick={pinnedNavbar ? null : showNavbar}>
-                  <BookOpenIcon className="h-4 w-4"></BookOpenIcon>
+                  <HiOutlineBookOpen className="h-4 w-4"></HiOutlineBookOpen>
                   <span className="ml-4">Compare Recipes</span>
                 </NavLink>
               </li>
@@ -191,12 +192,12 @@ const Nav = (props) => {
                   onClick={() => toggleOpenBeansAccordion()}
                 >
                   <div className="flex items-center">
-                    <CogIcon className="h-4 w-4"></CogIcon>
+                    <HiOutlineCog className="h-4 w-4"></HiOutlineCog>
                     <span className="ml-4">For Coffee Beans</span>
                   </div>
                   { openBeansAccordion === true 
-                    ? <ChevronUpIcon className="h-4 w-4"></ChevronUpIcon>
-                    : <ChevronDownIcon className="h-4 w-4"></ChevronDownIcon>
+                    ? <IoIosArrowUp className="h-4 w-4"></IoIosArrowUp>
+                    : <IoIosArrowDown className="h-4 w-4"></IoIosArrowDown>
                   }
                 </div>
 
@@ -283,12 +284,12 @@ const Nav = (props) => {
                   onClick={() => toggleOpenRecipesAccordion()}
                 >
                   <div className="flex items-center">
-                    <CogIcon className="h-4 w-4"></CogIcon>
+                    <HiOutlineCog className="h-4 w-4"></HiOutlineCog>
                     <span className="ml-4">For Recipes</span>
                   </div>
                   { openRecipesAccordion === true
-                    ? <ChevronUpIcon className="h-4 w-4"></ChevronUpIcon>
-                    : <ChevronDownIcon className="h-4 w-4"></ChevronDownIcon>
+                    ? <IoIosArrowUp className="h-4 w-4"></IoIosArrowUp>
+                    : <IoIosArrowDown className="h-4 w-4"></IoIosArrowDown>
                   }
                 </div>
                 <div className="overflow-hidden">

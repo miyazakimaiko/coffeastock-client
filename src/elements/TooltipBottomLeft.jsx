@@ -1,4 +1,5 @@
 import React from 'react'
+import { FcSettings } from 'react-icons/fc';
 
 const TooltipBottomLeft = ({ children, tooltipText }) => {
   const tipRef = React.createRef(null);

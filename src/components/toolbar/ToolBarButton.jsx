@@ -1,4 +1,4 @@
-import { PlusIcon } from '@heroicons/react/outline';
+import { FiPlus } from 'react-icons/fi';
 import React from 'react';
 import { capitalize } from '../../helpers/HtmlConverter';
 
@@ -10,7 +10,7 @@ const ToolBarButton = ({title, onClick}) => {
       className="flex items-center text-burnt-sienna
       px-3 mx-auto my-4 sm:ml-4 sm:mr-0 opacity-80 
       hover:opacity-100 ease-linear transition-all duration-150">
-      <PlusIcon className="w-4 h-4 mr-1 inline" />
+      <FiPlus className="w-4 h-4 mr-1 inline" />
       {capitalize(title)}
     </button>
   )
